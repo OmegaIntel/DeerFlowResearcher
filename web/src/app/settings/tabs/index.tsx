@@ -9,7 +9,7 @@ import { MCPTab } from "./mcp-tab";
 
 
 export const SETTINGS_TABS = [GeneralTab, MCPTab, AboutTab].map((tab) => {
-  const name = tab.name ?? tab.displayName;
+  const name = tab.displayName ?? tab.name;
   return {
     ...tab,
     id: name.replace(/Tab$/, "").toLocaleLowerCase(),
