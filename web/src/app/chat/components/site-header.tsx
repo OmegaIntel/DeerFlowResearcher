@@ -14,7 +14,7 @@ export async function SiteHeader() {
       <div className="container flex h-15 items-center justify-between px-3">
         <div className="text-xl font-medium">
           <span className="mr-1 text-2xl">🦌</span>
-          <span>DeerFlow</span>
+          <span>Omega Intelligence</span>
         </div>
         <div className="relative flex items-center">
           <div
@@ -30,9 +30,9 @@ export async function SiteHeader() {
             asChild
             className="group relative z-10"
           >
-            <Link href="https://github.com/bytedance/deer-flow" target="_blank">
+            <Link href="https://calendly.com/chetan-omegaintelligence" target="_blank">
               <GitHubLogoIcon className="size-4" />
-              Star on GitHub
+              Connect with us
               {env.NEXT_PUBLIC_STATIC_WEBSITE_ONLY &&
                 env.GITHUB_OAUTH_TOKEN && <StarCounter />}
             </Link>
