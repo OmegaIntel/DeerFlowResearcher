@@ -74,7 +74,7 @@ export const MCPTab: Tab = ({ settings, onChange }) => {
           <AddMCPServerDialog onAdd={handleAddServers} />
         </div>
         <div className="text-muted-foreground markdown text-sm">
-          The Model Context Protocol boosts DeerFlow by integrating external
+          The Model Context Protocol boosts Omega by integrating external
           tools for tasks like private domain searches, web browsing, food
           ordering, and more. Click here to
           <a
@@ -178,6 +178,7 @@ export const MCPTab: Tab = ({ settings, onChange }) => {
     </div>
   );
 };
+
 MCPTab.icon = Blocks;
 MCPTab.badge = "Beta";
 

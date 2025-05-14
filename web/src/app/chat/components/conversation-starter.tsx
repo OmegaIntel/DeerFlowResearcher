@@ -8,10 +8,10 @@ import { cn } from "~/lib/utils";
 import { Welcome } from "./welcome";
 
 const questions = [
-  "How many times taller is the Eiffel Tower than the tallest building in the world?",
-  "How many years does an average Tesla battery last compared to a gasoline engine?",
-  "How many liters of water are required to produce 1 kg of beef?",
-  "How many times faster is the speed of light compared to the speed of sound?",
+  "Median EV/EBITDA multiple for enterprise software acquisitions over the past five years?",
+  "Trend in debt-to-equity ratios for middle-market manufacturing buyouts since 2010?",
+  "Which PE-backed healthcare exits delivered the highest IRRs on a three-year hold?",
+  "Average EBIT growth before debt refinancing in B2B distribution carve-outs?",
 ];
 export function ConversationStarter({
   className,
