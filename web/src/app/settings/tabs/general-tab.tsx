@@ -149,5 +149,5 @@ export const GeneralTab: Tab = ({
     </div>
   );
 };
-
+GeneralTab.displayName = "General";
 GeneralTab.icon = Settings;

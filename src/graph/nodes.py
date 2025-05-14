@@ -333,7 +333,7 @@ async def _execute_agent_step(
         )
 
     # Invoke the agent
-    result = await agent.ainvoke(input=agent_input)
+    result = await agent.ainvoke(input=agent_input, config={"recursion_limit": 100})
 
     # Process the result
     response_content = result["messages"][-1].content
