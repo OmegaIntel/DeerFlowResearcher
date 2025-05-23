@@ -2,9 +2,10 @@
 // SPDX-License-Identifier: MIT
 
 "use client";
-
+import { DownloadOutlined } from "@ant-design/icons";
 import { useMemo } from "react";
 
+import { Button } from "~/components/ui/button";
 import { useStore } from "~/core/store";
 import { cn } from "~/lib/utils";
 
@@ -17,6 +18,47 @@ export default function Main() {
     () => openResearchId !== null,
     [openResearchId],
   );
+
+    // Pull the actual report text from your store.
+  // Replace `state.reportsById` & `.content` with whatever key you use.
+  const reportContent = useStore((state) => {
+    if (openResearchId === null) return "";
+    const msg = state.messages.get(openResearchId);
+    return msg?.content ?? "";
+  });
+
+  // When clicked, POST to your FastAPI and download the PPTX.
+  const generatePpt = async () => {
+    if (!reportContent) return;
+
+    try {
+      const res = await fetch("http://localhost:8000/api/ppt/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: reportContent }),
+      });
+
+      if (!res.ok) {
+        const txt = await res.text();
+        throw new Error(txt || res.statusText);
+      }
+
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "report.pptx";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Failed to download PPT", err);
+      // you can surface an in-UI notification here instead
+      alert("Error generating PPT. Check console for details.");
+    }
+  };
+ 
   return (
     <div
       className={cn(
@@ -40,6 +82,19 @@ export default function Main() {
         )}
         researchId={openResearchId}
       />
+    
+      {openResearchId !== null && (
+        <div className="fixed bottom-4 right-4">
+          <Button
+            size="icon"
+            variant="outline"
+            title="Download PPT"
+            onClick={generatePpt}
+          >
+            <DownloadOutlined />
+          </Button>
+        </div>
+      )}
     </div>
   );
 }
