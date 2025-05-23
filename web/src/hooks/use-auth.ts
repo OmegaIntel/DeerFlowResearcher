@@ -1,16 +1,17 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
 
 export const useAuth = () => {
   const router = useRouter();
   
   return {
-    isAuthenticated: () => !!localStorage.getItem('authToken'),
-    getToken: () => localStorage.getItem('authToken'),
+    isAuthenticated: () => !!Cookies.get('authToken'),
+    getToken: () => Cookies.get('authToken'),
     logout: () => {
-      localStorage.removeItem('authToken');
-      router.push('/login');
+      Cookies.remove('authToken', { path: '/' });
+      router.push('/auth/login');
     },
   };
 };

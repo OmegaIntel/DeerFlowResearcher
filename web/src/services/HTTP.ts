@@ -1,4 +1,5 @@
 import { API_BASE_URL } from "~/lib/constant";
+import Cookies from 'js-cookie';
 
 interface ApiResponse<T = unknown> {
   data: T;
@@ -11,7 +12,7 @@ export const fetcher = async <T>(
   url: string,
   options: RequestInit = {}
 ): Promise<ApiResponse<T>> => {
-  const token = localStorage.getItem('authToken');
+  const token = Cookies.get('authToken');
 
   const config: RequestInit = {
     ...options,
@@ -25,9 +26,17 @@ export const fetcher = async <T>(
   try {
     const response = await fetch(`${API_BASE_URL}${url}`, config);
 
-    // if (response.status === 401) {
-    //   return handleRefreshToken(url, options);
-    // }
+    // Handle 401 Unauthorized
+    if (response.status === 401) {
+      // If you have refresh token logic, uncomment this:
+      // return handleRefreshToken(url, options);
+      
+      // Otherwise, redirect to login
+      Cookies.remove('authToken', { path: '/' });
+      window.location.href = '/auth/login';
+      throw new Error('Unauthorized');
+    }
+
     console.log('HTTP-------------', response);
 
     if (!response.ok) {
@@ -44,7 +53,7 @@ export const fileFetcher = async <T>(
   url: string,
   options: RequestInit = {}
 ): Promise<ApiResponse<T>> => {
-  const token = localStorage.getItem('authToken');
+  const token = Cookies.get('authToken');
 
   const config: RequestInit = {
     ...options,
@@ -57,9 +66,13 @@ export const fileFetcher = async <T>(
   try {
     const response = await fetch(`${API_BASE_URL}${url}`, config);
 
-    // if (response.status === 401) {
-    //   return handleRefreshToken(url, options);
-    // }
+    if (response.status === 401) {
+      // return handleRefreshToken(url, options);
+      Cookies.remove('authToken', { path: '/' });
+      window.location.href = '/auth/login';
+      throw new Error('Unauthorized');
+    }
+
     console.log('HTTP-------------', response);
 
     if (!response.ok) {
@@ -72,12 +85,12 @@ export const fileFetcher = async <T>(
   }
 };
 
-// Refresh Token Logic
+// Refresh Token Logic (Updated to use cookies)
 const handleRefreshToken = async <T>(
   url: string,
   options: RequestInit
 ): Promise<ApiResponse<T>> => {
-  const refreshToken = localStorage.getItem('refreshToken');
+  const refreshToken = Cookies.get('refreshToken');
   if (!refreshToken) {
     throw new Error('No refresh token available');
   }
@@ -89,15 +102,86 @@ const handleRefreshToken = async <T>(
   });
 
   if (!refreshResponse.ok) {
+    // Clear tokens and redirect to login
+    Cookies.remove('authToken', { path: '/' });
+    Cookies.remove('refreshToken', { path: '/' });
+    window.location.href = '/auth/login';
     throw new Error('Refresh token failed');
   }
 
   const { accessToken } = await refreshResponse.json();
-  localStorage.setItem('authToken', accessToken);
+  
+  // Store new token in cookie
+  Cookies.set('authToken', accessToken, {
+    path: '/',
+    expires: 1/12, // 2 hours
+    sameSite: 'Strict',
+  });
 
   // Retry original request with new token
   return fetcher(url, {
     ...options,
-    headers: { Authorization: `Bearer ${accessToken}` },
+    headers: { 
+      ...options.headers,
+      Authorization: `Bearer ${accessToken}` 
+    },
   });
+};
+
+// Helper functions for common HTTP methods
+export const api = {
+  get: <T>(url: string, options?: RequestInit) => 
+    fetcher<T>(url, { ...options, method: 'GET' }),
+  
+  post: <T>(url: string, data?: any, options?: RequestInit) => 
+    fetcher<T>(url, {
+      ...options,
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+  
+  put: <T>(url: string, data?: any, options?: RequestInit) => 
+    fetcher<T>(url, {
+      ...options,
+      method: 'PUT',
+      body: JSON.stringify(data),
+    }),
+  
+  delete: <T>(url: string, options?: RequestInit) => 
+    fetcher<T>(url, { ...options, method: 'DELETE' }),
+};
+
+// File upload helper
+export const uploadFile = async <T>(
+  url: string,
+  formData: FormData
+): Promise<ApiResponse<T>> => {
+  const token = Cookies.get('authToken');
+
+  const config: RequestInit = {
+    method: 'POST',
+    headers: {
+      Authorization: token ? `Bearer ${token}` : '',
+      // Don't set Content-Type for FormData, let browser set it
+    },
+    body: formData,
+  };
+
+  try {
+    const response = await fetch(`${API_BASE_URL}${url}`, config);
+
+    if (response.status === 401) {
+      Cookies.remove('authToken', { path: '/' });
+      window.location.href = '/auth/login';
+      throw new Error('Unauthorized');
+    }
+
+    if (!response.ok) {
+      throw new Error(`Error ${response.status}: ${response.statusText}`);
+    }
+
+    return response.json();
+  } catch (error) {
+    throw error;
+  }
 };

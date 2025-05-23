@@ -9,11 +9,10 @@ import Link from "next/link";
 import { Suspense } from "react";
 
 import { Button } from "~/components/ui/button";
-
 import { Logo } from "../../components/deer-flow/logo";
 import { ThemeToggle } from "../../components/deer-flow/theme-toggle";
-import { Tooltip } from "../../components/deer-flow/tooltip";
 import { SettingsDialog } from "../settings/dialogs/settings-dialog";
+import { useAuth } from "~/hooks/use-auth";
 
 const Main = dynamic(() => import("./main"), {
   ssr: false,
@@ -25,28 +24,37 @@ const Main = dynamic(() => import("./main"), {
 });
 
 export default function HomePage() {
+  const { isAuthenticated } = useAuth();
+
   return (
-    <div className="flex h-screen w-screen justify-center overscroll-none">
-      <header className="fixed top-0 left-0 flex h-12 w-full items-center justify-between px-4">
-        <Logo />
-        <div className="flex items-center">
-          <Tooltip title="Connect with us">
-            <Button variant="ghost" size="icon" asChild>
-              <Link
-                href="https://www.omegaintelligence.ai/"
-                target="_blank"
-              >
-                <GithubOutlined />
-              </Link>
-            </Button>
-          </Tooltip>
+    <div className="flex flex-col h-screen overflow-hidden">
+      <header className="flex h-12 w-full items-center justify-end px-4 bg-white/80 dark:bg-stone-950/80 backdrop-blur-sm z-50 flex-shrink-0">
+        {/* <Logo /> */}
+        <div className="flex items-center gap-2">
+          {/* {isAuthenticated() && (
+            <Link href="/dashboard">
+              <Button variant="ghost" size="sm">
+                Go to Dashboard
+              </Button>
+            </Link>
+          )} */}
+          <Button variant="ghost" size="icon" asChild>
+            <Link
+              href="https://www.omegaintelligence.ai/"
+              target="_blank"
+            >
+              <GithubOutlined />
+            </Link>
+          </Button>
           <ThemeToggle />
           <Suspense>
             <SettingsDialog />
           </Suspense>
         </div>
       </header>
-      <Main />
+      <main className="flex-1 overflow-hidden">
+        <Main />
+      </main>
     </div>
   );
 }

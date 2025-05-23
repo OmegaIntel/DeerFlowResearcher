@@ -1,113 +1,62 @@
-export const dashboardData = [
-  {
-    title: 'Create a new Deal',
-    description:
-      'Unified workspace for all your research and diligence workstreams',
-    buttonText: 'Open',
-  },
-  {
-    title: 'Request Deal Documents',
-    description: 'Send a request to Management to request Diligence documents',
-    buttonText: 'Send Request',
-  },
-  {
-    title: 'Diligence Planning',
-    description: 'Stay organized and plan different phases of your transaction',
-    buttonText: 'Get Started',
-  },
-  {
-    title: 'Investment Research',
-    description:
-      'Unified workspace for all your research and diligence workstreams',
-    buttonText: 'Open',
-  },
-  {
-    title: 'Browse Templates',
-    description: 'Explore our available templates and example dashboards',
-    buttonText: 'Add Template',
-  },
-];
-export const newsData = [
-  {
-    linkTitle:
-      'OpenAI On Cusp Of Raising Billions In New Venture Capital Round, Valuation Spikes To $100B:Report',
-    date: 'Aug 28, 2024, 3:13 PM',
-  },
-  {
-    linkTitle:
-      'OpenAI On Cusp Of Raising Billions In New Venture Capital Round, Valuation Spikes To $100B:Report',
-    date: 'Aug 28, 2024, 3:13 PM',
-  },
-  {
-    linkTitle:
-      'OpenAI On Cusp Of Raising Billions In New Venture Capital Round, Valuation Spikes To $100B:Report',
-    date: 'Aug 28, 2024, 3:13 PM',
-  },
-  {
-    linkTitle:
-      'OpenAI On Cusp Of Raising Billions In New Venture Capital Round, Valuation Spikes To $100B:Report',
-    date: 'Aug 28, 2024, 3:13 PM',
-  },
-  {
-    linkTitle:
-      'OpenAI On Cusp Of Raising Billions In New Venture Capital Round, Valuation Spikes To $100B:Report',
-    date: 'Aug 28, 2024, 3:13 PM',
-  },
-];
-export const metaDataCategory = [
-  'Investment Thesis',
-  'Market Research',
-  'Financial Insights',
-  'Valuation',
-];
-export const metaDataSubCategory = [
-  'Investment Memo (CIM)',
-  'Financials',
-  'Industry Research Report',
-  'Equity Research ',
-  '10K Document',
-  'Earnings Call Transcript',
-  'Expert Call Transcript',
-  'Management Presentation',
-];
-export const metaDataTags = [
-  'Corporate & Legal',
-  'Financial & Tax',
-  'Operations & Technology',
-  'HR & Employee',
-  'Sales & Marketing',
-];
-export const activeItems = [
-  'Assess Intellectual Property (IP) Ownership',
-  'Client Contracts and Key Revenue Sources Review',
-  'Request Tax Filings and Compliance Documents',
-  'Investor Presentation Preparation',
-  'Discuss Capital Expenditure Plans with Management',
-  'Client and Supplier Dependency Check',
-  'Request Historical Financial Statements',
-  'Confirm Revenue Growth Projections',
-  'Verify Working Capital Requirements',
-];
-export const categoryList = [
+import {
+  LayoutDashboard,
+  FolderOpen,
+  User,
+  Settings,
+  type LucideIcon
+} from 'lucide-react';
 
-  'Market Research',
+export interface SidebarNavItem {
+  id: string;
+  title: string;
+  href: string;
+  icon: LucideIcon;
+  description?: string;
+}
 
+export const SIDEBAR_NAV_ITEMS: SidebarNavItem[] = [
+  {
+    id: 'dashboard',
+    title: 'Dashboard',
+    href: '/dashboard',
+    icon: LayoutDashboard,
+    description: 'Overview and analytics'
+  },
+  {
+    id: 'projects',
+    title: 'Projects',
+    href: '/projects',
+    icon: FolderOpen,
+    description: 'Manage your projects'
+  },
+  {
+    id: 'profile',
+    title: 'Profile',
+    href: '/profile',
+    icon: User,
+    description: 'Your account settings'
+  },
+  {
+    id: 'settings',
+    title: 'Settings',
+    href: '/settings',
+    icon: Settings,
+    description: 'Application preferences'
+  }
 ];
 
-export const categoryRoutes = {
-  'Market Research': '/market-research',
-  'Home' : '/'
-};
-export const documentAnalysisList = [
-  'Summary',
-  'Document Analysis',
-  'Financial Data',
-  'Saved Data',
+// Routes where sidebar should not be displayed
+export const NO_SIDEBAR_ROUTES = [
+  '/',
+  '/auth/login',
+  '/auth/register',
+  '/auth/forgot-password',
+  '/auth/reset-password'
 ];
-export const subCategoryList = [
-  'Current Workspace',
-  'Knowledge Base',
-  'Checklist',
+
+// Route prefixes where sidebar should not be displayed
+export const NO_SIDEBAR_ROUTE_PREFIXES = [
+  '/auth/'
 ];
 
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL ?? 'http://localhost:8000';

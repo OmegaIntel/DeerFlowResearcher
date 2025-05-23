@@ -11,6 +11,7 @@ import { ThemeProviderWrapper } from "~/components/deer-flow/theme-provider-wrap
 import { env } from "~/env";
 
 import { Toaster } from "../components/deer-flow/toaster";
+import { SidebarLayout } from "~/components/Layout/Sidebar/SidebarLayout";
 
 export const metadata: Metadata = {
   title: "Omega Intelligence",
@@ -43,7 +44,11 @@ export default function RootLayout({
         </Script>
       </head>
       <body className="bg-app">
-        <ThemeProviderWrapper>{children}</ThemeProviderWrapper>
+        <ThemeProviderWrapper>
+            <SidebarLayout>
+    {children}
+  </SidebarLayout>
+        </ThemeProviderWrapper>
         <Toaster />
         {
           // NO USER BEHAVIOR TRACKING OR PRIVATE DATA COLLECTION BY DEFAULT

@@ -24,7 +24,7 @@ export function Welcome({ className }: { className?: string }) {
           rel="noopener noreferrer"
           className="hover:underline"
         >
-          🦌 Omega Intelligence
+          Omega Intelligence
         </a>
         , a deep research assistant built on cutting-edge language models, helps
         you search on web, browse information, and handle complex tasks.

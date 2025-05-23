@@ -2,15 +2,13 @@
 // SPDX-License-Identifier: MIT
 
 "use client";
-import { DownloadOutlined } from "@ant-design/icons";
 import { useMemo } from "react";
-
-import { Button } from "~/components/ui/button";
 import { useStore } from "~/core/store";
 import { cn } from "~/lib/utils";
-
 import { MessagesBlock } from "./components/messages-block";
 import { ResearchBlock } from "./components/research-block";
+import { Button } from "~/components/ui/button";
+import { DownloadOutlined } from "@ant-design/icons";
 
 export default function Main() {
   const openResearchId = useStore((state) => state.openResearchId);
@@ -19,15 +17,12 @@ export default function Main() {
     [openResearchId],
   );
 
-    // Pull the actual report text from your store.
-  // Replace `state.reportsById` & `.content` with whatever key you use.
-  const reportContent = useStore((state) => {
+    const reportContent = useStore((state) => {
     if (openResearchId === null) return "";
     const msg = state.messages.get(openResearchId);
     return msg?.content ?? "";
   });
-
-  // When clicked, POST to your FastAPI and download the PPTX.
+  
   const generatePpt = async () => {
     if (!reportContent) return;
 
@@ -58,11 +53,10 @@ export default function Main() {
       alert("Error generating PPT. Check console for details.");
     }
   };
- 
   return (
     <div
       className={cn(
-        "flex h-full w-full justify-center px-4 pt-12 pb-4",
+        "flex h-full w-full justify-center px-4 py-4",
         doubleColumnMode && "gap-8",
       )}
     >
