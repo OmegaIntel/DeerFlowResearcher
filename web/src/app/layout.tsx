@@ -46,8 +46,8 @@ export default function RootLayout({
       <body className="bg-app">
         <ThemeProviderWrapper>
             <SidebarLayout>
-    {children}
-  </SidebarLayout>
+              {children}
+            </SidebarLayout>
         </ThemeProviderWrapper>
         <Toaster />
         {
