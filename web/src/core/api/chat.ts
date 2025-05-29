@@ -7,6 +7,7 @@ import type { MCPServerMetadata } from "../mcp";
 import { extractReplayIdFromSearchParams } from "../replay/get-replay-id";
 import { fetchStream } from "../sse";
 import { sleep } from "../utils";
+import { getAuthToken } from "~/services/auth";
 
 import { resolveServiceURL } from "./resolve-service-url";
 import type { ChatEvent } from "./types";
@@ -39,13 +40,31 @@ export async function* chatStream(
   ) {
     return yield* chatReplayStream(userMessage, params, options);
   }
+
+  // Get the authentication token
+  const authToken = getAuthToken();
+  
+  // Prepare headers with authentication
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    "Cache-Control": "no-cache",
+  };
+  
+  // Add Authorization header if token exists
+  if (authToken) {
+    headers.Authorization = `Bearer ${authToken}`;
+  }
+
   const stream = fetchStream(resolveServiceURL("chat/stream"), {
+    method: "POST",
+    headers,
     body: JSON.stringify({
       messages: [{ role: "user", content: userMessage }],
       ...params,
     }),
     signal: options.abortSignal,
   });
+  
   for await (const event of stream) {
     yield {
       type: event.event,
@@ -54,6 +73,7 @@ export async function* chatStream(
   }
 }
 
+// Rest of your code remains the same...
 async function* chatReplayStream(
   userMessage: string,
   params: {

@@ -15,34 +15,34 @@ export interface SidebarNavItem {
 }
 
 export const SIDEBAR_NAV_ITEMS: SidebarNavItem[] = [
-  {
-    id: 'dashboard',
-    title: 'Dashboard',
-    href: '/dashboard',
-    icon: LayoutDashboard,
-    description: 'Overview and analytics'
-  },
+  // {
+  //   id: 'dashboard',
+  //   title: 'Dashboard',
+  //   href: '/dashboard',
+  //   icon: LayoutDashboard,
+  //   description: 'Overview and analytics'
+  // },
   {
     id: 'projects',
     title: 'Projects',
-    href: '/projects',
+    href: '/chat',
     icon: FolderOpen,
     description: 'Manage your projects'
   },
-  {
-    id: 'profile',
-    title: 'Profile',
-    href: '/profile',
-    icon: User,
-    description: 'Your account settings'
-  },
-  {
-    id: 'settings',
-    title: 'Settings',
-    href: '/settings',
-    icon: Settings,
-    description: 'Application preferences'
-  }
+  // {
+  //   id: 'profile',
+  //   title: 'Profile',
+  //   href: '/profile',
+  //   icon: User,
+  //   description: 'Your account settings'
+  // },
+  // {
+  //   id: 'settings',
+  //   title: 'Settings',
+  //   href: '/settings',
+  //   icon: Settings,
+  //   description: 'Application preferences'
+  // }
 ];
 
 // Routes where sidebar should not be displayed

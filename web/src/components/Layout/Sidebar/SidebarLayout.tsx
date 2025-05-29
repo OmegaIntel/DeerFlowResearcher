@@ -30,34 +30,27 @@ export function SidebarLayout({ children }: SidebarLayoutProps) {
     localStorage.setItem('sidebar-collapsed', JSON.stringify(newState));
   };
 
-  // Define routes where sidebar should NOT appear
+  // Routes where sidebar should be hidden
   const noSidebarRoutes = ['/', '/auth/login', '/auth/register'];
-  
-  // Check if current path matches any no-sidebar route
-  const showSidebar = !noSidebarRoutes.some(route => 
+  const showSidebar = !noSidebarRoutes.some(route =>
     pathname === route || pathname.startsWith('/auth/')
   );
 
-  // Avoid hydration mismatch by not rendering until client-side
-  if (isLoading) {
-    return <>{children}</>;
-  }
-
-  if (!showSidebar) {
-    return <>{children}</>;
-  }
+  if (isLoading) return <>{children}</>;
+  if (!showSidebar) return <>{children}</>;
 
   return (
-    <div className="flex h-screen overflow-hidden">
-      <Sidebar 
-        isCollapsed={isCollapsed} 
-        onToggleCollapse={handleToggleCollapse} 
+    <div className="flex h-screen w-full flex-row overflow-hidden">
+      <Sidebar
+        isCollapsed={isCollapsed}
+        onToggleCollapse={handleToggleCollapse}
       />
-      <main className={cn(
-        "flex-1 overflow-auto transition-all duration-300",
-        "md:ml-0" // Sidebar handles its own spacing
-      )}>
-        <div className="h-full">
+      <main
+        className={cn(
+          'flex-1 overflow-y-auto transition-all duration-300'
+        )}
+      >
+        <div className="min-h-screen px-4 py-6">
           {children}
         </div>
       </main>

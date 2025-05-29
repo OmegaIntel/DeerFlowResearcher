@@ -75,8 +75,8 @@ def background_investigation_node(state: State) -> Command[Literal["planner"]]:
 
 def planner_node(
     state: State, config: RunnableConfig
-) -> Command[Literal["human_feedback", "reporter"]]:
-    """Planner node that generate the full plan."""
+) -> Command[Literal["human_feedback"]]:
+    """Planner node that generates the full plan."""
     logger.info("Planner generating full plan")
     configurable = Configuration.from_runnable_config(config)
     plan_iterations = state["plan_iterations"] if state.get("plan_iterations", 0) else 0
@@ -106,7 +106,6 @@ def planner_node(
     else:
         llm = get_llm_by_type(AGENT_LLM_MAP["planner"])
 
-    # if the plan iterations is greater than the max plan iterations, return the reporter node
     if plan_iterations >= configurable.max_plan_iterations:
         return Command(goto="reporter")
 
@@ -118,42 +117,44 @@ def planner_node(
         response = llm.stream(messages)
         for chunk in response:
             full_response += chunk.content
+
     logger.debug(f"Current state messages: {state['messages']}")
     logger.info(f"Planner response: {full_response}")
 
     try:
         curr_plan = json.loads(repair_json_output(full_response))
     except json.JSONDecodeError:
-        logger.warning("Planner response is not a valid JSON")
+        logger.warning("Planner response is not valid JSON.")
         if plan_iterations > 0:
             return Command(goto="reporter")
         else:
             return Command(goto="__end__")
-    if curr_plan.get("has_enough_context"):
-        logger.info("Planner response has enough context.")
-        new_plan = Plan.model_validate(curr_plan)
-        return Command(
-            update={
-                "messages": [AIMessage(content=full_response, name="planner")],
-                "current_plan": new_plan,
-            },
-            goto="reporter",
-        )
+
+    # Unconditionally go to human_feedback, let it handle auto_accepted_plan
+    new_plan = (
+        Plan.model_validate(curr_plan)
+        if curr_plan.get("has_enough_context")
+        else full_response  # keep as raw JSON string
+    )
+
     return Command(
         update={
             "messages": [AIMessage(content=full_response, name="planner")],
-            "current_plan": full_response,
+            "current_plan": new_plan,
         },
         goto="human_feedback",
     )
+
 
 
 def human_feedback_node(
     state,
 ) -> Command[Literal["planner", "research_team", "reporter", "__end__"]]:
     current_plan = state.get("current_plan", "")
-    # check if the plan is auto accepted
-    auto_accepted_plan = state.get("auto_accepted_plan", False)
+    
+    # MODIFICATION: Always skip human feedback - auto-accept all plans
+    auto_accepted_plan = True  # Force auto-accept
+    
     if not auto_accepted_plan:
         feedback = interrupt("Please Review the Plan.")
 
@@ -198,7 +199,6 @@ def human_feedback_node(
         },
         goto=goto,
     )
-
 
 def coordinator_node(
     state: State,
