@@ -1,8 +1,13 @@
+// ~/lib/constant.ts - Updated for ChatGPT-style navigation
 import {
   LayoutDashboard,
   FolderOpen,
   User,
   Settings,
+  MessageSquare,
+  FileText,
+  ChevronDown,
+  ChevronRight,
   type LucideIcon
 } from 'lucide-react';
 
@@ -12,6 +17,7 @@ export interface SidebarNavItem {
   href: string;
   icon: LucideIcon;
   description?: string;
+  isDynamic?: boolean; // Add this property
 }
 
 export const SIDEBAR_NAV_ITEMS: SidebarNavItem[] = [
@@ -25,9 +31,10 @@ export const SIDEBAR_NAV_ITEMS: SidebarNavItem[] = [
   {
     id: 'projects',
     title: 'Projects',
-    href: '/chat',
+    href: '/chat', // Default route when Projects is clicked
     icon: FolderOpen,
-    description: 'Manage your projects'
+    description: 'Your conversations and reports',
+    isDynamic: true // This will show dynamic report history
   },
   // {
   //   id: 'profile',

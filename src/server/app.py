@@ -12,6 +12,7 @@ from src.api.api_register_user import router as register_user_router
 from src.api.api_generate_token import user_generate_token_router
 from src.api.api_get_current_user import current_user_router
 from src.api.api_verify_user import verify_user_router
+from src.api.api_report import report_router
 from src.api.chat import chat_router
 from src.api import  tts, podcast, ppt, prose, mcp
 
@@ -33,6 +34,7 @@ app.include_router(podcast.router)
 app.include_router(ppt.router)
 app.include_router(prose.router)
 app.include_router(mcp.router)
+app.include_router(report_router)
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,

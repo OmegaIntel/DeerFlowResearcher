@@ -1,7 +1,7 @@
 # src/services/report_service.py
 import logging
 import json
-from typing import Optional, Dict, Any
+from typing import Optional, Dict, Any, List
 from sqlalchemy.orm import Session
 from sqlalchemy.exc import SQLAlchemyError
 
@@ -14,6 +14,117 @@ logger = logging.getLogger(__name__)
 
 class ReportService:
     """Service class for managing report operations."""
+    
+    @staticmethod
+    def extract_report_name(content: str, plan_title: Optional[str] = None) -> str:
+        """
+        Extract report name from markdown content (first # heading).
+        
+        Args:
+            content: The report content in markdown format
+            plan_title: Fallback title if no heading found
+            
+        Returns:
+            Extracted report name or fallback title
+        """
+        if not content:
+            return plan_title or "Untitled Report"
+            
+        lines = content.strip().split('\n')
+        for line in lines:
+            if line.startswith('# '):
+                title = line[2:].strip()  # Remove '# ' prefix
+                if title:  # Make sure it's not empty
+                    return title
+        
+        # Fallback to plan_title or default
+        return plan_title or "Untitled Report"
+    
+    @staticmethod
+    def get_user_reports_count(user_id: str, db: Session) -> int:
+        """
+        Get total count of reports for a specific user.
+        
+        Args:
+            user_id: The user ID
+            db: Database session
+            
+        Returns:
+            Total number of reports for the user
+        """
+        try:
+            count = db.query(Report).filter(Report.user_id == user_id).count()
+            return count
+        except Exception as e:
+            logger.exception(f"[get_user_reports_count] Error counting reports for user {user_id}: {e}")
+            return 0
+    
+    @staticmethod
+    def get_user_reports_with_names(user_id: str, limit: int, offset: int, db: Session) -> List[Dict[str, Any]]:
+        """
+        Get reports for a user with extracted report names.
+        
+        Args:
+            user_id: The user ID
+            limit: Maximum number of reports to return
+            offset: Number of reports to skip
+            db: Database session
+            
+        Returns:
+            List of dictionaries with report summaries
+        """
+        try:
+            reports = (
+                db.query(Report)
+                .filter(Report.user_id == user_id)
+                .order_by(Report.created_at.desc())
+                .limit(limit)
+                .offset(offset)
+                .all()
+            )
+            
+            result = []
+            for report in reports:
+                report_name = ReportService.extract_report_name(
+                    report.report_content, 
+                    report.plan_title
+                )
+                result.append({
+                    "id": str(report.id),
+                    "report_name": report_name,
+                    "created_at": report.created_at
+                })
+            
+            return result
+            
+        except Exception as e:
+            logger.exception(f"[get_user_reports_with_names] Error retrieving reports for user {user_id}: {e}")
+            return []
+    
+    @staticmethod
+    def get_report_by_id(report_id: str, user_id: str, db: Session) -> Optional[Report]:
+        """
+        Get full report by ID for a specific user.
+        
+        Args:
+            report_id: The report ID
+            user_id: The user ID (for access control)
+            db: Database session
+            
+        Returns:
+            Report object if found and accessible by user, None otherwise
+        """
+        try:
+            report = db.query(Report).filter(
+                Report.id == report_id,
+                Report.user_id == user_id
+            ).first()
+            return report
+        except Exception as e:
+            logger.exception(f"[get_report_by_id] Error retrieving report {report_id} for user {user_id}: {e}")
+            return None
+    
+    # Keep all your existing methods below...
     
     @staticmethod
     async def save_report_from_state(
