@@ -75,7 +75,15 @@ export const useStore = create<{
 }));
 
 // Main function to load historical report data into store (no API calls)
-export function loadHistoricalReport(reportData: any) {
+interface ReportData {
+  id: string;
+  plan_title?: string;
+  report_name: string;
+  plan_description?: string;
+  report_content: string;
+}
+
+export function loadHistoricalReport(reportData: ReportData) {
   try {
     // 1. Clear current state (replace current chat)
     useStore.setState({
@@ -101,8 +109,8 @@ export function loadHistoricalReport(reportData: any) {
       role: "assistant",
       agent: "planner",
       content: JSON.stringify({
-        title: reportData.plan_title || reportData.report_name,
-        thought: reportData.plan_description || "Historical research session"
+        title: reportData.plan_title ?? reportData.report_name,
+        thought: reportData.plan_description ?? "Historical research session"
       }),
       contentChunks: [],
       isStreaming: false
@@ -443,7 +451,7 @@ export function useLastInterruptMessage() {
     useShallow((state) => {
       if (state.messageIds.length >= 2) {
         const lastMessage = state.messages.get(
-          state.messageIds[state.messageIds.length - 1]!,
+          state.messageIds[state.messageIds.length - 1],
         );
         return lastMessage?.finishReason === "interrupt" ? lastMessage : null;
       }
@@ -457,7 +465,7 @@ export function useLastFeedbackMessageId() {
     useShallow((state) => {
       if (state.messageIds.length >= 2) {
         const lastMessage = state.messages.get(
-          state.messageIds[state.messageIds.length - 1]!,
+          state.messageIds[state.messageIds.length - 1],
         );
         if (lastMessage && lastMessage.finishReason === "interrupt") {
           return state.messageIds[state.messageIds.length - 2];

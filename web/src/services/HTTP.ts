@@ -133,14 +133,14 @@ export const api = {
   get: <T>(url: string, options?: RequestInit) => 
     fetcher<T>(url, { ...options, method: 'GET' }),
   
-  post: <T>(url: string, data?: any, options?: RequestInit) => 
+  post: <T>(url: string, data?: unknown, options?: RequestInit) =>
     fetcher<T>(url, {
       ...options,
       method: 'POST',
       body: JSON.stringify(data),
     }),
   
-  put: <T>(url: string, data?: any, options?: RequestInit) => 
+  put: <T>(url: string, data?: unknown, options?: RequestInit) =>
     fetcher<T>(url, {
       ...options,
       method: 'PUT',

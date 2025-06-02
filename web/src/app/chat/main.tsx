@@ -35,7 +35,7 @@ export default function Main() {
 
       if (!res.ok) {
         const txt = await res.text();
-        throw new Error(txt || res.statusText);
+        throw new Error(txt ?? res.statusText);
       }
 
       const blob = await res.blob();

@@ -17,7 +17,7 @@ export async function loginUser(formData: FormData): Promise<{
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(errorText || 'Login failed');
+    throw new Error(errorText ?? 'Login failed');
   }
 
   const data = await response.json();
@@ -35,7 +35,7 @@ export async function registerUser(formData: FormData): Promise<{ id: string; em
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(errorText || 'Registration failed');
+    throw new Error(errorText ?? 'Registration failed');
   }
 
   return await response.json();

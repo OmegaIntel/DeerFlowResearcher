@@ -95,7 +95,7 @@ async function* chatReplayStream(
   let replayFilePath = "";
   if (urlParams.has("mock")) {
     if (urlParams.get("mock")) {
-      replayFilePath = `/mock/${urlParams.get("mock")!}.txt`;
+      replayFilePath = `/mock/${urlParams.get("mock")}.txt`;
     } else {
       if (params.interrupt_feedback === "accepted") {
         replayFilePath = "/mock/final-answer.txt";
@@ -121,8 +121,8 @@ async function* chatReplayStream(
   const chunks = text.split("\n\n");
   for (const chunk of chunks) {
     const [eventRaw, dataRaw] = chunk.split("\n") as [string, string];
-    const [, event] = eventRaw.split("event: ", 2) as [string, string];
-    const [, data] = dataRaw.split("data: ", 2) as [string, string];
+    const [, event] = eventRaw.split("event: ", 2);
+    const [, data] = dataRaw.split("data: ", 2);
 
     try {
       const chatEvent = {

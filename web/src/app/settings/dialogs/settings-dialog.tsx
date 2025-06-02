@@ -30,7 +30,7 @@ import { SETTINGS_TABS } from "../tabs";
 
 export function SettingsDialog() {
   const { isReplay } = useReplay();
-  const [activeTabId, setActiveTabId] = useState(SETTINGS_TABS[0]!.id);
+  const [activeTabId, setActiveTabId] = useState(SETTINGS_TABS[0].id);
   const [open, setOpen] = useState(false);
   const [settings, setSettings] = useState(useSettingsStore.getState());
   const [changes, setChanges] = useState<Partial<SettingsState>>({});

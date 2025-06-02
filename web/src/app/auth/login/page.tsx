@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useTransition } from 'react';
+import { useState, useTransition, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { loginUser, setAuthToken } from '~/services/auth';
 import { Input } from '~/components/ui/input';
@@ -9,7 +9,7 @@ import { Button } from '~/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '~/components/ui/card';
 import { Alert, AlertDescription } from '~/components/ui/alert';
 
-export default function LoginPage() {
+function LoginContent() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
@@ -24,20 +24,19 @@ export default function LoginPage() {
     const formData = new FormData();
     formData.append('username', email);
     formData.append('password', password);
-try {
-  const { access_token } = await loginUser(formData);
-  
-  setAuthToken(access_token);
- 
+    try {
+      const { access_token } = await loginUser(formData);
 
-  const returnTo = searchParams.get('returnTo') || '/';
+      setAuthToken(access_token);
 
-  router.push(returnTo);
- 
-} catch (error: any) {
-  console.log('Error caught in login handler:', error);
-  // ... rest of error handling
-}
+      const returnTo = searchParams.get('returnTo') ?? '/';
+
+      router.push(returnTo);
+
+    } catch (error: unknown) {
+      console.log('Error caught in login handler:', error);
+      // ... rest of error handling
+    }
   };
 
   return (
@@ -53,13 +52,11 @@ try {
 
         <CardContent>
           <form onSubmit={handleLogin} className="space-y-4">
-            {errorMessage && (() => {
-  return (
-    <Alert variant="destructive">
-      <AlertDescription>{errorMessage}</AlertDescription>
-    </Alert>
-  );
-})()}
+            {errorMessage && (
+              <Alert variant="destructive">
+                <AlertDescription>{errorMessage}</AlertDescription>
+              </Alert>
+            )}
 
             <div className="space-y-2">
               <Label htmlFor="email">Email</Label>
@@ -92,5 +89,13 @@ try {
         </CardContent>
       </Card>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LoginContent />
+    </Suspense>
   );
 }

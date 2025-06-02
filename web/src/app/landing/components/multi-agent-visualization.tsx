@@ -52,7 +52,9 @@ export function MultiAgentVisualization({ className }: { className?: string }) {
     activeStepIndex,
     playing,
   } = useMAVStore((state) => state);
-  const flowRef = useRef<ReactFlowInstance<GraphNode, Edge>>(null);
+  const [reactFlowInstance, setReactFlowInstance] = useState<
+    ReactFlowInstance<GraphNode, Edge> | null
+  >(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [hasPlayed, setHasPlayed] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
@@ -72,17 +74,17 @@ export function MultiAgentVisualization({ className }: { className?: string }) {
         setFullscreen(true);
         await containerRef.current.requestFullscreen();
         setTimeout(() => {
-          void flowRef.current?.fitView({ maxZoom: 2.5 });
+          void reactFlowInstance?.fitView({ maxZoom: 2.5 });
         }, 100);
       } else {
         setFullscreen(false);
         await document.exitFullscreen();
         setTimeout(() => {
-          void flowRef.current?.fitView();
+          void reactFlowInstance?.fitView();
         }, 100);
       }
     }
-  }, []);
+  }, [reactFlowInstance]);
   return (
     <div
       ref={containerRef}
@@ -103,9 +105,7 @@ export function MultiAgentVisualization({ className }: { className?: string }) {
         zoomOnScroll={false}
         preventScrolling={false}
         panOnDrag={false}
-        onInit={(instance) => {
-          flowRef.current = instance;
-        }}
+        onInit={setReactFlowInstance}
       >
         <Background
           className="[mask-image:radial-gradient(800px_circle_at_center,white,transparent)]"
@@ -154,7 +154,7 @@ export function MultiAgentVisualization({ className }: { className?: string }) {
               value={[activeStepIndex >= 0 ? activeStepIndex : 0]}
               onValueChange={([value]) => {
                 setHasPlayed(true);
-                activateStep(value!);
+                activateStep(value);
               }}
             />
           </div>

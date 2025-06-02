@@ -20,7 +20,7 @@ export const useMAVStore = create<{
 }));
 
 export function activateStep(stepIndex: number) {
-  const nextStep = playbook.steps[stepIndex]!;
+  const nextStep = playbook.steps[stepIndex];
   const currentGraph = useMAVStore.getState().graph;
   const nextGraph: Graph = {
     nodes: currentGraph.nodes.map((node) => ({

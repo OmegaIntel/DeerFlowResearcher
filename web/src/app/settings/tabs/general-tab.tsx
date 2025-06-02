@@ -3,7 +3,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Settings } from "lucide-react";
-import { useEffect, useMemo } from "react";
+import * as React from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -41,20 +41,35 @@ export const GeneralTab: Tab = ({
   settings: SettingsState;
   onChange: (changes: Partial<SettingsState>) => void;
 }) => {
-  const generalSettings = useMemo(() => settings.general, [settings]);
+  const generalSettings = React.useMemo(() => settings.general, [settings]);
   const form = useForm<z.infer<typeof generalFormSchema>>({
     resolver: zodResolver(generalFormSchema, undefined, undefined),
-    defaultValues: generalSettings,
+    defaultValues: {
+      autoAcceptedPlan: generalSettings.autoAcceptedPlan ?? false,
+      enableBackgroundInvestigation:
+        generalSettings.enableBackgroundInvestigation ?? false,
+      maxPlanIterations: generalSettings.maxPlanIterations ?? 1, // Ensure default for number
+      maxStepNum: generalSettings.maxStepNum ?? 1, // Ensure default for number
+    },
     mode: "all",
     reValidateMode: "onBlur",
   });
 
-  const currentSettings = form.watch();
-  useEffect(() => {
+  const currentSettings: Partial<z.infer<typeof generalFormSchema>> = form.watch();
+  React.useEffect(() => {
     let hasChanges = false;
-    for (const key in currentSettings) {
+
+    // Construct the object that precisely matches SettingsState['general']
+    const newGeneralSettings: SettingsState['general'] = {
+      autoAcceptedPlan: currentSettings.autoAcceptedPlan ?? false,
+      enableBackgroundInvestigation: currentSettings.enableBackgroundInvestigation ?? false,
+      maxPlanIterations: currentSettings.maxPlanIterations ?? 1,
+      maxStepNum: currentSettings.maxStepNum ?? 1,
+    };
+
+    for (const key in newGeneralSettings) {
       if (
-        currentSettings[key as keyof typeof currentSettings] !==
+        newGeneralSettings[key as keyof typeof newGeneralSettings] !==
         settings.general[key as keyof SettingsState["general"]]
       ) {
         hasChanges = true;
@@ -62,7 +77,7 @@ export const GeneralTab: Tab = ({
       }
     }
     if (hasChanges) {
-      onChange({ general: currentSettings });
+      onChange({ general: newGeneralSettings });
     }
   }, [currentSettings, onChange, settings]);
 

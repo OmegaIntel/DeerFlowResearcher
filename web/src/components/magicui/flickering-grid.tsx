@@ -55,7 +55,7 @@ export const FlickeringGrid: React.FC<FlickeringGridProps> = ({
 
   const setupCanvas = useCallback(
     (canvas: HTMLCanvasElement, width: number, height: number) => {
-      const dpr = window.devicePixelRatio || 1;
+      const dpr = window.devicePixelRatio ?? 1;
       canvas.width = width * dpr;
       canvas.height = height * dpr;
       canvas.style.width = `${width}px`;
@@ -126,8 +126,8 @@ export const FlickeringGrid: React.FC<FlickeringGridProps> = ({
     let gridParams: ReturnType<typeof setupCanvas>;
 
     const updateCanvasSize = () => {
-      const newWidth = width || container.clientWidth;
-      const newHeight = height || container.clientHeight;
+      const newWidth = width ?? container.clientWidth;
+      const newHeight = height ?? container.clientHeight;
       setCanvasSize({ width: newWidth, height: newHeight });
       gridParams = setupCanvas(canvas, newWidth, newHeight);
     };

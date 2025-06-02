@@ -58,8 +58,8 @@ async function fetchUserReports(page: number = 1, limit: number = 20): Promise<{
 
     const data = await response.json();
     return {
-      reports: data.reports || [],
-      total_count: data.total_count || 0
+      reports: data.reports ?? [],
+      total_count: data.total_count ?? 0
     };
   } catch (error) {
     console.error('Error fetching reports:', error);
