@@ -15,6 +15,7 @@ from src.api.api_verify_user import verify_user_router
 from src.api.api_report import report_router
 from src.api.chat import chat_router
 from src.api import  tts, podcast, ppt, prose, mcp
+import src.db as db # Import the db module to ensure database initialization
 
 logger = logging.getLogger(__name__)
 
@@ -35,6 +36,13 @@ app.include_router(ppt.router)
 app.include_router(prose.router)
 app.include_router(mcp.router)
 app.include_router(report_router)
+
+@app.on_event("startup")
+async def startup_event():
+    logger.info("Initializing database...")
+    db.init_db()
+    logger.info("Database initialized.")
+
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
