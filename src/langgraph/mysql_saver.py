@@ -1,7 +1,18 @@
-from sqlalchemy import Table, Column, String, Text, MetaData, insert, select, update, delete
+from sqlalchemy import (
+    Table,
+    Column,
+    String,
+    Text,
+    MetaData,
+    insert,
+    select,
+    update,
+    delete,
+)
 from sqlalchemy.engine import Engine
 import json
 import uuid
+
 
 class MySQLCheckpointSaver:
     def __init__(self, engine: Engine, table_name: str = "checkpoints"):
@@ -24,15 +35,21 @@ class MySQLCheckpointSaver:
     async def aput(self, config: dict, state: dict) -> None:
         """Store full graph state."""
         thread_id = config["configurable"]["thread_id"]
-        checkpoint_id = config["configurable"].get("checkpoint_id", self.get_next_version(config))
+        checkpoint_id = config["configurable"].get(
+            "checkpoint_id", self.get_next_version(config)
+        )
         state_json = json.dumps(state, ensure_ascii=False)
 
-        stmt = insert(self.table).values(
-            id=f"{thread_id}:{checkpoint_id}",
-            thread_id=thread_id,
-            checkpoint_id=checkpoint_id,
-            checkpoint_data=state_json,
-        ).prefix_with("IGNORE")
+        stmt = (
+            insert(self.table)
+            .values(
+                id=f"{thread_id}:{checkpoint_id}",
+                thread_id=thread_id,
+                checkpoint_id=checkpoint_id,
+                checkpoint_data=state_json,
+            )
+            .prefix_with("IGNORE")
+        )
 
         update_stmt = (
             update(self.table)
@@ -75,9 +92,11 @@ class MySQLCheckpointSaver:
     async def aget_state_history(self, config: dict) -> list[str]:
         """Return a list of available checkpoint IDs for a thread."""
         thread_id = config["configurable"]["thread_id"]
-        stmt = select(self.table.c.checkpoint_id).where(
-            self.table.c.thread_id == thread_id
-        ).order_by(self.table.c.checkpoint_id)
+        stmt = (
+            select(self.table.c.checkpoint_id)
+            .where(self.table.c.thread_id == thread_id)
+            .order_by(self.table.c.checkpoint_id)
+        )
 
         with self.engine.begin() as conn:
             result = conn.execute(stmt).fetchall()
@@ -87,10 +106,7 @@ class MySQLCheckpointSaver:
         thread_id = config["configurable"]["thread_id"]
         checkpoint_id = config["configurable"].get("checkpoint_id", "default")
 
-        stmt = select(
-            self.table.c.checkpoint_data,
-            self.table.c.checkpoint_id
-        ).where(
+        stmt = select(self.table.c.checkpoint_data, self.table.c.checkpoint_id).where(
             self.table.c.id == f"{thread_id}:{checkpoint_id}"
         )
 

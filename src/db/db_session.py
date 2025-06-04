@@ -25,6 +25,7 @@ Base = declarative_base()
 # Create a session factory
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+
 # Dependency to get a new DB session
 def get_db():
     db = SessionLocal()
@@ -32,6 +33,7 @@ def get_db():
         yield db
     finally:
         db.close()
+
 
 # Export all essentials from this module
 __all__ = ["engine", "SessionLocal", "Base", "get_db"]

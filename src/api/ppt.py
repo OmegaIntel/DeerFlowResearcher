@@ -7,6 +7,7 @@ from src.server.chat_request import GeneratePPTRequest
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
+
 @router.post("/api/ppt/generate")
 async def generate_ppt(request: GeneratePPTRequest):
     try:

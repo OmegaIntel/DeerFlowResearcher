@@ -146,15 +146,14 @@ def planner_node(
     )
 
 
-
 def human_feedback_node(
     state,
 ) -> Command[Literal["planner", "research_team", "reporter", "__end__"]]:
     current_plan = state.get("current_plan", "")
-    
+
     # MODIFICATION: Always skip human feedback - auto-accept all plans
     auto_accepted_plan = True  # Force auto-accept
-    
+
     if not auto_accepted_plan:
         feedback = interrupt("Please Review the Plan.")
 
@@ -199,6 +198,7 @@ def human_feedback_node(
         },
         goto=goto,
     )
+
 
 def coordinator_node(
     state: State,
