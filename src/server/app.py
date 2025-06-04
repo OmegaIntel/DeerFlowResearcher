@@ -8,13 +8,19 @@ import os
 from typing import List, cast
 from uuid import uuid4
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response, StreamingResponse
 from langchain_core.messages import AIMessageChunk, ToolMessage
 from langgraph.types import Command
 
 from src.graph.builder import build_graph_with_memory
+from src.chat.graph.builder import build_chat_graph_with_memory
+from src.db.db_session import (
+    get_db,
+    get_or_create_chat_session,
+    add_chat_message,
+)
 from src.podcast.graph.builder import build_graph as build_podcast_graph
 from src.ppt.graph.builder import build_graph as build_ppt_graph
 from src.prose.graph.builder import build_graph as build_prose_graph
@@ -30,7 +36,7 @@ from src.server.mcp_request import MCPServerMetadataRequest, MCPServerMetadataRe
 from src.server.mcp_utils import load_mcp_tools
 from src.tools import VolcengineTTS
 
-#Routes from API folders
+# Routes from API folders
 from src.api.api_register_user import router as register_user_router
 from src.api.api_generate_token import user_generate_token_router
 from src.api.api_get_current_user import current_user_router
@@ -58,6 +64,7 @@ app.add_middleware(
 )
 
 graph = build_graph_with_memory()
+simple_chats: dict[str, any] = {}
 
 
 @app.post("/api/chat/stream")
@@ -175,6 +182,36 @@ def _make_event(event_type: str, data: dict[str, any]):
     if data.get("content") == "":
         data.pop("content")
     return f"event: {event_type}\ndata: {json.dumps(data, ensure_ascii=False)}\n\n"
+
+
+@app.post("/api/chat/simple")
+async def chat_simple(request: ChatRequest, db=Depends(get_db)):
+    thread_id = request.thread_id
+    if thread_id == "__default__":
+        thread_id = str(uuid4())
+
+    chain = simple_chats.get(thread_id)
+    if chain is None:
+        chain = build_chat_graph_with_memory()
+        simple_chats[thread_id] = chain
+
+    user_msg = request.messages[-1].content if request.messages else ""
+    response = chain.invoke(user_msg)
+
+    session_obj = get_or_create_chat_session(db, thread_id)
+    add_chat_message(db, session_obj.id, "user", user_msg)
+    add_chat_message(db, session_obj.id, "assistant", response)
+
+    async def gen():
+        event = {
+            "thread_id": thread_id,
+            "id": str(uuid4()),
+            "role": "assistant",
+            "content": response,
+        }
+        yield _make_event("message_chunk", event)
+
+    return StreamingResponse(gen(), media_type="text/event-stream")
 
 
 @app.post("/api/tts")

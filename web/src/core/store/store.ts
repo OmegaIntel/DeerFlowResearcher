@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { create } from "zustand";
 import { useShallow } from "zustand/react/shallow";
 
-import { chatStream, generatePodcast } from "../api";
+import { chatStream, chatSimpleStream, generatePodcast } from "../api";
 import type { Message } from "../messages";
 import { mergeMessage } from "../messages";
 import { parseJSON } from "../utils";
@@ -17,6 +17,7 @@ const THREAD_ID = nanoid();
 
 export const useStore = create<{
   responding: boolean;
+  mode: "chat" | "research";
   threadId: string | undefined;
   messageIds: string[];
   messages: Map<string, Message>;
@@ -26,6 +27,7 @@ export const useStore = create<{
   researchActivityIds: Map<string, string[]>;
   ongoingResearchId: string | null;
   openResearchId: string | null;
+  mode: "chat" | "research";
 
   appendMessage: (message: Message) => void;
   updateMessage: (message: Message) => void;
@@ -33,6 +35,7 @@ export const useStore = create<{
   openResearch: (researchId: string | null) => void;
   closeResearch: () => void;
   setOngoingResearch: (researchId: string | null) => void;
+  setMode: (mode: "chat" | "research") => void;
 }>((set) => ({
   responding: false,
   threadId: THREAD_ID,
@@ -44,6 +47,7 @@ export const useStore = create<{
   researchActivityIds: new Map<string, string[]>(),
   ongoingResearchId: null,
   openResearchId: null,
+  mode: "research",
 
   appendMessage(message: Message) {
     set((state) => ({
@@ -72,6 +76,9 @@ export const useStore = create<{
   setOngoingResearch(researchId: string | null) {
     set({ ongoingResearchId: researchId });
   },
+  setMode(mode: "chat" | "research") {
+    set({ mode });
+  },
 }));
 
 export async function sendMessage(
@@ -81,7 +88,7 @@ export async function sendMessage(
   }: {
     interruptFeedback?: string;
   } = {},
-  options: { abortSignal?: AbortSignal } = {},
+  options: { abortSignal?: AbortSignal; mode?: "chat" | "research" } = {},
 ) {
   if (content != null) {
     appendMessage({
@@ -94,20 +101,30 @@ export async function sendMessage(
   }
 
   const settings = getChatStreamSettings();
-  const stream = chatStream(
-    content ?? "[REPLAY]",
-    {
-      thread_id: THREAD_ID,
-      interrupt_feedback: interruptFeedback,
-      auto_accepted_plan: settings.autoAcceptedPlan,
-      enable_background_investigation:
-        settings.enableBackgroundInvestigation ?? true,
-      max_plan_iterations: settings.maxPlanIterations,
-      max_step_num: settings.maxStepNum,
-      mcp_settings: settings.mcpSettings,
-    },
-    options,
-  );
+  const mode = options.mode ?? useStore.getState().mode;
+  const stream =
+    mode === "research"
+      ? chatStream(
+          content ?? "[REPLAY]",
+          {
+            thread_id: THREAD_ID,
+            interrupt_feedback: interruptFeedback,
+            auto_accepted_plan: settings.autoAcceptedPlan,
+            enable_background_investigation:
+              settings.enableBackgroundInvestigation ?? true,
+            max_plan_iterations: settings.maxPlanIterations,
+            max_step_num: settings.maxStepNum,
+            mcp_settings: settings.mcpSettings,
+          },
+          options,
+        )
+      : chatSimpleStream(
+          content ?? "",
+          {
+            thread_id: THREAD_ID,
+          },
+          options,
+        );
 
   setResponding(true);
   let messageId: string | undefined;
@@ -376,4 +393,12 @@ export function useLastFeedbackMessageId() {
     }),
   );
   return waitingForFeedbackMessageId;
+}
+
+export function useMode() {
+  return useStore(useShallow((state) => state.mode));
+}
+
+export function setMode(value: "chat" | "research") {
+  useStore.getState().setMode(value);
 }

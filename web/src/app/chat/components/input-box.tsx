@@ -18,6 +18,7 @@ import type { Option } from "~/core/messages";
 import {
   setEnableBackgroundInvestigation,
   useSettingsStore,
+  useStore,
 } from "~/core/store";
 import { cn } from "~/lib/utils";
 
@@ -34,7 +35,10 @@ export function InputBox({
   size?: "large" | "normal";
   responding?: boolean;
   feedback?: { option: Option } | null;
-  onSend?: (message: string, options?: { interruptFeedback?: string }) => void;
+  onSend?: (
+    message: string,
+    options?: { interruptFeedback?: string; mode?: "chat" | "research" },
+  ) => void;
   onCancel?: () => void;
   onRemoveFeedback?: () => void;
 }) {
@@ -44,6 +48,8 @@ export function InputBox({
   const backgroundInvestigation = useSettingsStore(
     (state) => state.general.enableBackgroundInvestigation,
   );
+  const mode = useStore((state) => state.mode);
+  const setMode = useStore((state) => state.setMode);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const feedbackRef = useRef<HTMLDivElement>(null);
 
@@ -72,12 +78,13 @@ export function InputBox({
       if (onSend) {
         onSend(message, {
           interruptFeedback: feedback?.option.value,
+          mode,
         });
         setMessage("");
         onRemoveFeedback?.();
       }
     }
-  }, [responding, onCancel, message, onSend, feedback, onRemoveFeedback]);
+  }, [responding, onCancel, message, onSend, feedback, onRemoveFeedback, mode]);
 
   const handleKeyDown = useCallback(
     (event: KeyboardEvent<HTMLTextAreaElement>) => {
@@ -173,8 +180,16 @@ export function InputBox({
             >
               <Detective /> Investigation
             </Button>
-          </Tooltip>
-        </div>
+        </Tooltip>
+        <select
+          className="ml-2 rounded-2xl border px-2 py-1 text-sm"
+          value={mode}
+          onChange={(e) => setMode(e.target.value as "chat" | "research")}
+        >
+          <option value="research">Research</option>
+          <option value="chat">Chat</option>
+        </select>
+      </div>
         <div className="flex shrink-0 items-center gap-2">
           <Tooltip title={responding ? "Stop" : "Send"}>
             <Button
