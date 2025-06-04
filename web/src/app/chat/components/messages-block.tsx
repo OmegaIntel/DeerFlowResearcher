@@ -36,7 +36,10 @@ export function MessagesBlock({ className }: { className?: string }) {
   const abortControllerRef = useRef<AbortController | null>(null);
   const [feedback, setFeedback] = useState<{ option: Option } | null>(null);
   const handleSend = useCallback(
-    async (message: string, options?: { interruptFeedback?: string }) => {
+    async (
+      message: string,
+      options?: { interruptFeedback?: string; mode?: "chat" | "research" },
+    ) => {
       const abortController = new AbortController();
       abortControllerRef.current = abortController;
       try {
@@ -48,6 +51,7 @@ export function MessagesBlock({ className }: { className?: string }) {
           },
           {
             abortSignal: abortController.signal,
+            mode: options?.mode,
           },
         );
       } catch {}
