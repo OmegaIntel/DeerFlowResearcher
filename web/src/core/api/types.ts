@@ -75,9 +75,19 @@ export interface InterruptEvent
     }
   > {}
 
+export interface StreamEndEvent {
+  type: "stream_end";
+  data: {
+    thread_id: string;
+    finish_reason: string;
+    report_id?: string;
+  };
+}
+
 export type ChatEvent =
   | MessageChunkEvent
   | ToolCallsEvent
   | ToolCallChunksEvent
   | ToolCallResultEvent
-  | InterruptEvent;
+  | InterruptEvent
+  | StreamEndEvent;

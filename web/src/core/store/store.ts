@@ -213,6 +213,15 @@ export async function sendMessage(
   try {
     for await (const event of stream) {
       const { type, data } = event;
+      if (type === "stream_end") {
+        if (data.report_id) {
+          window.dispatchEvent(
+            new CustomEvent("report_saved", { detail: data.report_id }),
+          );
+          toast.success("Report saved");
+        }
+        break;
+      }
       messageId = data.id;
       let message: Message | undefined;
       if (type === "tool_call_result") {

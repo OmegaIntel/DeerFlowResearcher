@@ -109,6 +109,14 @@ export function Sidebar({ isCollapsed, onToggleCollapse }: SidebarProps) {
     }
   }, []);
 
+  useEffect(() => {
+    const handler = () => {
+      loadReports();
+    };
+    window.addEventListener("report_saved", handler);
+    return () => window.removeEventListener("report_saved", handler);
+  }, []);
+
   const loadReports = async () => {
     setIsLoadingReports(true);
     try {
