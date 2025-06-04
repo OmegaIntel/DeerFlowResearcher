@@ -6,6 +6,7 @@ from src.server.mcp_request import MCPServerMetadataRequest, MCPServerMetadataRe
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
+
 @router.post("/api/mcp/server/metadata", response_model=MCPServerMetadataResponse)
 async def mcp_server_metadata(request: MCPServerMetadataRequest):
     try:

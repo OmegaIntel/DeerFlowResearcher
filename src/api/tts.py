@@ -7,16 +7,21 @@ from src.tools import VolcengineTTS
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
+
 @router.post("/api/tts")
 async def text_to_speech(request: TTSRequest):
     try:
         app_id = os.getenv("VOLCENGINE_TTS_APPID", "")
         if not app_id:
-            raise HTTPException(status_code=400, detail="VOLCENGINE_TTS_APPID is not set")
+            raise HTTPException(
+                status_code=400, detail="VOLCENGINE_TTS_APPID is not set"
+            )
 
         access_token = os.getenv("VOLCENGINE_TTS_ACCESS_TOKEN", "")
         if not access_token:
-            raise HTTPException(status_code=400, detail="VOLCENGINE_TTS_ACCESS_TOKEN is not set")
+            raise HTTPException(
+                status_code=400, detail="VOLCENGINE_TTS_ACCESS_TOKEN is not set"
+            )
 
         tts_client = VolcengineTTS(
             appid=app_id,
@@ -43,7 +48,11 @@ async def text_to_speech(request: TTSRequest):
         return Response(
             content=audio_data,
             media_type=f"audio/{request.encoding}",
-            headers={"Content-Disposition": f"attachment; filename=tts_output.{request.encoding}"},
+            headers={
+                "Content-Disposition": (
+                    f"attachment; filename=tts_output.{request.encoding}"
+                )
+            },
         )
     except Exception as e:
         logger.exception(f"TTS error: {str(e)}")

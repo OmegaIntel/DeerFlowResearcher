@@ -7,6 +7,7 @@ from src.server.chat_request import GeneratePodcastRequest
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
+
 @router.post("/api/podcast/generate")
 async def generate_podcast(request: GeneratePodcastRequest):
     try:

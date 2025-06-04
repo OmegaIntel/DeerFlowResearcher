@@ -7,12 +7,17 @@ from src.server.chat_request import GenerateProseRequest
 router = APIRouter()
 logger = logging.getLogger(__name__)
 
+
 @router.post("/api/prose/generate")
 async def generate_prose(request: GenerateProseRequest):
     try:
         workflow = build_graph()
         events = workflow.astream(
-            {"content": request.prompt, "option": request.option, "command": request.command},
+            {
+                "content": request.prompt,
+                "option": request.option,
+                "command": request.command,
+            },
             stream_mode="messages",
             subgraphs=True,
         )
