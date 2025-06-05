@@ -18,6 +18,7 @@ import type { Option } from "~/core/messages";
 import {
   setEnableBackgroundInvestigation,
   useSettingsStore,
+  useStore,
 } from "~/core/store";
 import { cn } from "~/lib/utils";
 
@@ -41,6 +42,8 @@ export function InputBox({
   const [message, setMessage] = useState("");
   const [imeStatus, setImeStatus] = useState<"active" | "inactive">("inactive");
   const [indent, setIndent] = useState(0);
+  const mode = useStore((state) => state.mode);
+  const setMode = useStore((state) => state.setMode);
   const backgroundInvestigation = useSettingsStore(
     (state) => state.general.enableBackgroundInvestigation,
   );
@@ -144,6 +147,14 @@ export function InputBox({
         />
       </div>
       <div className="flex items-center px-4 py-2">
+        <select
+          className="mr-2 rounded-md border px-2 py-1 text-sm"
+          value={mode}
+          onChange={(e) => setMode(e.target.value as "chat" | "research")}
+        >
+          <option value="chat">Chat</option>
+          <option value="research">Research</option>
+        </select>
         <div className="flex grow">
           <Tooltip
             className="max-w-60"
