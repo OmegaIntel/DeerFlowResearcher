@@ -5,7 +5,6 @@ interface ApiResponse<T = unknown> {
   message?: string;
 }
 
-type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
 export const fetcher = async <T>(
   url: string,
@@ -70,34 +69,4 @@ export const fileFetcher = async <T>(
   } catch (error) {
     throw error;
   }
-};
-
-// Refresh Token Logic
-const handleRefreshToken = async <T>(
-  url: string,
-  options: RequestInit
-): Promise<ApiResponse<T>> => {
-  const refreshToken = localStorage.getItem('refreshToken');
-  if (!refreshToken) {
-    throw new Error('No refresh token available');
-  }
-
-  const refreshResponse = await fetch(`${API_BASE_URL}/auth/refresh`, {
-    method: 'POST',
-    body: JSON.stringify({ refreshToken }),
-    headers: { 'Content-Type': 'application/json' },
-  });
-
-  if (!refreshResponse.ok) {
-    throw new Error('Refresh token failed');
-  }
-
-  const { accessToken } = await refreshResponse.json();
-  localStorage.setItem('authToken', accessToken);
-
-  // Retry original request with new token
-  return fetcher(url, {
-    ...options,
-    headers: { Authorization: `Bearer ${accessToken}` },
-  });
 };
