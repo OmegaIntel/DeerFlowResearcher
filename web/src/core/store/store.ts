@@ -85,8 +85,12 @@ export async function sendMessage(
   content?: string,
   {
     interruptFeedback,
+    toolId,
+    toolType,
   }: {
     interruptFeedback?: string;
+    toolId?: string;
+    toolType?: "mcp" | "agent" | "research";
   } = {},
   options: { abortSignal?: AbortSignal } = {},
 ) {
@@ -102,7 +106,7 @@ export async function sendMessage(
   }
 
   let stream: AsyncIterable<ChatEvent>;
-  if (mode === "research") {
+  if (mode === "research" || toolId) {
     const settings = getChatStreamSettings();
     stream = chatStream(
       content ?? "[REPLAY]",
@@ -115,6 +119,8 @@ export async function sendMessage(
         max_plan_iterations: settings.maxPlanIterations,
         max_step_num: settings.maxStepNum,
         mcp_settings: settings.mcpSettings,
+        tool_id: toolId,
+        tool_type: toolType,
       },
       options,
     );

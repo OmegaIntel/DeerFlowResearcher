@@ -36,7 +36,7 @@ export function MessagesBlock({ className }: { className?: string }) {
   const abortControllerRef = useRef<AbortController | null>(null);
   const [feedback, setFeedback] = useState<{ option: Option } | null>(null);
   const handleSend = useCallback(
-    async (message: string, options?: { interruptFeedback?: string }) => {
+    async (message: string, options?: { interruptFeedback?: string; toolId?: string; toolType?: "mcp" | "agent" | "research" }) => {
       const abortController = new AbortController();
       abortControllerRef.current = abortController;
       try {
@@ -45,6 +45,8 @@ export function MessagesBlock({ className }: { className?: string }) {
           {
             interruptFeedback:
               options?.interruptFeedback ?? feedback?.option.value,
+            toolId: options?.toolId,
+            toolType: options?.toolType,
           },
           {
             abortSignal: abortController.signal,

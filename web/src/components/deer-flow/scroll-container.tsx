@@ -37,8 +37,8 @@ export function ScrollContainer({
     }
   }));
 
-  const tempScrollRef = useRef<HTMLElement>(null);
-  const tempContentRef = useRef<HTMLElement>(null);
+  const tempScrollRef = useRef<HTMLElement | null>(null);
+  const tempContentRef = useRef<HTMLElement | null>(null);
   useEffect(() => {
     if (!autoScrollToBottom) {
       tempScrollRef.current = scrollRef.current;

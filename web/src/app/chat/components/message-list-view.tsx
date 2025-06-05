@@ -130,6 +130,7 @@ function MessageListItem({
   if (message) {
     if (
       message.role === "user" ||
+      message.role === "assistant" ||
       message.agent === "coordinator" ||
       message.agent === "planner" ||
       message.agent === "podcast" ||
