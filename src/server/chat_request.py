@@ -50,6 +50,12 @@ class ChatRequest(BaseModel):
     enable_background_investigation: Optional[bool] = Field(
         True, description="Whether to get background investigation before plan"
     )
+    tool_id: Optional[str] = Field(
+        None, description="ID of the tool to use for @ queries"
+    )
+    tool_type: Optional[str] = Field(
+        None, description="Type of the tool (mcp, agent) for @ queries"
+    )
 
 
 class TTSRequest(BaseModel):

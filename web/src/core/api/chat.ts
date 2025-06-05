@@ -20,6 +20,8 @@ export async function* chatStream(
     max_step_num: number;
     interrupt_feedback?: string;
     enable_background_investigation: boolean;
+    tool_id?: string;
+    tool_type?: "mcp" | "agent" | "research";
     mcp_settings?: {
       servers: Record<
         string,
@@ -39,7 +41,14 @@ export async function* chatStream(
   ) {
     return yield* chatReplayStream(userMessage, params, options);
   }
-  const stream = fetchStream(resolveServiceURL("chat/stream"), {
+
+  // Determine which endpoint to use based on tool selection
+  let endpoint = "chat/stream";
+  if (params.tool_id && params.tool_type) {
+    endpoint = "chat/tool";
+  }
+
+  const stream = fetchStream(resolveServiceURL(endpoint), {
     body: JSON.stringify({
       messages: [{ role: "user", content: userMessage }],
       ...params,
