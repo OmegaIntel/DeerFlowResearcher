@@ -8,13 +8,14 @@ import os
 from typing import List, cast
 from uuid import uuid4
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response, StreamingResponse
 from langchain_core.messages import AIMessageChunk, ToolMessage
 from langgraph.types import Command
 
 from src.graph.builder import build_graph_with_memory
+from src.chat.graph.builder import build_chat_graph_with_memory
 from src.podcast.graph.builder import build_graph as build_podcast_graph
 from src.ppt.graph.builder import build_graph as build_ppt_graph
 from src.prose.graph.builder import build_graph as build_prose_graph
@@ -29,8 +30,16 @@ from src.server.chat_request import (
 from src.server.mcp_request import MCPServerMetadataRequest, MCPServerMetadataResponse
 from src.server.mcp_utils import load_mcp_tools
 from src.tools import VolcengineTTS
+from src.db.db_session import (
+    create_db_tables,
+    get_db,
+    get_or_create_chat_session,
+    add_chat_message,
+)
+from sqlalchemy.orm import Session
+from langchain.chains import ConversationChain
 
-#Routes from API folders
+# Routes from API folders
 from src.api.api_register_user import router as register_user_router
 from src.api.api_generate_token import user_generate_token_router
 from src.api.api_get_current_user import current_user_router
@@ -58,6 +67,9 @@ app.add_middleware(
 )
 
 graph = build_graph_with_memory()
+chat_chains: dict[str, ConversationChain] = {}
+
+create_db_tables()
 
 
 @app.post("/api/chat/stream")
@@ -78,6 +90,36 @@ async def chat_stream(request: ChatRequest):
         ),
         media_type="text/event-stream",
     )
+
+
+@app.post("/api/chat/simple")
+async def chat_simple(request: ChatRequest, db: Session = Depends(get_db)):
+    thread_id = request.thread_id
+    if thread_id == "__default__":
+        thread_id = str(uuid4())
+    session_obj = get_or_create_chat_session(db, thread_id)
+
+    chain = chat_chains.get(thread_id)
+    if chain is None:
+        chain = build_chat_graph_with_memory()
+        chat_chains[thread_id] = chain
+
+    user_message = request.messages[-1].content if request.messages else ""
+    add_chat_message(db, session_obj, "user", user_message)
+
+    def iter_response():
+        response_text = chain.invoke(user_message)
+        add_chat_message(db, session_obj, "assistant", response_text)
+        data = {
+            "thread_id": thread_id,
+            "id": str(uuid4()),
+            "role": "assistant",
+            "content": response_text,
+            "finish_reason": "stop",
+        }
+        yield f"event: message_chunk\ndata: {json.dumps(data)}\n\n"
+
+    return StreamingResponse(iter_response(), media_type="text/event-stream")
 
 
 async def _astream_workflow_generator(
