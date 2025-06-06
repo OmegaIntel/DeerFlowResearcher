@@ -29,6 +29,28 @@ interface ToolOption {
   type: "mcp" | "agent";
 }
 
+// Helper component to highlight matching text
+function HighlightMatch({ text, query }: { text: string; query: string }) {
+  if (!query.trim()) return <>{text}</>;
+  
+  const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+  const parts = text.split(regex);
+  
+  return (
+    <>
+      {parts.map((part, index) => 
+        regex.test(part) ? (
+          <mark key={index} className="bg-yellow-200 text-yellow-800 rounded px-0.5">
+            {part}
+          </mark>
+        ) : (
+          part
+        )
+      )}
+    </>
+  );
+}
+
 export function InputBox({
   className,
   size,
@@ -52,6 +74,9 @@ export function InputBox({
   const [showToolDropdown, setShowToolDropdown] = useState(false);
   const [selectedTool, setSelectedTool] = useState<ToolOption | null>(null);
   const [availableTools, setAvailableTools] = useState<ToolOption[]>([]);
+  const [filteredTools, setFilteredTools] = useState<ToolOption[]>([]);
+  const [toolSearchQuery, setToolSearchQuery] = useState("");
+  const [selectedDropdownIndex, setSelectedDropdownIndex] = useState(-1);
   const mode = useStore((state) => state.mode);
   const setMode = useStore((state) => state.setMode);
   const backgroundInvestigation = useSettingsStore(
@@ -75,10 +100,31 @@ export function InputBox({
       mcpSettings.servers.forEach((server) => {
         if (server.enabled && server.tools) {
           server.tools.forEach((tool) => {
+            // Extract only the first line/sentence of description
+            let description = tool.description || `${tool.name} from ${server.name}`;
+            
+            // Remove everything after the first line break or first sentence
+            const firstLineBreak = description.indexOf('\n');
+            const firstPeriod = description.indexOf('. ');
+            
+            if (firstLineBreak > 0 && firstLineBreak < 100) {
+              description = description.substring(0, firstLineBreak).trim();
+            } else if (firstPeriod > 0 && firstPeriod < 100) {
+              description = description.substring(0, firstPeriod + 1).trim();
+            }
+            
+            // Further truncate if still too long
+            if (description.length > 80) {
+              description = description.substring(0, 77) + "...";
+            }
+            
+            // Remove any markdown formatting
+            description = description.replace(/\[|\]/g, '').trim();
+            
             tools.push({
               id: `${server.name}.${tool.name}`,  // Use server.name instead of index
               name: tool.name,
-              description: tool.description || `${tool.name} from ${server.name}`,
+              description: description,
               type: "mcp"
             });
           });
@@ -87,7 +133,25 @@ export function InputBox({
     }
 
     setAvailableTools(tools);
+    setFilteredTools(tools); // Initialize filtered tools
   }, [mcpSettings]);
+
+  // Filter tools based on search query
+  useEffect(() => {
+    if (!toolSearchQuery.trim()) {
+      setFilteredTools(availableTools);
+      console.log("No search query, showing all tools:", availableTools.length);
+    } else {
+      const query = toolSearchQuery.toLowerCase();
+      const filtered = availableTools.filter((tool) => 
+        tool.name.toLowerCase().includes(query) ||
+        tool.id.toLowerCase().includes(query)
+      );
+      setFilteredTools(filtered);
+      console.log(`Filtering with query "${query}": ${filtered.length} of ${availableTools.length} tools`);
+    }
+    setSelectedDropdownIndex(-1); // Reset selection when filtering
+  }, [toolSearchQuery, availableTools]);
 
   useEffect(() => {
     if (feedback) {
@@ -152,6 +216,30 @@ export function InputBox({
     }
   }, [responding, onCancel, message, onSend, feedback, onRemoveFeedback, selectedTool]);
 
+  const handleToolSelect = useCallback((tool: ToolOption) => {
+    setSelectedTool(tool);
+    setShowToolDropdown(false);
+    setToolSearchQuery(""); // Clear search query
+    setSelectedDropdownIndex(-1); // Reset dropdown selection
+    
+    // Replace @query with tool name in message
+    const atIndex = message.lastIndexOf("@");
+    if (atIndex !== -1) {
+      const beforeAt = message.substring(0, atIndex);
+      const afterAt = message.substring(atIndex + 1);
+      // Check if there's a query after @ (no space yet)
+      if (!afterAt.includes(" ")) {
+        setMessage(`${beforeAt}@${tool.name} `);
+      } else {
+        // If there's already a space, just replace up to that space
+        const spaceIndex = afterAt.indexOf(" ");
+        const restOfMessage = afterAt.substring(spaceIndex);
+        setMessage(`${beforeAt}@${tool.name}${restOfMessage}`);
+      }
+    }
+    textareaRef.current?.focus();
+  }, [message]);
+
   const handleKeyDown = useCallback(
     (event: KeyboardEvent<HTMLTextAreaElement>) => {
       if (responding) {
@@ -163,6 +251,32 @@ export function InputBox({
         if (event.key === "Escape") {
           event.preventDefault();
           setShowToolDropdown(false);
+          setSelectedDropdownIndex(-1);
+          return;
+        }
+        
+        if (event.key === "ArrowDown") {
+          event.preventDefault();
+          setSelectedDropdownIndex(prev => 
+            prev < filteredTools.length - 1 ? prev + 1 : 0
+          );
+          return;
+        }
+        
+        if (event.key === "ArrowUp") {
+          event.preventDefault();
+          setSelectedDropdownIndex(prev => 
+            prev > 0 ? prev - 1 : filteredTools.length - 1
+          );
+          return;
+        }
+        
+        if (event.key === "Enter" && selectedDropdownIndex >= 0) {
+          event.preventDefault();
+          const selectedTool = filteredTools[selectedDropdownIndex];
+          if (selectedTool) {
+            handleToolSelect(selectedTool);
+          }
           return;
         }
       }
@@ -178,41 +292,34 @@ export function InputBox({
         handleSendMessage();
       }
     },
-    [responding, imeStatus, handleSendMessage, showToolDropdown],
+    [responding, imeStatus, handleSendMessage, showToolDropdown, filteredTools, selectedDropdownIndex, handleToolSelect],
   );
 
   const handleMessageChange = useCallback((value: string) => {
     setMessage(value);
 
-    // Check for @ trigger
+    // Check for @ trigger and extract search query
     const atIndex = value.lastIndexOf("@");
-    if (atIndex !== -1 && atIndex === value.length - 1) {
-      setShowToolDropdown(true);
-    } else if (atIndex !== -1) {
+    if (atIndex !== -1) {
       const afterAt = value.substring(atIndex + 1);
-      // Show dropdown if there's an @ and we're still typing after it
+      
+      // Show dropdown if there's an @ and we're still typing after it (no space)
       if (!afterAt.includes(" ")) {
         setShowToolDropdown(true);
+        setToolSearchQuery(afterAt); // Update search query for filtering
+        setSelectedDropdownIndex(-1); // Reset dropdown selection
+        console.log("Tool search query:", afterAt); // Debug log
       } else {
         setShowToolDropdown(false);
+        setToolSearchQuery("");
+        setSelectedDropdownIndex(-1);
       }
     } else {
       setShowToolDropdown(false);
+      setToolSearchQuery("");
+      setSelectedDropdownIndex(-1);
     }
   }, []);
-
-  const handleToolSelect = useCallback((tool: ToolOption) => {
-    setSelectedTool(tool);
-    setShowToolDropdown(false);
-    
-    // Replace @ with tool name in message
-    const atIndex = message.lastIndexOf("@");
-    if (atIndex !== -1) {
-      const beforeAt = message.substring(0, atIndex);
-      setMessage(`${beforeAt}@${tool.name} `);
-    }
-    textareaRef.current?.focus();
-  }, [message]);
 
   return (
     <div className={cn("bg-card relative rounded-[24px] border", className)}>
@@ -272,25 +379,52 @@ export function InputBox({
             >
               <div className="p-2">
                 <div className="text-xs text-muted-foreground mb-2 px-2">
-                  Select a tool or agent:
+                  {toolSearchQuery 
+                    ? `Searching for "${toolSearchQuery}"...` 
+                    : "Select a tool or agent:"
+                  }
+                  {toolSearchQuery && filteredTools.length > 0 && (
+                    <span className="ml-1 text-green-600">
+                      ({filteredTools.length} found)
+                    </span>
+                  )}
                 </div>
-                {availableTools.map((tool) => (
-                  <button
-                    key={tool.id}
-                    className="w-full text-left px-3 py-2 rounded-md hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground transition-colors"
-                    onClick={() => handleToolSelect(tool)}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <div className="font-medium text-sm">{tool.name}</div>
-                        <div className="text-xs text-muted-foreground">{tool.description}</div>
+                {filteredTools.length > 0 ? (
+                  filteredTools.map((tool, index) => (
+                    <button
+                      key={tool.id}
+                      className={cn(
+                        "w-full text-left px-3 py-2 rounded-md transition-colors",
+                        index === selectedDropdownIndex 
+                          ? "bg-accent text-accent-foreground" 
+                          : "hover:bg-accent hover:text-accent-foreground focus:bg-accent focus:text-accent-foreground"
+                      )}
+                      onClick={() => handleToolSelect(tool)}
+                      onMouseEnter={() => setSelectedDropdownIndex(index)}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="font-medium text-sm">
+                          {toolSearchQuery ? (
+                            <HighlightMatch text={tool.name} query={toolSearchQuery} />
+                          ) : (
+                            tool.name
+                          )}
+                        </div>
+                        <div className="text-xs px-2 py-1 rounded-full bg-muted">
+                          {tool.type}
+                        </div>
                       </div>
-                      <div className="text-xs px-2 py-1 rounded-full bg-muted">
-                        {tool.type}
-                      </div>
-                    </div>
-                  </button>
-                ))}
+                    </button>
+                  ))
+                ) : toolSearchQuery ? (
+                  <div className="px-3 py-4 text-center text-sm text-muted-foreground">
+                    No tools found matching "{toolSearchQuery}"
+                  </div>
+                ) : (
+                  <div className="px-3 py-4 text-center text-sm text-muted-foreground">
+                    No tools available
+                  </div>
+                )}
               </div>
             </motion.div>
           )}
