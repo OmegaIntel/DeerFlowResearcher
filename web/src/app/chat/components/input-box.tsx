@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUp, X, ChevronDown } from "lucide-react";
+import { ArrowUp, X, ChevronDown, Paperclip } from "lucide-react";
 import {
   type KeyboardEvent,
   useCallback,
@@ -14,6 +14,8 @@ import {
 import { Detective } from "~/components/deer-flow/icons/detective";
 import { Tooltip } from "~/components/deer-flow/tooltip";
 import { Button } from "~/components/ui/button";
+import { uploadFilesToPinecone, getPineconeUploadJobStatus, type PineconeUploadJobStatus } from "~/core/api/pinecone";
+import { resolveServiceURL } from "~/core/api/resolve-service-url";
 import type { Option } from "~/core/messages";
 import {
   setEnableBackgroundInvestigation,
@@ -77,6 +79,9 @@ export function InputBox({
   const [filteredTools, setFilteredTools] = useState<ToolOption[]>([]);
   const [toolSearchQuery, setToolSearchQuery] = useState("");
   const [selectedDropdownIndex, setSelectedDropdownIndex] = useState(-1);
+  const [isUploading, setIsUploading] = useState(false);
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [activeUploads, setActiveUploads] = useState<Map<string, PineconeUploadJobStatus>>(new Map());
   const mode = useStore((state) => state.mode);
   const setMode = useStore((state) => state.setMode);
   const backgroundInvestigation = useSettingsStore(
@@ -86,18 +91,72 @@ export function InputBox({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const feedbackRef = useRef<HTMLDivElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Load available tools from MCP settings
   useEffect(() => {
-    const tools: ToolOption[] = [
-      // Add research and agent options
-      { id: "research", name: "Research", description: "Deep research on any topic", type: "agent" },
-    ];
+    const loadTools = async () => {
+      const tools: ToolOption[] = [
+        // Add research and agent options
+        { id: "research", name: "Research", description: "Deep research on any topic", type: "agent" },
+      ];
 
-    // Add MCP tools from settings
-    if (mcpSettings.servers) {
-      // mcpSettings.servers is an array, not an object
-      mcpSettings.servers.forEach((server) => {
+      // Fetch backend-configured MCP servers
+      try {
+        const url = resolveServiceURL("mcp/backend-servers");
+        console.log("Fetching from URL:", url);
+        const response = await fetch(url);
+        console.log("Response status:", response.status);
+        if (response.ok) {
+          const data = await response.json();
+          console.log("Backend servers response:", data);
+          const backendServers = data.servers ?? [];
+          
+          // Add backend servers to tools
+          backendServers.forEach((server: {id: string; enabled: boolean; tools: {name: string; description: string}[]; name: string}) => {
+            if (server.enabled && server.tools) {
+              server.tools.forEach((tool: {name: string; description: string}) => {
+                // Extract only the first line/sentence of description
+                let description = tool.description ?? `${tool.name} from ${server.name}`;
+                
+                // Remove everything after the first line break or first sentence
+                const firstLineBreak = description.indexOf('\n');
+                const firstPeriod = description.indexOf('. ');
+                
+                if (firstLineBreak > 0 && firstLineBreak < 100) {
+                  description = description.substring(0, firstLineBreak).trim();
+                } else if (firstPeriod > 0 && firstPeriod < 100) {
+                  description = description.substring(0, firstPeriod + 1).trim();
+                }
+                
+                // Further truncate if still too long
+                if (description.length > 80) {
+                  description = description.substring(0, 77) + "...";
+                }
+                
+                // Remove any markdown formatting
+                description = description.replace(/\[|\]/g, '').trim();
+                
+                tools.push({
+                  id: `${server.id}.${tool.name}`,  // Use server ID instead of name
+                  name: tool.name,
+                  description: description,
+                  type: "mcp"
+                });
+              });
+            }
+          });
+        } else {
+          console.error("Failed to fetch backend servers, status:", response.status);
+        }
+      } catch (error) {
+        console.error("Failed to fetch backend MCP servers:", error);
+      }
+
+      // Add MCP tools from frontend settings
+      if (mcpSettings.servers) {
+        // mcpSettings.servers is an array, not an object
+        mcpSettings.servers.forEach((server) => {
         if (server.enabled && server.tools) {
           server.tools.forEach((tool) => {
             // Extract only the first line/sentence of description
@@ -132,8 +191,17 @@ export function InputBox({
       });
     }
 
-    setAvailableTools(tools);
-    setFilteredTools(tools); // Initialize filtered tools
+      // Deduplicate tools by ID to prevent duplicates from backend and frontend sources
+      const uniqueTools = tools.filter((tool, index, self) => 
+        index === self.findIndex(t => t.id === tool.id)
+      );
+      
+      console.log(`Loaded ${tools.length} tools, deduplicated to ${uniqueTools.length} unique tools`);
+      setAvailableTools(uniqueTools);
+      setFilteredTools(uniqueTools); // Initialize filtered tools
+    };
+
+    void loadTools();
   }, [mcpSettings]);
 
   // Filter tools based on search query
@@ -321,6 +389,91 @@ export function InputBox({
     }
   }, []);
 
+  // Function to poll upload status
+  const pollUploadStatus = useCallback(async (jobId: string) => {
+    try {
+      const status = await getPineconeUploadJobStatus(jobId);
+      
+      setActiveUploads(prev => new Map(prev.set(jobId, status)));
+      
+      // If job is still processing, continue polling
+      if (status.status === "processing" || status.status === "pending") {
+        setTimeout(() => void pollUploadStatus(jobId), 2000); // Poll every 2 seconds
+      } else {
+        // Job completed or failed
+        if (status.status === "completed") {
+          console.log("Upload completed:", status);
+          console.log("Status message:", status.message);
+          console.log("Index name:", status.index_name);
+          console.log("Index host:", status.index_host);
+          console.log("Result object:", status.result);
+          
+          // Show the actual backend message instead of our custom one
+          const indexName = status.result?.index_name ?? status.index_name ?? 'Unknown';
+          const indexHost = status.result?.index_host ?? status.index_host ?? 'Unknown';
+          const vectorsUpserted = status.result?.vectors_upserted ?? status.vectors_upserted ?? 0;
+          const chunksCreated = status.result?.chunks_created ?? 0;
+          
+          alert(`Upload completed!\n\nBackend message: ${status.message}\n\nIndex Name: ${indexName}\nIndex Host: ${indexHost}\nVectors Upserted: ${vectorsUpserted}\nChunks Created: ${chunksCreated}`);
+        } else if (status.status === "failed") {
+          console.error("Upload failed:", status.error);
+          alert(`Upload failed: ${status.error}`);
+        }
+        
+        // Remove from active uploads after a delay
+        setTimeout(() => {
+          setActiveUploads(prev => {
+            const newMap = new Map(prev);
+            newMap.delete(jobId);
+            return newMap;
+          });
+        }, 5000);
+      }
+    } catch (error) {
+      console.error("Error polling upload status:", error);
+    }
+  }, []);
+
+  const handleFileUpload = useCallback(async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (!files || files.length === 0) return;
+
+    setIsUploading(true);
+    try {
+      const filesArray = Array.from(files);
+      
+      // Upload files to Pinecone (now async)
+      console.log("Uploading files to Pinecone...", filesArray);
+      const response = await uploadFilesToPinecone(filesArray);
+      
+      if (response.success && response.job_id) {
+        console.log("Upload job started:", response);
+        
+        // Add files to uploaded list
+        setUploadedFiles(prev => [...prev, ...filesArray]);
+        
+        // Start polling for status
+        void pollUploadStatus(response.job_id);
+        
+        // Show initial success message
+        alert(`Upload started! Job ID: ${response.job_id}\nProcessing ${filesArray.length} files in background...`);
+        
+      } else {
+        console.error("Upload failed:", response.error);
+        alert(`Upload failed: ${response.message}`);
+      }
+      
+    } catch (error) {
+      console.error("Error uploading files:", error);
+      alert(`Error uploading files: ${error instanceof Error ? error.message : 'Unknown error'}`);
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  }, [pollUploadStatus]);
+
   return (
     <div className={cn("bg-card relative rounded-[24px] border", className)}>
       <div className="w-full">
@@ -345,6 +498,57 @@ export function InputBox({
             </motion.div>
           )}
         </AnimatePresence>
+        
+        {/* Active uploads progress */}
+        {activeUploads.size > 0 && (
+          <div className="px-4 pt-2">
+            {Array.from(activeUploads.values()).map((upload) => (
+              <div
+                key={upload.job_id}
+                className="mb-2 rounded-md bg-muted p-2 text-sm"
+              >
+                <div className="flex items-center justify-between mb-1">
+                  <span className="font-medium">{upload.files.length} files</span>
+                  <span className="text-xs text-muted-foreground">{upload.status}</span>
+                </div>
+                <div className="text-xs text-muted-foreground mb-1">{upload.message}</div>
+                <div className="w-full bg-background rounded-full h-2">
+                  <div
+                    className="bg-primary h-2 rounded-full transition-all duration-300"
+                    style={{ width: `${upload.progress}%` }}
+                  />
+                </div>
+                <div className="text-xs text-muted-foreground mt-1">
+                  {upload.progress}% complete
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Uploaded files display */}
+        {uploadedFiles.length > 0 && (
+          <div className="flex flex-wrap gap-2 px-4 pt-2">
+            {uploadedFiles.map((file, index) => (
+              <div
+                key={index}
+                className="flex items-center gap-1 rounded-md bg-muted px-2 py-1 text-sm"
+              >
+                <Paperclip className="h-3 w-3" />
+                <span className="max-w-[200px] truncate">{file.name}</span>
+                <button
+                  onClick={() => {
+                    setUploadedFiles(prev => prev.filter((_, i) => i !== index));
+                  }}
+                  className="ml-1 hover:text-destructive"
+                >
+                  <X className="h-3 w-3" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+        
         <textarea
           ref={textareaRef}
           className={cn(
@@ -418,7 +622,7 @@ export function InputBox({
                   ))
                 ) : toolSearchQuery ? (
                   <div className="px-3 py-4 text-center text-sm text-muted-foreground">
-                    No tools found matching "{toolSearchQuery}"
+                    No tools found matching &quot;{toolSearchQuery}&quot;
                   </div>
                 ) : (
                   <div className="px-3 py-4 text-center text-sm text-muted-foreground">
@@ -487,6 +691,25 @@ export function InputBox({
           </Tooltip>
         </div>
         <div className="flex shrink-0 items-center gap-2">
+          <input
+            ref={fileInputRef}
+            type="file"
+            multiple
+            accept=".pdf,.doc,.docx,.txt,.csv,.json,.md"
+            onChange={handleFileUpload}
+            className="hidden"
+          />
+          <Tooltip title="Upload files to Pinecone">
+            <Button
+              variant="outline"
+              size="icon"
+              className={cn("h-10 w-10 rounded-full", isUploading && "animate-pulse")}
+              onClick={() => fileInputRef.current?.click()}
+              disabled={isUploading}
+            >
+              <Paperclip className="h-5 w-5" />
+            </Button>
+          </Tooltip>
           <Tooltip title={responding ? "Stop" : "Send"}>
             <Button
               variant="outline"

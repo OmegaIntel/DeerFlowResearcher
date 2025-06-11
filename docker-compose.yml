@@ -10,6 +10,7 @@ services:
       - .env
     volumes:
       - ./conf.yaml:/app/conf.yaml
+      - ./mcp-servers:/app/mcp-servers
     restart: unless-stopped
     networks:
       - deer-flow-network

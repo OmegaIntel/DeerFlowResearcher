@@ -30,6 +30,9 @@ from src.server.chat_request import (
 from src.server.mcp_request import MCPServerMetadataRequest, MCPServerMetadataResponse
 from src.server.mcp_utils import load_mcp_tools
 from src.tools import VolcengineTTS
+from src.config.mcp_servers import mcp_server_config
+from src.server.llamacloud_upload import router as llamacloud_router
+from src.server.pinecone_routes import router as pinecone_router
 from src.db.db_session import (
     create_db_tables,
     SessionLocal,
@@ -56,6 +59,8 @@ app.include_router(register_user_router)
 app.include_router(user_generate_token_router)
 app.include_router(current_user_router)
 app.include_router(verify_user_router)
+app.include_router(llamacloud_router)
+app.include_router(pinecone_router, prefix="/api/pinecone")
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
@@ -69,6 +74,50 @@ graph = build_graph_with_memory()
 chat_chains: dict[str, RunnableWithMessageHistory] = {}
 
 create_db_tables()
+
+
+@app.on_event("startup")
+async def startup_event():
+    """Load MCP servers from backend configuration on startup."""
+    try:
+        await mcp_server_config.load_tools_for_servers()
+        logger.info(f"Loaded {len(mcp_server_config.servers)} MCP servers from backend configuration")
+    except Exception as e:
+        logger.error(f"Failed to load MCP servers on startup: {e}")
+    
+    # Start upload queue workers
+    try:
+        from src.server.upload_queue import upload_queue
+        await upload_queue.start_workers(num_workers=2)
+        logger.info("Started upload queue workers")
+    except Exception as e:
+        logger.error(f"Failed to start upload queue workers: {e}")
+    
+    # Start Pinecone upload queue workers
+    try:
+        from src.server.pinecone_upload import pinecone_upload_queue
+        await pinecone_upload_queue.start_workers(num_workers=2)
+        logger.info("Started Pinecone upload queue workers")
+    except Exception as e:
+        logger.error(f"Failed to start Pinecone upload queue workers: {e}")
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    """Cleanup on shutdown."""
+    try:
+        from src.server.upload_queue import upload_queue
+        await upload_queue.stop_workers()
+        logger.info("Stopped upload queue workers")
+    except Exception as e:
+        logger.error(f"Failed to stop upload queue workers: {e}")
+    
+    # Stop Pinecone upload queue workers
+    try:
+        from src.server.pinecone_upload import pinecone_upload_queue
+        await pinecone_upload_queue.stop_workers()
+        logger.info("Stopped Pinecone upload queue workers")
+    except Exception as e:
+        logger.error(f"Failed to stop Pinecone upload queue workers: {e}")
 
 
 @app.post("/api/chat/stream")
@@ -192,11 +241,16 @@ async def _handle_mcp_tool_query(user_message: str, tool_id: str, thread_id: str
         logger.info(f"MCP settings type: {type(mcp_settings)}")
         
         # Get server configuration for the specific server
-        if not mcp_settings or "servers" not in mcp_settings:
-            logger.error(f"No MCP servers configured. Settings: {mcp_settings}")
-            raise ValueError(f"No MCP servers configured. Available settings: {mcp_settings}")
+        # Combine backend servers with frontend servers
+        backend_servers = mcp_server_config.get_mcp_servers_dict()
+        frontend_servers = mcp_settings.get("servers", {}) if mcp_settings else {}
         
-        servers = mcp_settings["servers"]
+        # Merge servers - frontend servers override backend if same ID
+        servers = {**backend_servers, **frontend_servers}
+        
+        if not servers:
+            logger.error(f"No MCP servers configured. Settings: {mcp_settings}")
+            raise ValueError(f"No MCP servers configured")
         
         # Debug: Log the available servers and the requested server_id
         logger.info(f"Available servers: {list(servers.keys()) if servers else 'None'}")
@@ -750,6 +804,17 @@ async def generate_prose(request: GenerateProseRequest):
         )
     except Exception as e:
         logger.exception(f"Error occurred during prose generation: {str(e)}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/api/mcp/backend-servers")
+async def get_backend_mcp_servers():
+    """Get MCP servers configured in the backend."""
+    try:
+        servers = mcp_server_config.get_servers_for_frontend()
+        return {"servers": servers}
+    except Exception as e:
+        logger.exception(f"Error getting backend MCP servers: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
