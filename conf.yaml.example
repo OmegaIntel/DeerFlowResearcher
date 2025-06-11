@@ -7,3 +7,26 @@ BASIC_MODEL:
   base_url: https://ark.cn-beijing.volces.com/api/v3
   model: "doubao-1-5-pro-32k-250115"
   api_key: xxxx
+
+# MCP Server Configuration
+# These servers will be automatically loaded and available in the @ mentions
+# You can add multiple MCP servers here
+MCP_SERVERS:
+  # Example stdio server (uncomment to enable)
+  # filesystem:
+  #   name: "Filesystem"
+  #   transport: "stdio"
+  #   command: "npx"
+  #   args: ["-y", "@modelcontextprotocol/server-filesystem"]
+  #   env:
+  #     FILESYSTEM_ROOT: "/path/to/root"
+  #   enabled: true
+  #   add_to_agents: ["researcher", "coder"]  # Optional: specify which agents can use this
+  
+  # Example SSE server (uncomment to enable)
+  # weather:
+  #   name: "Weather API"
+  #   transport: "sse"
+  #   url: "http://localhost:3000/sse"
+  #   enabled: true
+  #   add_to_agents: ["researcher"]
