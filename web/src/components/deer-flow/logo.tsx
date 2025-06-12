@@ -3,7 +3,7 @@
 
 import Link from "next/link";
 
-export function Logo() {
+export function Logo({ className }: { className?: string }) {
   return (
     <Link
       className="opacity-70 transition-opacity duration-300 hover:opacity-100"
@@ -11,5 +11,13 @@ export function Logo() {
     >
       🦌 Omega Intelligence
     </Link>
+  );
+}
+
+export function LogoIcon({ className }: { className?: string }) {
+  return (
+    <span className={className}>
+      🦌
+    </span>
   );
 }
