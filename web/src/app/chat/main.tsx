@@ -9,6 +9,7 @@ import { Button } from "~/components/ui/button";
 import { useStore } from "~/core/store";
 import { cn } from "~/lib/utils";
 
+import { ChatHeader } from "./components/chat-header";
 import { MessagesBlock } from "./components/messages-block";
 import { ResearchBlock } from "./components/research-block";
 
@@ -60,12 +61,14 @@ export default function Main() {
   };
  
   return (
-    <div
-      className={cn(
-        "flex h-full w-full justify-center px-4 pt-12 pb-4",
-        doubleColumnMode && "gap-8",
-      )}
-    >
+    <div className="flex h-full w-full flex-col">
+      <ChatHeader />
+      <div
+        className={cn(
+          "flex h-full w-full justify-center px-4 pt-4 pb-4",
+          doubleColumnMode && "gap-8",
+        )}
+      >
       <MessagesBlock
         className={cn(
           "shrink-0 transition-all duration-300 ease-out",
@@ -95,6 +98,7 @@ export default function Main() {
           </Button>
         </div>
       )}
+      </div>
     </div>
   );
 }

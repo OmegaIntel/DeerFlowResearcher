@@ -3,17 +3,10 @@
 
 "use client";
 
-import { GithubOutlined } from "@ant-design/icons";
 import dynamic from "next/dynamic";
-import Link from "next/link";
-import { Suspense } from "react";
 
-import { Button } from "~/components/ui/button";
-
-import { Logo } from "../../components/deer-flow/logo";
-import { ThemeToggle } from "../../components/deer-flow/theme-toggle";
-import { Tooltip } from "../../components/deer-flow/tooltip";
-import { SettingsDialog } from "../settings/dialogs/settings-dialog";
+import { AppSidebar } from "~/components/deer-flow/app-sidebar";
+import { SidebarInset, SidebarProvider } from "~/components/ui/sidebar";
 
 const Main = dynamic(() => import("./main"), {
   ssr: false,
@@ -26,27 +19,11 @@ const Main = dynamic(() => import("./main"), {
 
 export default function HomePage() {
   return (
-    <div className="flex h-screen w-screen justify-center overscroll-none">
-      <header className="fixed top-0 left-0 flex h-12 w-full items-center justify-between px-4">
-        <Logo />
-        <div className="flex items-center">
-          <Tooltip title="Connect with us">
-            <Button variant="ghost" size="icon" asChild>
-              <Link
-                href="https://www.omegaintelligence.ai/"
-                target="_blank"
-              >
-                <GithubOutlined />
-              </Link>
-            </Button>
-          </Tooltip>
-          <ThemeToggle />
-          <Suspense>
-            <SettingsDialog />
-          </Suspense>
-        </div>
-      </header>
-      <Main />
-    </div>
+    <SidebarProvider>
+      <AppSidebar />
+      <SidebarInset>
+        <Main />
+      </SidebarInset>
+    </SidebarProvider>
   );
 }
