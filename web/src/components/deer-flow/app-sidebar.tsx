@@ -43,7 +43,7 @@ import {
 } from "~/components/ui/sidebar";
 import { useAuth } from "~/hooks/use-auth";
 
-import { Logo } from "./logo";
+import { LogoIcon } from "./logo";
 
 // Menu items.
 const data = {
@@ -170,7 +170,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
             <SidebarMenuButton size="lg" asChild>
               <Link href="/chat">
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
-                  <Logo className="size-4" />
+                  <LogoIcon className="size-4" />
                 </div>
                 <div className="grid flex-1 text-left text-sm leading-tight">
                   <span className="truncate font-semibold">Omega Intelligence</span>
