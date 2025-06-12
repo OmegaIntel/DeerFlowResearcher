@@ -121,37 +121,49 @@ interface User {
 }
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const { isAuthenticated, logout } = useAuth();
+  const { getToken, logout } = useAuth();
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
+  const [isAuth, setIsAuth] = useState(false);
 
   useEffect(() => {
-    // Check if user is authenticated and get user info
-    if (isAuthenticated()) {
-      // Try to get user info from localStorage or cookies
-      const userInfo = localStorage.getItem('userInfo');
-      if (userInfo) {
-        try {
-          setUser(JSON.parse(userInfo));
-        } catch {
-          // If parsing fails, use default
+    // Simple auth check using token presence
+    const checkAuth = () => {
+      const token = getToken();
+      const authStatus = !!token;
+      
+      setIsAuth(authStatus);
+      
+      if (authStatus) {
+        // Get user info if authenticated
+        const userInfo = localStorage.getItem('userInfo');
+        if (userInfo) {
+          try {
+            setUser(JSON.parse(userInfo));
+          } catch {
+            setUser({
+              name: "User",
+              email: "user@example.com",
+            });
+          }
+        } else {
           setUser({
             name: "User",
             email: "user@example.com",
           });
         }
       } else {
-        // If no user info, you could fetch from API here
-        // For now, use default
-        setUser({
-          name: "User",
-          email: "user@example.com",
-        });
+        setUser(null);
       }
-    } else {
-      setUser(null);
-    }
-  }, [isAuthenticated]);
+    };
+
+    // Initial check
+    checkAuth();
+
+    // Set up periodic check
+    const interval = setInterval(checkAuth, 2000);
+    return () => clearInterval(interval);
+  }, []); // Empty dependency array to prevent infinite loops
 
   const handleLogout = () => {
     logout();
@@ -219,7 +231,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            {isAuthenticated() && user ? (
+            {isAuth && user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <SidebarMenuButton
