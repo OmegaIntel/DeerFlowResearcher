@@ -99,6 +99,7 @@ export function InputBox({
       const tools: ToolOption[] = [
         // Add research and agent options
         { id: "research", name: "Research", description: "Deep research on any topic", type: "agent" },
+        { id: "documents", name: "Documents", description: "Search and ask questions about uploaded documents", type: "agent" },
       ];
 
       // Fetch backend-configured MCP servers

@@ -30,3 +30,16 @@ MCP_SERVERS:
   #   url: "http://localhost:3000/sse"
   #   enabled: true
   #   add_to_agents: ["researcher"]
+  
+  # Pinecone Document Search (requires PINECONE_API_KEY and OPENAI_API_KEY)
+  # Uncomment and configure API keys to enable @documents functionality
+  # documents:
+  #   name: "Documents"
+  #   transport: "stdio"
+  #   command: "uv"
+  #   args: ["run", "python", "mcp-servers/pinecone-mcp/mcp-server.py"]
+  #   env:
+  #     PINECONE_API_KEY: "${PINECONE_API_KEY}"
+  #     OPENAI_API_KEY: "${OPENAI_API_KEY}"
+  #   enabled: true
+  #   add_to_agents: ["researcher"]

@@ -9,6 +9,12 @@ from src.tools import (
     python_repl_tool,
     web_search_tool,
 )
+from src.tools.pinecone_search import (
+    search_pinecone_documents,
+    list_pinecone_indices,
+    answer_from_knowledge_base,
+)
+from src.config.tools import PINECONE_ENABLED
 
 from src.llms.llm import get_llm_by_type
 from src.config.agents import AGENT_LLM_MAP
@@ -26,7 +32,16 @@ def create_agent(agent_name: str, agent_type: str, tools: list, prompt_template:
 
 
 # Create agents using the factory function
+# Add Pinecone tools to researcher if available
+researcher_tools = [web_search_tool, crawl_tool]
+if PINECONE_ENABLED:
+    researcher_tools.extend([
+        search_pinecone_documents,
+        list_pinecone_indices,
+        answer_from_knowledge_base,
+    ])
+
 research_agent = create_agent(
-    "researcher", "researcher", [web_search_tool, crawl_tool], "researcher"
+    "researcher", "researcher", researcher_tools, "researcher"
 )
 coder_agent = create_agent("coder", "coder", [python_repl_tool], "coder")

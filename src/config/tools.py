@@ -18,3 +18,8 @@ class SearchEngine(enum.Enum):
 # Tool configuration
 SELECTED_SEARCH_ENGINE = os.getenv("SEARCH_API", SearchEngine.TAVILY.value)
 SEARCH_MAX_RESULTS = 3
+
+# Pinecone configuration
+PINECONE_ENABLED = bool(os.getenv("PINECONE_API_KEY"))
+PINECONE_DEFAULT_TOP_K = 5
+PINECONE_DEFAULT_CONTEXT_CHUNKS = 3
