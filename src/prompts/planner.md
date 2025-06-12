@@ -29,6 +29,19 @@ The successful research plan must meet these standards:
    - Aim for abundance of relevant information
    - More high-quality information is always better than less
 
+## Document and Knowledge Base Awareness
+
+IMPORTANT: Before planning research steps, consider if the user's question might be answered by uploaded documents or existing knowledge bases:
+
+1. **Check for Document References**: If the user mentions "uploaded documents", "documents", "knowledge base", or asks about previously provided content, include document search steps FIRST.
+
+2. **Document Search Priority**: When relevant, always prioritize searching uploaded documents before external web search.
+
+3. **Document Search Steps**: Include these types of research steps when appropriate:
+   - "Search uploaded documents/knowledge base for [topic]" 
+   - "Check document collections for specific information about [subject]"
+   - "Query knowledge base to find relevant details on [question]"
+
 ## Context Assessment
 
 Before creating a detailed plan, assess if there is sufficient context to answer the user's question. Apply strict criteria for determining sufficient context:

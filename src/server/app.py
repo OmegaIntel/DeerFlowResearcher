@@ -212,6 +212,10 @@ async def chat_tool(request: ChatRequest):
                     # Handle research agent query
                     for event in _handle_research_query(user_message, thread_id, request):
                         yield event
+                elif tool_id == "documents":
+                    # Handle documents query
+                    for event in _handle_documents_query(user_message, thread_id, request):
+                        yield event
                 else:
                     raise HTTPException(status_code=400, detail=f"Unknown agent: {tool_id}")
             else:
@@ -596,6 +600,157 @@ def _handle_research_query(user_message: str, thread_id: str, _request: ChatRequ
         "finish_reason": "stop",
     }
     yield f"event: message_chunk\ndata: {json.dumps(data)}\n\n"
+
+
+def _handle_documents_query(user_message: str, thread_id: str, _request: ChatRequest):
+    """Handle documents query - search and Q&A over uploaded documents."""
+    try:
+        import json
+        import os
+        
+        # Use direct Pinecone integration to avoid internal HTTP call deadlock
+        try:
+            from pinecone import Pinecone
+            from openai import OpenAI
+            import numpy as np
+            
+            # Get API keys
+            pinecone_api_key = os.getenv("PINECONE_API_KEY")
+            openai_api_key = os.getenv("OPENAI_API_KEY")
+            
+            if not pinecone_api_key or not openai_api_key:
+                content = "Pinecone or OpenAI API keys not configured. Please configure them to use document search."
+            else:
+                # Initialize clients
+                pc = Pinecone(api_key=pinecone_api_key)
+                openai_client = OpenAI(api_key=openai_api_key)
+                
+                # Generate embedding for question
+                embedding_response = openai_client.embeddings.create(
+                    model="text-embedding-ada-002",
+                    input=user_message
+                )
+                query_embedding = embedding_response.data[0].embedding
+                
+                # Search across indices
+                all_results = []
+                indices_info = pc.list_indexes()
+                indices_to_search = [idx.name for idx in indices_info]
+                
+                for index_name in indices_to_search:
+                    try:
+                        index = pc.Index(index_name)
+                        search_results = index.query(
+                            vector=query_embedding,
+                            top_k=6,  # Get more results for better context
+                            include_metadata=True,
+                            include_values=False
+                        )
+                        
+                        for match in search_results.matches:
+                            metadata = match.metadata or {}
+                            all_results.append({
+                                "text": metadata.get("text", ""),
+                                "score": match.score,
+                                "source": f"{index_name}/{metadata.get('filename', 'unknown')}",
+                                "metadata": metadata
+                            })
+                    except Exception as e:
+                        logger.warning(f"Error searching index {index_name}: {e}")
+                        continue
+                
+                if not all_results:
+                    content = "I couldn't find any relevant information in your documents to answer your question. Please make sure you have uploaded documents using the paperclip icon."
+                else:
+                    # Sort by score and take top results
+                    all_results.sort(key=lambda x: x["score"], reverse=True)
+                    relevant_chunks = all_results[:3]
+                    
+                    # Build context from relevant chunks
+                    context_parts = []
+                    sources = []
+                    
+                    for i, result in enumerate(relevant_chunks):
+                        context_parts.append(f"[Source {i+1}]: {result['text']}")
+                        sources.append({
+                            "source": result["source"],
+                            "score": result["score"],
+                            "metadata": result["metadata"]
+                        })
+                    
+                    context = "\n\n".join(context_parts)
+                    
+                    # Generate answer using OpenAI
+                    prompt = f"""Based on the following context from the knowledge base, please answer the question.
+If the context doesn't contain enough information to answer the question, say so.
+
+Context:
+{context}
+
+Question: {user_message}
+
+Answer:"""
+                    
+                    response = openai_client.chat.completions.create(
+                        model="gpt-4-turbo-preview",
+                        messages=[
+                            {"role": "system", "content": "You are a helpful assistant that answers questions based on the provided context. Be accurate and cite sources when possible."},
+                            {"role": "user", "content": prompt}
+                        ],
+                        temperature=0.7,
+                        max_tokens=500
+                    )
+                    
+                    answer = response.choices[0].message.content
+                    
+                    # Calculate confidence based on search scores
+                    avg_score = float(np.mean([r["score"] for r in relevant_chunks]))
+                    
+                    # Format the response nicely
+                    content_parts = [
+                        f"**Question**: {user_message}\n",
+                        f"**Answer**: {answer}\n"
+                    ]
+                    
+                    if sources:
+                        content_parts.append("**Sources**:")
+                        for i, source in enumerate(sources, 1):
+                            content_parts.append(f"{i}. **{source['source']}** (relevance: {source['score']:.1%})")
+                            # Show a snippet of the source text
+                            if source['metadata'].get('text'):
+                                snippet = source['metadata']['text'][:150]
+                                content_parts.append(f"   _{snippet}..._")
+                        content_parts.append("")
+                    
+                    content_parts.append(f"**Confidence**: {avg_score:.1%}")
+                    content_parts.append(f"**Documents Searched**: {len(relevant_chunks)} chunks")
+                    
+                    content = "\n".join(content_parts)
+                    
+        except Exception as e:
+            logger.error(f"Error in direct Pinecone search: {e}")
+            content = f"I encountered an error while searching your documents: {str(e)}"
+        
+        # Yield the response
+        response_data = {
+            "thread_id": thread_id,
+            "id": str(uuid4()),
+            "role": "assistant",
+            "content": content,
+            "finish_reason": "stop",
+        }
+        yield f"event: message_chunk\ndata: {json.dumps(response_data)}\n\n"
+        
+    except Exception as e:
+        logger.error(f"Error in documents query: {e}")
+        error_data = {
+            "thread_id": thread_id,
+            "id": str(uuid4()),
+            "role": "assistant",
+            "content": f"I encountered an error while searching your documents: {str(e)}",
+            "finish_reason": "error",
+        }
+        yield f"event: message_chunk\ndata: {json.dumps(error_data)}\n\n"
 
 
 async def _astream_workflow_generator(

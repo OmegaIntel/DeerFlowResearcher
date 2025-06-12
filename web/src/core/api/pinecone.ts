@@ -57,6 +57,47 @@ export interface PineconeSearchResponse {
   results: PineconeSearchResult[];
 }
 
+export interface PineconeEnhancedSearchResult {
+  text: string;
+  score: number;
+  source: string;
+  metadata: Record<string, unknown>;
+}
+
+export interface PineconeEnhancedSearchResponse {
+  query: string;
+  index_name?: string;
+  results: PineconeEnhancedSearchResult[];
+  total_results: number;
+}
+
+export interface PineconeQueryRequest {
+  question: string;
+  index_name?: string;
+  context_chunks?: number;
+}
+
+export interface PineconeQueryResponse {
+  question: string;
+  answer: string;
+  sources: Array<{
+    source: string;
+    score: number;
+    metadata: Record<string, unknown>;
+  }>;
+  confidence: number;
+  chunks_used: number;
+}
+
+export interface DetailedPineconeIndex {
+  name: string;
+  dimension: number;
+  metric: string;
+  host: string;
+  total_vectors: number;
+  namespaces: Record<string, unknown>;
+}
+
 export async function uploadFilesToPinecone(files: File[]): Promise<PineconeUploadResponse> {
   const formData = new FormData();
   files.forEach(file => {
@@ -124,6 +165,61 @@ export async function searchPineconeIndex(
   
   if (!response.ok) {
     throw new Error(`Search failed: ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
+export async function queryPineconeKnowledgeBase(
+  request: PineconeQueryRequest
+): Promise<PineconeQueryResponse> {
+  const response = await fetch(resolveServiceURL("pinecone/query"), {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(request),
+  });
+  
+  if (!response.ok) {
+    throw new Error(`Query failed: ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
+export async function searchPineconeEnhanced(
+  query: string,
+  indexName?: string,
+  topK = 5
+): Promise<PineconeEnhancedSearchResponse> {
+  const response = await fetch(resolveServiceURL("pinecone/search/enhanced"), {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      query,
+      index_name: indexName,
+      top_k: topK,
+    }),
+  });
+  
+  if (!response.ok) {
+    throw new Error(`Enhanced search failed: ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
+export async function getDetailedPineconeIndices(): Promise<{
+  indices: DetailedPineconeIndex[];
+  total_indices: number;
+}> {
+  const response = await fetch(resolveServiceURL("pinecone/indices/detailed"));
+  
+  if (!response.ok) {
+    throw new Error(`Failed to get detailed indices: ${response.statusText}`);
   }
 
   return response.json();

@@ -1,12 +1,31 @@
+print("DEBUG: Starting pinecone_routes.py import")
+
 from fastapi import APIRouter, HTTPException, File, UploadFile
-from typing import List
+from typing import List, Optional
+from pydantic import BaseModel
 import tempfile
 import os
 import logging
 from .pinecone_upload import pinecone_upload_queue
 
+print("DEBUG: Imports completed")
+
 logger = logging.getLogger(__name__)
 router = APIRouter()
+
+print("DEBUG: Router created")
+
+
+class QueryRequest(BaseModel):
+    question: str
+    index_name: Optional[str] = None
+    context_chunks: int = 3
+
+
+class SearchRequest(BaseModel):
+    query: str
+    index_name: Optional[str] = None
+    top_k: int = 5
 
 @router.post("/upload")
 async def upload_files_to_pinecone(files: List[UploadFile] = File(...)):
@@ -156,3 +175,135 @@ async def search_vectors(query: str, index_name: str, top_k: int = 5):
     except Exception as e:
         logger.error(f"Error searching vectors: {e}", exc_info=True)
         raise HTTPException(status_code=500, detail=f"Search failed: {str(e)}")
+
+print("DEBUG: After /search route")
+
+print("DEBUG: About to register /query route")
+
+@router.post("/query")
+async def query_knowledge_base(request: QueryRequest):
+    """Answer questions using RAG over documents stored in Pinecone"""
+    try:
+        from pinecone import Pinecone
+        from openai import OpenAI
+        import numpy as np
+        
+        # Get API keys
+        pinecone_api_key = os.getenv("PINECONE_API_KEY")
+        openai_api_key = os.getenv("OPENAI_API_KEY")
+        
+        if not pinecone_api_key:
+            raise HTTPException(status_code=500, detail="PINECONE_API_KEY not configured")
+        if not openai_api_key:
+            raise HTTPException(status_code=500, detail="OPENAI_API_KEY not configured")
+        
+        # Initialize clients
+        pc = Pinecone(api_key=pinecone_api_key)
+        openai_client = OpenAI(api_key=openai_api_key)
+        
+        # Generate embedding for question
+        embedding_response = openai_client.embeddings.create(
+            model="text-embedding-ada-002",
+            input=request.question
+        )
+        query_embedding = embedding_response.data[0].embedding
+        
+        # Search across indices
+        all_results = []
+        indices_to_search = []
+        
+        if request.index_name:
+            indices_to_search = [request.index_name]
+        else:
+            # Get all available indices
+            indices_info = pc.list_indexes()
+            indices_to_search = [idx.name for idx in indices_info]
+        
+        for index_name in indices_to_search:
+            try:
+                index = pc.Index(index_name)
+                search_results = index.query(
+                    vector=query_embedding,
+                    top_k=request.context_chunks * 2,  # Get more results for better context
+                    include_metadata=True,
+                    include_values=False
+                )
+                
+                for match in search_results.matches:
+                    metadata = match.metadata or {}
+                    all_results.append({
+                        "text": metadata.get("text", ""),
+                        "score": match.score,
+                        "source": f"{index_name}/{metadata.get('filename', 'unknown')}",
+                        "metadata": metadata
+                    })
+            except Exception as e:
+                logger.warning(f"Error searching index {index_name}: {e}")
+                continue
+        
+        if not all_results:
+            return {
+                "question": request.question,
+                "answer": "I couldn't find any relevant information in the knowledge base to answer your question.",
+                "sources": [],
+                "confidence": 0.0,
+                "chunks_used": 0
+            }
+        
+        # Sort by score and take top results
+        all_results.sort(key=lambda x: x["score"], reverse=True)
+        relevant_chunks = all_results[:request.context_chunks]
+        
+        # Build context from relevant chunks
+        context_parts = []
+        sources = []
+        
+        for i, result in enumerate(relevant_chunks):
+            context_parts.append(f"[Source {i+1}]: {result['text']}")
+            sources.append({
+                "source": result["source"],
+                "score": result["score"],
+                "metadata": result["metadata"]
+            })
+        
+        context = "\n\n".join(context_parts)
+        
+        # Generate answer using OpenAI
+        prompt = f"""Based on the following context from the knowledge base, please answer the question.
+If the context doesn't contain enough information to answer the question, say so.
+
+Context:
+{context}
+
+Question: {request.question}
+
+Answer:"""
+        
+        response = openai_client.chat.completions.create(
+            model="gpt-4-turbo-preview",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant that answers questions based on the provided context. Be accurate and cite sources when possible."},
+                {"role": "user", "content": prompt}
+            ],
+            temperature=0.7,
+            max_tokens=500
+        )
+        
+        answer = response.choices[0].message.content
+        
+        # Calculate confidence based on search scores
+        avg_score = float(np.mean([r["score"] for r in relevant_chunks]))
+        
+        return {
+            "question": request.question,
+            "answer": answer,
+            "sources": sources,
+            "confidence": avg_score,
+            "chunks_used": len(relevant_chunks)
+        }
+        
+    except Exception as e:
+        logger.error(f"Error querying knowledge base: {e}", exc_info=True)
+        raise HTTPException(status_code=500, detail=f"Query failed: {str(e)}")
+
+print("DEBUG: Successfully registered /query route")
