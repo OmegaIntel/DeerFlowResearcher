@@ -61,27 +61,27 @@ export default function Main() {
   };
  
   return (
-    <div className="flex h-full w-full flex-col">
+    <div className="flex h-full w-full flex-col overflow-hidden">
       <ChatHeader />
       <div
         className={cn(
-          "flex h-full w-full justify-center px-4 pt-4 pb-4",
+          "flex h-full w-full justify-center px-4 pt-4 pb-4 overflow-hidden",
           doubleColumnMode && "gap-8",
         )}
       >
       <MessagesBlock
         className={cn(
-          "shrink-0 transition-all duration-300 ease-out",
+          "shrink-0 transition-all duration-300 ease-out max-w-full",
           !doubleColumnMode &&
-            `w-[768px] translate-x-[min(calc((100vw-538px)*0.75/2),960px/2)]`,
-          doubleColumnMode && `w-[538px]`,
+            `w-full max-w-4xl`,
+          doubleColumnMode && `w-1/2 min-w-0`,
         )}
       />
       <ResearchBlock
         className={cn(
-          "w-[min(calc((100vw-538px)*0.75),960px)] pb-4 transition-all duration-300 ease-out",
-          !doubleColumnMode && "scale-0",
-          doubleColumnMode && "",
+          "pb-4 transition-all duration-300 ease-out max-w-full",
+          !doubleColumnMode && "scale-0 w-0",
+          doubleColumnMode && "w-1/2 min-w-0",
         )}
         researchId={openResearchId}
       />

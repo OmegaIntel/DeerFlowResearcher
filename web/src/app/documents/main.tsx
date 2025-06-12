@@ -172,9 +172,9 @@ export default function DocumentsMain() {
   );
 
   return (
-    <div className="flex h-full w-full flex-col">
+    <div className="flex h-screen w-full flex-col overflow-hidden">
       {/* Header */}
-      <header className="flex h-12 w-full items-center justify-between border-b px-4">
+      <header className="flex h-12 w-full items-center justify-between border-b px-4 flex-shrink-0">
         <div className="flex items-center gap-2">
           <SidebarTrigger className="-ml-1" />
           <h1 className="text-lg font-semibold">Documents</h1>
@@ -192,10 +192,10 @@ export default function DocumentsMain() {
       </header>
 
       {/* Content */}
-      <div className="flex flex-1 flex-col p-4">
+      <div className="flex flex-1 flex-col p-4 overflow-hidden">
         {/* Search and Filters */}
-        <div className="mb-4 flex items-center gap-4">
-          <div className="relative flex-1">
+        <div className="mb-4 flex items-center gap-4 flex-shrink-0">
+          <div className="relative flex-1 min-w-0">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder="Search documents..."
@@ -206,7 +206,7 @@ export default function DocumentsMain() {
           </div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="gap-2">
+              <Button variant="outline" className="gap-2 flex-shrink-0">
                 <Filter className="h-4 w-4" />
                 Status
                 {statusFilter && (
@@ -237,7 +237,7 @@ export default function DocumentsMain() {
         </div>
 
         {/* Documents Grid */}
-        <div className="flex-1 overflow-auto">
+        <div className="flex-1 overflow-auto min-h-0">
           {loading ? (
             <div className="flex h-full items-center justify-center">
               <div className="text-center">
@@ -258,7 +258,7 @@ export default function DocumentsMain() {
               </div>
             </div>
           ) : (
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
               {filteredDocuments.map((doc) => (
                 <Card key={doc.id} className="group hover:shadow-md transition-shadow">
                   <CardHeader className="pb-3">
@@ -321,7 +321,7 @@ export default function DocumentsMain() {
 
         {/* Pagination */}
         {total > 20 && (
-          <div className="mt-4 flex items-center justify-between">
+          <div className="mt-4 flex items-center justify-between flex-shrink-0">
             <p className="text-sm text-muted-foreground">
               Showing {filteredDocuments.length} of {total} documents
             </p>
@@ -349,9 +349,9 @@ export default function DocumentsMain() {
       </div>
 
       {/* Chat Input at Bottom */}
-      <div className="border-t p-4">
+      <div className="border-t p-4 flex-shrink-0">
         <InputBox
-          className="mx-auto max-w-4xl"
+          className="w-full max-w-none"
           size="normal"
         />
       </div>
