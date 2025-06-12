@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 import { AnimatePresence, motion } from "framer-motion";
-import { ArrowUp, X, ChevronDown, Paperclip } from "lucide-react";
+import { ArrowUp, X, ChevronDown, Paperclip, CheckCircle, Upload, AlertCircle } from "lucide-react";
 import {
   type KeyboardEvent,
   useCallback,
@@ -10,6 +10,7 @@ import {
   useRef,
   useState,
 } from "react";
+import { toast } from "sonner";
 
 import { Detective } from "~/components/deer-flow/icons/detective";
 import { Tooltip } from "~/components/deer-flow/tooltip";
@@ -399,7 +400,7 @@ export function InputBox({
       
       // If job is still processing, continue polling
       if (status.status === "processing" || status.status === "pending") {
-        setTimeout(() => void pollUploadStatus(jobId), 2000); // Poll every 2 seconds
+        setTimeout(() => void pollUploadStatus(jobId), 1500); // Poll every 1.5 seconds for smoother updates
       } else {
         // Job completed or failed
         if (status.status === "completed") {
@@ -411,14 +412,27 @@ export function InputBox({
           
           // Show the actual backend message instead of our custom one
           const indexName = status.result?.index_name ?? status.index_name ?? 'Unknown';
-          const indexHost = status.result?.index_host ?? status.index_host ?? 'Unknown';
           const vectorsUpserted = status.result?.vectors_upserted ?? status.vectors_upserted ?? 0;
           const chunksCreated = status.result?.chunks_created ?? 0;
           
-          alert(`Upload completed!\n\nBackend message: ${status.message}\n\nIndex Name: ${indexName}\nIndex Host: ${indexHost}\nVectors Upserted: ${vectorsUpserted}\nChunks Created: ${chunksCreated}`);
+          // Show success toast
+          toast.success("Documents processed successfully!", {
+            description: `${vectorsUpserted} vectors created from ${chunksCreated} chunks in ${indexName}`,
+            duration: 4000,
+          });
+          
+          // Auto-remove uploaded files from display after 3 seconds
+          setTimeout(() => {
+            setUploadedFiles(prev => prev.filter(file => 
+              !status.files.some((statusFile: string) => statusFile === file.name)
+            ));
+          }, 3000);
+          
         } else if (status.status === "failed") {
-          console.error("Upload failed:", status.error);
-          alert(`Upload failed: ${status.error}`);
+          toast.error("Upload failed", {
+            description: status.error || "An error occurred during processing",
+            duration: 6000,
+          });
         }
         
         // Remove from active uploads after a delay
@@ -428,10 +442,14 @@ export function InputBox({
             newMap.delete(jobId);
             return newMap;
           });
-        }, 5000);
+        }, 2000);
       }
     } catch (error) {
       console.error("Error polling upload status:", error);
+      toast.error("Failed to check upload status", {
+        description: "Please check your connection and try again",
+        duration: 4000,
+      });
     }
   }, []);
 
@@ -456,17 +474,26 @@ export function InputBox({
         // Start polling for status
         void pollUploadStatus(response.job_id);
         
-        // Show initial success message
-        alert(`Upload started! Job ID: ${response.job_id}\nProcessing ${filesArray.length} files in background...`);
+        // Show initial success toast
+        toast.success("Upload started!", {
+          description: `Processing ${filesArray.length} file${filesArray.length > 1 ? 's' : ''} in background...`,
+          duration: 3000,
+        });
         
       } else {
         console.error("Upload failed:", response.error);
-        alert(`Upload failed: ${response.message}`);
+        toast.error("Upload failed", {
+          description: response.message ?? "Failed to start upload job",
+          duration: 5000,
+        });
       }
       
     } catch (error) {
       console.error("Error uploading files:", error);
-      alert(`Error uploading files: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      toast.error("Upload error", {
+        description: error instanceof Error ? error.message : 'Unknown error occurred',
+        duration: 5000,
+      });
     } finally {
       setIsUploading(false);
       if (fileInputRef.current) {
@@ -502,29 +529,65 @@ export function InputBox({
         
         {/* Active uploads progress */}
         {activeUploads.size > 0 && (
-          <div className="px-4 pt-2">
+          <motion.div 
+            className="px-4 pt-2"
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+          >
             {Array.from(activeUploads.values()).map((upload) => (
-              <div
+              <motion.div
                 key={upload.job_id}
-                className="mb-2 rounded-md bg-muted p-2 text-sm"
+                className="mb-2 rounded-lg bg-muted/50 p-3 text-sm border"
+                initial={{ scale: 0.95, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.95, opacity: 0 }}
+                transition={{ duration: 0.2 }}
               >
-                <div className="flex items-center justify-between mb-1">
-                  <span className="font-medium">{upload.files.length} files</span>
-                  <span className="text-xs text-muted-foreground">{upload.status}</span>
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    {upload.status === "completed" ? (
+                      <CheckCircle className="h-4 w-4 text-green-500" />
+                    ) : upload.status === "failed" ? (
+                      <AlertCircle className="h-4 w-4 text-red-500" />
+                    ) : (
+                      <Upload className="h-4 w-4 text-blue-500 animate-pulse" />
+                    )}
+                    <span className="font-medium">{upload.files.length} file{upload.files.length > 1 ? 's' : ''}</span>
+                  </div>
+                  <span className={cn(
+                    "text-xs px-2 py-1 rounded-full",
+                    upload.status === "completed" && "bg-green-100 text-green-700",
+                    upload.status === "failed" && "bg-red-100 text-red-700",
+                    (upload.status === "processing" || upload.status === "pending") && "bg-blue-100 text-blue-700"
+                  )}>
+                    {upload.status === "processing" ? "Processing..." : 
+                     upload.status === "pending" ? "Queued" :
+                     upload.status === "completed" ? "Complete" : 
+                     upload.status}
+                  </span>
                 </div>
-                <div className="text-xs text-muted-foreground mb-1">{upload.message}</div>
-                <div className="w-full bg-background rounded-full h-2">
-                  <div
-                    className="bg-primary h-2 rounded-full transition-all duration-300"
-                    style={{ width: `${upload.progress}%` }}
+                <div className="text-xs text-muted-foreground mb-2">{upload.message}</div>
+                <div className="w-full bg-background rounded-full h-2 overflow-hidden">
+                  <motion.div
+                    className={cn(
+                      "h-2 rounded-full transition-all duration-500",
+                      upload.status === "completed" ? "bg-green-500" :
+                      upload.status === "failed" ? "bg-red-500" :
+                      "bg-blue-500"
+                    )}
+                    initial={{ width: 0 }}
+                    animate={{ width: `${upload.progress}%` }}
+                    transition={{ duration: 0.5, ease: "easeOut" }}
                   />
                 </div>
-                <div className="text-xs text-muted-foreground mt-1">
-                  {upload.progress}% complete
+                <div className="text-xs text-muted-foreground mt-1 flex justify-between">
+                  <span>{upload.progress}% complete</span>
+                  <span className="text-xs opacity-70">Job ID: {upload.job_id.slice(-8)}</span>
                 </div>
-              </div>
+              </motion.div>
             ))}
-          </div>
+          </motion.div>
         )}
 
         {/* Uploaded files display */}
