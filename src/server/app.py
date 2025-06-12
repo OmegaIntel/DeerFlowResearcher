@@ -33,6 +33,8 @@ from src.tools import VolcengineTTS
 from src.config.mcp_servers import mcp_server_config
 from src.server.llamacloud_upload import router as llamacloud_router
 from src.server.pinecone_routes import router as pinecone_router
+from src.server.chat_history_routes import router as chat_history_router
+from src.server.documents_routes import router as documents_router
 from src.db.db_session import (
     create_db_tables,
     SessionLocal,
@@ -61,6 +63,8 @@ app.include_router(current_user_router)
 app.include_router(verify_user_router)
 app.include_router(llamacloud_router)
 app.include_router(pinecone_router, prefix="/api/pinecone")
+app.include_router(chat_history_router, prefix="/api/chat")
+app.include_router(documents_router, prefix="/api/documents")
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,

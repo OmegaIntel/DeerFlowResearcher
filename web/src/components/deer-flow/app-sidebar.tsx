@@ -53,46 +53,16 @@ const data = {
       url: "/chat",
       icon: Bot,
       isActive: true,
-      items: [
-        {
-          title: "New Chat",
-          url: "/chat",
-        },
-        {
-          title: "Chat History",
-          url: "/chat/history",
-        },
-      ],
     },
     {
-      title: "Research",
-      url: "/research",
+      title: "Chat History",
+      url: "/chat/history",
       icon: BookOpen,
-      items: [
-        {
-          title: "New Research",
-          url: "/chat?mode=research",
-        },
-        {
-          title: "Research History",
-          url: "/research/history",
-        },
-      ],
     },
     {
       title: "Documents",
       url: "/documents",
       icon: Frame,
-      items: [
-        {
-          title: "Upload Files",
-          url: "/documents/upload",
-        },
-        {
-          title: "Document Search",
-          url: "/chat?tool=documents",
-        },
-      ],
     },
   ],
   projects: [
