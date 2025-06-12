@@ -185,16 +185,16 @@ export default function ChatHistoryMain() {
   );
 
   return (
-    <div className="flex h-full w-full">
+    <div className="flex h-screen w-full overflow-hidden">
       {/* Sessions List */}
-      <div className="flex w-80 flex-col border-r">
+      <div className="flex w-80 flex-col border-r flex-shrink-0 overflow-hidden">
         {/* Header */}
-        <header className="flex h-12 w-full items-center justify-between border-b px-4">
-          <div className="flex items-center gap-2">
+        <header className="flex h-12 w-full items-center justify-between border-b px-4 flex-shrink-0">
+          <div className="flex items-center gap-2 min-w-0">
             <SidebarTrigger className="-ml-1" />
-            <h1 className="text-lg font-semibold">Chat History</h1>
+            <h1 className="text-lg font-semibold truncate">Chat History</h1>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 flex-shrink-0">
             <Button
               variant="outline"
               size="icon"
@@ -214,7 +214,7 @@ export default function ChatHistoryMain() {
         </header>
 
         {/* Search and Filters */}
-        <div className="border-b p-4 space-y-2">
+        <div className="border-b p-4 space-y-2 flex-shrink-0">
           <div className="relative">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
@@ -254,7 +254,7 @@ export default function ChatHistoryMain() {
         </div>
 
         {/* Sessions List */}
-        <div className="flex-1 overflow-auto">
+        <div className="flex-1 overflow-auto min-h-0">
           {loading ? (
             <div className="flex h-full items-center justify-center">
               <div className="text-center">
@@ -342,27 +342,27 @@ export default function ChatHistoryMain() {
       </div>
 
       {/* Session Detail */}
-      <div className="flex flex-1 flex-col">
+      <div className="flex flex-1 flex-col min-w-0 overflow-hidden">
         {selectedSession ? (
           <>
             {/* Session Header */}
-            <header className="flex h-12 w-full items-center justify-between border-b px-4">
-              <div>
-                <h2 className="font-semibold">
+            <header className="flex h-12 w-full items-center justify-between border-b px-4 flex-shrink-0">
+              <div className="min-w-0 flex-1">
+                <h2 className="font-semibold truncate">
                   {selectedSession.title || `${selectedSession.mode} session`}
                 </h2>
                 <p className="text-xs text-muted-foreground">
                   {format(new Date(selectedSession.created_at), 'MMMM d, yyyy')}
                 </p>
               </div>
-              <Badge className={getModeColor(selectedSession.mode)}>
+              <Badge className={`${getModeColor(selectedSession.mode)} flex-shrink-0`}>
                 {selectedSession.mode}
               </Badge>
             </header>
 
             {/* Messages */}
-            <div className="flex-1 overflow-auto p-4">
-              <div className="space-y-4 max-w-4xl mx-auto">
+            <div className="flex-1 overflow-auto p-4 min-h-0">
+              <div className="space-y-4 w-full max-w-none">
                 {selectedSession.messages.map((message) => (
                   <div
                     key={message.id}
@@ -377,7 +377,7 @@ export default function ChatHistoryMain() {
                           : 'bg-muted'
                       }`}
                     >
-                      <div className="whitespace-pre-wrap">{message.content}</div>
+                      <div className="whitespace-pre-wrap break-words">{message.content}</div>
                       <div className={`mt-1 text-xs ${
                         message.role === 'user' 
                           ? 'text-primary-foreground/70' 
@@ -392,9 +392,9 @@ export default function ChatHistoryMain() {
             </div>
 
             {/* Chat Input */}
-            <div className="border-t p-4">
+            <div className="border-t p-4 flex-shrink-0">
               <InputBox
-                className="mx-auto max-w-4xl"
+                className="w-full max-w-none"
                 size="normal"
               />
             </div>
