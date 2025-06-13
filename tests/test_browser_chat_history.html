@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Chat History in Browser</title>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        button { margin: 10px 0; padding: 10px; }
+        .success { color: green; }
+        .error { color: red; }
+        pre { background: #f0f0f0; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Chat History Browser Test</h1>
+    
+    <div>
+        <button onclick="testFullFlow()">Run Full Test Flow</button>
+        <button onclick="checkCurrentAuth()">Check Current Auth</button>
+        <button onclick="navigateToChatHistory()">Go to Chat History Page</button>
+    </div>
+    
+    <h2>Test Results:</h2>
+    <pre id="results"></pre>
+    
+    <script>
+        const resultsDiv = document.getElementById('results');
+        
+        function log(message, isError = false) {
+            const timestamp = new Date().toLocaleTimeString();
+            const className = isError ? 'error' : 'success';
+            resultsDiv.innerHTML += `<span class="${className}">[${timestamp}] ${message}</span>\n`;
+            console.log(message);
+        }
+        
+        async function checkCurrentAuth() {
+            log('Checking current authentication status...');
+            
+            // Check all storage
+            const cookieToken = Cookies.get('authToken');
+            const localToken = localStorage.getItem('authToken');
+            const sessionToken = sessionStorage.getItem('authToken');
+            
+            log(`Cookie token: ${cookieToken ? 'Present' : 'Missing'}`);
+            log(`LocalStorage token: ${localToken ? 'Present' : 'Missing'}`);
+            log(`SessionStorage token: ${sessionToken ? 'Present' : 'Missing'}`);
+            
+            if (cookieToken || localToken || sessionToken) {
+                const token = cookieToken || localToken || sessionToken;
+                
+                // Test the token
+                try {
+                    const response = await fetch('http://localhost:8000/api/chat/sessions', {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        }
+                    });
+                    
+                    if (response.ok) {
+                        const sessions = await response.json();
+                        log(`✓ Token is valid! Found ${sessions.length} chat sessions`);
+                    } else {
+                        log(`✗ Token is invalid: ${response.status}`, true);
+                    }
+                } catch (error) {
+                    log(`✗ Error testing token: ${error.message}`, true);
+                }
+            } else {
+                log('No authentication token found', true);
+            }
+        }
+        
+        async function testFullFlow() {
+            resultsDiv.innerHTML = '';
+            
+            // Step 1: Clear all auth
+            log('Step 1: Clearing all authentication...');
+            Cookies.remove('authToken', { path: '/' });
+            localStorage.removeItem('authToken');
+            sessionStorage.removeItem('authToken');
+            log('✓ All auth cleared');
+            
+            // Step 2: Login
+            log('\nStep 2: Logging in...');
+            try {
+                const response = await fetch('http://localhost:8000/api/token', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'username=test@example.com&password=testpassword123'
+                });
+                
+                if (!response.ok) {
+                    log(`✗ Login failed: ${response.status}`, true);
+                    return;
+                }
+                
+                const data = await response.json();
+                const token = data.access_token;
+                log(`✓ Login successful, got token: ${token.substring(0, 20)}...`);
+                
+                // Step 3: Store token like the frontend does
+                log('\nStep 3: Storing token...');
+                
+                // Store in cookies
+                Cookies.set('authToken', token, {
+                    path: '/',
+                    expires: 1/12, // 2 hours
+                    sameSite: 'Lax',
+                });
+                log('✓ Stored in cookie');
+                
+                // Also save to localStorage
+                localStorage.setItem('authToken', token);
+                log('✓ Stored in localStorage');
+                
+                // Also save to sessionStorage
+                sessionStorage.setItem('authToken', token);
+                log('✓ Stored in sessionStorage');
+                
+                // Step 4: Test API call
+                log('\nStep 4: Testing API call...');
+                const testResponse = await fetch('http://localhost:8000/api/chat/sessions', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (testResponse.ok) {
+                    const sessions = await testResponse.json();
+                    log(`✓ API call successful! Found ${sessions.length} sessions`);
+                    
+                    if (sessions.length > 0) {
+                        log('\nChat Sessions:');
+                        sessions.forEach((session, index) => {
+                            log(`  ${index + 1}. Thread: ${session.thread_id}`);
+                            log(`     Messages: ${session.message_count}, Created: ${session.created_at}`);
+                        });
+                    }
+                } else {
+                    log(`✗ API call failed: ${testResponse.status}`, true);
+                }
+                
+                log('\n✅ Test complete! You can now navigate to the Chat History page.');
+                
+            } catch (error) {
+                log(`✗ Error: ${error.message}`, true);
+            }
+        }
+        
+        function navigateToChatHistory() {
+            log('Navigating to Chat History page...');
+            window.location.href = 'http://localhost:3000/chat-history';
+        }
+        
+        // Check auth on load
+        window.onload = () => {
+            checkCurrentAuth();
+        };
+    </script>
+</body>
+</html>

@@ -25,9 +25,12 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { SidebarTrigger } from "~/components/ui/sidebar";
 import { InputBox } from "~/app/chat/components/input-box";
+import { getAuthToken } from "~/services/auth";
+import { resolveServiceURL } from "~/core/api/resolve-service-url";
 
 interface ChatSession {
   id: string;
+  thread_id: string;
   title?: string;
   mode: string;
   message_count: number;
@@ -51,6 +54,7 @@ interface ChatMessage {
 
 interface ChatSessionDetail {
   id: string;
+  thread_id: string;
   title?: string;
   mode: string;
   created_at: string;
@@ -79,19 +83,30 @@ export default function ChatHistoryMain() {
         params.append("mode", modeFilter);
       }
 
-      const response = await fetch(`/api/chat/sessions?${params}`, {
+      const url = resolveServiceURL(`chat/sessions?${params}`);
+      console.log("[Chat History] Fetching sessions from:", url);
+      
+      const response = await fetch(url, {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+          Authorization: `Bearer ${getAuthToken()}`,
         },
       });
 
+      console.log("[Chat History] Response status:", response.status);
+
       if (response.ok) {
-        const data: ChatSession[] = await response.json();
-        setSessions(data);
+        const data = await response.json();
+        console.log("[Chat History] Raw response data:", data);
+        console.log("[Chat History] Data type:", typeof data, "Is Array:", Array.isArray(data));
+        
+        // Ensure we have an array
+        const sessionsArray: ChatSession[] = Array.isArray(data) ? data : [];
+        console.log("[Chat History] Fetched sessions:", sessionsArray.length);
+        setSessions(sessionsArray);
         // Note: We'd need to update the backend to return total count
-        setTotal(data.length);
+        setTotal(sessionsArray.length);
       } else {
-        console.error("Failed to fetch chat sessions");
+        console.error("Failed to fetch chat sessions", response.status);
       }
     } catch (error) {
       console.error("Error fetching chat sessions:", error);
@@ -103,9 +118,9 @@ export default function ChatHistoryMain() {
 
   const fetchSessionDetail = async (sessionId: string) => {
     try {
-      const response = await fetch(`/api/chat/sessions/${sessionId}`, {
+      const response = await fetch(resolveServiceURL(`chat/sessions/${sessionId}`), {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+          Authorization: `Bearer ${getAuthToken()}`,
         },
       });
 
@@ -143,10 +158,10 @@ export default function ChatHistoryMain() {
     }
 
     try {
-      const response = await fetch(`/api/chat/sessions/${sessionId}`, {
+      const response = await fetch(resolveServiceURL(`chat/sessions/${sessionId}`), {
         method: 'DELETE',
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+          Authorization: `Bearer ${getAuthToken()}`,
         },
       });
 
@@ -166,13 +181,13 @@ export default function ChatHistoryMain() {
   const getModeColor = (mode: string) => {
     switch (mode) {
       case 'research':
-        return 'bg-purple-100 text-purple-800';
+        return 'bg-purple-100/60 text-purple-700 dark:bg-purple-900/20 dark:text-purple-400';
       case 'documents':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-blue-100/60 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400';
       case 'chat':
-        return 'bg-green-100 text-green-800';
+        return 'bg-green-100/60 text-green-700 dark:bg-green-900/20 dark:text-green-400';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-gray-100/60 text-gray-700 dark:bg-gray-900/20 dark:text-gray-400';
     }
   };
 
@@ -183,6 +198,8 @@ export default function ChatHistoryMain() {
   const filteredSessions = sessions.filter(session =>
     getDisplayTitle(session).toLowerCase().includes(searchTerm.toLowerCase())
   );
+  
+  console.log("[Chat History] Sessions:", sessions.length, "Filtered:", filteredSessions.length, "Loading:", loading, "Search:", searchTerm);
 
   return (
     <div className="flex h-screen w-full overflow-hidden">
@@ -275,66 +292,75 @@ export default function ChatHistoryMain() {
               </div>
             </div>
           ) : (
-            <div className="space-y-2 p-4">
+            <div className="space-y-1 p-2">
               {filteredSessions.map((session) => (
-                <Card 
+                <div 
                   key={session.id} 
-                  className={`cursor-pointer transition-colors hover:bg-accent ${
+                  className={`group relative flex items-center justify-between rounded-md px-3 py-2 cursor-pointer transition-all hover:bg-accent/50 ${
                     selectedSession?.id === session.id ? 'bg-accent' : ''
                   }`}
                   onClick={() => handleSessionClick(session)}
                 >
-                  <CardHeader className="pb-2">
-                    <div className="flex items-start justify-between">
-                      <div className="flex-1 min-w-0">
-                        <CardTitle className="text-sm line-clamp-1">
-                          {getDisplayTitle(session)}
-                        </CardTitle>
-                        <div className="mt-1 flex items-center gap-2">
-                          <Badge className={getModeColor(session.mode)}>
-                            {session.mode}
-                          </Badge>
-                          <span className="text-xs text-muted-foreground">
-                            {session.message_count} messages
-                          </span>
+                  <div className="flex-1 min-w-0 pr-2">
+                    <div className="flex items-center gap-2">
+                      <h3 className="text-sm font-medium truncate">
+                        {getDisplayTitle(session)}
+                      </h3>
+                      <Badge className={`${getModeColor(session.mode)} h-5 px-1.5 text-[10px]`}>
+                        {session.mode}
+                      </Badge>
+                    </div>
+                    <div className="flex items-center gap-3 mt-0.5">
+                      <span className="text-[11px] text-muted-foreground">
+                        {session.message_count} messages
+                      </span>
+                      <span className="text-[11px] text-muted-foreground">
+                        {format(new Date(session.last_message_at), 'MMM d, h:mm a')}
+                      </span>
+                    </div>
+                  </div>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
+                      <Button 
+                        variant="ghost" 
+                        size="icon" 
+                        className="h-6 w-6 opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <span className="sr-only">More options</span>
+                        <div className="flex flex-col gap-0.5">
+                          <div className="h-1 w-1 rounded-full bg-current" />
+                          <div className="h-1 w-1 rounded-full bg-current" />
+                          <div className="h-1 w-1 rounded-full bg-current" />
                         </div>
-                      </div>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                          <Button variant="ghost" size="icon" className="h-6 w-6">
-                            <span className="sr-only">More options</span>
-                            <div className="flex flex-col gap-0.5">
-                              <div className="h-1 w-1 rounded-full bg-current" />
-                              <div className="h-1 w-1 rounded-full bg-current" />
-                              <div className="h-1 w-1 rounded-full bg-current" />
-                            </div>
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                          <DropdownMenuItem>
-                            <Edit className="mr-2 h-4 w-4" />
-                            Rename
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDeleteSession(session.id);
-                            }}
-                            className="text-destructive"
-                          >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                  </CardHeader>
-                  <CardContent className="pt-0">
-                    <div className="text-xs text-muted-foreground">
-                      {format(new Date(session.last_message_at), 'MMM d, yyyy h:mm a')}
-                    </div>
-                  </CardContent>
-                </Card>
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          router.push(`/chat?thread=${session.thread_id}`);
+                        }}
+                      >
+                        <MessageSquare className="mr-2 h-3 w-3" />
+                        Continue Chat
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Edit className="mr-2 h-3 w-3" />
+                        Rename
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleDeleteSession(session.id);
+                        }}
+                        className="text-destructive"
+                      >
+                        <Trash2 className="mr-2 h-3 w-3" />
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
               ))}
             </div>
           )}

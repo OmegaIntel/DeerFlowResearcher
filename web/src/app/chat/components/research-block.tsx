@@ -2,6 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 import { Check, Copy, Headphones, X } from "lucide-react";
+import { DownloadOutlined } from "@ant-design/icons";
 import { useCallback, useEffect, useState } from "react";
 
 import { ScrollContainer } from "~/components/deer-flow/scroll-container";
@@ -47,6 +48,39 @@ export function ResearchBlock({
     await listenToPodcast(researchId);
   }, [researchId]);
 
+  const handleGeneratePpt = useCallback(async () => {
+    if (!reportId) return;
+    
+    const report = useStore.getState().messages.get(reportId);
+    if (!report) return;
+
+    try {
+      const res = await fetch("http://localhost:8000/api/ppt/generate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content: report.content }),
+      });
+
+      if (!res.ok) {
+        const txt = await res.text();
+        throw new Error(txt || res.statusText);
+      }
+
+      const blob = await res.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "report.pptx";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Failed to download PPT", err);
+      alert("Error generating PPT. Check console for details.");
+    }
+  }, [reportId]);
+
   const [copied, setCopied] = useState(false);
   const handleCopy = useCallback(() => {
     if (!reportId) {
@@ -85,6 +119,17 @@ export function ResearchBlock({
                   onClick={handleGeneratePodcast}
                 >
                   <Headphones />
+                </Button>
+              </Tooltip>
+              <Tooltip title="Download PowerPoint">
+                <Button
+                  className="text-gray-400"
+                  size="icon"
+                  variant="ghost"
+                  disabled={isReplay}
+                  onClick={handleGeneratePpt}
+                >
+                  <DownloadOutlined />
                 </Button>
               </Tooltip>
               <Tooltip title="Copy">

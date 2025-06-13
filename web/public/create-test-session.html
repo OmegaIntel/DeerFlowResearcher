@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Create Test Session</title>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .session { border: 1px solid #ccc; padding: 10px; margin: 10px 0; }
+        .error { color: red; }
+        .success { color: green; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        pre { background: #f0f0f0; padding: 10px; overflow: auto; }
+    </style>
+</head>
+<body>
+    <h1>Create Test Chat Session</h1>
+    <p>This will create a test chat session for the currently logged-in user.</p>
+    
+    <button onclick="createTestSession()">Create Test Session</button>
+    <button onclick="viewSessions()">View All Sessions</button>
+    <button onclick="clearResults()">Clear</button>
+    <hr>
+    <div id="results"></div>
+
+    <script>
+        const results = document.getElementById('results');
+        
+        function log(message, type = 'info') {
+            const className = type === 'error' ? 'error' : type === 'success' ? 'success' : '';
+            results.innerHTML += `<p class="${className}">${message}</p>`;
+        }
+        
+        function clearResults() {
+            results.innerHTML = '';
+        }
+        
+        async function createTestSession() {
+            clearResults();
+            log('Starting test session creation...');
+            
+            // Get auth token
+            const authToken = Cookies.get('authToken') || 
+                             localStorage.getItem('authToken') || 
+                             sessionStorage.getItem('authToken');
+            
+            if (!authToken) {
+                log('No auth token found. Please login first.', 'error');
+                return;
+            }
+            
+            log('Auth token found!', 'success');
+            
+            // Determine API URL based on current location
+            const currentHost = window.location.hostname;
+            const baseUrl = currentHost === 'localhost' || currentHost === '127.0.0.1'
+                ? 'http://localhost:8000/api'
+                : `http://${currentHost}:8000/api`;
+            
+            log(`Using API base URL: ${baseUrl}`);
+            
+            // Create a unique thread ID
+            const threadId = 'test-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+            log(`Generated thread ID: ${threadId}`);
+            
+            // Prepare chat data
+            const chatData = {
+                messages: [{
+                    role: "user",
+                    content: "Hello! This is a test message created at " + new Date().toLocaleString()
+                }],
+                temperature: 0.7,
+                max_tokens: 150,
+                thread_id: threadId
+            };
+            
+            log('Sending chat request...');
+            log(`Request body: <pre>${JSON.stringify(chatData, null, 2)}</pre>`);
+            
+            try {
+                const response = await fetch(`${baseUrl}/chat/simple`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(chatData)
+                });
+                
+                log(`Response status: ${response.status}`);
+                
+                if (response.ok) {
+                    log('Chat session created successfully!', 'success');
+                    
+                    // Read the streaming response
+                    const reader = response.body.getReader();
+                    const decoder = new TextDecoder();
+                    let fullResponse = '';
+                    
+                    while (true) {
+                        const { done, value } = await reader.read();
+                        if (done) break;
+                        
+                        const chunk = decoder.decode(value);
+                        fullResponse += chunk;
+                    }
+                    
+                    log(`Response preview: ${fullResponse.substring(0, 200)}...`);
+                    
+                    // Now check if it appears in sessions
+                    log('<br>Checking if session appears in history...');
+                    setTimeout(() => viewSessions(), 1000);
+                } else {
+                    const errorText = await response.text();
+                    log(`Failed to create session: ${response.status}`, 'error');
+                    log(`Error: ${errorText}`, 'error');
+                }
+            } catch (error) {
+                log(`Network error: ${error.message}`, 'error');
+            }
+        }
+        
+        async function viewSessions() {
+            log('<br><strong>Fetching all sessions...</strong>');
+            
+            const authToken = Cookies.get('authToken') || 
+                             localStorage.getItem('authToken') || 
+                             sessionStorage.getItem('authToken');
+            
+            if (!authToken) {
+                log('No auth token found.', 'error');
+                return;
+            }
+            
+            const currentHost = window.location.hostname;
+            const apiUrl = currentHost === 'localhost' || currentHost === '127.0.0.1'
+                ? 'http://localhost:8000/api/chat/sessions'
+                : `http://${currentHost}:8000/api/chat/sessions`;
+            
+            try {
+                const response = await fetch(apiUrl, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Accept': 'application/json',
+                    }
+                });
+                
+                if (response.ok) {
+                    const sessions = await response.json();
+                    log(`Found ${sessions.length} sessions`, 'success');
+                    
+                    if (sessions.length > 0) {
+                        log('<strong>Recent sessions:</strong>');
+                        sessions.slice(0, 5).forEach((session, index) => {
+                            log(`<div class="session">
+                                <strong>Session ${index + 1}</strong><br>
+                                ID: ${session.id}<br>
+                                Thread ID: ${session.thread_id}<br>
+                                Messages: ${session.message_count}<br>
+                                Created: ${new Date(session.created_at).toLocaleString()}
+                            </div>`);
+                        });
+                    }
+                } else {
+                    log(`Failed to fetch sessions: ${response.status}`, 'error');
+                }
+            } catch (error) {
+                log(`Error fetching sessions: ${error.message}`, 'error');
+            }
+        }
+    </script>
+</body>
+</html>

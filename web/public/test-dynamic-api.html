@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dynamic API Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .info { color: blue; }
+        .success { color: green; }
+        .error { color: red; }
+        pre { background: #f0f0f0; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Dynamic API URL Test</h1>
+    
+    <div id="info"></div>
+    
+    <button onclick="runTest()">Run API Test</button>
+    <button onclick="location.reload()">Reload Page</button>
+    
+    <pre id="output"></pre>
+
+    <script>
+        // Show current location info
+        document.getElementById('info').innerHTML = `
+            <p class="info"><strong>Current Location:</strong></p>
+            <p>Protocol: ${window.location.protocol}</p>
+            <p>Hostname: ${window.location.hostname}</p>
+            <p>Port: ${window.location.port || '(default)'}</p>
+            <p>Full URL: ${window.location.href}</p>
+        `;
+        
+        // Dynamic API URL resolution (same logic as React code)
+        function resolveServiceURL(path) {
+            let BASE_URL = "http://localhost:8000/api";
+            
+            const currentHost = window.location.hostname;
+            const currentProtocol = window.location.protocol;
+            
+            // If accessing from EC2 or non-localhost, use dynamic URL
+            if (currentHost !== 'localhost' && currentHost !== '127.0.0.1') {
+                BASE_URL = `${currentProtocol}//${currentHost}:8000/api`;
+            }
+            
+            if (BASE_URL.endsWith("/")) {
+                BASE_URL = BASE_URL.slice(0, -1);
+            }
+            if (!path.startsWith("/")) {
+                path = "/" + path;
+            }
+            return BASE_URL + path;
+        }
+        
+        async function runTest() {
+            const output = document.getElementById('output');
+            output.textContent = '';
+            
+            try {
+                // Show resolved API URL
+                const apiUrl = resolveServiceURL('/chat/sessions');
+                output.textContent += `Resolved API URL: ${apiUrl}\n\n`;
+                
+                // Get auth token
+                const authToken = document.cookie
+                    .split('; ')
+                    .find(row => row.startsWith('authToken='))
+                    ?.split('=')[1];
+                
+                if (!authToken) {
+                    output.textContent += 'ERROR: No auth token found. Please login first.\n';
+                    output.textContent += 'Go to: ' + window.location.origin + '/auth/login\n';
+                    return;
+                }
+                
+                output.textContent += `Auth token found: ${authToken.substring(0, 30)}...\n\n`;
+                
+                // Make API call
+                output.textContent += 'Making API call...\n';
+                const response = await fetch(apiUrl, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Accept': 'application/json',
+                    }
+                });
+                
+                output.textContent += `Response status: ${response.status}\n`;
+                output.textContent += `Response OK: ${response.ok}\n\n`;
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    output.textContent += `SUCCESS! Found ${data.length} chat sessions:\n\n`;
+                    data.forEach((session, index) => {
+                        output.textContent += `Session ${index + 1}:\n`;
+                        output.textContent += `  ID: ${session.id}\n`;
+                        output.textContent += `  Thread: ${session.thread_id}\n`;
+                        output.textContent += `  Messages: ${session.message_count}\n`;
+                        output.textContent += `  Created: ${session.created_at}\n\n`;
+                    });
+                } else {
+                    const error = await response.text();
+                    output.textContent += `ERROR: ${error}\n`;
+                }
+            } catch (e) {
+                output.textContent += `\nEXCEPTION: ${e.message}\n`;
+                output.textContent += `Stack: ${e.stack}\n`;
+            }
+        }
+        
+        // Auto-run on load
+        window.onload = () => {
+            const info = document.getElementById('info');
+            const apiUrl = resolveServiceURL('/chat/sessions');
+            info.innerHTML += `<p class="success"><strong>API will use: ${apiUrl}</strong></p>`;
+        };
+    </script>
+</body>
+</html>

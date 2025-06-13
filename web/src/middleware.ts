@@ -7,8 +7,16 @@ export function middleware(request: NextRequest) {
   // Get auth token from cookies
   const authToken = request.cookies.get('authToken')?.value;
   
+  console.log('[Middleware] Request:', {
+    pathname,
+    method: request.method,
+    hasAuthToken: !!authToken,
+    tokenPreview: authToken ? `${authToken.substring(0, 20)}...` : null,
+    cookies: request.cookies.getAll().map(c => c.name),
+  });
+  
   // Define protected routes
-  const protectedRoutes = ['/chat', '/research', '/documents', '/settings'];
+  const protectedRoutes = ['/chat', '/chat-history', '/research', '/documents', '/settings'];
   const authRoutes = ['/auth/login', '/auth/register'];
   
   // Check if current path is protected

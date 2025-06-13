@@ -12,6 +12,8 @@ import {
   Search,
   Filter,
 } from "lucide-react";
+import { resolveServiceURL } from "~/core/api/resolve-service-url";
+import { getAuthToken } from "~/services/auth";
 
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -25,6 +27,7 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { SidebarTrigger } from "~/components/ui/sidebar";
 import { InputBox } from "~/app/chat/components/input-box";
+import { UploadDialog } from "~/components/documents/upload-dialog";
 
 interface Document {
   id: string;
@@ -55,6 +58,7 @@ export default function DocumentsMain() {
   const [page, setPage] = useState(1);
   const [total, setTotal] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
+  const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
 
   const fetchDocuments = async () => {
     try {
@@ -67,10 +71,11 @@ export default function DocumentsMain() {
         params.append("status_filter", statusFilter);
       }
 
-      const response = await fetch(`/api/documents?${params}`, {
+      const response = await fetch(resolveServiceURL(`documents?${params}`), {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+          Authorization: `Bearer ${getAuthToken()}`,
         },
+        credentials: 'include'
       });
 
       if (response.ok) {
@@ -104,9 +109,11 @@ export default function DocumentsMain() {
     }
 
     try {
-      const response = await fetch(`/api/documents/${doc.id}/download-url`, {
+      // For download URL, we still need to call backend directly
+      const token = getAuthToken();
+      const response = await fetch(resolveServiceURL(`documents/${doc.id}/download-url`), {
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+          Authorization: `Bearer ${token}`,
         },
       });
 
@@ -127,11 +134,12 @@ export default function DocumentsMain() {
     }
 
     try {
-      const response = await fetch(`/api/documents/${docId}`, {
+      const response = await fetch(resolveServiceURL(`documents/${docId}`), {
         method: 'DELETE',
         headers: {
-          Authorization: `Bearer ${localStorage.getItem('authToken')}`,
+          Authorization: `Bearer ${getAuthToken()}`,
         },
+        credentials: 'include'
       });
 
       if (response.ok) {
@@ -147,15 +155,15 @@ export default function DocumentsMain() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'completed':
-        return 'bg-green-100 text-green-800';
+        return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400';
       case 'processing':
-        return 'bg-blue-100 text-blue-800';
+        return 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400';
       case 'failed':
-        return 'bg-red-100 text-red-800';
+        return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400';
       case 'pending':
-        return 'bg-yellow-100 text-yellow-800';
+        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-muted text-muted-foreground';
     }
   };
 
@@ -172,7 +180,7 @@ export default function DocumentsMain() {
   );
 
   return (
-    <div className="flex h-screen w-full flex-col overflow-hidden">
+    <div className="flex h-full w-full flex-col overflow-hidden">
       {/* Header */}
       <header className="flex h-12 w-full items-center justify-between border-b px-4 flex-shrink-0">
         <div className="flex items-center gap-2">
@@ -192,9 +200,9 @@ export default function DocumentsMain() {
       </header>
 
       {/* Content */}
-      <div className="flex flex-1 flex-col p-4 overflow-hidden">
-        {/* Search and Filters */}
-        <div className="mb-4 flex items-center gap-4 flex-shrink-0">
+      <div className="flex flex-1 flex-col px-4 pt-4 pb-4 overflow-hidden justify-center">
+        {/* Search and Filters - Centered with max width like chat */}
+        <div className="w-full max-w-4xl mx-auto mb-4 flex items-center gap-4 flex-shrink-0">
           <div className="relative flex-1 min-w-0">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
             <Input
@@ -236,8 +244,8 @@ export default function DocumentsMain() {
           </DropdownMenu>
         </div>
 
-        {/* Documents Grid */}
-        <div className="flex-1 overflow-auto min-h-0">
+        {/* Documents Grid - Centered with max width like chat */}
+        <div className="w-full max-w-4xl mx-auto flex-1 overflow-auto min-h-0">
           {loading ? (
             <div className="flex h-full items-center justify-center">
               <div className="text-center">
@@ -255,6 +263,15 @@ export default function DocumentsMain() {
                     ? "Try adjusting your search or filters"
                     : "Upload documents to get started"}
                 </p>
+                {!searchTerm && !statusFilter && (
+                  <Button 
+                    className="mt-4" 
+                    onClick={() => setUploadDialogOpen(true)}
+                  >
+                    <Upload className="mr-2 h-4 w-4" />
+                    Upload Documents
+                  </Button>
+                )}
               </div>
             </div>
           ) : (
@@ -302,7 +319,7 @@ export default function DocumentsMain() {
                       </Badge>
                     </div>
                     
-                    {doc.processing_status === 'completed' && (
+                    {doc.processing_status === 'completed' && doc.vectors_created > 0 && (
                       <div className="text-xs text-muted-foreground">
                         <div>Vectors: {doc.vectors_created}</div>
                         <div>Chunks: {doc.chunks_created}</div>
@@ -319,9 +336,9 @@ export default function DocumentsMain() {
           )}
         </div>
 
-        {/* Pagination */}
+        {/* Pagination - Centered with max width like chat */}
         {total > 20 && (
-          <div className="mt-4 flex items-center justify-between flex-shrink-0">
+          <div className="w-full max-w-4xl mx-auto mt-4 flex items-center justify-between flex-shrink-0">
             <p className="text-sm text-muted-foreground">
               Showing {filteredDocuments.length} of {total} documents
             </p>
@@ -348,13 +365,24 @@ export default function DocumentsMain() {
         )}
       </div>
 
-      {/* Chat Input at Bottom */}
+      {/* Chat Input at Bottom - Centered with max width like chat */}
       <div className="border-t p-4 flex-shrink-0">
-        <InputBox
-          className="w-full max-w-none"
-          size="normal"
-        />
+        <div className="w-full max-w-4xl mx-auto">
+          <InputBox
+            className="w-full"
+          />
+        </div>
       </div>
+
+      {/* Upload Dialog */}
+      <UploadDialog
+        open={uploadDialogOpen}
+        onOpenChange={setUploadDialogOpen}
+        onUploadComplete={() => {
+          handleRefresh();
+          setUploadDialogOpen(false);
+        }}
+      />
     </div>
   );
 }

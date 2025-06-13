@@ -6,9 +6,9 @@ import json
 import logging
 import os
 from typing import List, cast
-from uuid import uuid4
+# uuid module imported later
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import Response, StreamingResponse
 from langchain_core.messages import AIMessageChunk, ToolMessage
@@ -41,6 +41,8 @@ from src.db.db_session import (
     get_or_create_chat_session,
     add_chat_message,
 )
+from src.db_models.chat_session import ChatSession
+import uuid
 from langchain_core.runnables.history import RunnableWithMessageHistory
 
 # Routes from API folders
@@ -48,6 +50,8 @@ from src.api.api_register_user import router as register_user_router
 from src.api.api_generate_token import user_generate_token_router
 from src.api.api_get_current_user import current_user_router
 from src.api.api_verify_user import verify_user_router
+from src.api.api_debug_headers import router as debug_router
+from src.server.auth_debug_middleware import log_auth_headers
 
 logger = logging.getLogger(__name__)
 
@@ -61,6 +65,7 @@ app.include_router(register_user_router)
 app.include_router(user_generate_token_router)
 app.include_router(current_user_router)
 app.include_router(verify_user_router)
+app.include_router(debug_router)
 app.include_router(llamacloud_router)
 app.include_router(pinecone_router, prefix="/api/pinecone")
 app.include_router(chat_history_router, prefix="/api/chat")
@@ -68,16 +73,45 @@ app.include_router(documents_router, prefix="/api/documents")
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins
+    allow_origins=[
+        "http://localhost:3000",
+        "http://localhost:3001",
+        "http://ec2-54-91-85-225.compute-1.amazonaws.com:3000",
+        "http://ec2-54-91-85-225.compute-1.amazonaws.com:3001",
+        "http://54.91.85.225:3000",
+        "http://54.91.85.225:3001",
+        "*"  # Allow all origins temporarily for debugging
+    ],
     allow_credentials=True,
     allow_methods=["*"],  # Allows all methods
     allow_headers=["*"],  # Allows all headers
 )
 
+# Add auth debug middleware
+app.middleware("http")(log_auth_headers)
+
 graph = build_graph_with_memory()
 chat_chains: dict[str, RunnableWithMessageHistory] = {}
 
 create_db_tables()
+
+
+def add_chat_message(db, session, role: str, content: str):
+    """Add a message to the chat session"""
+    from src.db_models.chat_message import ChatMessage
+    from sqlalchemy import func
+    
+    message = ChatMessage(
+        session_id=session.id,
+        role=role,
+        content=content
+    )
+    db.add(message)
+    db.commit()
+    
+    # Update session's last_message_at
+    session.last_message_at = func.current_timestamp()
+    db.commit()
 
 
 @app.on_event("startup")
@@ -128,7 +162,7 @@ async def shutdown_event():
 async def chat_stream(request: ChatRequest):
     thread_id = request.thread_id
     if thread_id == "__default__":
-        thread_id = str(uuid4())
+        thread_id = str(uuid.uuid4())
     return StreamingResponse(
         _astream_workflow_generator(
             request.model_dump()["messages"],
@@ -145,13 +179,48 @@ async def chat_stream(request: ChatRequest):
 
 
 @app.post("/api/chat/simple")
-async def chat_simple(request: ChatRequest):
+async def chat_simple(request: ChatRequest, req: Request):
+    from src.api.api_get_current_user import get_current_user
+    from src.db_models.chat_session import ChatSession
+    from fastapi import Header
+    
+    # Get auth token from header
+    auth_header = req.headers.get('Authorization', '')
+    token = auth_header.replace('Bearer ', '') if auth_header.startswith('Bearer ') else None
+    
+    # Get current user
+    current_user = None
+    if token:
+        try:
+            db_temp = SessionLocal()
+            current_user = await get_current_user(token, db_temp)
+            db_temp.close()
+        except:
+            pass
+    
     thread_id = request.thread_id
     if thread_id == "__default__":
-        thread_id = str(uuid4())
+        thread_id = f"chat_{uuid.uuid4()}"
 
     db = SessionLocal()
-    session_obj = get_or_create_chat_session(db, thread_id)
+    
+    # Create or get session with user association
+    if current_user:
+        session_obj = db.query(ChatSession).filter(
+            ChatSession.thread_id == thread_id,
+            ChatSession.user_id == uuid.UUID(current_user.id)
+        ).first()
+        if not session_obj:
+            session_obj = ChatSession(
+                thread_id=thread_id,
+                user_id=uuid.UUID(current_user.id),
+                mode='chat'
+            )
+            db.add(session_obj)
+            db.commit()
+            db.refresh(session_obj)
+    else:
+        session_obj = get_or_create_chat_session(db, thread_id)
 
     chain = chat_chains.get(thread_id)
     if chain is None:
@@ -159,8 +228,41 @@ async def chat_simple(request: ChatRequest):
         chat_chains[thread_id] = chain
 
     user_message = request.messages[-1].content if request.messages else ""
-    # Persist the user message
     add_chat_message(db, session_obj, "user", str(user_message))
+    
+    # Search documents if user has uploaded any
+    context_docs = []
+    if current_user and session_obj:
+        try:
+            from src.server.document_processor import document_processor
+            from src.db_models import Document
+            
+            # Check if session has documents
+            session_docs = db.query(Document).filter(
+                Document.session_id == session_obj.id,
+                Document.processing_status == 'completed',
+                Document.is_active == True
+            ).count()
+            
+            if session_docs > 0:
+                # Search for relevant documents in this session
+                search_results = document_processor.search_documents(
+                    query=user_message,
+                    top_k=3,
+                    filter_dict={"session_id": str(session_obj.id)}
+                )
+                
+                if search_results:
+                    context_docs = search_results
+                    # Add context to the message
+                    context_text = "\n\nRelevant information from your documents:\n"
+                    for i, doc in enumerate(search_results):
+                        context_text += f"\n[Document {i+1}]: {doc['content'][:500]}...\n"
+                    
+                    # Prepend context to user message
+                    user_message = f"{context_text}\n\nUser question: {user_message}"
+        except Exception as e:
+            logger.warning(f"Error searching documents: {e}")
 
     def iter_response():
         try:
@@ -177,14 +279,22 @@ async def chat_simple(request: ChatRequest):
             add_chat_message(db, session_obj, "assistant", str(response_text))
             data = {
                 "thread_id": thread_id,
-                "id": str(uuid4()),
+                "id": str(uuid.uuid4()),
                 "role": "assistant",
                 "content": response_text,
                 "finish_reason": "stop",
             }
             yield f"event: message_chunk\ndata: {json.dumps(data)}\n\n"
-        finally:
-            db.close()
+        except Exception as e:
+            logger.exception(f"Error in simple chat: {str(e)}")
+            error_data = {
+                "thread_id": thread_id,
+                "id": str(uuid.uuid4()),
+                "role": "assistant",
+                "content": f"Error: {str(e)}",
+                "finish_reason": "error",
+            }
+            yield f"event: message_chunk\ndata: {json.dumps(error_data)}\n\n"
 
     return StreamingResponse(iter_response(), media_type="text/event-stream")
 
@@ -194,7 +304,7 @@ async def chat_tool(request: ChatRequest):
     """Handle single tool queries with @ mention."""
     thread_id = request.thread_id
     if thread_id == "__default__":
-        thread_id = str(uuid4())
+        thread_id = str(uuid.uuid4())
 
     # Extract tool information from request
     tool_id = request.tool_id
@@ -214,7 +324,7 @@ async def chat_tool(request: ChatRequest):
             elif tool_type == "agent":
                 if tool_id == "research":
                     # Handle research agent query
-                    for event in _handle_research_query(user_message, thread_id, request):
+                    async for event in _handle_research_query(user_message, thread_id, request):
                         yield event
                 elif tool_id == "documents":
                     # Handle documents query
@@ -228,7 +338,7 @@ async def chat_tool(request: ChatRequest):
             logger.exception(f"Error in tool query: {str(e)}")
             error_data = {
                 "thread_id": thread_id,
-                "id": str(uuid4()),
+                "id": str(uuid.uuid4()),
                 "role": "assistant", 
                 "content": f"Error executing tool: {str(e)}",
                 "finish_reason": "error",
@@ -303,7 +413,7 @@ async def _handle_mcp_tool_query(user_message: str, tool_id: str, thread_id: str
         logger.exception(f"Error executing MCP tool '{tool_name}': {str(e)}")
         error_data = {
             "thread_id": thread_id,
-            "id": str(uuid4()),
+            "id": str(uuid.uuid4()),
             "role": "assistant",
             "content": f"Error executing MCP tool '{tool_name}': {str(e)}",
             "finish_reason": "error",
@@ -349,7 +459,7 @@ async def _handle_openai_responses_query(user_message: str, tool_name: str, thre
         
         data = {
             "thread_id": thread_id,
-            "id": str(uuid4()),
+            "id": str(uuid.uuid4()),
             "role": "assistant",
             "content": response_content,
             "finish_reason": "stop",
@@ -360,7 +470,7 @@ async def _handle_openai_responses_query(user_message: str, tool_name: str, thre
         logger.exception(f"Error in OpenAI responses query: {str(e)}")
         error_data = {
             "thread_id": thread_id,
-            "id": str(uuid4()),
+            "id": str(uuid.uuid4()),
             "role": "assistant",
             "content": f"Error executing OpenAI responses API: {str(e)}",
             "finish_reason": "error",
@@ -574,7 +684,7 @@ Be concise but thorough in your response. If there was an error retrieving the d
         
         data = {
             "thread_id": thread_id,
-            "id": str(uuid4()),
+            "id": str(uuid.uuid4()),
             "role": "assistant",
             "content": response_content,
             "finish_reason": "stop",
@@ -585,7 +695,7 @@ Be concise but thorough in your response. If there was an error retrieving the d
         logger.exception(f"Error in traditional MCP query: {str(e)}")
         error_data = {
             "thread_id": thread_id,
-            "id": str(uuid4()),
+            "id": str(uuid.uuid4()),
             "role": "assistant",
             "content": f"Error executing traditional MCP tool: {str(e)}",
             "finish_reason": "error",
@@ -593,17 +703,31 @@ Be concise but thorough in your response. If there was an error retrieving the d
         yield f"event: message_chunk\ndata: {json.dumps(error_data)}\n\n"
 
 
-def _handle_research_query(user_message: str, thread_id: str, _request: ChatRequest):
-    """Handle research agent query - single research, not deep research."""
-    # For now, return a simple response indicating research functionality
-    data = {
-        "thread_id": thread_id,
-        "id": str(uuid4()),
-        "role": "assistant",
-        "content": f"Single research query for: {user_message}\n\nThis would perform a focused research task without the full deep research planning flow.",
-        "finish_reason": "stop",
-    }
-    yield f"event: message_chunk\ndata: {json.dumps(data)}\n\n"
+async def _handle_research_query(user_message: str, thread_id: str, request: ChatRequest):
+    """Handle research agent query using DeerFlow research capabilities."""
+    try:
+        # Use the main DeerFlow research stream with proper configuration
+        async for event in _astream_workflow_generator(
+            [{"role": "user", "content": user_message}],
+            thread_id,
+            request.max_plan_iterations or 3,
+            request.max_step_num or 25,
+            request.auto_accepted_plan or False,
+            request.interrupt_feedback or "",
+            request.mcp_settings or {},
+            request.enable_background_investigation or True,
+        ):
+            yield event
+    except Exception as e:
+        logger.exception(f"Error in research query: {str(e)}")
+        error_data = {
+            "thread_id": thread_id,
+            "id": str(uuid.uuid4()),
+            "role": "assistant",
+            "content": f"Error during research: {str(e)}",
+            "finish_reason": "error",
+        }
+        yield f"event: message_chunk\ndata: {json.dumps(error_data)}\n\n"
 
 
 def _handle_documents_query(user_message: str, thread_id: str, _request: ChatRequest):
@@ -738,7 +862,7 @@ Answer:"""
         # Yield the response
         response_data = {
             "thread_id": thread_id,
-            "id": str(uuid4()),
+            "id": str(uuid.uuid4()),
             "role": "assistant",
             "content": content,
             "finish_reason": "stop",
@@ -749,7 +873,7 @@ Answer:"""
         logger.error(f"Error in documents query: {e}")
         error_data = {
             "thread_id": thread_id,
-            "id": str(uuid4()),
+            "id": str(uuid.uuid4()),
             "role": "assistant",
             "content": f"I encountered an error while searching your documents: {str(e)}",
             "finish_reason": "error",
@@ -1014,3 +1138,264 @@ async def mcp_server_metadata(request: MCPServerMetadataRequest):
             logger.exception(f"Error in MCP server metadata endpoint: {str(e)}")
             raise HTTPException(status_code=500, detail=str(e))
         raise
+
+
+# Mock authentication endpoints for running without database
+@app.post("/api/register")
+async def mock_register(request: Request):
+    """Mock registration endpoint that always succeeds."""
+    # Handle both JSON and FormData
+    try:
+        # Try to parse as form data
+        form_data = await request.form()
+        email = form_data.get("email", "user@example.com")
+    except:
+        # Fall back to JSON
+        try:
+            json_data = await request.json()
+            email = json_data.get("email", "user@example.com")
+        except:
+            email = "user@example.com"
+    
+    return {
+        "message": "Registration successful (mock)",
+        "user": {
+            "id": "mock-user-123",
+            "email": email,
+            "username": "mockuser"
+        }
+    }
+
+
+@app.post("/api/token")
+async def mock_login(request: Request):
+    """Mock login endpoint that returns a fake token."""
+    # Handle both JSON and FormData
+    try:
+        # Try to parse as form data
+        form_data = await request.form()
+        username = form_data.get("username", "user@example.com")
+    except:
+        # Fall back to JSON
+        try:
+            json_data = await request.json()
+            username = json_data.get("username", "user@example.com")
+        except:
+            username = "user@example.com"
+    
+    return {
+        "access_token": "mock-jwt-token-123456789",
+        "token_type": "bearer",
+        "user": {
+            "id": "mock-user-123",
+            "email": username if "@" in str(username) else "user@example.com",
+            "username": "mockuser"
+        }
+    }
+
+
+@app.get("/api/users/me")
+async def mock_get_current_user():
+    """Mock endpoint to get current user."""
+    return {
+        "id": "mock-user-123",
+        "email": "user@example.com",
+        "username": "mockuser",
+        "is_active": True
+    }
+
+
+@app.get("/api/verify")
+async def mock_verify():
+    """Mock verification endpoint."""
+    return {"verified": True}
+
+
+# NOTE: This endpoint has been moved to documents_routes.py with proper authentication
+# @app.get("/api/documents")
+# async def get_documents(
+#     page: int = 1,
+#     per_page: int = 20,
+#     status_filter: str = None
+# ):
+#     """Get documents from S3 with pagination."""
+#     try:
+#         from src.server.s3_utils import s3_manager
+#         
+#         # Get all files for the user
+#         all_files = s3_manager.list_user_files("mock-user-123")
+#         
+#         # Convert S3 files to document format
+#         documents = []
+#         for file in all_files:
+#             # Generate presigned URL
+#             try:
+#                 download_url = s3_manager.generate_presigned_url(file['key'])
+#             except:
+#                 download_url = None
+#             
+#             documents.append({
+#                 "id": file['file_id'],
+#                 "filename": file['key'],
+#                 "original_filename": file['original_filename'],
+#                 "file_size": file['size'],
+#                 "content_type": file['content_type'],
+#                 "processing_status": "completed",  # S3 files are always available
+#                 "vectors_created": 0,  # Not applicable for S3
+#                 "chunks_created": 0,  # Not applicable for S3
+#                 "created_at": file['upload_time'],
+#                 "download_url": download_url,
+#                 "s3_key": file['key']  # Store key for deletion
+#             })
+#         
+#         # Apply pagination
+#         start_idx = (page - 1) * per_page
+#         end_idx = start_idx + per_page
+#         paginated_docs = documents[start_idx:end_idx]
+#         
+#         return {
+#             "documents": paginated_docs,
+#             "total": len(documents),
+#             "page": page,
+#             "per_page": per_page
+#         }
+#     except Exception as e:
+#         logger.error(f"Error fetching documents: {e}")
+#         # Return empty list on error
+#         return {
+#             "documents": [],
+#             "total": 0,
+#             "page": page,
+#             "per_page": per_page
+#         }
+
+
+# NOTE: This endpoint has been moved to documents_routes.py with proper authentication
+# @app.post("/api/documents/upload")
+# async def upload_document(
+#     file: UploadFile = File(...)
+# ):
+#     """Upload a document to S3 and process for RAG."""
+#     try:
+#         from src.server.s3_utils import s3_manager
+#         from src.server.document_processor import document_processor
+#         
+#         # Read file content
+#         content = await file.read()
+#         
+#         # Upload to S3
+#         result = s3_manager.upload_file(
+#             file_content=content,
+#             filename=file.filename,
+#             content_type=file.content_type or "application/octet-stream",
+#             user_id="mock-user-123"
+#         )
+#         
+#         # Process document for RAG (async)
+#         processing_result = await document_processor.process_document(
+#             file_content=content,
+#             filename=file.filename,
+#             content_type=file.content_type or "application/octet-stream",
+#             document_id=result['file_id']
+#         )
+#         
+#         return {
+#             "success": True,
+#             "message": "File uploaded and processed successfully",
+#             "document": {
+#                 "id": result['file_id'],
+#                 "filename": result['filename'],
+#                 "size": result['size'],
+#                 "upload_time": result['upload_time'],
+#                 "chunks_created": processing_result.get('chunks_created', 0),
+#                 "vectors_created": processing_result.get('vectors_created', 0)
+#             }
+#         }
+#     except Exception as e:
+#         logger.error(f"Error uploading document: {e}")
+#         raise HTTPException(status_code=500, detail=str(e))
+
+
+# NOTE: This endpoint has been moved to documents_routes.py with proper authentication
+# @app.delete("/api/documents/{document_id}")
+# async def delete_document(document_id: str):
+#     """Delete a document from S3."""
+#     try:
+#         from src.server.s3_utils import s3_manager
+#         
+#         # Get all files to find the one with matching file_id
+#         files = s3_manager.list_user_files("mock-user-123")
+#         file_to_delete = None
+#         
+#         for file in files:
+#             if file['file_id'] == document_id:
+#                 file_to_delete = file
+#                 break
+#         
+#         if not file_to_delete:
+#             raise HTTPException(status_code=404, detail="Document not found")
+#         
+#         # Delete from S3
+#         s3_manager.delete_file(file_to_delete['key'])
+#         
+#         return {"success": True, "message": "Document deleted successfully"}
+#     except Exception as e:
+#         logger.error(f"Error deleting document: {e}")
+#         raise HTTPException(status_code=500, detail=str(e))
+
+
+# NOTE: This endpoint has been moved to documents_routes.py with proper authentication
+# @app.get("/api/documents/{document_id}/download-url")
+# async def get_document_download_url(document_id: str):
+#     """Get a presigned download URL for a document."""
+#     try:
+#         from src.server.s3_utils import s3_manager
+#         
+#         # Get all files to find the one with matching file_id
+#         files = s3_manager.list_user_files("mock-user-123")
+#         file_to_download = None
+#         
+#         for file in files:
+#             if file['file_id'] == document_id:
+#                 file_to_download = file
+#                 break
+#         
+#         if not file_to_download:
+#             raise HTTPException(status_code=404, detail="Document not found")
+#         
+#         # Generate presigned URL
+#         download_url = s3_manager.generate_presigned_url(file_to_download['key'])
+#         
+#         return {
+#             "download_url": download_url,
+#             "filename": file_to_download['original_filename']
+#         }
+#     except Exception as e:
+#         logger.error(f"Error generating download URL: {e}")
+#         raise HTTPException(status_code=500, detail=str(e))
+
+
+# NOTE: This endpoint has been moved to documents_routes.py with proper authentication
+# @app.post("/api/documents/search")
+# async def search_documents(
+#     query: str = Form(...),
+#     top_k: int = Form(5)
+# ):
+#     """Search across all uploaded documents."""
+#     try:
+#         from src.server.document_processor import document_processor
+#         
+#         # Search documents
+#         results = document_processor.search_documents(
+#             query=query,
+#             top_k=top_k
+#         )
+#         
+#         return {
+#             "query": query,
+#             "results": results,
+#             "total_results": len(results)
+#         }
+#     except Exception as e:
+#         logger.error(f"Error searching documents: {e}")
+#         raise HTTPException(status_code=500, detail=str(e))

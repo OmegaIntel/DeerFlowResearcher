@@ -1,0 +1,57 @@
+/* Document Page Theme Fixes */
+
+/* Fix main document page container */
+.documents-page {
+  background-color: hsl(var(--background)) !important;
+  color: hsl(var(--foreground)) !important;
+}
+
+/* Fix document page header */
+.documents-header {
+  background-color: hsl(var(--background)) !important;
+  border-color: hsl(var(--border)) !important;
+}
+
+/* Fix document cards */
+.document-card {
+  background-color: hsl(var(--card)) !important;
+  border-color: hsl(var(--border)) !important;
+  color: hsl(var(--card-foreground)) !important;
+}
+
+/* Center and constrain width like chat page */
+.documents-search-container,
+.documents-grid-container,
+.documents-pagination-container,
+.documents-chat-input-container {
+  max-width: 64rem !important; /* max-w-4xl */
+  margin-left: auto !important;
+  margin-right: auto !important;
+  width: 100% !important;
+}
+
+/* Fix text colors */
+.documents-page h1,
+.documents-page h2,
+.documents-page h3,
+.documents-page p,
+.documents-page span {
+  color: hsl(var(--foreground)) !important;
+}
+
+.documents-page .text-muted-foreground {
+  color: hsl(var(--muted-foreground)) !important;
+}
+
+/* Ensure proper theming for all elements */
+.documents-page [class*="bg-gray"],
+.documents-page [class*="bg-black"],
+.documents-page [style*="background-color: black"] {
+  background-color: hsl(var(--background)) !important;
+}
+
+.documents-page [class*="text-gray"],
+.documents-page [class*="text-black"],
+.documents-page [style*="color: black"] {
+  color: hsl(var(--foreground)) !important;
+}

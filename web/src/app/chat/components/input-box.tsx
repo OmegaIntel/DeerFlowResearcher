@@ -16,7 +16,9 @@ import { Detective } from "~/components/deer-flow/icons/detective";
 import { Tooltip } from "~/components/deer-flow/tooltip";
 import { Button } from "~/components/ui/button";
 import { uploadFilesToPinecone, getPineconeUploadJobStatus, type PineconeUploadJobStatus } from "~/core/api/pinecone";
+import { uploadFileToS3 } from "~/core/api/s3";
 import { resolveServiceURL } from "~/core/api/resolve-service-url";
+import { getAuthToken } from "~/services/auth";
 import type { Option } from "~/core/messages";
 import {
   setEnableBackgroundInvestigation,
@@ -457,35 +459,64 @@ export function InputBox({
     const files = event.target.files;
     if (!files || files.length === 0) return;
 
+    console.log('[InputBox] File upload initiated, files:', Array.from(files).map(f => ({ name: f.name, size: f.size })));
+    
+    // Get current thread/session ID
+    const threadId = useStore.getState().threadId;
+    console.log('[InputBox] Current thread ID:', threadId);
+    
+    // Check auth token before upload
+    const authToken = getAuthToken();
+    console.log('[InputBox] Auth token check before upload:', {
+      exists: !!authToken,
+      length: authToken?.length || 0
+    });
+
     setIsUploading(true);
     try {
       const filesArray = Array.from(files);
+      let successCount = 0;
       
-      // Upload files to Pinecone (now async)
-      console.log("Uploading files to Pinecone...", filesArray);
-      const response = await uploadFilesToPinecone(filesArray);
+      // Upload files to S3 one by one
+      for (const file of filesArray) {
+        try {
+          console.log("[InputBox] Uploading file to S3...", file.name);
+          const response = await uploadFileToS3(file, threadId);
+          
+          if (response.success) {
+            successCount++;
+            console.log("[InputBox] File uploaded successfully:", response);
+          } else {
+            console.error("[InputBox] Upload failed response:", response);
+            toast.error(`Failed to upload ${file.name}`, {
+              description: response.message,
+              duration: 4000,
+            });
+          }
+        } catch (error) {
+          console.error(`[InputBox] Error uploading ${file.name}:`, error);
+          toast.error(`Failed to upload ${file.name}`, {
+            description: error instanceof Error ? error.message : 'Unknown error',
+            duration: 4000,
+          });
+        }
+      }
       
-      if (response.success && response.job_id) {
-        console.log("Upload job started:", response);
-        
-        // Add files to uploaded list
-        setUploadedFiles(prev => [...prev, ...filesArray]);
-        
-        // Start polling for status
-        void pollUploadStatus(response.job_id);
-        
-        // Show initial success toast
-        toast.success("Upload started!", {
-          description: `Processing ${filesArray.length} file${filesArray.length > 1 ? 's' : ''} in background...`,
+      if (successCount > 0) {
+        toast.success("Upload complete!", {
+          description: `Successfully uploaded ${successCount} of ${filesArray.length} file${filesArray.length > 1 ? 's' : ''}`,
           duration: 3000,
         });
         
-      } else {
-        console.error("Upload failed:", response.error);
-        toast.error("Upload failed", {
-          description: response.message ?? "Failed to start upload job",
-          duration: 5000,
-        });
+        // Add files to uploaded list for display
+        setUploadedFiles(prev => [...prev, ...filesArray.slice(0, successCount)]);
+        
+        // Auto-remove uploaded files from display after 3 seconds
+        setTimeout(() => {
+          setUploadedFiles(prev => prev.filter(file => 
+            !filesArray.slice(0, successCount).includes(file)
+          ));
+        }, 3000);
       }
       
     } catch (error) {
@@ -500,7 +531,7 @@ export function InputBox({
         fileInputRef.current.value = '';
       }
     }
-  }, [pollUploadStatus]);
+  }, []);
 
   return (
     <div className={cn("bg-card relative rounded-[24px] border", className)}>
@@ -699,30 +730,6 @@ export function InputBox({
         </AnimatePresence>
       </div>
       <div className="flex items-center px-4 py-2">
-        <div className="mr-2 relative">
-          <select
-            className="rounded-md border px-2 py-1 text-sm appearance-none pr-8"
-            value={selectedTool ? selectedTool.type === "agent" && selectedTool.id === "research" ? "research" : "tool" : mode}
-            onChange={(e) => {
-              if (e.target.value === "research") {
-                setSelectedTool({ id: "research", name: "Research", description: "Deep research on any topic", type: "agent" });
-              } else if (e.target.value === "chat") {
-                setSelectedTool(null);
-                setMode("chat");
-              } else {
-                setMode(e.target.value as "chat" | "research");
-                setSelectedTool(null);
-              }
-            }}
-          >
-            <option value="chat">Chat</option>
-            <option value="research">Research</option>
-            {selectedTool && selectedTool.type === "mcp" && (
-              <option value="tool">{selectedTool.name}</option>
-            )}
-          </select>
-          <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 w-3 h-3 pointer-events-none" />
-        </div>
         <div className="flex grow">
           <Tooltip
             className="max-w-60"
@@ -759,11 +766,11 @@ export function InputBox({
             ref={fileInputRef}
             type="file"
             multiple
-            accept=".pdf,.doc,.docx,.txt,.csv,.json,.md"
+            accept=".pdf,.doc,.docx,.txt,.csv,.json,.md,.xlsx,.xls,.ppt,.pptx,.png,.jpg,.jpeg,.gif"
             onChange={handleFileUpload}
             className="hidden"
           />
-          <Tooltip title="Upload files to Pinecone">
+          <Tooltip title="Upload files to S3">
             <Button
               variant="outline"
               size="icon"

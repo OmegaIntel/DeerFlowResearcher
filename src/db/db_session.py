@@ -7,11 +7,11 @@ from src.db_models import Base, ChatSession, ChatMessage
 
 load_dotenv()
 
-DATABASE_USER_NAME = os.getenv("DATABASE_USER_NAME")
-DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD")
-DATABASE_HOST = os.getenv("DATABASE_HOST")
-DATABASE_PORT = int(os.getenv("DATABASE_PORT"))
-DATABASE_NAME = os.getenv("DATABASE_NAME")
+DATABASE_USER_NAME = os.getenv("DATABASE_USER_NAME", "root")
+DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD", "password")
+DATABASE_HOST = os.getenv("DATABASE_HOST", "localhost")
+DATABASE_PORT = int(os.getenv("DATABASE_PORT", "3306"))
+DATABASE_NAME = os.getenv("DATABASE_NAME", "deer_flow")
 
 DATABASE_URL = (
     f"mysql+mysqlconnector://{DATABASE_USER_NAME}:{DATABASE_PASSWORD}"
@@ -34,12 +34,12 @@ def get_db() -> Session:
         db.close()
 
 
-def get_or_create_chat_session(db: Session, thread_id: str) -> ChatSession:
+def get_or_create_chat_session(db: Session, thread_id: str, user_id: str = None) -> ChatSession:
     session_obj = (
         db.query(ChatSession).filter(ChatSession.thread_id == thread_id).first()
     )
     if not session_obj:
-        session_obj = ChatSession(thread_id=thread_id)
+        session_obj = ChatSession(thread_id=thread_id, user_id=user_id, mode='chat')
         db.add(session_obj)
         db.commit()
         db.refresh(session_obj)

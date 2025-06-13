@@ -1,0 +1,35 @@
+
+============================================================
+Testing Complete Flow - 2025-06-13 04:23:13.108541
+============================================================
+
+1. Registering test user...
+   Registration status: 200
+   User created: {'id': 'a32fa2e1-3920-428a-81ed-ca356a95e0ed', 'email': 'test_1749788593@example.com', 'is_admin': False}
+
+2. Logging in...
+   Login status: 200
+   Token received: eyJhbGciOiJIUzI1NiIsInR5cCI6Ik...
+
+3. Starting a chat session...
+   Chat status: 500
+   Thread ID: b5c2eaad-ba9b-4928-a3cb-383edf6edbd7
+
+4. Uploading document with session association...
+   Upload status: 500
+   Error: {"detail":"(mysql.connector.errors.IntegrityError) 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`deer_flow`.`documents`, CONSTRAINT `documents_ibfk_2` FOREIGN KEY (`session_id`) REFERENCES `chat_sessions` (`id`))\n[SQL: INSERT INTO documents (id, user_id, session_id, filename, original_filename, file_size, content_type, s3_bucket, s3_key, pinecone_index, pinecone_namespace, processing_status, processing_job_id, vectors_created, chunks_created, is_active, upload_metadata) VALUES (%(id)s, %(user_id)s, %(session_id)s, %(filename)s, %(original_filename)s, %(file_size)s, %(content_type)s, %(s3_bucket)s, %(s3_key)s, %(pinecone_index)s, %(pinecone_namespace)s, %(processing_status)s, %(processing_job_id)s, %(vectors_created)s, %(chunks_created)s, %(is_active)s, %(upload_metadata)s)]\n[parameters: {'id': '9713dab45fe04935b69455489923d495', 'user_id': 'a32fa2e13920428a81edca356a95e0ed', 'session_id': 'b5c2eaadba9b4928a3cb383edf6edbd7', 'filename': 'test_session_doc.txt', 'original_filename': 'test_session_doc.txt', 'file_size': 106, 'content_type': 'text/plain', 's3_bucket': 'omegaintel-docs-b0308be5', 's3_key': 'uploads/a32fa2e1-3920-428a-81ed-ca356a95e0ed/9713dab4-5fe0-4935-b694-55489923d495/test_session_doc.txt', 'pinecone_index': None, 'pinecone_namespace': None, 'processing_status': 'processing', 'processing_job_id': None, 'vectors_created': 0, 'chunks_created': 0, 'is_active': 1, 'upload_metadata': '{\"user_id\": \"a32fa2e1-3920-428a-81ed-ca356a95e0ed\", \"original_filename\": \"test_session_doc.txt\", \"upload_timestamp\": \"2025-06-13T04:23:14.045351\"}'}]\n(Background on this error at: https://sqlalche.me/e/20/gkpj)"}
+
+5. Verifying document-session association...
+   Get documents status: 200
+   Documents in session: 0
+
+6. Testing chat with document context...
+   Chat status: 500
+   Response will use document context from session
+
+============================================================
+
+✅ Test completed successfully!
+   - User: test_1749788593@example.com
+   - Session: b5c2eaad-ba9b-4928-a3cb-383edf6edbd7
+   - Documents uploaded and associated with session

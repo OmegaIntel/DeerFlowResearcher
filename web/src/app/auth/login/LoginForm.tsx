@@ -32,7 +32,10 @@ export default function LoginForm() {
 
     try {
       const { access_token } = await loginUser(formData);
+      console.log('[LoginForm] Token received:', access_token);
+      
       setAuthToken(access_token);
+      
       const returnTo = searchParams.get('returnTo') ?? '/';
       router.push(returnTo);
     } catch (error: unknown) {

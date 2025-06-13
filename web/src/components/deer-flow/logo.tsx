@@ -9,15 +9,15 @@ export function Logo({ className }: { className?: string }) {
       className="opacity-70 transition-opacity duration-300 hover:opacity-100"
       href="/"
     >
-      🦌 Omega Intelligence
+      OI
     </Link>
   );
 }
 
 export function LogoIcon({ className }: { className?: string }) {
   return (
-    <span className={className}>
-      🦌
-    </span>
+    <div className={`${className} bg-white text-black font-bold flex items-center justify-center rounded-lg w-full h-full`}>
+      OI
+    </div>
   );
 }

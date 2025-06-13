@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Registration</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .section { margin: 20px 0; padding: 10px; border: 1px solid #ccc; }
+        .log { background: #f0f0f0; padding: 10px; white-space: pre-wrap; font-family: monospace; }
+        button { margin: 5px; padding: 10px; }
+        input { margin: 5px; padding: 5px; width: 300px; }
+    </style>
+</head>
+<body>
+    <h1>Registration Test Page</h1>
+    
+    <div class="section">
+        <h2>Test Registration</h2>
+        <input type="email" id="email" placeholder="Email"><br>
+        <input type="password" id="password" placeholder="Password"><br>
+        <button onclick="testRegister()">Register</button>
+    </div>
+
+    <div class="section">
+        <h2>Log Output</h2>
+        <div id="log" class="log"></div>
+    </div>
+
+    <script>
+        const API_URL = 'http://ec2-54-91-85-225.compute-1.amazonaws.com:8000/api';
+        
+        function log(message) {
+            const logDiv = document.getElementById('log');
+            logDiv.textContent += new Date().toISOString() + ' - ' + message + '\n';
+            console.log(message);
+        }
+
+        async function testRegister() {
+            log('Starting registration test...');
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            if (!email || !password) {
+                log('Please enter email and password');
+                return;
+            }
+            
+            // Test 1: Try with FormData (correct way)
+            log('\n=== Test 1: FormData (application/x-www-form-urlencoded) ===');
+            const formData = new FormData();
+            formData.append('email', email);
+            formData.append('password', password);
+
+            try {
+                const response = await fetch(`${API_URL}/register`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                log(`Response status: ${response.status} ${response.statusText}`);
+                const responseText = await response.text();
+                log(`Response: ${responseText}`);
+                
+                if (response.ok) {
+                    const data = JSON.parse(responseText);
+                    log(`✓ Registration successful! User ID: ${data.id}`);
+                }
+            } catch (error) {
+                log(`✗ Error: ${error.message}`);
+            }
+            
+            // Test 2: Try with URLSearchParams (alternative form encoding)
+            log('\n=== Test 2: URLSearchParams ===');
+            const params = new URLSearchParams();
+            params.append('email', email + '_v2');
+            params.append('password', password);
+            
+            try {
+                const response = await fetch(`${API_URL}/register`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: params
+                });
+
+                log(`Response status: ${response.status} ${response.statusText}`);
+                const responseText = await response.text();
+                log(`Response: ${responseText}`);
+            } catch (error) {
+                log(`✗ Error: ${error.message}`);
+            }
+            
+            // Test 3: Check CORS preflight
+            log('\n=== Test 3: Checking CORS ===');
+            try {
+                const response = await fetch(`${API_URL}/register`, {
+                    method: 'OPTIONS',
+                    headers: {
+                        'Access-Control-Request-Method': 'POST',
+                        'Access-Control-Request-Headers': 'content-type',
+                        'Origin': window.location.origin
+                    }
+                });
+                
+                log(`CORS preflight status: ${response.status}`);
+                log(`Access-Control-Allow-Origin: ${response.headers.get('Access-Control-Allow-Origin')}`);
+                log(`Access-Control-Allow-Methods: ${response.headers.get('Access-Control-Allow-Methods')}`);
+            } catch (error) {
+                log(`✗ CORS check error: ${error.message}`);
+            }
+        }
+
+        // On load
+        window.onload = () => {
+            log('Page loaded');
+            log(`Current origin: ${window.location.origin}`);
+            log(`API URL: ${API_URL}`);
+        };
+    </script>
+</body>
+</html>

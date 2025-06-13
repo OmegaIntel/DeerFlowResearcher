@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Direct Chat History Test</title>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .session { border: 1px solid #ccc; padding: 10px; margin: 10px 0; }
+        .error { color: red; }
+        .success { color: green; }
+    </style>
+</head>
+<body>
+    <h1>Direct Chat History Test</h1>
+    <button onclick="testChatHistory()">Test Chat History</button>
+    <hr>
+    <div id="results"></div>
+
+    <script>
+        async function testChatHistory() {
+            const results = document.getElementById('results');
+            results.innerHTML = '<p>Testing...</p>';
+            
+            // Get auth token
+            const authToken = Cookies.get('authToken') || 
+                             localStorage.getItem('authToken') || 
+                             sessionStorage.getItem('authToken');
+            
+            if (!authToken) {
+                results.innerHTML = '<p class="error">No auth token found. Please login first.</p>';
+                return;
+            }
+            
+            results.innerHTML = '<p class="success">Auth token found!</p>';
+            
+            // Determine API URL based on current location
+            const currentHost = window.location.hostname;
+            const apiUrl = currentHost === 'localhost' || currentHost === '127.0.0.1'
+                ? 'http://localhost:8000/api/chat/sessions'
+                : `http://${currentHost}:8000/api/chat/sessions`;
+            
+            results.innerHTML += `<p>API URL: ${apiUrl}</p>`;
+            
+            try {
+                const response = await fetch(apiUrl, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Accept': 'application/json',
+                    }
+                });
+                
+                results.innerHTML += `<p>Response status: ${response.status}</p>`;
+                
+                const responseText = await response.text();
+                results.innerHTML += `<p>Raw response: <pre>${responseText}</pre></p>`;
+                
+                if (response.ok) {
+                    try {
+                        const data = JSON.parse(responseText);
+                        results.innerHTML += `<p class="success">Successfully parsed JSON!</p>`;
+                        results.innerHTML += `<p>Number of sessions: ${Array.isArray(data) ? data.length : 'Not an array'}</p>`;
+                        
+                        if (Array.isArray(data) && data.length > 0) {
+                            results.innerHTML += '<h2>Sessions:</h2>';
+                            data.forEach((session, index) => {
+                                results.innerHTML += `
+                                    <div class="session">
+                                        <strong>Session ${index + 1}</strong><br>
+                                        ID: ${session.id}<br>
+                                        Thread ID: ${session.thread_id}<br>
+                                        Messages: ${session.message_count}<br>
+                                        Created: ${session.created_at}
+                                    </div>
+                                `;
+                            });
+                        }
+                    } catch (e) {
+                        results.innerHTML += `<p class="error">JSON parse error: ${e.message}</p>`;
+                    }
+                } else {
+                    results.innerHTML += `<p class="error">API request failed</p>`;
+                }
+            } catch (error) {
+                results.innerHTML += `<p class="error">Network error: ${error.message}</p>`;
+            }
+        }
+        
+        // Auto-run on load
+        window.onload = () => {
+            testChatHistory();
+        };
+    </script>
+</body>
+</html>

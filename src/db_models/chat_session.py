@@ -10,7 +10,7 @@ class ChatSession(Base):
     __tablename__ = "chat_sessions"
 
     id = Column(UUIDType(binary=False), primary_key=True, default=uuid.uuid4)
-    user_id = Column(UUIDType(binary=False), ForeignKey("users.id"), nullable=False)
+    user_id = Column(UUIDType(binary=False), ForeignKey("users.id"), nullable=True)
     thread_id = Column(String(255), unique=True, index=True, nullable=False)
     title = Column(String(500), nullable=True)  # Auto-generated or user-set title
     mode = Column(String(50), default='chat', nullable=False)  # chat, research, documents
@@ -20,3 +20,4 @@ class ChatSession(Base):
     # Relationships
     user = relationship("User", back_populates="chat_sessions")
     messages = relationship("ChatMessage", back_populates="session", cascade="all, delete-orphan")
+    documents = relationship("Document", back_populates="session", cascade="all, delete-orphan")

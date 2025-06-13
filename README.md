@@ -45,6 +45,7 @@ In this demo, we showcase how to use DeerFlow to:
 - [🐳 Docker](#docker)
 - [🗣️ Text-to-Speech Integration](#text-to-speech-integration)
 - [📚 Examples](#examples)
+- [🔍 Debugging](#debugging)
 - [❓ FAQ](#faq)
 - [📜 License](#license)
 - [💖 Acknowledgments](#acknowledgments)
@@ -293,6 +294,14 @@ make lint
 make format
 ```
 
+### Automated Development
+
+Use the `make dev` target to run tests, rebuild Docker images without cache, and restart services:
+
+```bash
+make dev
+```
+
 ### Debugging with LangGraph Studio
 
 DeerFlow uses LangGraph for its workflow architecture. You can use LangGraph Studio to debug and visualize the workflow in real-time.
@@ -502,6 +511,41 @@ The application supports several command-line arguments to customize its behavio
 - **--max_plan_iterations**: Maximum number of planning cycles (default: 1)
 - **--max_step_num**: Maximum number of steps in a research plan (default: 3)
 - **--debug**: Enable detailed debug logging
+
+## Debugging
+
+### Authentication Issues
+
+If you're experiencing authentication issues (e.g., 401 errors when uploading files), follow these steps:
+
+1. **Check Authentication Status**
+   - Navigate to http://localhost:3000/debug/auth
+   - Click "Check Auth Status" to verify your authentication token
+   - Check the browser console (F12) for detailed logs
+
+2. **Manual Testing**
+   ```bash
+   # Run the authentication debug script
+   python test_auth_debug.py
+   ```
+
+3. **Browser Debugging**
+   - Open DevTools (F12) → Application → Cookies
+   - Verify the 'authToken' cookie exists
+   - Check the Network tab when making requests to see headers
+
+4. **Common Issues**
+   - **No auth token**: Make sure you're logged in
+   - **401 errors**: Token may be expired, try logging in again
+   - **CORS errors**: Check that the backend is running on the correct port
+
+### Logging
+
+The application includes detailed logging for debugging:
+
+- **Frontend logs**: Check browser console for client-side logs
+- **Backend logs**: Check Docker logs with `docker-compose logs backend`
+- **Auth middleware logs**: Authentication attempts are logged in the backend
 
 ## FAQ
 

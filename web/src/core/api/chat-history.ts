@@ -1,4 +1,5 @@
 import { resolveServiceURL } from "./resolve-service-url";
+import { getAuthToken } from "~/services/auth";
 
 export interface ChatSession {
   id: string;
@@ -131,7 +132,3 @@ export async function deleteChatSession(sessionId: string): Promise<void> {
   }
 }
 
-function getAuthToken(): string {
-  // Get token from localStorage or cookies
-  return localStorage.getItem('authToken') || '';
-}

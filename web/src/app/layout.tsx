@@ -42,7 +42,7 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body className="bg-app h-full overflow-x-hidden">
+      <body className="bg-background h-full overflow-x-hidden">
         <ThemeProviderWrapper>
           <div className="h-full w-full overflow-x-hidden">
             {children}
