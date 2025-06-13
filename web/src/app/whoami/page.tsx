@@ -43,7 +43,7 @@ export default function WhoAmIPage() {
       try {
         const parts = token.split('.');
         if (parts.length === 3) {
-          const payload = JSON.parse(atob(parts[1]));
+          const payload = JSON.parse(atob(parts[1]!));
           result.tokenPayload = payload;
           result.user = {
             sub: payload.sub,

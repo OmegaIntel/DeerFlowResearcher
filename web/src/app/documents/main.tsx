@@ -27,7 +27,7 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { SidebarTrigger } from "~/components/ui/sidebar";
 import { InputBox } from "~/app/chat/components/input-box";
-import { UploadDialog } from "~/components/documents/upload-dialog";
+import { UploadDialog } from "~/components/documents/upload-dialog-simple";
 
 interface Document {
   id: string;
