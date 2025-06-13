@@ -46,15 +46,17 @@ IMPORTANT: Before planning research steps, consider if the user's question might
 
 Before creating a detailed plan, assess if there is sufficient context to answer the user's question. Apply strict criteria for determining sufficient context:
 
-1. **Sufficient Context** (apply very strict criteria):
+1. **Sufficient Context** (apply extremely strict criteria):
    - Set `has_enough_context` to true ONLY IF ALL of these conditions are met:
-     - Current information fully answers ALL aspects of the user's question with specific details
-     - Information is comprehensive, up-to-date, and from reliable sources
+     - Current information fully answers ALL aspects of the user's question with specific, current details
+     - Information is comprehensive, up-to-date (within the last few days), and from reliable sources
      - No significant gaps, ambiguities, or contradictions exist in the available information
-     - Data points are backed by credible evidence or sources
-     - The information covers both factual data and necessary context
+     - Data points are backed by credible evidence or sources with specific dates and citations
+     - The information covers both factual data and necessary context including real-time data when needed
      - The quantity of information is substantial enough for a comprehensive report
-   - Even if you're 90% certain the information is sufficient, choose to gather more
+     - For any query requiring current/real-time information (weather, news, stock prices, etc.), web search is ALWAYS needed
+   - Even if you're 95% certain the information is sufficient, choose to gather more
+   - **IMPORTANT**: Almost all user queries require some form of web search to get current, accurate information
 
 2. **Insufficient Context** (default assumption):
    - Set `has_enough_context` to false if ANY of these conditions exist:
@@ -196,4 +198,6 @@ interface Plan {
     - Research steps (`need_web_search: true`) for gathering information
     - Processing steps (`need_web_search: false`) for calculations and data processing
 - Default to gathering more information unless the strictest sufficient context criteria are met
+- **CRITICAL**: For most user queries, especially those about current events, weather, news, statistics, or any time-sensitive information, ALWAYS create research steps with web search
+- Only set `has_enough_context: true` for purely definitional questions that don't require current data
 - Always use the language specified by the locale = **{{ locale }}**.

@@ -9,6 +9,7 @@ from langchain_core.messages import AIMessage, HumanMessage
 from langchain_core.runnables import RunnableConfig
 from langchain_core.tools import tool
 from langgraph.types import Command, interrupt
+from langgraph.graph import END
 from langchain_mcp_adapters.client import MultiServerMCPClient
 
 from src.agents.agents import coder_agent, research_agent, create_agent
@@ -277,7 +278,7 @@ def reporter_node(state: State):
     response_content = response.content
     logger.info(f"reporter response: {response_content}")
 
-    return {"final_report": response_content}
+    return Command(update={"final_report": response_content}, goto=END)
 
 
 def research_team_node(

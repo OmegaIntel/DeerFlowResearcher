@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Chat History Test - Static</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .success { color: green; }
+        .error { color: red; }
+        .info { color: blue; }
+        pre { background: #f0f0f0; padding: 10px; overflow: auto; }
+        button { margin: 5px; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Chat History Test - Direct API Calls</h1>
+    
+    <div>
+        <button onclick="testAuth()">1. Test Auth Token</button>
+        <button onclick="testAPI()">2. Test API Call</button>
+        <button onclick="testFullFlow()">3. Run Full Test</button>
+        <button onclick="clearLog()">Clear Log</button>
+    </div>
+    
+    <h2>Log:</h2>
+    <pre id="log"></pre>
+
+    <h2>Sessions:</h2>
+    <div id="sessions"></div>
+
+    <script>
+        const logEl = document.getElementById('log');
+        const sessionsEl = document.getElementById('sessions');
+        
+        function log(msg, type = 'info') {
+            const timestamp = new Date().toLocaleTimeString();
+            const className = type;
+            logEl.innerHTML += `<span class="${className}">[${timestamp}] ${msg}</span>\n`;
+            console.log(msg);
+        }
+        
+        function clearLog() {
+            logEl.innerHTML = '';
+            sessionsEl.innerHTML = '';
+        }
+        
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+            return null;
+        }
+        
+        async function testAuth() {
+            log('=== Testing Authentication ===');
+            
+            // Check all storage locations
+            const cookieToken = getCookie('authToken');
+            const localToken = localStorage.getItem('authToken');
+            const sessionToken = sessionStorage.getItem('authToken');
+            
+            log(`Cookie token: ${cookieToken ? 'Found' : 'Not found'}`);
+            log(`LocalStorage token: ${localToken ? 'Found' : 'Not found'}`);
+            log(`SessionStorage token: ${sessionToken ? 'Found' : 'Not found'}`);
+            
+            const token = cookieToken || localToken || sessionToken;
+            if (token) {
+                log(`Token found: ${token.substring(0, 30)}...`, 'success');
+                return token;
+            } else {
+                log('No auth token found!', 'error');
+                return null;
+            }
+        }
+        
+        async function testAPI() {
+            log('=== Testing API Call ===');
+            
+            const token = await testAuth();
+            if (!token) {
+                log('Cannot test API without token', 'error');
+                return;
+            }
+            
+            try {
+                // Test direct backend call
+                log('Calling backend directly at http://localhost:8000/api/chat/sessions');
+                
+                const response = await fetch('http://localhost:8000/api/chat/sessions', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                    },
+                    mode: 'cors',
+                    credentials: 'include'
+                });
+                
+                log(`Response status: ${response.status}`);
+                log(`Response headers:`, 'info');
+                for (const [key, value] of response.headers.entries()) {
+                    if (key.toLowerCase().includes('access-control') || key.toLowerCase().includes('content')) {
+                        log(`  ${key}: ${value}`);
+                    }
+                }
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    log(`Success! Found ${data.length} sessions`, 'success');
+                    displaySessions(data);
+                    return data;
+                } else {
+                    const errorText = await response.text();
+                    log(`API Error: ${errorText}`, 'error');
+                }
+            } catch (error) {
+                log(`Network Error: ${error.message}`, 'error');
+                log(`Error details: ${error.stack}`, 'error');
+            }
+        }
+        
+        function displaySessions(sessions) {
+            sessionsEl.innerHTML = '<h3>Chat Sessions:</h3>';
+            if (sessions.length === 0) {
+                sessionsEl.innerHTML += '<p>No sessions found</p>';
+                return;
+            }
+            
+            sessions.forEach((session, index) => {
+                const div = document.createElement('div');
+                div.style.border = '1px solid #ccc';
+                div.style.padding = '10px';
+                div.style.marginBottom = '10px';
+                div.innerHTML = `
+                    <strong>Session ${index + 1}</strong><br>
+                    ID: ${session.id}<br>
+                    Thread: ${session.thread_id}<br>
+                    Messages: ${session.message_count}<br>
+                    Created: ${new Date(session.created_at).toLocaleString()}<br>
+                    <button onclick="window.location.href='/chat?thread=${session.thread_id}'">Continue Chat</button>
+                `;
+                sessionsEl.appendChild(div);
+            });
+        }
+        
+        async function testFullFlow() {
+            clearLog();
+            log('=== Running Full Test Flow ===');
+            
+            // Step 1: Check environment
+            log('\n1. Checking environment...');
+            log(`Current URL: ${window.location.href}`);
+            log(`Origin: ${window.location.origin}`);
+            
+            // Step 2: Test auth
+            log('\n2. Testing authentication...');
+            const token = await testAuth();
+            if (!token) {
+                log('Please login first at /auth/login', 'error');
+                return;
+            }
+            
+            // Step 3: Test API
+            log('\n3. Testing API...');
+            await testAPI();
+            
+            // Step 4: Test the actual frontend URL resolution
+            log('\n4. Testing frontend API resolution...');
+            log(`Frontend would use: ${window.location.origin}/api/chat/sessions`);
+            
+            // Step 5: Additional diagnostics
+            log('\n5. Additional diagnostics...');
+            try {
+                // Check if backend is reachable
+                const healthResponse = await fetch('http://localhost:8000/api/health', {
+                    method: 'GET'
+                });
+                log(`Backend health check: ${healthResponse.ok ? 'OK' : 'Failed'}`);
+            } catch (e) {
+                log(`Backend health check failed: ${e.message}`, 'error');
+            }
+        }
+        
+        // Auto-run on load
+        window.onload = () => {
+            log('Page loaded. Click buttons to run tests.');
+            
+            // Check if user is logged in
+            const hasToken = getCookie('authToken') || localStorage.getItem('authToken') || sessionStorage.getItem('authToken');
+            if (!hasToken) {
+                log('No auth token detected. Please login first.', 'error');
+                log('Click here to login: <a href="/auth/login">/auth/login</a>');
+            } else {
+                log('Auth token detected. Running full test...', 'success');
+                setTimeout(testFullFlow, 1000);
+            }
+        };
+    </script>
+</body>
+</html>

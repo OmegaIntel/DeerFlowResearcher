@@ -15,6 +15,7 @@ router = APIRouter()
 
 class ChatSessionResponse(BaseModel):
     id: str
+    thread_id: str
     title: Optional[str]
     mode: str
     message_count: int
@@ -37,6 +38,7 @@ class ChatMessageResponse(BaseModel):
 
 class ChatSessionDetailResponse(BaseModel):
     id: str
+    thread_id: str
     title: Optional[str]
     mode: str
     created_at: datetime
@@ -77,6 +79,7 @@ async def get_chat_sessions(
         message_count = db.query(ChatMessage).filter(ChatMessage.session_id == session.id).count()
         session_data = ChatSessionResponse(
             id=str(session.id),
+            thread_id=session.thread_id,
             title=session.title,
             mode=session.mode,
             message_count=message_count,
@@ -124,6 +127,7 @@ async def get_chat_session(
     
     return ChatSessionDetailResponse(
         id=str(session.id),
+        thread_id=session.thread_id,
         title=session.title,
         mode=session.mode,
         created_at=session.created_at,

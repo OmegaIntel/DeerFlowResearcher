@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Verify Authentication</title>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .error { color: red; }
+        .success { color: green; }
+        pre { background: #f0f0f0; padding: 10px; overflow: auto; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Authentication Verification</h1>
+    
+    <button onclick="checkAuth()">Check Authentication</button>
+    <button onclick="login()">Login as chetan@omegaintelligence.ai</button>
+    <button onclick="window.location.href='/chat/history'">Go to Chat History</button>
+    <hr>
+    <div id="results"></div>
+
+    <script>
+        const results = document.getElementById('results');
+        
+        function log(message, type = 'info') {
+            const className = type === 'error' ? 'error' : type === 'success' ? 'success' : '';
+            results.innerHTML += `<p class="${className}">${message}</p>`;
+        }
+        
+        async function checkAuth() {
+            results.innerHTML = '';
+            
+            // Get auth token
+            const authToken = Cookies.get('authToken') || 
+                             localStorage.getItem('authToken') || 
+                             sessionStorage.getItem('authToken');
+            
+            if (!authToken) {
+                log('No auth token found!', 'error');
+                return;
+            }
+            
+            log('Auth token found!', 'success');
+            
+            // Decode JWT
+            try {
+                const parts = authToken.split('.');
+                if (parts.length === 3) {
+                    const payload = JSON.parse(atob(parts[1]));
+                    log('Token payload:');
+                    log(`<pre>${JSON.stringify(payload, null, 2)}</pre>`);
+                    
+                    // Check expiration
+                    if (payload.exp) {
+                        const expDate = new Date(payload.exp * 1000);
+                        const now = new Date();
+                        if (now > expDate) {
+                            log(`Token expired at: ${expDate}`, 'error');
+                        } else {
+                            log(`Token valid until: ${expDate}`, 'success');
+                        }
+                    }
+                }
+            } catch (e) {
+                log('Failed to decode token', 'error');
+            }
+            
+            // Determine API URL
+            const currentHost = window.location.hostname;
+            const baseUrl = currentHost === 'localhost' || currentHost === '127.0.0.1'
+                ? 'http://localhost:8000/api'
+                : `http://${currentHost}:8000/api`;
+            
+            // Check current user
+            try {
+                const response = await fetch(`${baseUrl}/users/current`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const user = await response.json();
+                    log('Current user:', 'success');
+                    log(`<pre>${JSON.stringify(user, null, 2)}</pre>`);
+                } else {
+                    log(`Failed to get current user: ${response.status}`, 'error');
+                }
+            } catch (e) {
+                log(`Error getting current user: ${e.message}`, 'error');
+            }
+            
+            // Check sessions
+            try {
+                const response = await fetch(`${baseUrl}/chat/sessions`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const sessions = await response.json();
+                    log(`Found ${sessions.length} chat sessions`, 'success');
+                    if (sessions.length > 0) {
+                        log('First 3 sessions:');
+                        sessions.slice(0, 3).forEach((session, i) => {
+                            log(`${i+1}. Thread: ${session.thread_id}, Messages: ${session.message_count}`);
+                        });
+                    }
+                } else {
+                    log(`Failed to get sessions: ${response.status}`, 'error');
+                }
+            } catch (e) {
+                log(`Error getting sessions: ${e.message}`, 'error');
+            }
+        }
+        
+        async function login() {
+            results.innerHTML = '';
+            log('Logging in as chetan@omegaintelligence.ai...');
+            
+            const currentHost = window.location.hostname;
+            const baseUrl = currentHost === 'localhost' || currentHost === '127.0.0.1'
+                ? 'http://localhost:8000/api'
+                : `http://${currentHost}:8000/api`;
+            
+            try {
+                const formData = new URLSearchParams();
+                formData.append('username', 'chetan@omegaintelligence.ai');
+                formData.append('password', 'Test123.');
+                
+                const response = await fetch(`${baseUrl}/token`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: formData
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    const token = data.access_token;
+                    
+                    // Store in multiple places
+                    Cookies.set('authToken', token, { path: '/', expires: 1/12 });
+                    localStorage.setItem('authToken', token);
+                    sessionStorage.setItem('authToken', token);
+                    
+                    log('Login successful!', 'success');
+                    log('Token stored in cookies, localStorage, and sessionStorage');
+                    
+                    // Run auth check
+                    setTimeout(() => checkAuth(), 500);
+                } else {
+                    log(`Login failed: ${response.status}`, 'error');
+                    const error = await response.text();
+                    log(`Error: ${error}`, 'error');
+                }
+            } catch (e) {
+                log(`Login error: ${e.message}`, 'error');
+            }
+        }
+        
+        // Auto-check on load
+        window.onload = () => {
+            checkAuth();
+        };
+    </script>
+</body>
+</html>

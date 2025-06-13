@@ -13,14 +13,15 @@ export function ThemeProviderWrapper({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const isChatPage = pathname?.startsWith("/chat");
+  // Only force dark theme on landing page and auth pages
+  const shouldForceDark = pathname === "/" || pathname?.startsWith("/auth");
 
   return (
     <ThemeProvider
       attribute="class"
-      defaultTheme={"dark"}
-      enableSystem={isChatPage}
-      forcedTheme={isChatPage ? undefined : "dark"}
+      defaultTheme={"system"}
+      enableSystem={true}
+      forcedTheme={shouldForceDark ? "dark" : undefined}
       disableTransitionOnChange
     >
       {children}

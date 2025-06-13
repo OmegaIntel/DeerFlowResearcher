@@ -1,4 +1,5 @@
 import { resolveServiceURL } from "./resolve-service-url";
+import { getAuthToken } from "~/services/auth";
 
 export interface Document {
   id: string;
@@ -153,7 +154,3 @@ export async function reprocessDocument(documentId: string): Promise<{ message: 
   return response.json();
 }
 
-function getAuthToken(): string {
-  // Get token from localStorage or cookies
-  return localStorage.getItem('authToken') || '';
-}

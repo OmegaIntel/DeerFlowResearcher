@@ -24,7 +24,6 @@ import { cn } from "~/lib/utils";
 import { ConversationStarter } from "./conversation-starter";
 import { InputBox } from "./input-box";
 import { MessageListView } from "./message-list-view";
-import { Welcome } from "./welcome";
 
 export function MessagesBlock({ className }: { className?: string }) {
   const messageIds = useMessageIds();
@@ -80,21 +79,23 @@ export function MessagesBlock({ className }: { className?: string }) {
   }, [fastForwarding]);
   return (
     <div className={cn("flex h-full flex-col", className)}>
-      <MessageListView
-        className="flex flex-grow"
-        onFeedback={handleFeedback}
-        onSendMessage={handleSend}
-      />
+      <div className="flex-1 min-h-0 relative">
+        <MessageListView
+          className="absolute inset-0 overflow-y-auto pr-4"
+          onFeedback={handleFeedback}
+          onSendMessage={handleSend}
+        />
+      </div>
       {!isReplay ? (
-        <div className="relative flex h-42 shrink-0 pb-4">
+        <div className="flex-shrink-0 w-full pt-4 bg-background border-t">
           {!responding && messageCount === 0 && (
             <ConversationStarter
-              className="absolute top-[-218px] left-0"
+              className="mb-4"
               onSend={handleSend}
             />
           )}
           <InputBox
-            className="h-full w-full"
+            className="w-full"
             responding={responding}
             feedback={feedback}
             onSend={handleSend}
@@ -104,14 +105,6 @@ export function MessagesBlock({ className }: { className?: string }) {
         </div>
       ) : (
         <>
-          <div
-            className={cn(
-              "fixed bottom-[calc(50vh+80px)] left-0 transition-all duration-500 ease-out",
-              replayStarted && "pointer-events-none scale-150 opacity-0",
-            )}
-          >
-            <Welcome />
-          </div>
           <motion.div
             className="mb-4 h-fit w-full items-center justify-center"
             initial={{ opacity: 0, y: "20vh" }}

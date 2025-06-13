@@ -1,4 +1,5 @@
 import { API_BASE_URL } from "~/lib/constant";
+import { getAuthToken } from "~/services/auth";
 
 interface ApiResponse<T = unknown> {
   data: T;
@@ -10,7 +11,7 @@ export const fetcher = async <T>(
   url: string,
   options: RequestInit = {}
 ): Promise<ApiResponse<T>> => {
-  const token = localStorage.getItem('authToken');
+  const token = getAuthToken();
 
   const config: RequestInit = {
     ...options,
@@ -43,7 +44,7 @@ export const fileFetcher = async <T>(
   url: string,
   options: RequestInit = {}
 ): Promise<ApiResponse<T>> => {
-  const token = localStorage.getItem('authToken');
+  const token = getAuthToken();
 
   const config: RequestInit = {
     ...options,

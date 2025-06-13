@@ -5,13 +5,15 @@ from langchain_community.chat_message_histories import ChatMessageHistory
 from typing import Dict
 
 from src.llms.llm import basic_llm
+from .db_history import DatabaseChatMessageHistory
 
-# Store for in-memory chat histories
+# Store for chat histories (mix of in-memory and DB-backed)
 store: Dict[str, BaseChatMessageHistory] = {}
 
 def get_session_history(session_id: str) -> BaseChatMessageHistory:
     if session_id not in store:
-        store[session_id] = ChatMessageHistory()
+        # Use database-backed history for persistence
+        store[session_id] = DatabaseChatMessageHistory(session_id)
     return store[session_id]
 
 def build_chat_graph_with_memory() -> RunnableWithMessageHistory:

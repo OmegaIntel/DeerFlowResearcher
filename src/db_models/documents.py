@@ -11,6 +11,7 @@ class Document(Base):
 
     id = Column(UUIDType(binary=False), primary_key=True, default=uuid.uuid4)
     user_id = Column(UUIDType(binary=False), ForeignKey("users.id"), nullable=False)
+    session_id = Column(UUIDType(binary=False), ForeignKey("chat_sessions.id"), nullable=True)
     filename = Column(String(255), nullable=False)
     original_filename = Column(String(255), nullable=False)
     file_size = Column(Integer, nullable=False)
@@ -30,3 +31,4 @@ class Document(Base):
 
     # Relationships
     user = relationship("User", back_populates="documents")
+    session = relationship("ChatSession", back_populates="documents")

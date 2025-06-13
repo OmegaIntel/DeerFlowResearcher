@@ -36,10 +36,12 @@ export const useStore = create<{
   closeResearch: () => void;
   setOngoingResearch: (researchId: string | null) => void;
   setMode: (mode: "chat" | "research") => void;
+  startNewChat: () => void;
+  loadChat: (threadId: string) => void;
 }>((set) => ({
   responding: false,
   threadId: THREAD_ID,
-  mode: "research",
+  mode: "chat",
   messageIds: [],
   messages: new Map<string, Message>(),
   researchIds: [],
@@ -79,6 +81,34 @@ export const useStore = create<{
   setMode(mode: "chat" | "research") {
     set({ mode });
   },
+  startNewChat() {
+    set({
+      responding: false,
+      threadId: nanoid(),
+      messageIds: [],
+      messages: new Map<string, Message>(),
+      researchIds: [],
+      researchPlanIds: new Map<string, string>(),
+      researchReportIds: new Map<string, string>(),
+      researchActivityIds: new Map<string, string[]>(),
+      ongoingResearchId: null,
+      openResearchId: null,
+    });
+  },
+  loadChat(threadId: string) {
+    set({
+      responding: false,
+      threadId: threadId,
+      messageIds: [],
+      messages: new Map<string, Message>(),
+      researchIds: [],
+      researchPlanIds: new Map<string, string>(),
+      researchReportIds: new Map<string, string>(),
+      researchActivityIds: new Map<string, string[]>(),
+      ongoingResearchId: null,
+      openResearchId: null,
+    });
+  },
 }));
 
 export async function sendMessage(
@@ -94,11 +124,13 @@ export async function sendMessage(
   } = {},
   options: { abortSignal?: AbortSignal } = {},
 ) {
-  const mode = useStore.getState().mode;
+  const state = useStore.getState();
+  const currentThreadId = state.threadId || THREAD_ID;
+  
   if (content != null) {
     appendMessage({
       id: nanoid(),
-      threadId: THREAD_ID,
+      threadId: currentThreadId,
       role: "user",
       content: content,
       contentChunks: [content],
@@ -106,12 +138,12 @@ export async function sendMessage(
   }
 
   let stream: AsyncIterable<ChatEvent>;
-  if (mode === "research" || toolId) {
+  if (state.mode === "research" || toolId) {
     const settings = getChatStreamSettings();
     stream = chatStream(
       content ?? "[REPLAY]",
       {
-        thread_id: THREAD_ID,
+        thread_id: currentThreadId,
         interrupt_feedback: interruptFeedback,
         auto_accepted_plan: settings.autoAcceptedPlan,
         enable_background_investigation:
@@ -127,7 +159,7 @@ export async function sendMessage(
   } else {
     stream = chatSimpleStream(
       content ?? "",
-      { thread_id: THREAD_ID },
+      { thread_id: currentThreadId },
       options,
     );
   }
@@ -289,6 +321,10 @@ export function closeResearch() {
   useStore.getState().closeResearch();
 }
 
+export function startNewChat() {
+  useStore.getState().startNewChat();
+}
+
 export async function listenToPodcast(researchId: string) {
   const planMessageId = useStore.getState().researchPlanIds.get(researchId);
   const reportMessageId = useStore.getState().researchReportIds.get(researchId);
@@ -297,9 +333,10 @@ export async function listenToPodcast(researchId: string) {
     const title = parseJSON(planMessage.content, { title: "Untitled" }).title;
     const reportMessage = getMessage(reportMessageId);
     if (reportMessage?.content) {
+      const currentThreadId = useStore.getState().threadId || THREAD_ID;
       appendMessage({
         id: nanoid(),
-        threadId: THREAD_ID,
+        threadId: currentThreadId,
         role: "user",
         content: "Please generate a podcast for the above research.",
         contentChunks: [],
@@ -308,7 +345,7 @@ export async function listenToPodcast(researchId: string) {
       const podcastObject = { title, researchId };
       const podcastMessage: Message = {
         id: podCastMessageId,
-        threadId: THREAD_ID,
+        threadId: currentThreadId,
         role: "assistant",
         agent: "podcast",
         content: JSON.stringify(podcastObject),

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Direct API Test</title>
+</head>
+<body>
+    <h1>Direct API Test - No React</h1>
+    <button onclick="runTest()">Run Test</button>
+    <pre id="output"></pre>
+
+    <script>
+        async function runTest() {
+            const output = document.getElementById('output');
+            output.textContent = 'Running test...\n\n';
+            
+            try {
+                // Get auth token from cookie
+                const authToken = document.cookie
+                    .split('; ')
+                    .find(row => row.startsWith('authToken='))
+                    ?.split('=')[1];
+                
+                if (!authToken) {
+                    output.textContent += 'ERROR: No auth token found. Please login first.\n';
+                    return;
+                }
+                
+                output.textContent += `Found auth token: ${authToken.substring(0, 30)}...\n\n`;
+                
+                // Make API call
+                output.textContent += 'Calling API...\n';
+                const response = await fetch('http://localhost:8000/api/chat/sessions', {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+                
+                output.textContent += `Response status: ${response.status}\n`;
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    output.textContent += `\nSUCCESS! Found ${data.length} sessions:\n\n`;
+                    output.textContent += JSON.stringify(data, null, 2);
+                } else {
+                    const error = await response.text();
+                    output.textContent += `\nERROR: ${error}\n`;
+                }
+            } catch (e) {
+                output.textContent += `\nEXCEPTION: ${e.message}\n`;
+                output.textContent += e.stack;
+            }
+        }
+        
+        // Auto-run on load
+        window.onload = () => {
+            console.log('Page loaded');
+            runTest();
+        };
+    </script>
+</body>
+</html>

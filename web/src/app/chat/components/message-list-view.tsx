@@ -76,12 +76,12 @@ export function MessageListView({
 
   return (
     <ScrollContainer
-      className={cn("flex h-full w-full flex-col overflow-hidden", className)}
+      className={cn("h-full w-full overflow-y-auto", className)}
       scrollShadowColor="var(--app-background)"
       autoScrollToBottom
       ref={scrollContainerRef}
     >
-      <ul className="flex flex-col">
+      <ul className="flex flex-col px-4">
         {messageIds.map((messageId) => (
           <MessageListItem
             key={messageId}
@@ -139,7 +139,7 @@ function MessageListItem({
       let content: React.ReactNode;
       if (message.agent === "planner") {
         content = (
-          <div className="w-full px-4">
+          <div className="w-full">
             <PlanCard
               message={message}
               waitForFeedback={waitForFeedback}
@@ -151,13 +151,13 @@ function MessageListItem({
         );
       } else if (message.agent === "podcast") {
         content = (
-          <div className="w-full px-4">
+          <div className="w-full">
             <PodcastCard message={message} />
           </div>
         );
       } else if (startOfResearch) {
         content = (
-          <div className="w-full px-4">
+          <div className="w-full">
             <ResearchCard
               researchId={message.id}
               onToggleResearch={onToggleResearch}
@@ -168,7 +168,7 @@ function MessageListItem({
         content = message.content ? (
           <div
             className={cn(
-              "flex w-full px-4",
+              "flex w-full",
               message.role === "user" && "justify-end",
               className,
             )}
