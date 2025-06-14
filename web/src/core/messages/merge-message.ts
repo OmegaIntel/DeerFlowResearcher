@@ -43,6 +43,10 @@ function mergeTextMessage(message: Message, event: MessageChunkEvent) {
     message.content += event.data.content;
     message.contentChunks.push(event.data.content);
   }
+  // Preserve citations if they exist in the event
+  if (event.data.citations) {
+    message.citations = event.data.citations;
+  }
 }
 
 function mergeToolCallMessage(

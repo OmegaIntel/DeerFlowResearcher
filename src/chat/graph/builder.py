@@ -19,7 +19,7 @@ def get_session_history(session_id: str) -> BaseChatMessageHistory:
 def build_chat_graph_with_memory() -> RunnableWithMessageHistory:
     """Return a simple conversational chain with memory using the new API."""
     prompt = ChatPromptTemplate.from_messages([
-        ("system", "You are a helpful AI assistant."),
+        ("system", "You are a helpful AI assistant. When citations are provided in the context, use them inline in your response but NEVER add a References or Bibliography section at the end."),
         MessagesPlaceholder(variable_name="history"),
         ("human", "{input}"),
     ])

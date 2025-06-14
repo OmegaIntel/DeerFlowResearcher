@@ -189,6 +189,19 @@ function MessageListItem({
                     ))}
                   </div>
                 )}
+                {message.citations && message.citations.length > 0 && (
+                  <div className="mt-3 border-t pt-3">
+                    <p className="text-xs font-semibold text-muted-foreground mb-2">📚 References:</p>
+                    <div className="space-y-1">
+                      {message.citations.map((citation) => (
+                        <CitationDisplay 
+                          key={citation.id} 
+                          citation={citation}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                )}
               </div>
             </MessageBubble>
           </div>
@@ -531,6 +544,56 @@ function AttachmentDisplay({
       {downloading && (
         <LoadingOutlined className="h-3.5 w-3.5 text-muted-foreground" />
       )}
+    </div>
+  );
+}
+
+function CitationDisplay({ 
+  citation 
+}: { 
+  citation: { id: string; document_id: string; filename: string; page_number: number; chunk_id: string; char_start: number; char_end: number };
+}) {
+  const [loading, setLoading] = useState(false);
+  
+  const handleViewCitation = async () => {
+    try {
+      setLoading(true);
+      
+      // Get document download URL
+      const { download_url } = await getDocumentDownloadUrl(citation.document_id);
+      
+      // Open document viewer with page and highlight parameters
+      const viewerUrl = `/document-viewer/${citation.document_id}?page=${citation.page_number}&highlight=${citation.chunk_id}`;
+      window.open(viewerUrl, '_blank', 'noopener,noreferrer');
+      
+      toast.success(`Opening ${citation.filename} at page ${citation.page_number}`);
+    } catch (error) {
+      console.error("Citation error:", error);
+      // If viewer doesn't exist, just open the document
+      try {
+        const { download_url } = await getDocumentDownloadUrl(citation.document_id);
+        window.open(download_url, '_blank', 'noopener,noreferrer');
+        toast.info(`Opening ${citation.filename} (page ${citation.page_number})`);
+      } catch (e) {
+        toast.error("Failed to open citation");
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  return (
+    <div 
+      className="flex items-center gap-2 text-xs cursor-pointer hover:bg-muted/50 rounded px-2 py-1 transition-colors"
+      onClick={handleViewCitation}
+    >
+      <span className="font-semibold text-primary">{citation.id}</span>
+      <FileIcon className="h-3 w-3 text-muted-foreground" />
+      <span className="text-muted-foreground truncate max-w-[200px]" title={citation.filename}>
+        {citation.filename}
+      </span>
+      <span className="text-muted-foreground">- Page {citation.page_number}</span>
+      {loading && <LoadingOutlined className="h-3 w-3" />}
     </div>
   );
 }
