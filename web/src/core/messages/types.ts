@@ -22,6 +22,17 @@ export interface Message {
   finishReason?: "stop" | "interrupt" | "tool_calls";
   interruptFeedback?: string;
   attachments?: MessageAttachment[];
+  citations?: Citation[];
+}
+
+export interface Citation {
+  id: string;
+  document_id: string;
+  filename: string;
+  page_number: number;
+  chunk_id: string;
+  char_start: number;
+  char_end: number;
 }
 
 export interface MessageAttachment {

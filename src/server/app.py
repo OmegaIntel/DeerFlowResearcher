@@ -34,7 +34,7 @@ from src.config.mcp_servers import mcp_server_config
 from src.server.llamacloud_upload import router as llamacloud_router
 from src.server.pinecone_routes import router as pinecone_router
 from src.server.chat_history_routes import router as chat_history_router
-from src.server.documents_routes import router as documents_router
+from src.server.documents_routes import router as documents_router, enhanced_document_processor
 from src.server.fix_titles_route import router as fix_titles_router
 from src.db.db_session import (
     create_db_tables,
@@ -291,9 +291,10 @@ async def chat_simple(request: ChatRequest, req: Request):
     
     # Search documents if user has uploaded any
     context_docs = []
+    citations = []  # Initialize citations list
     if current_user and session_obj:
         try:
-            from src.server.document_processor import document_processor
+            from src.server.document_processor_enhanced import enhanced_document_processor
             from src.db_models import Document
             
             # Check if session has documents
@@ -305,8 +306,8 @@ async def chat_simple(request: ChatRequest, req: Request):
             
             if session_docs > 0:
                 logger.info(f"[RAG] Found {session_docs} documents for session {session_obj.id}")
-                # Search for relevant documents in this session
-                search_results = document_processor.search_documents(
+                # Use enhanced search with citations
+                search_results = enhanced_document_processor.search_documents_with_citations(
                     query=user_message,
                     top_k=3,
                     filter_dict={"session_id": str(session_obj.id)}
@@ -315,15 +316,22 @@ async def chat_simple(request: ChatRequest, req: Request):
                 
                 if search_results:
                     context_docs = search_results
-                    # Add context to the message
+                    # Add context to the message with citation markers
                     context_text = "\n\nRelevant information from your documents:\n"
-                    for i, doc in enumerate(search_results):
-                        context_text += f"\n[Document {i+1}]: {doc['content'][:500]}...\n"
+                    for doc in search_results:
+                        citation_id = doc['citation_id']
+                        context_text += f"\n{citation_id} {doc['content'][:500]}...\n"
                         logger.info(f"[RAG] Including document chunk from {doc['metadata'].get('filename', 'unknown')}")
+                        # Store citation info for later
+                        citations.append(doc['citation'])
+                    
+                    # Add instruction for LLM to use citations
+                    system_instruction = """When answering, use the citation markers [1], [2], etc. inline where you reference the information.
+IMPORTANT: Do NOT add a "References" section, bibliography, or list of sources at the end of your response. Citations should only appear inline."""
                     
                     # Prepend context to user message
-                    user_message = f"{context_text}\n\nUser question: {user_message}"
-                    logger.info(f"[RAG] Enhanced message with document context")
+                    user_message = f"{system_instruction}\n\n{context_text}\n\nUser question: {user_message}"
+                    logger.info(f"[RAG] Enhanced message with document context and citations")
         except Exception as e:
             logger.warning(f"Error searching documents: {e}")
 
@@ -339,13 +347,18 @@ async def chat_simple(request: ChatRequest, req: Request):
             else:
                 response_text = str(result)
 
+            # Don't add citations to response text - they're handled by the frontend
+            
             add_chat_message(db, session_obj, "assistant", str(response_text))
+            
+            # Include citations in the response data
             data = {
                 "thread_id": thread_id,
                 "id": str(uuid.uuid4()),
                 "role": "assistant",
                 "content": response_text,
                 "finish_reason": "stop",
+                "citations": citations if citations else None
             }
             yield f"event: message_chunk\ndata: {json.dumps(data)}\n\n"
         except Exception as e:
@@ -1342,6 +1355,7 @@ async def mock_verify():
 #     try:
 #         from src.server.s3_utils import s3_manager
 #         from src.server.document_processor import document_processor
+from src.server.document_processor_enhanced import enhanced_document_processor
 #         
 #         # Read file content
 #         content = await file.read()
@@ -1447,6 +1461,7 @@ async def mock_verify():
 #     """Search across all uploaded documents."""
 #     try:
 #         from src.server.document_processor import document_processor
+from src.server.document_processor_enhanced import enhanced_document_processor
 #         
 #         # Search documents
 #         results = document_processor.search_documents(

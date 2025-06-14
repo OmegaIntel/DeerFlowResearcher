@@ -35,13 +35,17 @@ class S3Manager:
         
         try:
             # Upload file with metadata
+            # Encode non-ASCII characters in metadata values
+            import urllib.parse
+            encoded_filename = urllib.parse.quote(filename, safe='')
+            
             self.s3_client.put_object(
                 Bucket=self.bucket_name,
                 Key=key,
                 Body=file_content,
                 ContentType=content_type,
                 Metadata={
-                    'original_filename': filename,
+                    'original_filename': encoded_filename,
                     'user_id': user_id,
                     'upload_time': timestamp,
                     'file_id': file_id
@@ -116,12 +120,20 @@ class S3Manager:
                         metadata = head_response.get('Metadata', {})
                         
                         # Extract file info
+                        # Decode filename if it was encoded
+                        import urllib.parse
+                        original_filename = metadata.get('original_filename', obj['Key'].split('/')[-1])
+                        try:
+                            original_filename = urllib.parse.unquote(original_filename)
+                        except:
+                            pass  # Use the filename as-is if decoding fails
+                            
                         files.append({
                             'key': obj['Key'],
                             'size': obj['Size'],
                             'last_modified': obj['LastModified'].isoformat(),
                             'file_id': metadata.get('file_id', ''),
-                            'original_filename': metadata.get('original_filename', obj['Key'].split('/')[-1]),
+                            'original_filename': original_filename,
                             'upload_time': metadata.get('upload_time', obj['LastModified'].isoformat()),
                             'content_type': head_response.get('ContentType', 'application/octet-stream')
                         })

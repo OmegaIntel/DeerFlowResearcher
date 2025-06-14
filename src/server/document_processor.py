@@ -82,7 +82,7 @@ class DocumentProcessor:
             # Default to text loader
             return TextLoader(file_path)
     
-    async def process_document(self, file_content: bytes, filename: str, content_type: str, document_id: str, session_id: Optional[str] = None) -> Dict:
+    async def process_document(self, file_content: bytes, filename: str, content_type: str, document_id: str, session_id: Optional[str] = None, user_id: Optional[str] = None) -> Dict:
         """Process a document and store embeddings in Pinecone"""
         try:
             logger.info(f"Processing document: {filename}, type: {content_type}, id: {document_id}, session_id: {session_id}")
@@ -115,6 +115,10 @@ class DocumentProcessor:
                     metadata['session_id'] = session_id
                     logger.info(f"Adding session_id {session_id} to chunk metadata")
                     print(f"[DOCUMENT_PROCESSOR] Adding session_id {session_id} to chunk {i}", flush=True)
+                # Add user_id if provided
+                if user_id:
+                    metadata['user_id'] = user_id
+                    logger.info(f"Adding user_id {user_id} to chunk metadata")
                 chunk.metadata.update(metadata)
             
             # Create vector store and add documents

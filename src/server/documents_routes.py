@@ -11,7 +11,7 @@ from src.db.db_session import get_db
 from src.db_models import Document, User
 from src.api.api_get_current_user import get_current_user, User as UserResponse
 from src.server.s3_utils import s3_manager
-from src.server.document_processor import document_processor
+from src.server.document_processor_enhanced import enhanced_document_processor
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
@@ -171,12 +171,13 @@ async def upload_document(
             logger.info(f"[UPLOAD] Calling document_processor with session_id: {session_id_str}")
             print(f"[UPLOAD DEBUG] Passing session_id to processor: {session_id_str}", flush=True)
             
-            processing_result = await document_processor.process_document(
+            processing_result = await enhanced_document_processor.process_document(
                 file_content=content,
                 filename=file.filename,
                 content_type=file.content_type or "application/octet-stream",
                 document_id=doc_id,
-                session_id=session_id_str
+                session_id=session_id_str,
+                user_id=current_user.id
             )
             
             # Update document with processing results
