@@ -179,7 +179,7 @@ function MessageListItem({
               <div className="flex w-full flex-col">
                 <Markdown>{message?.content}</Markdown>
                 {message.attachments && message.attachments.length > 0 && (
-                  <div className="mt-2 space-y-1">
+                  <div className="mt-2 flex flex-wrap gap-1">
                     {message.attachments.map((attachment) => (
                       <AttachmentDisplay 
                         key={attachment.id} 
@@ -495,28 +495,22 @@ function AttachmentDisplay({
     return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
   };
   
-  const handleDownload = async () => {
+  const handleOpen = async () => {
     try {
       setDownloading(true);
       
       // Get presigned download URL from backend
       // Use documentId if available, otherwise use the attachment id
       const docId = attachment.documentId || attachment.id;
-      const { download_url, filename } = await getDocumentDownloadUrl(docId);
+      const { download_url } = await getDocumentDownloadUrl(docId);
       
-      // Create a temporary link and trigger download
-      const link = document.createElement('a');
-      link.href = download_url;
-      link.download = filename || attachment.filename;
-      link.style.display = 'none';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+      // Open in new tab
+      window.open(download_url, '_blank', 'noopener,noreferrer');
       
-      toast.success(`Downloading ${attachment.filename}`);
+      toast.success(`Opening ${attachment.filename}`);
     } catch (error) {
-      console.error("Download error:", error);
-      toast.error("Failed to download file", {
+      console.error("Open error:", error);
+      toast.error("Failed to open file", {
         description: error instanceof Error ? error.message : 'Unknown error'
       });
     } finally {
@@ -525,29 +519,18 @@ function AttachmentDisplay({
   };
   
   return (
-    <div className="flex items-center gap-2 rounded-md bg-muted/50 px-3 py-2">
-      <FileIcon className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium truncate" title={attachment.filename}>
-          {attachment.filename}
-        </p>
-        <p className="text-xs text-muted-foreground">
-          {formatFileSize(attachment.size)}
-        </p>
-      </div>
-      <Button
-        size="sm"
-        variant="ghost"
-        onClick={handleDownload}
-        disabled={downloading}
-        className="h-8 w-8 p-0"
-      >
-        {downloading ? (
-          <LoadingOutlined className="h-4 w-4" />
-        ) : (
-          <Download className="h-4 w-4" />
-        )}
-      </Button>
+    <div 
+      className="inline-flex items-center gap-2 rounded-md bg-muted/50 px-2 py-1 cursor-pointer hover:bg-muted/70 transition-colors max-w-fit"
+      onClick={handleOpen}
+      title={`Click to open ${attachment.filename}`}
+    >
+      <FileIcon className="h-3.5 w-3.5 flex-shrink-0 text-muted-foreground" />
+      <p className="text-sm font-medium truncate max-w-[150px]">
+        {attachment.filename}
+      </p>
+      {downloading && (
+        <LoadingOutlined className="h-3.5 w-3.5 text-muted-foreground" />
+      )}
     </div>
   );
 }
