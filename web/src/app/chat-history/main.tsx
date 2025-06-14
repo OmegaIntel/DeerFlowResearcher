@@ -299,7 +299,7 @@ export default function ChatHistoryMain() {
                     <div className="flex items-start justify-between">
                       <div className="flex-1 min-w-0">
                         <CardTitle className="text-sm line-clamp-1">
-                          {session.title || `Chat ${session.id.slice(0, 8)}`}
+                          {session.title || `${session.mode} session`}
                         </CardTitle>
                         <div className="flex items-center gap-2 mt-1">
                           <Badge className={getModeColor(session.mode)}>
@@ -357,7 +357,7 @@ export default function ChatHistoryMain() {
                 <div className="flex items-center justify-between">
                   <div>
                     <h2 className="text-lg font-semibold">
-                      {selectedSession.title || `Chat ${selectedSession.id.slice(0, 8)}`}
+                      {selectedSession.title || `${selectedSession.mode} session`}
                     </h2>
                     <p className="text-sm text-muted-foreground">
                       Created {format(new Date(selectedSession.created_at), 'MMM d, yyyy h:mm a')}

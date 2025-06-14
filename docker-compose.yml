@@ -33,6 +33,7 @@ services:
       DATABASE_USER_NAME: deer_user
       DATABASE_PASSWORD: deer_password
       DATABASE_NAME: deer_flow
+      PYTHONUNBUFFERED: 1
     volumes:
       - ./conf.yaml:/app/conf.yaml
       - ./mcp-servers:/app/mcp-servers
