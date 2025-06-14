@@ -21,6 +21,16 @@ export interface Message {
   options?: Option[];
   finishReason?: "stop" | "interrupt" | "tool_calls";
   interruptFeedback?: string;
+  attachments?: MessageAttachment[];
+}
+
+export interface MessageAttachment {
+  id: string;
+  filename: string;
+  size: number;
+  type: string;
+  uploadTime?: string;
+  documentId?: string;
 }
 
 export interface Option {

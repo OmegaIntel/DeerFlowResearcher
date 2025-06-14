@@ -14,6 +14,13 @@ class ContentItem(BaseModel):
     )
 
 
+class MessageAttachment(BaseModel):
+    filename: str = Field(..., description="The filename of the attachment")
+    size: int = Field(..., description="The size of the attachment in bytes")
+    type: str = Field(..., description="The MIME type of the attachment")
+    documentId: Optional[str] = Field(None, description="The document ID from the upload")
+
+
 class ChatMessage(BaseModel):
     role: str = Field(
         ..., description="The role of the message sender (user or assistant)"
@@ -21,6 +28,9 @@ class ChatMessage(BaseModel):
     content: Union[str, List[ContentItem]] = Field(
         ...,
         description="The content of the message, either a string or a list of content items",
+    )
+    attachments: Optional[List[MessageAttachment]] = Field(
+        None, description="List of attachments associated with this message"
     )
 
 

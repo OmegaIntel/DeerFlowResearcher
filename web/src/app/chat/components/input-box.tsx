@@ -83,7 +83,10 @@ export function InputBox({
   const [toolSearchQuery, setToolSearchQuery] = useState("");
   const [selectedDropdownIndex, setSelectedDropdownIndex] = useState(-1);
   const [isUploading, setIsUploading] = useState(false);
-  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [uploadedFiles, setUploadedFiles] = useState<Array<{
+    file: File;
+    documentId?: string;
+  }>>([]);
   const [activeUploads, setActiveUploads] = useState<Map<string, PineconeUploadJobStatus>>(new Map());
   const mode = useStore((state) => state.mode);
   const setMode = useStore((state) => state.setMode);
@@ -258,7 +261,7 @@ export function InputBox({
     if (responding) {
       onCancel?.();
     } else {
-      if (message.trim() === "") {
+      if (message.trim() === "" && uploadedFiles.length === 0) {
         return;
       }
       if (onSend) {
@@ -267,9 +270,26 @@ export function InputBox({
           interruptFeedback?: string;
           toolId?: string;
           toolType?: "mcp" | "agent" | "research";
+          attachments?: { filename: string; size: number; type: string }[];
         } = {
           interruptFeedback: feedback?.option.value,
         };
+
+        // Include uploaded files information
+        if (uploadedFiles.length > 0) {
+          options.attachments = uploadedFiles.map(item => ({
+            filename: item.file.name,
+            size: item.file.size,
+            type: item.file.type || 'application/octet-stream',
+            documentId: item.documentId
+          }));
+          console.log("[InputBox] Sending message with attachments:", options.attachments);
+          
+          // Add a note about uploaded files to the message if message is empty
+          if (!finalMessage.trim()) {
+            finalMessage = `[Uploaded ${uploadedFiles.length} file${uploadedFiles.length > 1 ? 's' : ''}]`;
+          }
+        }
 
         // Handle @ tool selection
         if (selectedTool) {
@@ -283,10 +303,11 @@ export function InputBox({
         setMessage("");
         setSelectedTool(null);
         setShowToolDropdown(false);
+        setUploadedFiles([]); // Clear uploaded files after sending
         onRemoveFeedback?.();
       }
     }
-  }, [responding, onCancel, message, onSend, feedback, onRemoveFeedback, selectedTool]);
+  }, [responding, onCancel, message, onSend, feedback, onRemoveFeedback, selectedTool, uploadedFiles]);
 
   const handleToolSelect = useCallback((tool: ToolOption) => {
     setSelectedTool(tool);
@@ -423,12 +444,7 @@ export function InputBox({
             duration: 4000,
           });
           
-          // Auto-remove uploaded files from display after 3 seconds
-          setTimeout(() => {
-            setUploadedFiles(prev => prev.filter(file => 
-              !status.files.some((statusFile: string) => statusFile === file.name)
-            ));
-          }, 3000);
+          // Keep files visible - don't auto-remove
           
         } else if (status.status === "failed") {
           toast.error("Upload failed", {
@@ -475,7 +491,7 @@ export function InputBox({
     setIsUploading(true);
     try {
       const filesArray = Array.from(files);
-      let successCount = 0;
+      const uploadedItems: Array<{file: File; documentId?: string}> = [];
       
       // Upload files to S3 one by one
       for (const file of filesArray) {
@@ -484,8 +500,11 @@ export function InputBox({
           const response = await uploadFileToS3(file, threadId);
           
           if (response.success) {
-            successCount++;
             console.log("[InputBox] File uploaded successfully:", response);
+            uploadedItems.push({
+              file,
+              documentId: response.document?.id
+            });
           } else {
             console.error("[InputBox] Upload failed response:", response);
             toast.error(`Failed to upload ${file.name}`, {
@@ -502,21 +521,14 @@ export function InputBox({
         }
       }
       
-      if (successCount > 0) {
+      if (uploadedItems.length > 0) {
         toast.success("Upload complete!", {
-          description: `Successfully uploaded ${successCount} of ${filesArray.length} file${filesArray.length > 1 ? 's' : ''}`,
+          description: `Successfully uploaded ${uploadedItems.length} of ${filesArray.length} file${filesArray.length > 1 ? 's' : ''}`,
           duration: 3000,
         });
         
         // Add files to uploaded list for display
-        setUploadedFiles(prev => [...prev, ...filesArray.slice(0, successCount)]);
-        
-        // Auto-remove uploaded files from display after 3 seconds
-        setTimeout(() => {
-          setUploadedFiles(prev => prev.filter(file => 
-            !filesArray.slice(0, successCount).includes(file)
-          ));
-        }, 3000);
+        setUploadedFiles(prev => [...prev, ...uploadedItems]);
       }
       
     } catch (error) {
@@ -624,13 +636,13 @@ export function InputBox({
         {/* Uploaded files display */}
         {uploadedFiles.length > 0 && (
           <div className="flex flex-wrap gap-2 px-4 pt-2">
-            {uploadedFiles.map((file, index) => (
+            {uploadedFiles.map((item, index) => (
               <div
                 key={index}
                 className="flex items-center gap-1 rounded-md bg-muted px-2 py-1 text-sm"
               >
                 <Paperclip className="h-3 w-3" />
-                <span className="max-w-[200px] truncate">{file.name}</span>
+                <span className="max-w-[200px] truncate">{item.file.name}</span>
                 <button
                   onClick={() => {
                     setUploadedFiles(prev => prev.filter((_, i) => i !== index));

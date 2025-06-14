@@ -82,10 +82,10 @@ class DocumentProcessor:
             # Default to text loader
             return TextLoader(file_path)
     
-    async def process_document(self, file_content: bytes, filename: str, content_type: str, document_id: str) -> Dict:
+    async def process_document(self, file_content: bytes, filename: str, content_type: str, document_id: str, session_id: Optional[str] = None) -> Dict:
         """Process a document and store embeddings in Pinecone"""
         try:
-            logger.info(f"Processing document: {filename}, type: {content_type}, id: {document_id}")
+            logger.info(f"Processing document: {filename}, type: {content_type}, id: {document_id}, session_id: {session_id}")
             logger.info(f"Using Pinecone index: {self.index_name}")
             
             # Save file temporarily
@@ -104,12 +104,18 @@ class DocumentProcessor:
             
             # Add metadata to each chunk
             for i, chunk in enumerate(chunks):
-                chunk.metadata.update({
+                metadata = {
                     'document_id': document_id,
                     'filename': filename,
                     'chunk_index': i,
                     'total_chunks': len(chunks)
-                })
+                }
+                # Add session_id if provided
+                if session_id:
+                    metadata['session_id'] = session_id
+                    logger.info(f"Adding session_id {session_id} to chunk metadata")
+                    print(f"[DOCUMENT_PROCESSOR] Adding session_id {session_id} to chunk {i}", flush=True)
+                chunk.metadata.update(metadata)
             
             # Create vector store and add documents
             vector_store = PineconeVectorStore(

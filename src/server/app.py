@@ -98,7 +98,7 @@ chat_chains: dict[str, RunnableWithMessageHistory] = {}
 create_db_tables()
 
 
-def add_chat_message(db, session, role: str, content: str):
+def add_chat_message(db, session, role: str, content: str, attachments=None):
     """Add a message to the chat session"""
     from src.db_models.chat_message import ChatMessage
     from sqlalchemy import func
@@ -106,7 +106,8 @@ def add_chat_message(db, session, role: str, content: str):
     message = ChatMessage(
         session_id=session.id,
         role=role,
-        content=content
+        content=content,
+        attachments=attachments
     )
     db.add(message)
     db.commit()
@@ -216,6 +217,9 @@ async def chat_simple(request: ChatRequest, req: Request):
 
     db = SessionLocal()
     
+    # Debug: Print entire request
+    print(f"[CHAT_SIMPLE] Full request messages: {request.messages}", flush=True)
+    
     # Create or get session with user association
     if current_user:
         print(f"[CHAT_SIMPLE] Looking for session - user: {current_user.email}, thread_id: {thread_id}", flush=True)
@@ -249,7 +253,26 @@ async def chat_simple(request: ChatRequest, req: Request):
         chat_chains[thread_id] = chain
 
     user_message = request.messages[-1].content if request.messages else ""
-    add_chat_message(db, session_obj, "user", str(user_message))
+    user_attachments = request.messages[-1].attachments if request.messages and request.messages[-1].attachments else None
+    
+    print(f"[CHAT_SIMPLE] User message: {user_message[:50]}...", flush=True)
+    print(f"[CHAT_SIMPLE] User attachments: {user_attachments}", flush=True)
+    
+    # Convert attachments to dict format for JSON storage
+    attachments_data = None
+    if user_attachments:
+        attachments_data = [
+            {
+                "filename": att.filename,
+                "size": att.size,
+                "type": att.type,
+                "documentId": att.documentId
+            }
+            for att in user_attachments
+        ]
+        print(f"[CHAT_SIMPLE] Converted attachments data: {attachments_data}", flush=True)
+    
+    add_chat_message(db, session_obj, "user", str(user_message), attachments=attachments_data)
     
     # Always update title if it's the first message and no title is set
     from src.db_models.chat_message import ChatMessage as ChatMessageModel
@@ -281,12 +304,14 @@ async def chat_simple(request: ChatRequest, req: Request):
             ).count()
             
             if session_docs > 0:
+                logger.info(f"[RAG] Found {session_docs} documents for session {session_obj.id}")
                 # Search for relevant documents in this session
                 search_results = document_processor.search_documents(
                     query=user_message,
                     top_k=3,
                     filter_dict={"session_id": str(session_obj.id)}
                 )
+                logger.info(f"[RAG] Search returned {len(search_results) if search_results else 0} results")
                 
                 if search_results:
                     context_docs = search_results
@@ -294,9 +319,11 @@ async def chat_simple(request: ChatRequest, req: Request):
                     context_text = "\n\nRelevant information from your documents:\n"
                     for i, doc in enumerate(search_results):
                         context_text += f"\n[Document {i+1}]: {doc['content'][:500]}...\n"
+                        logger.info(f"[RAG] Including document chunk from {doc['metadata'].get('filename', 'unknown')}")
                     
                     # Prepend context to user message
                     user_message = f"{context_text}\n\nUser question: {user_message}"
+                    logger.info(f"[RAG] Enhanced message with document context")
         except Exception as e:
             logger.warning(f"Error searching documents: {e}")
 
