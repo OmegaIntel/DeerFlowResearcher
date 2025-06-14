@@ -51,6 +51,19 @@ def add_chat_message(
 ) -> ChatMessage:
     msg = ChatMessage(session_id=session_obj.id, role=role, content=content)
     db.add(msg)
+    
+    # If this is the first user message and session has no title, set it
+    if role == "user" and (not session_obj.title or session_obj.title == ""):
+        # Check if this is the first user message
+        existing_user_messages = db.query(ChatMessage).filter(
+            ChatMessage.session_id == session_obj.id,
+            ChatMessage.role == "user"
+        ).count()
+        
+        if existing_user_messages == 0:  # This is the first user message
+            session_obj.title = content[:100]  # Limit to 100 chars
+            db.add(session_obj)
+    
     db.commit()
     db.refresh(msg)
     return msg

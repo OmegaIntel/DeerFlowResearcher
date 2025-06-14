@@ -35,6 +35,7 @@ from src.server.llamacloud_upload import router as llamacloud_router
 from src.server.pinecone_routes import router as pinecone_router
 from src.server.chat_history_routes import router as chat_history_router
 from src.server.documents_routes import router as documents_router
+from src.server.fix_titles_route import router as fix_titles_router
 from src.db.db_session import (
     create_db_tables,
     SessionLocal,
@@ -69,6 +70,7 @@ app.include_router(debug_router)
 app.include_router(llamacloud_router)
 app.include_router(pinecone_router, prefix="/api/pinecone")
 app.include_router(chat_history_router, prefix="/api/chat")
+app.include_router(fix_titles_router, prefix="/api/chat")
 app.include_router(documents_router, prefix="/api/documents")
 # Add CORS middleware
 app.add_middleware(
@@ -180,6 +182,7 @@ async def chat_stream(request: ChatRequest):
 
 @app.post("/api/chat/simple")
 async def chat_simple(request: ChatRequest, req: Request):
+    print(f"[CHAT_SIMPLE] === ENDPOINT CALLED === thread_id: {request.thread_id}", flush=True)
     from src.api.api_get_current_user import get_current_user
     from src.db_models.chat_session import ChatSession
     from fastapi import Header
@@ -188,6 +191,11 @@ async def chat_simple(request: ChatRequest, req: Request):
     auth_header = req.headers.get('Authorization', '')
     token = auth_header.replace('Bearer ', '') if auth_header.startswith('Bearer ') else None
     
+    import logging
+    logger = logging.getLogger(__name__)
+    logger.info(f"[CHAT_SIMPLE] Auth header: {auth_header[:50] if auth_header else 'None'}")
+    logger.info(f"[CHAT_SIMPLE] Token extracted: {token[:20] if token else 'None'}...")
+    
     # Get current user
     current_user = None
     if token:
@@ -195,8 +203,12 @@ async def chat_simple(request: ChatRequest, req: Request):
             db_temp = SessionLocal()
             current_user = await get_current_user(token, db_temp)
             db_temp.close()
-        except:
+            logger.info(f"[CHAT_SIMPLE] Current user: {current_user.email if current_user else 'None'}")
+        except Exception as e:
+            logger.error(f"[CHAT_SIMPLE] Error getting user: {str(e)}")
             pass
+    else:
+        logger.warning("[CHAT_SIMPLE] No token provided")
     
     thread_id = request.thread_id
     if thread_id == "__default__":
@@ -206,20 +218,29 @@ async def chat_simple(request: ChatRequest, req: Request):
     
     # Create or get session with user association
     if current_user:
+        print(f"[CHAT_SIMPLE] Looking for session - user: {current_user.email}, thread_id: {thread_id}", flush=True)
         session_obj = db.query(ChatSession).filter(
             ChatSession.thread_id == thread_id,
             ChatSession.user_id == uuid.UUID(current_user.id)
         ).first()
         if not session_obj:
+            print(f"[CHAT_SIMPLE] Creating NEW session", flush=True)
+            # Get the user message to use as title
+            user_msg = request.messages[-1].content if request.messages else ""
             session_obj = ChatSession(
                 thread_id=thread_id,
                 user_id=uuid.UUID(current_user.id),
-                mode='chat'
+                mode='chat',
+                title=user_msg[:100] if user_msg else None  # Set title immediately
             )
             db.add(session_obj)
             db.commit()
             db.refresh(session_obj)
+            print(f"[CHAT_SIMPLE] Created new session with ID: {session_obj.id}, title: {session_obj.title}", flush=True)
+        else:
+            print(f"[CHAT_SIMPLE] Found EXISTING session with ID: {session_obj.id}, title: {session_obj.title}", flush=True)
     else:
+        logger.warning(f"[CHAT_SIMPLE] No user - creating anonymous session for thread_id: {thread_id}")
         session_obj = get_or_create_chat_session(db, thread_id)
 
     chain = chat_chains.get(thread_id)
@@ -229,6 +250,21 @@ async def chat_simple(request: ChatRequest, req: Request):
 
     user_message = request.messages[-1].content if request.messages else ""
     add_chat_message(db, session_obj, "user", str(user_message))
+    
+    # Always update title if it's the first message and no title is set
+    from src.db_models.chat_message import ChatMessage as ChatMessageModel
+    message_count = db.query(ChatMessageModel).filter(ChatMessageModel.session_id == session_obj.id).count()
+    print(f"[CHAT_SIMPLE DEBUG] Session {session_obj.id} - Title: {repr(session_obj.title)}, Messages: {message_count}, Current msg: {user_message[:50]}", flush=True)
+    
+    if (not session_obj.title or session_obj.title == '') and user_message and message_count <= 2:
+        print(f"[CHAT_SIMPLE] Setting title for session {session_obj.id}: {str(user_message)[:50]}...", flush=True)
+        session_obj.title = str(user_message)[:100]  # Limit to 100 chars
+        db.add(session_obj)  # Make sure session is in the session
+        db.commit()
+        db.refresh(session_obj)
+        print(f"[CHAT_SIMPLE] Title set and committed: {session_obj.title}", flush=True)
+    else:
+        print(f"[CHAT_SIMPLE] Not setting title - Title: {repr(session_obj.title)}, Messages: {message_count}", flush=True)
     
     # Search documents if user has uploaded any
     context_docs = []
