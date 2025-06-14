@@ -47,9 +47,14 @@ def get_or_create_chat_session(db: Session, thread_id: str, user_id: str = None)
 
 
 def add_chat_message(
-    db: Session, session_obj: ChatSession, role: str, content: str
+    db: Session, session_obj: ChatSession, role: str, content: str, attachments=None
 ) -> ChatMessage:
-    msg = ChatMessage(session_id=session_obj.id, role=role, content=content)
+    msg = ChatMessage(
+        session_id=session_obj.id, 
+        role=role, 
+        content=content,
+        attachments=attachments  # Store attachments metadata
+    )
     db.add(msg)
     
     # If this is the first user message and session has no title, set it

@@ -76,6 +76,22 @@ export async function getChatSession(sessionId: string): Promise<ChatSessionDeta
   return response.json();
 }
 
+export async function getChatSessionByThread(threadId: string): Promise<ChatSessionDetail> {
+  const url = resolveServiceURL(`chat/sessions/by-thread/${threadId}`);
+  
+  const response = await fetch(url, {
+    headers: {
+      'Authorization': `Bearer ${getAuthToken()}`,
+    },
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch chat session by thread: ${response.statusText}`);
+  }
+
+  return response.json();
+}
+
 export async function createChatSession(data: CreateChatSessionRequest): Promise<ChatSession> {
   const url = resolveServiceURL('chat/sessions');
   

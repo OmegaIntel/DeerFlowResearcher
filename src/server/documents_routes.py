@@ -167,11 +167,16 @@ async def upload_document(
         
         # Process document for RAG (async)
         try:
+            session_id_str = str(session_uuid) if session_uuid else None
+            logger.info(f"[UPLOAD] Calling document_processor with session_id: {session_id_str}")
+            print(f"[UPLOAD DEBUG] Passing session_id to processor: {session_id_str}", flush=True)
+            
             processing_result = await document_processor.process_document(
                 file_content=content,
                 filename=file.filename,
                 content_type=file.content_type or "application/octet-stream",
-                document_id=doc_id
+                document_id=doc_id,
+                session_id=session_id_str
             )
             
             # Update document with processing results

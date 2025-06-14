@@ -30,6 +30,7 @@ class ChatMessageResponse(BaseModel):
     id: str
     role: str
     content: str
+    attachments: Optional[List[dict]] = None
     created_at: datetime
 
     class Config:
@@ -120,6 +121,47 @@ async def get_chat_session(
             id=str(msg.id),
             role=msg.role,
             content=msg.content,
+            attachments=msg.attachments,
+            created_at=msg.created_at
+        )
+        for msg in messages
+    ]
+    
+    return ChatSessionDetailResponse(
+        id=str(session.id),
+        thread_id=session.thread_id,
+        title=session.title,
+        mode=session.mode,
+        created_at=session.created_at,
+        messages=message_responses
+    )
+
+
+@router.get("/sessions/by-thread/{thread_id}", response_model=ChatSessionDetailResponse)
+async def get_chat_session_by_thread(
+    thread_id: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    """Get a chat session by thread ID with messages"""
+    session = db.query(ChatSession).filter(
+        ChatSession.thread_id == thread_id,
+        ChatSession.user_id == current_user.id
+    ).first()
+    
+    if not session:
+        raise HTTPException(status_code=404, detail="Chat session not found")
+    
+    messages = db.query(ChatMessage).filter(
+        ChatMessage.session_id == session.id
+    ).order_by(ChatMessage.created_at).all()
+    
+    message_responses = [
+        ChatMessageResponse(
+            id=str(msg.id),
+            role=msg.role,
+            content=msg.content,
+            attachments=msg.attachments,
             created_at=msg.created_at
         )
         for msg in messages
@@ -157,6 +199,7 @@ async def create_chat_session(
     
     return ChatSessionResponse(
         id=str(session.id),
+        thread_id=session.thread_id,
         title=session.title,
         mode=session.mode,
         message_count=0,
@@ -196,6 +239,7 @@ async def update_chat_session(
     
     return ChatSessionResponse(
         id=str(session.id),
+        thread_id=session.thread_id,
         title=session.title,
         mode=session.mode,
         message_count=message_count,

@@ -11,6 +11,7 @@ import type { ChatEvent } from "../api/types";
 import type { Message } from "../messages";
 import { mergeMessage } from "../messages";
 import { parseJSON } from "../utils";
+import { getChatSessionByThread } from "../api/chat-history";
 
 import { getChatStreamSettings } from "./settings-store";
 
@@ -37,7 +38,7 @@ export const useStore = create<{
   setOngoingResearch: (researchId: string | null) => void;
   setMode: (mode: "chat" | "research") => void;
   startNewChat: () => void;
-  loadChat: (threadId: string) => void;
+  loadChat: (threadId: string) => Promise<void>;
 }>((set) => ({
   responding: false,
   threadId: THREAD_ID,
@@ -95,7 +96,8 @@ export const useStore = create<{
       openResearchId: null,
     });
   },
-  loadChat(threadId: string) {
+  async loadChat(threadId: string) {
+    // First, reset the state with the new thread ID
     set({
       responding: false,
       threadId: threadId,
@@ -108,6 +110,38 @@ export const useStore = create<{
       ongoingResearchId: null,
       openResearchId: null,
     });
+
+    try {
+      // Fetch the chat session by thread ID
+      const session = await getChatSessionByThread(threadId);
+      
+      // Convert the messages to the expected format and update the store
+      const messageMap = new Map<string, Message>();
+      const messageIds: string[] = [];
+      
+      session.messages.forEach((msg) => {
+        const message: Message = {
+          id: msg.id,
+          threadId: threadId,
+          role: msg.role as "user" | "assistant",
+          content: msg.content,
+          contentChunks: [msg.content],
+          attachments: (msg as any).attachments,
+        };
+        messageMap.set(msg.id, message);
+        messageIds.push(msg.id);
+      });
+      
+      // Update the store with the loaded messages
+      set({
+        messages: messageMap,
+        messageIds: messageIds,
+        mode: session.mode as "chat" | "research",
+      });
+    } catch (error) {
+      console.error("Failed to load chat history:", error);
+      toast.error("Failed to load chat history");
+    }
   },
 }));
 
@@ -117,23 +151,39 @@ export async function sendMessage(
     interruptFeedback,
     toolId,
     toolType,
+    attachments,
   }: {
     interruptFeedback?: string;
     toolId?: string;
     toolType?: "mcp" | "agent" | "research";
+    attachments?: { filename: string; size: number; type: string; documentId?: string }[];
   } = {},
   options: { abortSignal?: AbortSignal } = {},
 ) {
   const state = useStore.getState();
   const currentThreadId = state.threadId || THREAD_ID;
   
+  console.log("[sendMessage] Called with attachments:", attachments);
+  
   if (content != null) {
+    const messageAttachments = attachments?.map(att => ({
+      id: att.documentId || nanoid(),
+      filename: att.filename,
+      size: att.size,
+      type: att.type,
+      uploadTime: new Date().toISOString(),
+      documentId: att.documentId
+    }));
+    
+    console.log("[sendMessage] Creating message with attachments:", messageAttachments);
+    
     appendMessage({
       id: nanoid(),
       threadId: currentThreadId,
       role: "user",
       content: content,
       contentChunks: [content],
+      attachments: messageAttachments,
     });
   }
 
@@ -159,7 +209,10 @@ export async function sendMessage(
   } else {
     stream = chatSimpleStream(
       content ?? "",
-      { thread_id: currentThreadId },
+      { 
+        thread_id: currentThreadId,
+        attachments: attachments 
+      },
       options,
     );
   }

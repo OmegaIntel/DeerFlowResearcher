@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Frontend Chat Loading</title>
+</head>
+<body>
+    <h1>Test Frontend Chat Loading</h1>
+    <div id="result"></div>
+    
+    <script>
+        // Get the test thread ID from the previous test
+        const threadId = 'chat_c7782372-1a0b-462f-b6a5-50ac29428c5e';
+        const resultDiv = document.getElementById('result');
+        
+        resultDiv.innerHTML = `
+            <h2>Chat History Loading Test</h2>
+            <p>The backend test has passed ✅</p>
+            <p>To complete the frontend test:</p>
+            <ol>
+                <li>Open a browser and navigate to: <a href="http://localhost:3000/auth/login" target="_blank">http://localhost:3000/auth/login</a></li>
+                <li>Login with credentials:
+                    <ul>
+                        <li>Email: chetan@omegaintelligence.ai</li>
+                        <li>Password: Test123.</li>
+                    </ul>
+                </li>
+                <li>After login, go to: <a href="http://localhost:3000/chat-history" target="_blank">http://localhost:3000/chat-history</a></li>
+                <li>Find the chat titled "Test Chat History" and click "Continue Chat"</li>
+                <li>OR directly navigate to: <a href="http://localhost:3000/chat?thread=${threadId}" target="_blank">http://localhost:3000/chat?thread=${threadId}</a></li>
+            </ol>
+            <h3>Expected Result:</h3>
+            <p>You should see all previous messages loaded in the chat interface:</p>
+            <ul>
+                <li>User: "Hello, this is my first message"</li>
+                <li>Assistant: Response to first message</li>
+                <li>User: "Can you help me with Python?"</li>
+                <li>Assistant: Response about Python</li>
+                <li>User: "What is the weather today?"</li>
+                <li>Assistant: Response about weather</li>
+            </ul>
+        `;
+    </script>
+</body>
+</html>

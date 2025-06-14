@@ -65,13 +65,23 @@ export async function* chatStream(
 
 export async function* chatSimpleStream(
   userMessage: string,
-  params: { thread_id: string },
+  params: { thread_id: string; attachments?: Array<{filename: string; size: number; type: string; documentId?: string}> },
   options: { abortSignal?: AbortSignal } = {},
 ) {
+  console.log("[chatSimpleStream] Called with params:", params);
+  
+  const messages = [{ 
+    role: "user", 
+    content: userMessage,
+    ...(params.attachments && { attachments: params.attachments })
+  }];
+  
+  console.log("[chatSimpleStream] Sending messages:", messages);
+  
   const stream = fetchStream(resolveServiceURL("chat/simple"), {
     body: JSON.stringify({
-      messages: [{ role: "user", content: userMessage }],
-      ...params,
+      messages,
+      thread_id: params.thread_id,
     }),
     signal: options.abortSignal,
   });
