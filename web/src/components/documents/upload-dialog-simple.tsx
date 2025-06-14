@@ -161,36 +161,61 @@ export function UploadDialog({ open, onOpenChange, onUploadComplete, sessionId }
           )}
         </div>
 
-        {/* File List */}
+        {/* File List - Tile Grid */}
         {files.length > 0 && (
-          <ScrollArea className="h-[200px] w-full rounded-md border p-2">
-            <div className="space-y-2">
+          <ScrollArea className="h-[240px] w-full rounded-md border p-3">
+            <div className="grid grid-cols-2 gap-3">
               {files.map((fileStatus, index) => (
                 <div
                   key={index}
-                  className="flex items-center gap-2 p-2 rounded-md bg-muted/50"
+                  className="relative p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors"
                 >
-                  {getStatusIcon(fileStatus.status)}
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm truncate">
-                      {fileStatus.file.name}
-                    </p>
-                    <p className="text-xs text-muted-foreground">
-                      {(fileStatus.file.size / 1024).toFixed(1)} KB
-                    </p>
-                  </div>
-                  {fileStatus.status === "uploading" && (
-                    <Progress value={fileStatus.progress} className="w-16 h-2" />
-                  )}
+                  {/* Delete button for pending files */}
                   {fileStatus.status === "pending" && (
                     <Button
                       variant="ghost"
                       size="sm"
-                      className="h-6 w-6 p-0"
+                      className="absolute top-1 right-1 h-6 w-6 p-0"
                       onClick={() => removeFile(index)}
                     >
                       <X className="h-3 w-3" />
                     </Button>
+                  )}
+                  
+                  {/* File icon with status */}
+                  <div className="flex justify-center mb-2">
+                    <div className="relative">
+                      <FileIcon className="h-10 w-10 text-muted-foreground" />
+                      <div className="absolute -bottom-1 -right-1">
+                        {getStatusIcon(fileStatus.status)}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* File info */}
+                  <div className="space-y-1">
+                    <p className="text-xs font-medium text-center truncate" title={fileStatus.file.name}>
+                      {fileStatus.file.name.length > 20 
+                        ? fileStatus.file.name.substring(0, 17) + '...' 
+                        : fileStatus.file.name}
+                    </p>
+                    <p className="text-xs text-muted-foreground text-center">
+                      {(fileStatus.file.size / 1024).toFixed(1)} KB
+                    </p>
+                  </div>
+                  
+                  {/* Progress bar for uploading files */}
+                  {fileStatus.status === "uploading" && (
+                    <div className="mt-2">
+                      <Progress value={fileStatus.progress} className="h-1.5" />
+                    </div>
+                  )}
+                  
+                  {/* Error message */}
+                  {fileStatus.status === "error" && (
+                    <p className="text-xs text-destructive text-center mt-1 truncate" title={fileStatus.error}>
+                      {fileStatus.error}
+                    </p>
                   )}
                 </div>
               ))}

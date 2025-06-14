@@ -189,6 +189,13 @@ export default function DocumentsMain() {
         </div>
         <div className="flex items-center gap-2">
           <Button
+            onClick={() => setUploadDialogOpen(true)}
+            size="sm"
+          >
+            <Upload className="mr-2 h-4 w-4" />
+            Upload
+          </Button>
+          <Button
             variant="outline"
             size="icon"
             onClick={handleRefresh}
@@ -263,15 +270,6 @@ export default function DocumentsMain() {
                     ? "Try adjusting your search or filters"
                     : "Upload documents to get started"}
                 </p>
-                {!searchTerm && !statusFilter && (
-                  <Button 
-                    className="mt-4" 
-                    onClick={() => setUploadDialogOpen(true)}
-                  >
-                    <Upload className="mr-2 h-4 w-4" />
-                    Upload Documents
-                  </Button>
-                )}
               </div>
             </div>
           ) : (
