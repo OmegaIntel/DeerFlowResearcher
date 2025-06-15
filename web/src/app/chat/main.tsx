@@ -7,10 +7,12 @@ import { useSearchParams } from "next/navigation";
 
 import { useStore } from "~/core/store";
 import { cn } from "~/lib/utils";
+import { inspectCitations } from "~/lib/citation-inspector";
 
 import { ChatHeader } from "./components/chat-header";
 import { MessagesBlock } from "./components/messages-block";
 import { ResearchBlock } from "./components/research-block";
+import { CitationDebugger } from "./components/citation-debug";
 
 export default function Main() {
   const searchParams = useSearchParams();
@@ -24,6 +26,11 @@ export default function Main() {
       loadChat(threadId);
     }
   }, [threadId, loadChat]);
+  
+  useEffect(() => {
+    // Start citation inspector
+    inspectCitations();
+  }, []);
   const doubleColumnMode = useMemo(
     () => openResearchId !== null,
     [openResearchId],
@@ -31,6 +38,7 @@ export default function Main() {
  
   return (
     <div className="flex h-full w-full flex-col overflow-hidden">
+      <CitationDebugger />
       <ChatHeader />
       <div
         className={cn(

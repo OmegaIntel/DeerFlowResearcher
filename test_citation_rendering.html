@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Citation Rendering Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .test-section { margin: 20px 0; padding: 10px; border: 1px solid #ccc; }
+        .citation { background: #f0f0f0; padding: 2px 4px; }
+        a { color: blue; text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <h1>Citation Rendering Test</h1>
+    
+    <div class="test-section">
+        <h2>Test 1: Plain text citations</h2>
+        <p>This is a test with citation <span class="citation">[1]</span> and another <span class="citation">[2]</span>.</p>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 2: What the backend might send</h2>
+        <pre id="backend-response"></pre>
+    </div>
+    
+    <div class="test-section">
+        <h2>Test 3: After markdown processing</h2>
+        <div id="markdown-output"></div>
+    </div>
+    
+    <script>
+        // Simulate backend response
+        const backendResponse = {
+            content: "This is some content with citation [1] and [2].",
+            citations: [
+                {
+                    id: "[1]",
+                    document_id: "96f86d03-d480-48aa-bb42-a7c8bf303730",
+                    filename: "test-doc.pdf",
+                    page_number: 1
+                },
+                {
+                    id: "[2]", 
+                    document_id: "85f4963c-cf2f-4c20-88c1-4a158b4db428",
+                    filename: "another-doc.pdf",
+                    page_number: 5
+                }
+            ]
+        };
+        
+        document.getElementById('backend-response').textContent = JSON.stringify(backendResponse, null, 2);
+        
+        // Simulate what might be happening
+        let processedContent = backendResponse.content;
+        
+        // Theory 1: Something is replacing [1] with links
+        // This should NOT happen based on our code review
+        // processedContent = processedContent.replace(/\[(\d+)\]/g, '[$1](/document-viewer/' + backendResponse.citations[0].document_id + ')');
+        
+        document.getElementById('markdown-output').innerHTML = processedContent;
+        
+        // Monitor clicks
+        document.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A') {
+                console.log('Link clicked:', e.target.href);
+                alert('Link clicked: ' + e.target.href);
+                e.preventDefault();
+            }
+        });
+    </script>
+</body>
+</html>

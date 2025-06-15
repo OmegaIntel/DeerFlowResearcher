@@ -31,6 +31,7 @@ class ChatMessageResponse(BaseModel):
     role: str
     content: str
     attachments: Optional[List[dict]] = None
+    citations: Optional[List[dict]] = None
     created_at: datetime
 
     class Config:
@@ -122,6 +123,7 @@ async def get_chat_session(
             role=msg.role,
             content=msg.content,
             attachments=msg.attachments,
+            citations=getattr(msg, 'citations', None),  # Include citations
             created_at=msg.created_at
         )
         for msg in messages
@@ -162,6 +164,7 @@ async def get_chat_session_by_thread(
             role=msg.role,
             content=msg.content,
             attachments=msg.attachments,
+            citations=getattr(msg, 'citations', None),  # Include citations
             created_at=msg.created_at
         )
         for msg in messages

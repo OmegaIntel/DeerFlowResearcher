@@ -12,6 +12,7 @@ import type { Message } from "../messages";
 import { mergeMessage } from "../messages";
 import { parseJSON } from "../utils";
 import { getChatSessionByThread } from "../api/chat-history";
+import { debugCitations } from "~/lib/debug-citations";
 
 import { getChatStreamSettings } from "./settings-store";
 
@@ -127,7 +128,13 @@ export const useStore = create<{
           content: msg.content,
           contentChunks: [msg.content],
           attachments: (msg as any).attachments,
+          citations: (msg as any).citations,  // Add citations
         };
+        console.log('[Store] Loading message with citations:', {
+          id: msg.id,
+          hasCitations: !!(msg as any).citations,
+          citationCount: (msg as any).citations?.length || 0
+        });
         messageMap.set(msg.id, message);
         messageIds.push(msg.id);
       });
@@ -241,7 +248,15 @@ export async function sendMessage(
       }
       message ??= messageId ? getMessage(messageId) : undefined;
       if (message) {
+        // Debug: Log events with citations
+        if ('citations' in event.data && event.data.citations) {
+          console.log("[Store] Event has citations:", event.data.citations);
+          debugCitations('store-event-citations', event.data.citations);
+        }
+        debugCitations('store-before-merge', { message, event });
         message = mergeMessage(message, event);
+        console.log("[Store] Message after merge:", message);
+        debugCitations('store-after-merge', message);
         updateMessage(message);
       }
     }

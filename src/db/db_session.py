@@ -47,13 +47,14 @@ def get_or_create_chat_session(db: Session, thread_id: str, user_id: str = None)
 
 
 def add_chat_message(
-    db: Session, session_obj: ChatSession, role: str, content: str, attachments=None
+    db: Session, session_obj: ChatSession, role: str, content: str, attachments=None, citations=None
 ) -> ChatMessage:
     msg = ChatMessage(
         session_id=session_obj.id, 
         role=role, 
         content=content,
-        attachments=attachments  # Store attachments metadata
+        attachments=attachments,  # Store attachments metadata
+        citations=citations  # Store citations
     )
     db.add(msg)
     

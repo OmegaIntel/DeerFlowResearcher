@@ -5,6 +5,7 @@ import base64
 import json
 import logging
 import os
+import pprint
 from typing import List, cast
 # uuid module imported later
 
@@ -96,25 +97,6 @@ graph = build_graph_with_memory()
 chat_chains: dict[str, RunnableWithMessageHistory] = {}
 
 create_db_tables()
-
-
-def add_chat_message(db, session, role: str, content: str, attachments=None):
-    """Add a message to the chat session"""
-    from src.db_models.chat_message import ChatMessage
-    from sqlalchemy import func
-    
-    message = ChatMessage(
-        session_id=session.id,
-        role=role,
-        content=content,
-        attachments=attachments
-    )
-    db.add(message)
-    db.commit()
-    
-    # Update session's last_message_at
-    session.last_message_at = func.current_timestamp()
-    db.commit()
 
 
 @app.on_event("startup")
@@ -294,7 +276,7 @@ async def chat_simple(request: ChatRequest, req: Request):
     citations = []  # Initialize citations list
     if current_user and session_obj:
         try:
-            from src.server.document_processor_enhanced import enhanced_document_processor
+            from src.server.document_processor_with_validation import validated_document_processor
             from src.db_models import Document
             
             # Check if session has documents
@@ -306,13 +288,27 @@ async def chat_simple(request: ChatRequest, req: Request):
             
             if session_docs > 0:
                 logger.info(f"[RAG] Found {session_docs} documents for session {session_obj.id}")
-                # Use enhanced search with citations
-                search_results = enhanced_document_processor.search_documents_with_citations(
+                # Use validated search that ensures documents exist in DB
+                search_results = validated_document_processor.search_documents_with_validation(
                     query=user_message,
+                    user_id=current_user.id,
+                    session_id=str(session_obj.id),
                     top_k=3,
-                    filter_dict={"session_id": str(session_obj.id)}
+                    db=db
                 )
-                logger.info(f"[RAG] Search returned {len(search_results) if search_results else 0} results")
+                
+                # If no results with session filter, try without session filter
+                if not search_results:
+                    logger.info(f"[RAG] No results with session filter, trying without session filter")
+                    search_results = validated_document_processor.search_documents_with_validation(
+                        query=user_message,
+                        user_id=current_user.id,
+                        session_id=None,
+                        top_k=3,
+                        db=db
+                    )
+                
+                logger.info(f"[RAG] Validated search returned {len(search_results)} results")
                 
                 if search_results:
                     context_docs = search_results
@@ -323,11 +319,18 @@ async def chat_simple(request: ChatRequest, req: Request):
                         context_text += f"\n{citation_id} {doc['content'][:500]}...\n"
                         logger.info(f"[RAG] Including document chunk from {doc['metadata'].get('filename', 'unknown')}")
                         # Store citation info for later
-                        citations.append(doc['citation'])
+                        # Only add citation if it's from a valid document
+                        if doc.get('citation') and doc['citation'].get('document_id'):
+                            citations.append(doc['citation'])
+                            logger.info(f"[RAG] Added citation for document {doc['citation']['document_id']}")
                     
                     # Add instruction for LLM to use citations
                     system_instruction = """When answering, use the citation markers [1], [2], etc. inline where you reference the information.
-IMPORTANT: Do NOT add a "References" section, bibliography, or list of sources at the end of your response. Citations should only appear inline."""
+IMPORTANT: 
+- Do NOT add a "References" section, bibliography, or list of sources at the end of your response
+- Do NOT convert citation markers into links - just use plain text like [1], [2], etc.
+- Do NOT create markdown links for citations
+- Citations should only appear as plain text markers inline"""
                     
                     # Prepend context to user message
                     user_message = f"{system_instruction}\n\n{context_text}\n\nUser question: {user_message}"
@@ -336,10 +339,13 @@ IMPORTANT: Do NOT add a "References" section, bibliography, or list of sources a
             logger.warning(f"Error searching documents: {e}")
 
     def iter_response():
+        logger.info(f"[RAG] iter_response called for thread_id: {thread_id}")
         try:
             # RunnableWithMessageHistory.invoke expects config with session_id
             config = {"configurable": {"session_id": thread_id}}
+            logger.info(f"[RAG] Invoking chain with config: {config}")
             result = chain.invoke({"input": user_message}, config=config)
+            logger.info(f"[RAG] Chain invoked, result type: {type(result)}")
             
             # The new API returns AIMessage content directly
             if hasattr(result, 'content'):
@@ -347,25 +353,72 @@ IMPORTANT: Do NOT add a "References" section, bibliography, or list of sources a
             else:
                 response_text = str(result)
 
-            # Don't add citations to response text - they're handled by the frontend
+            # Log the response to check for markdown links
+            logger.info(f"[RAG] LLM response length: {len(response_text)}")
+            logger.info(f"[RAG] LLM response preview: {response_text[:500]}...")
             
-            add_chat_message(db, session_obj, "assistant", str(response_text))
+            # Check if response contains markdown links that might be causing issues
+            if "](document-viewer/" in response_text or "](/document-viewer/" in response_text:
+                logger.warning("[RAG] Response contains document-viewer links! This will cause 404 errors.")
+                # Remove any markdown links to document-viewer
+                import re
+                response_text = re.sub(r'\[([^\]]+)\]\(/?(document-viewer/[^)]+)\)', r'[\1]', response_text)
+                logger.info("[RAG] Cleaned response to remove document-viewer links")
+            
+            # Also check for citation links with document IDs
+            import re
+            # Pattern to match [number](any-url-with-document-id)
+            doc_id_pattern = r'\[(\d+)\]\([^)]*[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}[^)]*\)'
+            if re.search(doc_id_pattern, response_text):
+                logger.warning("[RAG] Response contains citation links with document IDs! Removing them.")
+                response_text = re.sub(doc_id_pattern, r'[\1]', response_text)
+                logger.info("[RAG] Cleaned response to remove citation links with document IDs")
+            
+            # Final check for ANY citation that looks like a markdown link
+            citation_link_pattern = r'\[(\d+|\[\d+\])\]\([^)]+\)'
+            if re.search(citation_link_pattern, response_text):
+                logger.warning("[RAG] Response still contains citation links! Final cleanup.")
+                response_text = re.sub(citation_link_pattern, r'[\1]', response_text)
+                logger.info("[RAG] Final cleanup of citation links complete")
+            
+            # Also check for other problematic patterns
+            if "](" in response_text and "document" in response_text:
+                logger.warning(f"[RAG] Response may contain document links. Checking...")
+                # Log any markdown links found
+                import re
+                links = re.findall(r'\[([^\]]+)\]\(([^)]+)\)', response_text)
+                if links:
+                    logger.warning(f"[RAG] Found markdown links: {links[:3]}...")
+            
+            add_chat_message(db, session_obj, "assistant", str(response_text), citations=citations)
             
             # Include citations in the response data
             data = {
                 "thread_id": thread_id,
                 "id": str(uuid.uuid4()),
+                "agent": "coordinator",  # Add agent field for compatibility
                 "role": "assistant",
                 "content": response_text,
                 "finish_reason": "stop",
                 "citations": citations if citations else None
             }
+            
+            # Log what we're sending
+            logger.info(f"[RAG] Sending response with {len(citations) if citations else 0} citations")
+            if citations:
+                logger.info(f"[RAG] First citation: {citations[0]}")
+            
+            # Debug: log the full data being sent
+            logger.info(f"[RAG-DEBUG] Full response data being sent:")
+            logger.info(pprint.pformat(data))
+            
             yield f"event: message_chunk\ndata: {json.dumps(data)}\n\n"
         except Exception as e:
             logger.exception(f"Error in simple chat: {str(e)}")
             error_data = {
                 "thread_id": thread_id,
                 "id": str(uuid.uuid4()),
+                "agent": "coordinator",
                 "role": "assistant",
                 "content": f"Error: {str(e)}",
                 "finish_reason": "error",

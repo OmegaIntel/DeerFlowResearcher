@@ -123,6 +123,8 @@ export async function getDocumentDownloadUrl(
   if (expiration) searchParams.append('expiration', expiration.toString());
 
   const url = resolveServiceURL(`documents/${documentId}/download-url?${searchParams.toString()}`);
+  console.log('[getDocumentDownloadUrl] Fetching from URL:', url);
+  console.log('[getDocumentDownloadUrl] Auth token exists:', !!getAuthToken());
   
   const response = await fetch(url, {
     headers: {
@@ -130,11 +132,18 @@ export async function getDocumentDownloadUrl(
     },
   });
 
+  console.log('[getDocumentDownloadUrl] Response status:', response.status);
+  console.log('[getDocumentDownloadUrl] Response headers:', response.headers);
+
   if (!response.ok) {
-    throw new Error(`Failed to get download URL: ${response.statusText}`);
+    const errorText = await response.text();
+    console.error('[getDocumentDownloadUrl] Error response:', errorText);
+    throw new Error(`Failed to get download URL: ${response.statusText} - ${errorText}`);
   }
 
-  return response.json();
+  const data = await response.json();
+  console.log('[getDocumentDownloadUrl] Response data:', data);
+  return data;
 }
 
 export async function reprocessDocument(documentId: string): Promise<{ message: string }> {

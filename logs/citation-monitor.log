@@ -1,0 +1,19 @@
+[Sat Jun 14 18:00:25 UTC 2025] Starting citation monitoring
+[FRONTEND] pathname: '/document-viewer/96f86d03-d480-48aa-bb42-a7c8bf303730',
+[BACKEND] 2025-06-14 17:55:59,117 - src.server.app - INFO - [RAG] Found 1 documents for session 8d40bb7e-8977-44dd-862d-e501923c3dcf
+[BACKEND] 2025-06-14 17:55:59,337 - src.server.app - INFO - [RAG] Validated search returned 3 results
+[BACKEND] 2025-06-14 17:55:59,337 - src.server.app - INFO - [RAG] Including document chunk from Valuation Multiple Trends in Software (2020–2024).pdf
+[BACKEND] 2025-06-14 17:55:59,337 - src.server.app - INFO - [RAG] Added citation for document 96f86d03-d480-48aa-bb42-a7c8bf303730
+[BACKEND] 2025-06-14 17:55:59,337 - src.server.app - INFO - [RAG] Including document chunk from Valuation Multiple Trends in Software (2020–2024).pdf
+[BACKEND] 2025-06-14 17:55:59,337 - src.server.app - INFO - [RAG] Added citation for document 96f86d03-d480-48aa-bb42-a7c8bf303730
+[BACKEND] 2025-06-14 17:55:59,337 - src.server.app - INFO - [RAG] Including document chunk from Valuation Multiple Trends in Software (2020–2024).pdf
+[BACKEND] 2025-06-14 17:55:59,337 - src.server.app - INFO - [RAG] Added citation for document 96f86d03-d480-48aa-bb42-a7c8bf303730
+[BACKEND] 2025-06-14 17:55:59,337 - src.server.app - INFO - [RAG] Enhanced message with document context and citations
+[BACKEND] 2025-06-14 17:55:59,338 - src.server.app - INFO - [RAG] iter_response called for thread_id: wIA-OhQU-wmp7lgCq1uPE
+[BACKEND] 2025-06-14 17:55:59,339 - src.server.app - INFO - [RAG] Invoking chain with config: {'configurable': {'session_id': 'wIA-OhQU-wmp7lgCq1uPE'}}
+[BACKEND] 2025-06-14 17:56:03,515 - src.server.app - INFO - [RAG] Chain invoked, result type: <class 'langchain_core.messages.ai.AIMessage'>
+[BACKEND] 2025-06-14 17:56:03,515 - src.server.app - INFO - [RAG] LLM response length: 1121
+[BACKEND] 2025-06-14 17:56:03,515 - src.server.app - INFO - [RAG] LLM response preview: Valuation multiples in the SaaS industry can vary significantly based on market conditions and growth potential of the firms. As observed in recent trends, mid-2021 valuations were particularly high, with many high-growth SaaS companies achieving EV/EBITDA multiples well above 30x. Established players like Microsoft even saw their multiples reach around 25x EV/EBITDA during that period, indicative of a valuation bubble fueled by low interest rates and strong growth expectations [2].
+[BACKEND] 2025-06-14 17:56:03,532 - src.server.app - INFO - [RAG] Sending response with 3 citations
+[BACKEND] 2025-06-14 17:56:03,532 - src.server.app - INFO - [RAG] First citation: {'id': '[1]', 'document_id': '96f86d03-d480-48aa-bb42-a7c8bf303730', 'filename': 'Valuation Multiple Trends in Software (2020–2024).pdf', 'page_number': 1.0, 'chunk_id': '96f86d03-d480-48aa-bb42-a7c8bf303730_p1_c24', 'char_start': 951.0, 'char_end': 1944.0}
+[BACKEND] 2025-06-14 17:56:03,532 - src.server.app - INFO - [RAG-DEBUG] Full response data being sent:

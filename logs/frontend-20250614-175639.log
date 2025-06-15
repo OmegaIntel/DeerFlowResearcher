@@ -1,0 +1,76 @@
+   ▲ Next.js 15.3.0
+   - Local:        http://1c6c82dba64d:3000
+   - Network:      http://1c6c82dba64d:3000
+
+ ✓ Starting...
+ ✓ Ready in 487ms
+[Middleware] Request: {
+  pathname: '/chat',
+  method: 'GET',
+  hasAuthToken: true,
+  tokenPreview: 'eyJhbGciOiJIUzI1NiIs...',
+  cookies: [ 'authToken' ]
+}
+[Middleware] Request: {
+  pathname: '/settings',
+  method: 'GET',
+  hasAuthToken: true,
+  tokenPreview: 'eyJhbGciOiJIUzI1NiIs...',
+  cookies: [ 'authToken' ]
+}
+[Middleware] Request: {
+  pathname: '/settings/api-keys',
+  method: 'GET',
+  hasAuthToken: true,
+  tokenPreview: 'eyJhbGciOiJIUzI1NiIs...',
+  cookies: [ 'authToken' ]
+}
+[Middleware] Request: {
+  pathname: '/auth/login',
+  method: 'GET',
+  hasAuthToken: false,
+  tokenPreview: null,
+  cookies: []
+}
+[Middleware] Request: {
+  pathname: '/',
+  method: 'GET',
+  hasAuthToken: true,
+  tokenPreview: 'eyJhbGciOiJIUzI1NiIs...',
+  cookies: [ 'authToken' ]
+}
+[Middleware] Request: {
+  pathname: '/chat',
+  method: 'GET',
+  hasAuthToken: true,
+  tokenPreview: 'eyJhbGciOiJIUzI1NiIs...',
+  cookies: [ 'authToken' ]
+}
+[Middleware] Request: {
+  pathname: '/settings/mcp',
+  method: 'GET',
+  hasAuthToken: true,
+  tokenPreview: 'eyJhbGciOiJIUzI1NiIs...',
+  cookies: [ 'authToken' ]
+}
+[Middleware] Request: {
+  pathname: '/chat',
+  method: 'GET',
+  hasAuthToken: true,
+  tokenPreview: 'eyJhbGciOiJIUzI1NiIs...',
+  cookies: [ 'authToken' ]
+}
+[Middleware] Request: {
+  pathname: '/chat',
+  method: 'GET',
+  hasAuthToken: true,
+  tokenPreview: 'eyJhbGciOiJIUzI1NiIs...',
+  cookies: [ 'authToken' ]
+}
+[Middleware] Request: {
+  pathname: '/document-viewer/96f86d03-d480-48aa-bb42-a7c8bf303730',
+  method: 'GET',
+  hasAuthToken: true,
+  tokenPreview: 'eyJhbGciOiJIUzI1NiIs...',
+  cookies: [ 'authToken' ]
+}

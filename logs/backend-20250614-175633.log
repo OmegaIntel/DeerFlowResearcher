@@ -1,0 +1,289 @@
+warning: `aiohttp==3.11.13` is yanked (reason: "Regression: https://github.com/aio-libs/aiohttp/issues/10617")
+Downloading pillow (4.4MiB)
+Downloading nltk (1.4MiB)
+Downloading networkx (1.9MiB)
+Downloading pygments (1.2MiB)
+Downloading botocore (13.0MiB)
+Downloading rapidfuzz (2.9MiB)
+Downloading unstructured (1.7MiB)
+Downloading llama-index-core (7.3MiB)
+Downloading lz4 (1.2MiB)
+Downloading cryptography (4.3MiB)
+Downloading mysql-connector-python (32.3MiB)
+Downloading grpcio (5.7MiB)
+ Downloading lz4
+   Building langdetect==1.0.9
+ Downloading rapidfuzz
+ Downloading unstructured
+ Downloading pillow
+ Downloading grpcio
+ Downloading pygments
+ Downloading cryptography
+ Downloading nltk
+ Downloading mysql-connector-python
+ Downloading networkx
+ Downloading llama-index-core
+      Built langdetect==1.0.9
+ Downloading botocore
+Uninstalled 7 packages in 129ms
+Installed 100 packages in 195ms
+DEBUG: Starting pinecone_routes.py import
+DEBUG: Imports completed
+DEBUG: Router created
+DEBUG: After /search route
+DEBUG: About to register /query route
+DEBUG: Successfully registered /query route
+INFO:     Started server process [90]
+INFO:     Waiting for application startup.
+2025-06-14 17:52:27,798 - src.config.mcp_servers - INFO - Loaded 1 tools for server llamacloud
+2025-06-14 17:52:27,798 - src.server.app - INFO - Loaded 1 MCP servers from backend configuration
+2025-06-14 17:52:27,803 - src.server.upload_queue - INFO - Started 2 upload workers
+2025-06-14 17:52:27,803 - src.server.app - INFO - Started upload queue workers
+2025-06-14 17:52:27,803 - src.server.pinecone_upload - INFO - Started 2 Pinecone upload workers
+2025-06-14 17:52:27,803 - src.server.app - INFO - Started Pinecone upload queue workers
+2025-06-14 17:52:27,803 - src.server.upload_queue - INFO - Upload worker worker-0 started
+2025-06-14 17:52:27,803 - src.server.upload_queue - INFO - Upload worker worker-1 started
+2025-06-14 17:52:27,803 - src.server.pinecone_upload - INFO - Pinecone upload worker pinecone-worker-0 started
+2025-06-14 17:52:27,803 - src.server.pinecone_upload - INFO - Pinecone upload worker pinecone-worker-1 started
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+2025-06-14 17:55:24,231 - passlib.handlers.bcrypt - WARNING - (trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/app/.venv/lib/python3.12/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+INFO:     172.18.0.1:41288 - "POST /api/token HTTP/1.1" 200 OK
+INFO:     216.80.72.3:63613 - "GET /api/mcp/backend-servers HTTP/1.1" 200 OK
+INFO:     216.80.72.3:63613 - "OPTIONS /api/chat/sessions?skip=0&limit=20 HTTP/1.1" 200 OK
+INFO:     216.80.72.3:63613 - "GET /api/chat/sessions?skip=0&limit=20 HTTP/1.1" 200 OK
+INFO:     216.80.72.3:63613 - "OPTIONS /api/chat/sessions/ca80751c-9f55-43da-b429-53376aeeec29 HTTP/1.1" 200 OK
+INFO:     216.80.72.3:63613 - "GET /api/chat/sessions/ca80751c-9f55-43da-b429-53376aeeec29 HTTP/1.1" 200 OK
+INFO:     216.80.72.3:63613 - "GET /api/mcp/backend-servers HTTP/1.1" 200 OK
+INFO:     216.80.72.3:63613 - "GET /api/mcp/backend-servers HTTP/1.1" 200 OK
+INFO:     216.80.72.3:63613 - "OPTIONS /api/chat/sessions/by-thread/H32P0uPaSoZr8TgAtQcPc HTTP/1.1" 200 OK
+INFO:     216.80.72.3:63613 - "GET /api/chat/sessions/by-thread/H32P0uPaSoZr8TgAtQcPc HTTP/1.1" 200 OK
+=== Auth Debug for OPTIONS /api/documents/upload ===
+Authorization header: No auth header
+All headers: {'host': 'ec2-54-91-85-225.compute-1.amazonaws.com:8000', 'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:139.0) Gecko/20100101 Firefox/139.0', 'accept': '*/*', 'accept-language': 'en-US,en;q=0.5', 'accept-encoding': 'gzip, deflate', 'access-control-request-method': 'POST', 'access-control-request-headers': 'authorization', 'referer': 'http://ec2-54-91-85-225.compute-1.amazonaws.com:3000/', 'origin': 'http://ec2-54-91-85-225.compute-1.amazonaws.com:3000', 'connection': 'keep-alive', 'priority': 'u=4'}
+=== End Auth Debug ===
+INFO:     216.80.72.3:63619 - "OPTIONS /api/documents/upload?session_id=wIA-OhQU-wmp7lgCq1uPE HTTP/1.1" 200 OK
+=== Auth Debug for POST /api/documents/upload ===
+Authorization header: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjaGV0YW5Ab21lZ2FpbnRlbGxpZ2VuY2UuYWkiLCJleHAiOjE3NDk5MzA5MjR9.EWRnqOohlkpx6tASnIhK8vXaYspkxJ6XN0v1uaQnNbE
+All headers: {'host': 'ec2-54-91-85-225.compute-1.amazonaws.com:8000', 'user-agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10.15; rv:139.0) Gecko/20100101 Firefox/139.0', 'accept': '*/*', 'accept-language': 'en-US,en;q=0.5', 'accept-encoding': 'gzip, deflate', 'referer': 'http://ec2-54-91-85-225.compute-1.amazonaws.com:3000/', 'authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjaGV0YW5Ab21lZ2FpbnRlbGxpZ2VuY2UuYWkiLCJleHAiOjE3NDk5MzA5MjR9.EWRnqOohlkpx6tASnIhK8vXaYspkxJ6XN0v1uaQnNbE', 'content-type': 'multipart/form-data; boundary=----geckoformboundary9763331d3a4b105d128170a74402cb61', 'content-length': '185931', 'origin': 'http://ec2-54-91-85-225.compute-1.amazonaws.com:3000', 'connection': 'keep-alive', 'cookie': 'authToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjaGV0YW5Ab21lZ2FpbnRlbGxpZ2VuY2UuYWkiLCJleHAiOjE3NDk5MzA5MjR9.EWRnqOohlkpx6tASnIhK8vXaYspkxJ6XN0v1uaQnNbE', 'priority': 'u=4'}
+=== End Auth Debug ===
+UPLOAD DEBUG: session_id=wIA-OhQU-wmp7lgCq1uPE
+[DEBUG] Upload endpoint called with session_id: wIA-OhQU-wmp7lgCq1uPE
+2025-06-14 17:55:43,211 - src.server.documents_routes - INFO - Upload request from user: chetan@omegaintelligence.ai
+[DEBUG] Looking for session with thread_id: wIA-OhQU-wmp7lgCq1uPE
+2025-06-14 17:55:43,361 - src.server.documents_routes - INFO - Looking for session with thread_id: wIA-OhQU-wmp7lgCq1uPE
+[DEBUG] No existing session found, creating new one
+2025-06-14 17:55:43,364 - src.server.documents_routes - INFO - Creating new session for thread_id: wIA-OhQU-wmp7lgCq1uPE, user_id: 3e60a427-97e3-4c8b-89c7-39ccf8f89a64
+[DEBUG] Created session with id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:43,375 - src.server.documents_routes - INFO - Created session with id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+[DEBUG] Using session_uuid: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:43,375 - src.server.documents_routes - INFO - Creating document with doc_id: 96f86d03-d480-48aa-bb42-a7c8bf303730, user_id: 3e60a427-97e3-4c8b-89c7-39ccf8f89a64, session_uuid: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:43,388 - src.server.documents_routes - INFO - [UPLOAD] Calling document_processor with session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+[UPLOAD DEBUG] Passing session_id to processor: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:43,389 - src.server.document_processor_enhanced - INFO - Processing document with enhanced metadata: Valuation Multiple Trends in Software (2020–2024).pdf, type: application/pdf, id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:43,391 - src.server.document_processor_enhanced - ERROR - Error extracting PDF with pages: seek of closed file
+2025-06-14 17:55:44,087 - src.server.document_processor_enhanced - INFO - Loaded 10 documents from Valuation Multiple Trends in Software (2020–2024).pdf
+2025-06-14 17:55:44,088 - src.server.document_processor_enhanced - INFO - Split into 39 chunks with enhanced metadata
+2025-06-14 17:55:44,088 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,088 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,089 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,089 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,089 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,089 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,089 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,089 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,089 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,089 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,089 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,089 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,089 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,089 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,089 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,089 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,089 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,089 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,089 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,089 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,089 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,089 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,089 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,089 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,089 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,090 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,090 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,090 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,090 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,090 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,090 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,090 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,090 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,090 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,090 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,090 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,090 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,090 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,090 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,090 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,090 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,090 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,090 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,090 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,090 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,090 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,090 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,090 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,090 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,091 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,091 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,091 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,091 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,091 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,091 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,091 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,091 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,091 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,091 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,091 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,091 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,091 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,091 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,091 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,091 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,091 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,091 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,091 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,091 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,091 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,091 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,091 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,091 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,091 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,092 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,092 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,092 - src.server.document_processor_enhanced - INFO - [METADATA] Storing chunk with document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:44,092 - src.server.document_processor_enhanced - INFO - [METADATA] Added session_id: 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:44,283 - src.server.document_processor_enhanced - INFO - Adding 39 chunks with enhanced metadata to Pinecone
+2025-06-14 17:55:45,454 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-14 17:55:46,465 - src.server.document_processor_enhanced - INFO - Successfully added documents to Pinecone
+INFO:     216.80.72.3:63618 - "POST /api/documents/upload?session_id=wIA-OhQU-wmp7lgCq1uPE HTTP/1.1" 200 OK
+INFO:     216.80.72.3:63629 - "OPTIONS /api/chat/simple HTTP/1.1" 200 OK
+[CHAT_SIMPLE] === ENDPOINT CALLED === thread_id: wIA-OhQU-wmp7lgCq1uPE
+2025-06-14 17:55:59,068 - src.server.app - INFO - [CHAT_SIMPLE] Auth header: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdW
+2025-06-14 17:55:59,068 - src.server.app - INFO - [CHAT_SIMPLE] Token extracted: eyJhbGciOiJIUzI1NiIs...
+2025-06-14 17:55:59,071 - src.server.app - INFO - [CHAT_SIMPLE] Current user: chetan@omegaintelligence.ai
+[CHAT_SIMPLE] Full request messages: [ChatMessage(role='user', content='Valuation multiple of Saas industry', attachments=[MessageAttachment(filename='Valuation Multiple Trends in Software (2020–2024).pdf', size=185667, type='application/pdf', documentId='96f86d03-d480-48aa-bb42-a7c8bf303730')])]
+[CHAT_SIMPLE] Looking for session - user: chetan@omegaintelligence.ai, thread_id: wIA-OhQU-wmp7lgCq1uPE
+[CHAT_SIMPLE] Found EXISTING session with ID: 8d40bb7e-8977-44dd-862d-e501923c3dcf, title: None
+[CHAT_SIMPLE] User message: Valuation multiple of Saas industry...
+[CHAT_SIMPLE] User attachments: [MessageAttachment(filename='Valuation Multiple Trends in Software (2020–2024).pdf', size=185667, type='application/pdf', documentId='96f86d03-d480-48aa-bb42-a7c8bf303730')]
+[CHAT_SIMPLE] Converted attachments data: [{'filename': 'Valuation Multiple Trends in Software (2020–2024).pdf', 'size': 185667, 'type': 'application/pdf', 'documentId': '96f86d03-d480-48aa-bb42-a7c8bf303730'}]
+[CHAT_SIMPLE DEBUG] Session 8d40bb7e-8977-44dd-862d-e501923c3dcf - Title: None, Messages: 1, Current msg: Valuation multiple of Saas industry
+[CHAT_SIMPLE] Setting title for session 8d40bb7e-8977-44dd-862d-e501923c3dcf: Valuation multiple of Saas industry...
+[CHAT_SIMPLE] Title set and committed: Valuation multiple of Saas industry
+2025-06-14 17:55:59,117 - src.server.app - INFO - [RAG] Found 1 documents for session 8d40bb7e-8977-44dd-862d-e501923c3dcf
+2025-06-14 17:55:59,120 - src.server.document_processor_with_validation - INFO - [VALIDATED-SEARCH] User has 1 valid documents
+2025-06-14 17:55:59,120 - src.server.document_processor_enhanced - INFO - [SEARCH] Searching with query: 'Valuation multiple of Saas industry...', filter: {'user_id': '3e60a427-97e3-4c8b-89c7-39ccf8f89a64', 'session_id': '8d40bb7e-8977-44dd-862d-e501923c3dcf'}
+2025-06-14 17:55:59,121 - src.server.document_processor_enhanced - INFO - [SEARCH] Using filter: {'user_id': '3e60a427-97e3-4c8b-89c7-39ccf8f89a64', 'session_id': '8d40bb7e-8977-44dd-862d-e501923c3dcf'}
+2025-06-14 17:55:59,225 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/embeddings "HTTP/1.1 200 OK"
+2025-06-14 17:55:59,335 - src.server.document_processor_enhanced - INFO - [SEARCH] Found 6 results
+2025-06-14 17:55:59,335 - src.server.document_processor_enhanced - INFO - [SEARCH] Result 1 - document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730, filename: Valuation Multiple Trends in Software (2020–2024).pdf
+2025-06-14 17:55:59,335 - src.server.document_processor_enhanced - INFO - [SEARCH] Full metadata: {'chunk_char_end': 1944.0, 'chunk_char_start': 951.0, 'chunk_id': '96f86d03-d480-48aa-bb42-a7c8bf303730_p1_c24', 'chunk_index': 24.0, 'chunk_index_in_page': 1.0, 'content_type': 'application/pdf', 'document_id': '96f86d03-d480-48aa-bb42-a7c8bf303730', 'filename': 'Valuation Multiple Trends in Software (2020–2024).pdf', 'page_number': 1.0, 'session_id': '8d40bb7e-8977-44dd-862d-e501923c3dcf', 'total_chunks': 39.0, 'total_chunks_in_page': 5.0, 'user_id': '3e60a427-97e3-4c8b-89c7-39ccf8f89a64'}
+2025-06-14 17:55:59,335 - src.server.document_processor_enhanced - INFO - [SEARCH] Result 2 - document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730, filename: Valuation Multiple Trends in Software (2020–2024).pdf
+2025-06-14 17:55:59,335 - src.server.document_processor_enhanced - INFO - [SEARCH] Full metadata: {'chunk_char_end': 1911.0, 'chunk_char_start': 998.0, 'chunk_id': '96f86d03-d480-48aa-bb42-a7c8bf303730_p1_c12', 'chunk_index': 12.0, 'chunk_index_in_page': 1.0, 'content_type': 'application/pdf', 'document_id': '96f86d03-d480-48aa-bb42-a7c8bf303730', 'filename': 'Valuation Multiple Trends in Software (2020–2024).pdf', 'page_number': 1.0, 'session_id': '8d40bb7e-8977-44dd-862d-e501923c3dcf', 'total_chunks': 39.0, 'total_chunks_in_page': 6.0, 'user_id': '3e60a427-97e3-4c8b-89c7-39ccf8f89a64'}
+2025-06-14 17:55:59,335 - src.server.document_processor_enhanced - INFO - [SEARCH] Result 3 - document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730, filename: Valuation Multiple Trends in Software (2020–2024).pdf
+2025-06-14 17:55:59,335 - src.server.document_processor_enhanced - INFO - [SEARCH] Full metadata: {'chunk_char_end': 973.0, 'chunk_char_start': 0.0, 'chunk_id': '96f86d03-d480-48aa-bb42-a7c8bf303730_p1_c0', 'chunk_index': 0.0, 'chunk_index_in_page': 0.0, 'content_type': 'application/pdf', 'document_id': '96f86d03-d480-48aa-bb42-a7c8bf303730', 'filename': 'Valuation Multiple Trends in Software (2020–2024).pdf', 'page_number': 1.0, 'session_id': '8d40bb7e-8977-44dd-862d-e501923c3dcf', 'total_chunks': 39.0, 'total_chunks_in_page': 4.0, 'user_id': '3e60a427-97e3-4c8b-89c7-39ccf8f89a64'}
+2025-06-14 17:55:59,335 - src.server.document_processor_enhanced - INFO - [SEARCH] Result 4 - document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730, filename: Valuation Multiple Trends in Software (2020–2024).pdf
+2025-06-14 17:55:59,335 - src.server.document_processor_enhanced - INFO - [SEARCH] Full metadata: {'chunk_char_end': 526.0, 'chunk_char_start': 0.0, 'chunk_id': '96f86d03-d480-48aa-bb42-a7c8bf303730_p1_c33', 'chunk_index': 33.0, 'chunk_index_in_page': 0.0, 'content_type': 'application/pdf', 'document_id': '96f86d03-d480-48aa-bb42-a7c8bf303730', 'filename': 'Valuation Multiple Trends in Software (2020–2024).pdf', 'page_number': 1.0, 'session_id': '8d40bb7e-8977-44dd-862d-e501923c3dcf', 'total_chunks': 39.0, 'total_chunks_in_page': 1.0, 'user_id': '3e60a427-97e3-4c8b-89c7-39ccf8f89a64'}
+2025-06-14 17:55:59,335 - src.server.document_processor_enhanced - INFO - [SEARCH] Result 5 - document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730, filename: Valuation Multiple Trends in Software (2020–2024).pdf
+2025-06-14 17:55:59,335 - src.server.document_processor_enhanced - INFO - [SEARCH] Full metadata: {'chunk_char_end': 1907.0, 'chunk_char_start': 973.0, 'chunk_id': '96f86d03-d480-48aa-bb42-a7c8bf303730_p1_c1', 'chunk_index': 1.0, 'chunk_index_in_page': 1.0, 'content_type': 'application/pdf', 'document_id': '96f86d03-d480-48aa-bb42-a7c8bf303730', 'filename': 'Valuation Multiple Trends in Software (2020–2024).pdf', 'page_number': 1.0, 'session_id': '8d40bb7e-8977-44dd-862d-e501923c3dcf', 'total_chunks': 39.0, 'total_chunks_in_page': 4.0, 'user_id': '3e60a427-97e3-4c8b-89c7-39ccf8f89a64'}
+2025-06-14 17:55:59,335 - src.server.document_processor_enhanced - INFO - [SEARCH] Result 6 - document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730, filename: Valuation Multiple Trends in Software (2020–2024).pdf
+2025-06-14 17:55:59,335 - src.server.document_processor_enhanced - INFO - [SEARCH] Full metadata: {'chunk_char_end': 998.0, 'chunk_char_start': 0.0, 'chunk_id': '96f86d03-d480-48aa-bb42-a7c8bf303730_p1_c11', 'chunk_index': 11.0, 'chunk_index_in_page': 0.0, 'content_type': 'application/pdf', 'document_id': '96f86d03-d480-48aa-bb42-a7c8bf303730', 'filename': 'Valuation Multiple Trends in Software (2020–2024).pdf', 'page_number': 1.0, 'session_id': '8d40bb7e-8977-44dd-862d-e501923c3dcf', 'total_chunks': 39.0, 'total_chunks_in_page': 6.0, 'user_id': '3e60a427-97e3-4c8b-89c7-39ccf8f89a64'}
+2025-06-14 17:55:59,337 - src.server.document_processor_with_validation - INFO - [VALIDATED-SEARCH] Including valid document: 96f86d03-d480-48aa-bb42-a7c8bf303730 - Valuation Multiple Trends in Software (2020–2024).pdf
+2025-06-14 17:55:59,337 - src.server.document_processor_with_validation - INFO - [VALIDATED-SEARCH] Including valid document: 96f86d03-d480-48aa-bb42-a7c8bf303730 - Valuation Multiple Trends in Software (2020–2024).pdf
+2025-06-14 17:55:59,337 - src.server.document_processor_with_validation - INFO - [VALIDATED-SEARCH] Including valid document: 96f86d03-d480-48aa-bb42-a7c8bf303730 - Valuation Multiple Trends in Software (2020–2024).pdf
+2025-06-14 17:55:59,337 - src.server.document_processor_with_validation - INFO - [VALIDATED-SEARCH] Returning 3 valid results
+2025-06-14 17:55:59,337 - src.server.app - INFO - [RAG] Validated search returned 3 results
+2025-06-14 17:55:59,337 - src.server.app - INFO - [RAG] Including document chunk from Valuation Multiple Trends in Software (2020–2024).pdf
+2025-06-14 17:55:59,337 - src.server.app - INFO - [RAG] Added citation for document 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:59,337 - src.server.app - INFO - [RAG] Including document chunk from Valuation Multiple Trends in Software (2020–2024).pdf
+2025-06-14 17:55:59,337 - src.server.app - INFO - [RAG] Added citation for document 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:59,337 - src.server.app - INFO - [RAG] Including document chunk from Valuation Multiple Trends in Software (2020–2024).pdf
+2025-06-14 17:55:59,337 - src.server.app - INFO - [RAG] Added citation for document 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:55:59,337 - src.server.app - INFO - [RAG] Enhanced message with document context and citations
+INFO:     216.80.72.3:63629 - "POST /api/chat/simple HTTP/1.1" 200 OK
+2025-06-14 17:55:59,338 - src.server.app - INFO - [RAG] iter_response called for thread_id: wIA-OhQU-wmp7lgCq1uPE
+2025-06-14 17:55:59,339 - src.server.app - INFO - [RAG] Invoking chain with config: {'configurable': {'session_id': 'wIA-OhQU-wmp7lgCq1uPE'}}
+2025-06-14 17:56:03,500 - httpx - INFO - HTTP Request: POST https://api.openai.com/v1/chat/completions "HTTP/1.1 200 OK"
+2025-06-14 17:56:03,515 - src.server.app - INFO - [RAG] Chain invoked, result type: <class 'langchain_core.messages.ai.AIMessage'>
+2025-06-14 17:56:03,515 - src.server.app - INFO - [RAG] LLM response length: 1121
+2025-06-14 17:56:03,515 - src.server.app - INFO - [RAG] LLM response preview: Valuation multiples in the SaaS industry can vary significantly based on market conditions and growth potential of the firms. As observed in recent trends, mid-2021 valuations were particularly high, with many high-growth SaaS companies achieving EV/EBITDA multiples well above 30x. Established players like Microsoft even saw their multiples reach around 25x EV/EBITDA during that period, indicative of a valuation bubble fueled by low interest rates and strong growth expectations [2].
+
+However, th...
+2025-06-14 17:56:03,532 - src.server.app - INFO - [RAG] Sending response with 3 citations
+2025-06-14 17:56:03,532 - src.server.app - INFO - [RAG] First citation: {'id': '[1]', 'document_id': '96f86d03-d480-48aa-bb42-a7c8bf303730', 'filename': 'Valuation Multiple Trends in Software (2020–2024).pdf', 'page_number': 1.0, 'chunk_id': '96f86d03-d480-48aa-bb42-a7c8bf303730_p1_c24', 'char_start': 951.0, 'char_end': 1944.0}
+2025-06-14 17:56:03,532 - src.server.app - INFO - [RAG-DEBUG] Full response data being sent:
+2025-06-14 17:56:03,533 - src.server.app - INFO - {'agent': 'coordinator',
+ 'citations': [{'char_end': 1944.0,
+                'char_start': 951.0,
+                'chunk_id': '96f86d03-d480-48aa-bb42-a7c8bf303730_p1_c24',
+                'document_id': '96f86d03-d480-48aa-bb42-a7c8bf303730',
+                'filename': 'Valuation Multiple Trends in Software '
+                            '(2020–2024).pdf',
+                'id': '[1]',
+                'page_number': 1.0},
+               {'char_end': 1911.0,
+                'char_start': 998.0,
+                'chunk_id': '96f86d03-d480-48aa-bb42-a7c8bf303730_p1_c12',
+                'document_id': '96f86d03-d480-48aa-bb42-a7c8bf303730',
+                'filename': 'Valuation Multiple Trends in Software '
+                            '(2020–2024).pdf',
+                'id': '[2]',
+                'page_number': 1.0},
+               {'char_end': 973.0,
+                'char_start': 0.0,
+                'chunk_id': '96f86d03-d480-48aa-bb42-a7c8bf303730_p1_c0',
+                'document_id': '96f86d03-d480-48aa-bb42-a7c8bf303730',
+                'filename': 'Valuation Multiple Trends in Software '
+                            '(2020–2024).pdf',
+                'id': '[3]',
+                'page_number': 1.0}],
+ 'content': 'Valuation multiples in the SaaS industry can vary significantly '
+            'based on market conditions and growth potential of the firms. As '
+            'observed in recent trends, mid-2021 valuations were particularly '
+            'high, with many high-growth SaaS companies achieving EV/EBITDA '
+            'multiples well above 30x. Established players like Microsoft even '
+            'saw their multiples reach around 25x EV/EBITDA during that '
+            'period, indicative of a valuation bubble fueled by low interest '
+            'rates and strong growth expectations [2].\n'
+            '\n'
+            'However, the market experienced a substantial correction in 2022, '
+            'leading to a collapse in public software valuations due to rising '
+            'inflation and interest rates. As of 2023-2024, while there has '
+            'been some recovery in valuations, they are still below the peak '
+            'levels seen in 2021. The EBITDA multiples for SaaS companies, '
+            'particularly in mid-teens range, reflect a more cautious '
+            'investment landscape compared to the previous highs [1][2].\n'
+            '\n'
+            'Thus, the valuation multiples for SaaS companies can fluctuate '
+            'greatly, influenced by macroeconomic factors, market sentiment, '
+            'and the specific performance metrics of the companies in '
+            'question.',
+ 'finish_reason': 'stop',
+ 'id': 'a610c136-ed3e-42f6-b6a5-37434985a668',
+ 'role': 'assistant',
+ 'thread_id': 'wIA-OhQU-wmp7lgCq1uPE'}
+INFO:     216.80.72.3:63629 - "OPTIONS /api/documents/96f86d03-d480-48aa-bb42-a7c8bf303730/download-url HTTP/1.1" 200 OK
+2025-06-14 17:56:06,679 - src.server.documents_routes - INFO - [DOWNLOAD-URL] Request for document_id: 96f86d03-d480-48aa-bb42-a7c8bf303730 by user: 3e60a427-97e3-4c8b-89c7-39ccf8f89a64
+2025-06-14 17:56:06,679 - src.server.documents_routes - INFO - [DOWNLOAD-URL] Raw document_id type: <class 'str'>, value: '96f86d03-d480-48aa-bb42-a7c8bf303730'
+2025-06-14 17:56:06,679 - src.server.documents_routes - INFO - [DOWNLOAD-URL] Parsed UUID: 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:56:06,679 - src.server.documents_routes - INFO - [DOWNLOAD-URL] Querying with doc_id: 96f86d03-d480-48aa-bb42-a7c8bf303730, user_id: 3e60a427-97e3-4c8b-89c7-39ccf8f89a64
+2025-06-14 17:56:06,684 - src.server.documents_routes - INFO - [DOWNLOAD-URL] Generated presigned URL for document 96f86d03-d480-48aa-bb42-a7c8bf303730
+2025-06-14 17:56:06,684 - src.server.documents_routes - INFO - [DOWNLOAD-URL] S3 key: uploads/3e60a427-97e3-4c8b-89c7-39ccf8f89a64/96f86d03-d480-48aa-bb42-a7c8bf303730/Valuation Multiple Trends in Software (2020–2024).pdf, Bucket: omegaintel-docs-b0308be5
+2025-06-14 17:56:06,684 - src.server.documents_routes - INFO - [DOWNLOAD-URL] URL preview: https://omegaintel-docs-b0308be5.s3.amazonaws.com/uploads/3e60a427-97e3-4c8b-89c7-39ccf8f89a64/96f86...
+2025-06-14 17:56:06,684 - src.server.documents_routes - INFO - [DOWNLOAD-URL] Returning response: {'download_url': 'https://omegaintel-docs-b0308be5.s3.amazonaws.com/uploads/3e60a427-97e3-4c8b-89c7-39ccf8f89a64/96f86d03-d480-48aa-bb42-a7c8bf303730/Valuation%20Multiple%20Trends%20in%20Software%20%282020%E2%80%932024%29.pdf?AWSAccessKeyId=AKIA5FTZD4AAAUBJMWY3&Signature=8m01CL5ljUVzxDD5CenzUFmD2X4%3D&Expires=1749927366', 'filename': 'Valuation Multiple Trends in Software (2020–2024).pdf', 'expires_in': 3600}
+INFO:     216.80.72.3:63629 - "GET /api/documents/96f86d03-d480-48aa-bb42-a7c8bf303730/download-url HTTP/1.1" 200 OK

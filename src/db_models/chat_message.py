@@ -14,6 +14,7 @@ class ChatMessage(Base):
     role = Column(String(20), nullable=False)
     content = Column(Text, nullable=False)
     attachments = Column(JSON, nullable=True)  # Store attachment metadata as JSON
+    citations = Column(JSON, nullable=True)  # Store citations as JSON
     created_at = Column(TIMESTAMP, server_default=func.current_timestamp())
 
     session = relationship("ChatSession", back_populates="messages")

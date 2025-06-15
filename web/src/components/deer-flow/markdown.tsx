@@ -25,12 +25,14 @@ export function Markdown({
   style,
   enableCopy,
   animated = false,
+  onLinkClick,
   ...props
 }: ReactMarkdownOptions & {
   className?: string;
   enableCopy?: boolean;
   style?: React.CSSProperties;
   animated?: boolean;
+  onLinkClick?: (href: string) => void;
 }) {
   const rehypePlugins = useMemo(() => {
     if (animated) {
@@ -50,11 +52,55 @@ export function Markdown({
         remarkPlugins={[remarkGfm, remarkMath]}
         rehypePlugins={rehypePlugins}
         components={{
-          a: ({ href, children }) => (
-            <a href={href} target="_blank" rel="noopener noreferrer">
-              {children}
-            </a>
-          ),
+          a: ({ href, children }) => {
+            // Check if this is a citation link (starts with /document-viewer/)
+            if (href && href.startsWith('/document-viewer/')) {
+              // Extract document ID from the URL
+              const documentId = href.replace('/document-viewer/', '');
+              console.log('[Markdown] Citation link clicked:', { href, documentId });
+              
+              // Handle citation click inline
+              return (
+                <a
+                  href="#"
+                  onClick={async (e) => {
+                    e.preventDefault();
+                    console.log('[Markdown] Citation click handler triggered for:', documentId);
+                    
+                    try {
+                      // Import the necessary functions
+                      const { getDocumentDownloadUrl } = await import('~/core/api/documents');
+                      const { toast } = await import('sonner');
+                      
+                      const response = await getDocumentDownloadUrl(documentId);
+                      console.log('[Markdown] Download URL response:', response);
+                      
+                      if (response && response.download_url) {
+                        window.open(response.download_url, '_blank', 'noopener,noreferrer');
+                        toast.success(`Opening document`);
+                      } else {
+                        throw new Error('No download URL received');
+                      }
+                    } catch (error) {
+                      console.error('[Markdown] Citation error:', error);
+                      const { toast } = await import('sonner');
+                      toast.error('Failed to open citation');
+                    }
+                  }}
+                  style={{ cursor: 'pointer', color: 'inherit', textDecoration: 'underline' }}
+                >
+                  {children}
+                </a>
+              );
+            }
+            
+            // For regular links, keep the existing behavior
+            return (
+              <a href={href} target="_blank" rel="noopener noreferrer">
+                {children}
+              </a>
+            );
+          },
           img: ({ src, alt }) => (
             <a href={src as string} target="_blank" rel="noopener noreferrer">
               <Image className="rounded" src={src as string} alt={alt ?? ""} />
@@ -63,9 +109,27 @@ export function Markdown({
         }}
         {...props}
       >
-        {autoFixMarkdown(
-          dropMarkdownQuote(processKatexInMarkdown(children ?? "")) ?? "",
-        )}
+        {(() => {
+          let content = autoFixMarkdown(
+            dropMarkdownQuote(processKatexInMarkdown(children ?? "")) ?? "",
+          );
+          
+          // Remove any document-viewer links that might have slipped through
+          // Pattern: [text](/document-viewer/id) or [text](document-viewer/id)
+          content = content.replace(
+            /\[([^\]]+)\]\(\/?document-viewer\/[^)]+\)/g,
+            '[$1]'
+          );
+          
+          // Also remove links with document IDs that look like citations
+          content = content.replace(
+            /\[(\d+)\]\([^)]*[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}[^)]*\)/g,
+            '[$1]'
+          );
+          
+          console.log('[Markdown] Content after cleanup:', content.substring(0, 200));
+          return content;
+        })()}
       </ReactMarkdown>
       {enableCopy && typeof children === "string" && (
         <div className="flex">

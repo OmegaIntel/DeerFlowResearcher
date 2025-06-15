@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Citations</title>
+</head>
+<body>
+    <h1>Citation Link Test</h1>
+    
+    <p>This page tests different types of links to understand the 404 issue:</p>
+    
+    <h2>Test Links:</h2>
+    <ol>
+        <li><a href="/document-viewer/test-id-123">Relative link to /document-viewer/test-id-123</a></li>
+        <li><a href="document-viewer/test-id-456">Relative link to document-viewer/test-id-456</a></li>
+        <li><a href="https://example.com">External link</a></li>
+        <li><a href="#test">Anchor link</a></li>
+    </ol>
+    
+    <h2>Markdown-style links:</h2>
+    <p>[Test 1](/document-viewer/test-789)</p>
+    <p>[Test 2](document-viewer/test-000)</p>
+    
+    <script>
+        // Log all link clicks
+        document.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A') {
+                console.log('Link clicked:', e.target.href);
+            }
+        });
+    </script>
+</body>
+</html>
