@@ -4,9 +4,13 @@
 import { LoadingOutlined } from "@ant-design/icons";
 import { motion } from "framer-motion";
 import { Download, Headphones, FileIcon, Paperclip } from "lucide-react";
-import { useCallback, useMemo, useRef, useState } from "react";
+import React, { useCallback, useMemo, useRef, useState, useEffect } from "react";
 import { toast } from "sonner";
 import { getDocumentDownloadUrl } from "~/core/api/documents";
+import { getAuthToken } from "~/services/auth";
+import { processMessageContent } from "~/lib/process-content";
+import { ensureNoCitationLinks } from "~/lib/replace-citations";
+import { stripAllLinks } from "~/lib/strip-all-links";
 
 import { LoadingAnimation } from "~/components/deer-flow/loading-animation";
 import { Markdown } from "~/components/deer-flow/markdown";
@@ -177,7 +181,9 @@ function MessageListItem({
           >
             <MessageBubble message={message}>
               <div className="flex w-full flex-col">
-                <Markdown>{message?.content}</Markdown>
+                <Markdown onLinkClick={(href) => {
+                  console.log('[MessageList] Markdown link clicked:', href);
+                }}>{stripAllLinks(message?.content || '')}</Markdown>
                 {message.attachments && message.attachments.length > 0 && (
                   <div className="mt-2 flex flex-wrap gap-1">
                     {message.attachments.map((attachment) => (
@@ -555,28 +561,113 @@ function CitationDisplay({
 }) {
   const [loading, setLoading] = useState(false);
   
+  // Debug: Log when component mounts
+  useEffect(() => {
+    console.log("[Citation] Component mounted with citation:", citation);
+  }, [citation]);
+  
   const handleViewCitation = async () => {
+    console.log("[Citation] Click handler triggered!");
+    console.log("[Citation] Citation object:", citation);
+    
     try {
       setLoading(true);
+      console.log("[Citation] Full citation data:", citation);
+      console.log("[Citation] Document ID:", citation.document_id);
+      console.log("[Citation] Document ID type:", typeof citation.document_id);
+      
+      // Validate document_id exists
+      if (!citation.document_id) {
+        throw new Error("Citation missing document_id");
+      }
       
       // Get document download URL
-      const { download_url } = await getDocumentDownloadUrl(citation.document_id);
+      console.log("[Citation] Calling getDocumentDownloadUrl...");
+      const response = await getDocumentDownloadUrl(citation.document_id);
+      console.log("[Citation] Download URL response:", response);
       
-      // Open document viewer with page and highlight parameters
-      const viewerUrl = `/document-viewer/${citation.document_id}?page=${citation.page_number}&highlight=${citation.chunk_id}`;
-      window.open(viewerUrl, '_blank', 'noopener,noreferrer');
-      
-      toast.success(`Opening ${citation.filename} at page ${citation.page_number}`);
-    } catch (error) {
-      console.error("Citation error:", error);
-      // If viewer doesn't exist, just open the document
-      try {
-        const { download_url } = await getDocumentDownloadUrl(citation.document_id);
-        window.open(download_url, '_blank', 'noopener,noreferrer');
-        toast.info(`Opening ${citation.filename} (page ${citation.page_number})`);
-      } catch (e) {
-        toast.error("Failed to open citation");
+      if (response && response.download_url) {
+        // Open the document directly
+        console.log("[Citation] Opening URL:", response.download_url);
+        
+        // Use a small delay to avoid popup blockers
+        setTimeout(() => {
+          console.log("[Citation] About to open URL:", response.download_url);
+          console.log("[Citation] URL type:", typeof response.download_url);
+          console.log("[Citation] URL starts with http:", response.download_url?.startsWith('http'));
+          
+          const newWindow = window.open(response.download_url, '_blank', 'noopener,noreferrer');
+          if (!newWindow) {
+            console.error("[Citation] Window.open was blocked");
+            // Fallback: create a temporary link
+            const link = document.createElement('a');
+            link.href = response.download_url;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            console.log("[Citation] Fallback link href:", link.href);
+            link.click();
+          }
+        }, 100);
+        
+        toast.success(`Opening ${citation.filename} (page ${citation.page_number})`);
+      } else {
+        throw new Error("No download URL received");
       }
+    } catch (error) {
+      console.error("[Citation] Primary method failed:", error);
+      console.error("[Citation] Error details:", {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        citation: citation,
+        stack: error instanceof Error ? error.stack : undefined
+      });
+      
+      // Fallback: Try to construct a direct API URL
+      try {
+        console.log("[Citation] Trying fallback method...");
+        const fallbackUrl = `/api/documents/${citation.document_id}/download-url`;
+        console.log("[Citation] Fallback URL:", fallbackUrl);
+        
+        const response = await fetch(fallbackUrl, {
+          headers: {
+            'Authorization': `Bearer ${getAuthToken() || ''}`,
+          },
+        });
+        
+        console.log("[Citation] Fallback response status:", response.status);
+        
+        if (response.ok) {
+          const data = await response.json();
+          console.log("[Citation] Fallback response data:", data);
+          
+          if (data.download_url) {
+            console.log("[Citation] Fallback: Opening URL:", data.download_url);
+            
+            // Use a small delay to avoid popup blockers
+            setTimeout(() => {
+              const newWindow = window.open(data.download_url, '_blank', 'noopener,noreferrer');
+              if (!newWindow) {
+                console.error("[Citation] Fallback: Window.open was blocked");
+                // Fallback: create a temporary link
+                const link = document.createElement('a');
+                link.href = data.download_url;
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+                link.click();
+              }
+            }, 100);
+            
+            toast.info(`Opening ${citation.filename} (page ${citation.page_number})`);
+            return;
+          }
+        } else {
+          const errorText = await response.text();
+          console.error("[Citation] Fallback error response:", errorText);
+        }
+      } catch (fallbackError) {
+        console.error("[Citation] Fallback also failed:", fallbackError);
+      }
+      
+      toast.error("Failed to open citation");
     } finally {
       setLoading(false);
     }

@@ -216,9 +216,14 @@ class EnhancedDocumentProcessor:
                     'total_chunks_in_page': chunk.metadata.get('total_chunks_in_page', 1)
                 }
                 
+                logger.info(f"[METADATA] Storing chunk with document_id: {document_id}")
+                
                 # Add session_id if provided
                 if session_id:
                     metadata['session_id'] = session_id
+                    logger.info(f"[METADATA] Added session_id: {session_id}")
+                else:
+                    logger.warning(f"[METADATA] No session_id provided for document {document_id}")
                 
                 # Add user_id if provided
                 if user_id:
@@ -271,6 +276,8 @@ class EnhancedDocumentProcessor:
                                       filter_dict: Optional[Dict] = None) -> List[Dict]:
         """Search for relevant documents and return with citation metadata"""
         try:
+            logger.info(f"[SEARCH] Searching with query: '{query[:50]}...', filter: {filter_dict}")
+            
             vector_store = PineconeVectorStore(
                 index_name=self.index_name,
                 embedding=self.embeddings,
@@ -279,21 +286,28 @@ class EnhancedDocumentProcessor:
             
             # Perform similarity search
             if filter_dict:
+                logger.info(f"[SEARCH] Using filter: {filter_dict}")
                 results = vector_store.similarity_search_with_score(
                     query=query,
                     k=top_k,
                     filter=filter_dict
                 )
             else:
+                logger.info(f"[SEARCH] No filter applied")
                 results = vector_store.similarity_search_with_score(
                     query=query,
                     k=top_k
                 )
             
+            logger.info(f"[SEARCH] Found {len(results)} results")
+            
             # Format results with citation information
             formatted_results = []
             for i, (doc, score) in enumerate(results):
                 citation_id = f"[{i+1}]"
+                doc_id = doc.metadata.get('document_id')
+                logger.info(f"[SEARCH] Result {i+1} - document_id: {doc_id}, filename: {doc.metadata.get('filename')}")
+                logger.info(f"[SEARCH] Full metadata: {doc.metadata}")
                 formatted_results.append({
                     'citation_id': citation_id,
                     'content': doc.page_content,

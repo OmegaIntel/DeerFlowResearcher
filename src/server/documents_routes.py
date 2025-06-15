@@ -297,10 +297,18 @@ async def get_document_download_url(
     current_user: UserResponse = Depends(get_current_user)
 ):
     """Get a presigned download URL for a document."""
+    logger.info(f"[DOWNLOAD-URL] Request for document_id: {document_id} by user: {current_user.id}")
+    logger.info(f"[DOWNLOAD-URL] Raw document_id type: {type(document_id)}, value: {repr(document_id)}")
+    
     try:
         doc_uuid = uuid.UUID(document_id)
-    except ValueError:
+        logger.info(f"[DOWNLOAD-URL] Parsed UUID: {doc_uuid}")
+    except ValueError as e:
+        logger.error(f"[DOWNLOAD-URL] Invalid UUID format: {document_id}, error: {e}")
         raise HTTPException(status_code=400, detail="Invalid document ID format")
+    
+    # Log the query parameters
+    logger.info(f"[DOWNLOAD-URL] Querying with doc_id: {doc_uuid}, user_id: {current_user.id}")
     
     document = db.query(Document).filter(
         Document.id == doc_uuid,
@@ -309,19 +317,43 @@ async def get_document_download_url(
     ).first()
     
     if not document:
+        # Let's see what documents exist for this user
+        user_docs = db.query(Document).filter(
+            Document.user_id == uuid.UUID(current_user.id),
+            Document.is_active == True
+        ).all()
+        logger.error(f"[DOWNLOAD-URL] Document {doc_uuid} not found for user {current_user.id}")
+        logger.error(f"[DOWNLOAD-URL] User has {len(user_docs)} documents:")
+        for doc in user_docs:
+            logger.error(f"[DOWNLOAD-URL]   - ID: {doc.id}, Filename: {doc.filename}, Session: {doc.session_id}")
+        
+        # Also check if document exists but for different user
+        other_user_doc = db.query(Document).filter(
+            Document.id == doc_uuid,
+            Document.is_active == True
+        ).first()
+        if other_user_doc:
+            logger.error(f"[DOWNLOAD-URL] Document exists but belongs to different user: {other_user_doc.user_id}")
+        
         raise HTTPException(status_code=404, detail="Document not found")
     
     try:
         download_url = s3_manager.generate_presigned_url(document.s3_key, expiration=expiration)
+        logger.info(f"[DOWNLOAD-URL] Generated presigned URL for document {document_id}")
+        logger.info(f"[DOWNLOAD-URL] S3 key: {document.s3_key}, Bucket: {s3_manager.bucket_name}")
+        logger.info(f"[DOWNLOAD-URL] URL preview: {download_url[:100]}...")
     except Exception as e:
-        logger.error(f"Error generating download URL: {e}")
+        logger.error(f"[DOWNLOAD-URL] Error generating download URL: {e}")
+        logger.error(f"[DOWNLOAD-URL] Document S3 key: {document.s3_key}")
         raise HTTPException(status_code=500, detail="Failed to generate download URL")
     
-    return {
+    response_data = {
         "download_url": download_url,
         "filename": document.original_filename,
         "expires_in": expiration
     }
+    logger.info(f"[DOWNLOAD-URL] Returning response: {response_data}")
+    return response_data
 
 
 @router.post("/search")
