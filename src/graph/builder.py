@@ -5,6 +5,7 @@ from langgraph.graph import StateGraph, START, END
 from langgraph.checkpoint.memory import MemorySaver
 
 from .types import State
+from ..prompts.planner_model import StepType
 from .nodes import (
     coordinator_node,
     planner_node,
@@ -15,6 +16,22 @@ from .nodes import (
     human_feedback_node,
     background_investigation_node,
 )
+
+
+def continue_to_running_research_team(state: State):
+    current_plan = state.get("current_plan")
+    if not current_plan or not current_plan.steps:
+        return "planner"
+    if all(step.execution_res for step in current_plan.steps):
+        return "planner"
+    for step in current_plan.steps:
+        if not step.execution_res:
+            break
+    if step.step_type and step.step_type == StepType.RESEARCH:
+        return "researcher"
+    if step.step_type and step.step_type == StepType.PROCESSING:
+        return "coder"
+    return "planner"
 
 
 def _build_base_graph():
@@ -29,6 +46,20 @@ def _build_base_graph():
     builder.add_node("researcher", researcher_node)
     builder.add_node("coder", coder_node)
     builder.add_node("human_feedback", human_feedback_node)
+    
+    # Add edges to connect nodes
+    builder.add_edge("background_investigator", "planner")
+    # Note: nodes with Command returns handle their own routing
+    # coordinator_node -> planner, background_investigator, or __end__
+    # planner_node -> human_feedback or reporter  
+    # human_feedback_node -> planner, research_team, reporter, or __end__
+    builder.add_conditional_edges(
+        "research_team",
+        continue_to_running_research_team,
+        ["planner", "researcher", "coder"],
+    )
+    builder.add_edge("researcher", "research_team")
+    builder.add_edge("coder", "research_team")
     builder.add_edge("reporter", END)
     return builder
 
@@ -41,14 +72,14 @@ def build_graph_with_memory():
 
     # build state graph
     builder = _build_base_graph()
-    return builder.compile(checkpointer=memory)
+    return builder.compile(checkpointer=memory, interrupt_before=["human_feedback"])
 
 
 def build_graph():
     """Build and return the agent workflow graph without memory."""
     # build state graph
     builder = _build_base_graph()
-    return builder.compile()
+    return builder.compile(interrupt_before=["human_feedback"])
 
 
 graph = build_graph()

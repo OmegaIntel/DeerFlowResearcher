@@ -1,0 +1,1 @@
+- restart backend and frontend docker containers with no cache everytime you make changes to the code

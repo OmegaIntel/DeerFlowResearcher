@@ -172,7 +172,7 @@ export async function sendMessage(
   
   console.log("[sendMessage] Called with attachments:", attachments);
   
-  if (content != null) {
+  if (content != null && content !== "") {
     const messageAttachments = attachments?.map(att => ({
       id: att.documentId || nanoid(),
       filename: att.filename,
@@ -195,8 +195,22 @@ export async function sendMessage(
   }
 
   let stream: AsyncIterable<ChatEvent>;
-  if (state.mode === "research" || toolId) {
-    const settings = getChatStreamSettings();
+  const settings = getChatStreamSettings();
+  
+  // Debug logging
+  console.log("[sendMessage] Decision logic:", {
+    mode: state.mode,
+    toolId,
+    enableBackgroundInvestigation: settings.enableBackgroundInvestigation,
+    settings
+  });
+  
+  // Trigger research mode if:
+  // 1. Mode is set to "research" OR
+  // 2. Tool is specified (e.g., @research) OR
+  // 3. Investigation toggle is ON
+  if (state.mode === "research" || toolId || settings.enableBackgroundInvestigation) {
+    console.log("[sendMessage] Using research flow (chatStream)");
     stream = chatStream(
       content ?? "[REPLAY]",
       {
@@ -214,6 +228,7 @@ export async function sendMessage(
       options,
     );
   } else {
+    console.log("[sendMessage] Using simple chat flow (chatSimpleStream)");
     stream = chatSimpleStream(
       content ?? "",
       { 

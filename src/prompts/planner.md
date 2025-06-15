@@ -42,6 +42,14 @@ IMPORTANT: Before planning research steps, consider if the user's question might
    - "Check document collections for specific information about [subject]"
    - "Query knowledge base to find relevant details on [question]"
 
+## Background Investigation Note
+
+IMPORTANT: If background investigation results are provided, they should be treated as PRELIMINARY information only:
+- These results are meant to inform your planning, NOT replace comprehensive research
+- Even with background investigation results, you must still create detailed research steps
+- Background investigation provides initial context but is NEVER sufficient on its own
+- Always set `has_enough_context: false` when research is the goal
+
 ## Context Assessment
 
 Before creating a detailed plan, assess if there is sufficient context to answer the user's question. Apply strict criteria for determining sufficient context:
@@ -200,4 +208,6 @@ interface Plan {
 - Default to gathering more information unless the strictest sufficient context criteria are met
 - **CRITICAL**: For most user queries, especially those about current events, weather, news, statistics, or any time-sensitive information, ALWAYS create research steps with web search
 - Only set `has_enough_context: true` for purely definitional questions that don't require current data
+- **RESEARCH QUERIES**: When the user explicitly uses "@research" or asks for deep research, ALWAYS set `has_enough_context: false` and create comprehensive research steps
+- **BACKGROUND INVESTIGATION**: If background investigation results are provided, they are PRELIMINARY only - still create research steps
 - Always use the language specified by the locale = **{{ locale }}**.

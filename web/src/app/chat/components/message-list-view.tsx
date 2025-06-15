@@ -52,7 +52,11 @@ export function MessageListView({
   onFeedback?: (feedback: { option: Option }) => void;
   onSendMessage?: (
     message: string,
-    options?: { interruptFeedback?: string },
+    options?: { 
+      interruptFeedback?: string;
+      toolId?: string;
+      toolType?: "mcp" | "agent" | "research";
+    },
   ) => void;
 }) {
   const scrollContainerRef = useRef<ScrollContainerRef>(null);
@@ -124,7 +128,11 @@ function MessageListItem({
   interruptMessage?: Message | null;
   onSendMessage?: (
     message: string,
-    options?: { interruptFeedback?: string },
+    options?: { 
+      interruptFeedback?: string;
+      toolId?: string;
+      toolType?: "mcp" | "agent" | "research";
+    },
   ) => void;
   onToggleResearch?: () => void;
 }) {
@@ -136,7 +144,6 @@ function MessageListItem({
   if (message) {
     if (
       message.role === "user" ||
-      message.role === "assistant" ||
       message.agent === "coordinator" ||
       message.agent === "planner" ||
       message.agent === "podcast" ||
@@ -170,7 +177,7 @@ function MessageListItem({
             />
           </div>
         );
-      } else {
+      } else if (message.agent !== "reporter" && message.agent !== "researcher") {
         content = message.content ? (
           <div
             className={cn(
@@ -346,7 +353,11 @@ function PlanCard({
   onFeedback?: (feedback: { option: Option }) => void;
   onSendMessage?: (
     message: string,
-    options?: { interruptFeedback?: string },
+    options?: { 
+      interruptFeedback?: string;
+      toolId?: string;
+      toolType?: "mcp" | "agent" | "research";
+    },
   ) => void;
   waitForFeedback?: boolean;
 }) {
@@ -359,10 +370,13 @@ function PlanCard({
   }, [message.content]);
   const handleAccept = useCallback(async () => {
     if (onSendMessage) {
+      // Don't send a new message - just continue with the interrupted flow
       onSendMessage(
-        `${GREETINGS[Math.floor(Math.random() * GREETINGS.length)]}! ${Math.random() > 0.5 ? "Let's get started." : "Let's start."}`,
+        "", // Empty message to continue the interrupted flow
         {
           interruptFeedback: "accepted",
+          toolId: "research",
+          toolType: "agent",
         },
       );
     }
