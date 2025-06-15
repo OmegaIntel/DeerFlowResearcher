@@ -189,13 +189,6 @@ export default function DocumentsMain() {
         </div>
         <div className="flex items-center gap-2">
           <Button
-            onClick={() => setUploadDialogOpen(true)}
-            size="sm"
-          >
-            <Upload className="mr-2 h-4 w-4" />
-            Upload
-          </Button>
-          <Button
             variant="outline"
             size="icon"
             onClick={handleRefresh}
@@ -219,36 +212,13 @@ export default function DocumentsMain() {
               className="pl-10"
             />
           </div>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline" className="gap-2 flex-shrink-0">
-                <Filter className="h-4 w-4" />
-                Status
-                {statusFilter && (
-                  <Badge variant="secondary" className="ml-1">
-                    {statusFilter}
-                  </Badge>
-                )}
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuItem onClick={() => setStatusFilter("")}>
-                All Status
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setStatusFilter("completed")}>
-                Completed
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setStatusFilter("processing")}>
-                Processing
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setStatusFilter("pending")}>
-                Pending
-              </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setStatusFilter("failed")}>
-                Failed
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <Button
+            onClick={() => setUploadDialogOpen(true)}
+            className="gap-2 flex-shrink-0"
+          >
+            <Upload className="h-4 w-4" />
+            Upload
+          </Button>
         </div>
 
         {/* Documents Grid - Centered with max width like chat */}
@@ -273,62 +243,59 @@ export default function DocumentsMain() {
               </div>
             </div>
           ) : (
-            <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5">
+            <div className="flex flex-col gap-2 w-3/4">
               {filteredDocuments.map((doc) => (
-                <Card key={doc.id} className="group hover:shadow-md transition-shadow">
-                  <CardHeader className="pb-3">
-                    <div className="flex items-start justify-between">
-                      <FileText className="h-8 w-8 text-blue-500" />
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="icon" className="h-8 w-8">
-                            <span className="sr-only">More options</span>
-                            <div className="flex flex-col gap-1">
-                              <div className="h-1 w-1 rounded-full bg-current" />
-                              <div className="h-1 w-1 rounded-full bg-current" />
-                              <div className="h-1 w-1 rounded-full bg-current" />
-                            </div>
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent>
-                          <DropdownMenuItem onClick={() => handleDownload(doc)}>
-                            <Download className="mr-2 h-4 w-4" />
-                            Download
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => handleDelete(doc.id)}
-                            className="text-destructive"
-                          >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Delete
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </div>
-                    <CardTitle className="text-sm line-clamp-2">
-                      {doc.original_filename}
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-2">
-                    <div className="flex items-center justify-between text-xs text-muted-foreground">
-                      <span>{formatFileSize(doc.file_size)}</span>
-                      <Badge className={getStatusColor(doc.processing_status)}>
-                        {doc.processing_status}
-                      </Badge>
-                    </div>
-                    
-                    {doc.processing_status === 'completed' && doc.vectors_created > 0 && (
-                      <div className="text-xs text-muted-foreground">
-                        <div>Vectors: {doc.vectors_created}</div>
-                        <div>Chunks: {doc.chunks_created}</div>
+                <div
+                  key={doc.id}
+                  className="group flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors"
+                >
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <FileText className="h-5 w-5 text-blue-500 flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium truncate">
+                        {doc.original_filename}
+                      </p>
+                      <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                        <span>{formatFileSize(doc.file_size)}</span>
+                        <span>{format(new Date(doc.created_at), 'MMM d, yyyy')}</span>
+                        {doc.processing_status === 'completed' && doc.vectors_created > 0 && (
+                          <span>Chunks: {doc.chunks_created}</span>
+                        )}
                       </div>
-                    )}
-                    
-                    <div className="text-xs text-muted-foreground">
-                      {format(new Date(doc.created_at), 'MMM d, yyyy')}
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                  
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <Badge className={`${getStatusColor(doc.processing_status)} text-xs`}>
+                      {doc.processing_status}
+                    </Badge>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <span className="sr-only">More options</span>
+                          <div className="flex flex-col gap-1">
+                            <div className="h-1 w-1 rounded-full bg-current" />
+                            <div className="h-1 w-1 rounded-full bg-current" />
+                            <div className="h-1 w-1 rounded-full bg-current" />
+                          </div>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => handleDownload(doc)}>
+                          <Download className="mr-2 h-4 w-4" />
+                          Download
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => handleDelete(doc.id)}
+                          className="text-destructive"
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                </div>
               ))}
             </div>
           )}
