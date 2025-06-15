@@ -174,42 +174,52 @@ function MessageListItem({
         content = message.content ? (
           <div
             className={cn(
-              "flex w-full",
-              message.role === "user" && "justify-end",
+              "flex flex-col w-full",
+              message.role === "user" && "items-end",
               className,
             )}
           >
-            <MessageBubble message={message}>
-              <div className="flex w-full flex-col">
-                <Markdown onLinkClick={(href) => {
-                  console.log('[MessageList] Markdown link clicked:', href);
-                }}>{stripAllLinks(message?.content || '')}</Markdown>
-                {message.attachments && message.attachments.length > 0 && (
-                  <div className="mt-2 flex flex-wrap gap-1">
-                    {message.attachments.map((attachment) => (
-                      <AttachmentDisplay 
-                        key={attachment.id} 
-                        attachment={attachment}
-                        threadId={message.threadId}
-                      />
-                    ))}
-                  </div>
-                )}
-                {message.citations && message.citations.length > 0 && (
-                  <div className="mt-3 border-t pt-3">
-                    <p className="text-xs font-semibold text-muted-foreground mb-2">📚 References:</p>
-                    <div className="space-y-1">
-                      {message.citations.map((citation) => (
-                        <CitationDisplay 
-                          key={citation.id} 
-                          citation={citation}
-                        />
-                      ))}
+            <div
+              className={cn(
+                "flex w-full",
+                message.role === "user" && "justify-end",
+              )}
+            >
+              <MessageBubble message={message}>
+                <div className="flex w-full flex-col">
+                  <Markdown onLinkClick={(href) => {
+                    console.log('[MessageList] Markdown link clicked:', href);
+                  }}>{stripAllLinks(message?.content || '')}</Markdown>
+                  {message.citations && message.citations.length > 0 && (
+                    <div className="mt-3 border-t pt-3">
+                      <p className="text-xs font-semibold text-muted-foreground mb-2">📚 References:</p>
+                      <div className="space-y-1">
+                        {message.citations.map((citation) => (
+                          <CitationDisplay 
+                            key={citation.id} 
+                            citation={citation}
+                          />
+                        ))}
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
+                </div>
+              </MessageBubble>
+            </div>
+            {message.attachments && message.attachments.length > 0 && (
+              <div className={cn(
+                "mt-2 flex flex-wrap gap-1",
+                message.role === "user" ? "max-w-[85%]" : "max-w-[85%]"
+              )}>
+                {message.attachments.map((attachment) => (
+                  <AttachmentDisplay 
+                    key={attachment.id} 
+                    attachment={attachment}
+                    threadId={message.threadId}
+                  />
+                ))}
               </div>
-            </MessageBubble>
+            )}
           </div>
         ) : null;
       }
