@@ -835,9 +835,15 @@ Be concise but thorough in your response. If there was an error retrieving the d
 async def _handle_research_query(user_message: str, thread_id: str, request: ChatRequest):
     """Handle research agent query using DeerFlow research capabilities."""
     try:
+        # If we have interrupt feedback, we're resuming an interrupted flow
+        # Don't create a new message in this case
+        messages = []
+        if not request.interrupt_feedback and user_message:
+            messages = [{"role": "user", "content": user_message}]
+        
         # Use the main DeerFlow research stream with proper configuration
         async for event in _astream_workflow_generator(
-            [{"role": "user", "content": user_message}],
+            messages,
             thread_id,
             request.max_plan_iterations or 3,
             request.max_step_num or 25,
@@ -1031,8 +1037,8 @@ async def _astream_workflow_generator(
     }
     if not auto_accepted_plan and interrupt_feedback:
         resume_msg = f"[{interrupt_feedback}]"
-        # add the last message to the resume message
-        if messages:
+        # add the last message to the resume message only if it has content
+        if messages and messages[-1].get('content'):
             resume_msg += f" {messages[-1]['content']}"
         input_ = Command(resume=resume_msg)
     async for agent, _, event_data in graph.astream(
@@ -1046,15 +1052,53 @@ async def _astream_workflow_generator(
         stream_mode=["messages", "updates"],
         subgraphs=True,
     ):
+        # Debug all event data
+        if isinstance(event_data, dict) and "__interrupt__" in event_data:
+            logger.info(f"[DEBUG] Event with interrupt - agent: {agent}, event_data keys: {list(event_data.keys())}")
+        
         if isinstance(event_data, dict):
             if "__interrupt__" in event_data:
+                # First check if __interrupt__ is a valid list/tuple before accessing [0]
+                interrupt_list = event_data["__interrupt__"]
+                logger.info(f"[DEBUG] Interrupt data: type={type(interrupt_list)}, len={len(interrupt_list) if hasattr(interrupt_list, '__len__') else 'N/A'}, content={interrupt_list}")
+                # Handle empty interrupt (which means we just need to pause)
+                if not isinstance(interrupt_list, (list, tuple)) or len(interrupt_list) == 0:
+                    logger.info("Empty interrupt detected - creating interrupt event")
+                    # Create a simple interrupt event
+                    yield _make_event(
+                        "interrupt",
+                        {
+                            "thread_id": thread_id,
+                            "id": str(uuid.uuid4()),
+                            "role": "assistant",
+                            "content": "Please Review the Plan.",
+                            "finish_reason": "interrupt",
+                            "options": [
+                                {"text": "Edit plan", "value": "edit_plan"},
+                                {"text": "Start research", "value": "accepted"},
+                            ],
+                        },
+                    )
+                    continue
+                
+                interrupt_data = interrupt_list[0]
+                # Handle different interrupt data structures
+                interrupt_id = str(uuid.uuid4())  # Generate a unique ID for the interrupt
+                if hasattr(interrupt_data, 'ns'):
+                    # If ns is a tuple/list, get the first element
+                    if isinstance(interrupt_data.ns, (list, tuple)) and len(interrupt_data.ns) > 0:
+                        interrupt_id = interrupt_data.ns[0]
+                    # If ns is a string, use it directly
+                    elif isinstance(interrupt_data.ns, str):
+                        interrupt_id = interrupt_data.ns
+                
                 yield _make_event(
                     "interrupt",
                     {
                         "thread_id": thread_id,
-                        "id": event_data["__interrupt__"][0].ns[0],
+                        "id": interrupt_id,
                         "role": "assistant",
-                        "content": event_data["__interrupt__"][0].value,
+                        "content": interrupt_data.value,
                         "finish_reason": "interrupt",
                         "options": [
                             {"text": "Edit plan", "value": "edit_plan"},

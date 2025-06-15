@@ -131,7 +131,7 @@ def planner_node(
         else:
             return Command(goto="__end__")
     if curr_plan.get("has_enough_context"):
-        logger.info("Planner response has enough context.")
+        logger.info("Planner response has enough context, going to reporter.")
         new_plan = Plan.model_validate(curr_plan)
         return Command(
             update={
@@ -140,6 +140,7 @@ def planner_node(
             },
             goto="reporter",
         )
+    logger.info(f"Planner response needs more context (has_enough_context={curr_plan.get('has_enough_context')}), going to human_feedback.")
     return Command(
         update={
             "messages": [AIMessage(content=full_response, name="planner")],
@@ -153,6 +154,14 @@ def human_feedback_node(
     state,
 ) -> Command[Literal["planner", "research_team", "reporter", "__end__"]]:
     current_plan = state.get("current_plan", "")
+    logger.info(f"[DEBUG] human_feedback_node - current_plan type: {type(current_plan)}")
+    logger.info(f"[DEBUG] human_feedback_node - current_plan content: {str(current_plan)[:200]}...")
+    
+    # If current_plan is already a Plan object, convert it to JSON string for processing
+    if hasattr(current_plan, 'model_dump'):
+        current_plan = json.dumps(current_plan.model_dump())
+        logger.info("[DEBUG] Converted Plan object to JSON string")
+    
     # check if the plan is auto accepted
     auto_accepted_plan = state.get("auto_accepted_plan", False)
     if not auto_accepted_plan:
@@ -168,7 +177,7 @@ def human_feedback_node(
                 },
                 goto="planner",
             )
-        elif feedback and str(feedback).upper().startswith("[ACCEPTED]"):
+        elif feedback and (str(feedback).upper().startswith("[ACCEPTED]") or str(feedback).lower() == "[accepted]"):
             logger.info("Plan is accepted by user.")
         else:
             raise TypeError(f"Interrupt value of {feedback} is not supported.")
@@ -178,12 +187,17 @@ def human_feedback_node(
     goto = "research_team"
     try:
         current_plan = repair_json_output(current_plan)
+        logger.info(f"[DEBUG] After repair_json_output: {current_plan[:200]}...")
         # increment the plan iterations
         plan_iterations += 1
         # parse the plan
         new_plan = json.loads(current_plan)
+        logger.info(f"[DEBUG] Parsed plan - has_enough_context: {new_plan.get('has_enough_context', 'NOT FOUND')}")
         if new_plan["has_enough_context"]:
+            logger.info("[DEBUG] Plan has enough context, going to reporter")
             goto = "reporter"
+        else:
+            logger.info("[DEBUG] Plan needs research, going to research_team")
     except json.JSONDecodeError:
         logger.warning("Planner response is not a valid JSON")
         if plan_iterations > 0:
