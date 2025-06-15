@@ -347,24 +347,28 @@ function getOngoingResearchId() {
 }
 
 function appendResearch(researchId: string) {
+  console.log('[DEBUG] appendResearch called with:', researchId);
   let planMessage: Message | undefined;
   const reversedMessageIds = [...useStore.getState().messageIds].reverse();
   for (const messageId of reversedMessageIds) {
     const message = getMessage(messageId);
     if (message?.agent === "planner") {
       planMessage = message;
+      console.log('[DEBUG] Found planner message:', planMessage.id);
       break;
     }
   }
   const messageIds = [researchId];
   messageIds.unshift(planMessage!.id);
+  const newPlanIds = new Map(useStore.getState().researchPlanIds).set(
+    researchId,
+    planMessage!.id,
+  );
+  console.log('[DEBUG] Setting researchPlanIds:', newPlanIds);
   useStore.setState({
     ongoingResearchId: researchId,
     researchIds: [...useStore.getState().researchIds, researchId],
-    researchPlanIds: new Map(useStore.getState().researchPlanIds).set(
-      researchId,
-      planMessage!.id,
-    ),
+    researchPlanIds: newPlanIds,
     researchActivityIds: new Map(useStore.getState().researchActivityIds).set(
       researchId,
       messageIds,
@@ -386,11 +390,14 @@ function appendResearchActivity(message: Message) {
       });
     }
     if (message.agent === "reporter") {
+      const newReportIds = new Map(useStore.getState().researchReportIds).set(
+        researchId,
+        message.id,
+      );
+      console.log('[DEBUG] Setting researchReportIds:', newReportIds);
+      console.log('[DEBUG] Research', researchId, 'now has report:', message.id);
       useStore.setState({
-        researchReportIds: new Map(useStore.getState().researchReportIds).set(
-          researchId,
-          message.id,
-        ),
+        researchReportIds: newReportIds,
       });
     }
   }

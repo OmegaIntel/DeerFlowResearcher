@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Plan Hiding Test</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        #output {
+            margin-top: 20px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .log-entry {
+            margin: 2px 0;
+            padding: 2px;
+        }
+        .debug {
+            color: #007bff;
+        }
+        .error {
+            color: #dc3545;
+        }
+        .success {
+            color: #28a745;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Plan Hiding Test</h1>
+        <p>This test will verify that research plans are hidden after report generation.</p>
+        
+        <button onclick="runTest()">Run Test</button>
+        <button onclick="clearOutput()">Clear Output</button>
+        
+        <div id="output"></div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8000/api';
+        const output = document.getElementById('output');
+        
+        function log(message, type = '') {
+            const entry = document.createElement('div');
+            entry.className = `log-entry ${type}`;
+            entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            output.appendChild(entry);
+            output.scrollTop = output.scrollHeight;
+        }
+        
+        function clearOutput() {
+            output.innerHTML = '';
+        }
+        
+        async function runTest() {
+            log('Starting plan hiding test...', 'success');
+            
+            try {
+                // Login first
+                log('Logging in...');
+                const loginResponse = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        email: 'chetan@omegaintelligence.ai',
+                        password: 'Test123.'
+                    })
+                });
+                
+                if (!loginResponse.ok) {
+                    throw new Error(`Login failed: ${loginResponse.status}`);
+                }
+                
+                const loginData = await loginResponse.json();
+                const token = loginData.token;
+                log('Login successful', 'success');
+                
+                // Create thread
+                log('Creating thread...');
+                const threadResponse = await fetch(`${API_URL}/threads`, {
+                    method: 'POST',
+                    headers: {'Authorization': `Bearer ${token}`}
+                });
+                
+                const threadData = await threadResponse.json();
+                const threadId = threadData.id;
+                log(`Thread created: ${threadId}`, 'success');
+                
+                // Send research request
+                log('Sending research request...');
+                const response = await fetch(`${API_URL}/chat/research`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: '@research What are the benefits of using TypeScript?',
+                        thread_id: threadId,
+                        enable_background_investigation: true,
+                        tool_id: 'research',
+                        tool_type: 'agent'
+                    })
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`Research request failed: ${response.status}`);
+                }
+                
+                // Process SSE stream
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let buffer = '';
+                let planMessageId = null;
+                let researchId = null;
+                let hasReport = false;
+                
+                while (true) {
+                    const {done, value} = await reader.read();
+                    if (done) break;
+                    
+                    buffer += decoder.decode(value, {stream: true});
+                    const lines = buffer.split('\n');
+                    buffer = lines.pop(); // Keep incomplete line in buffer
+                    
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            const dataStr = line.slice(6);
+                            if (dataStr === '[DONE]') {
+                                log('Stream completed', 'success');
+                                continue;
+                            }
+                            
+                            try {
+                                const data = JSON.parse(dataStr);
+                                
+                                // Log debug messages
+                                if (data.data && data.data.content && data.data.content.includes('[DEBUG]')) {
+                                    log(data.data.content, 'debug');
+                                }
+                                
+                                // Track plan message
+                                if (data.type === 'message_chunk' && data.data.agent === 'planner') {
+                                    planMessageId = data.data.id;
+                                    log(`Plan message received: ${planMessageId}`, 'debug');
+                                }
+                                
+                                // Track research
+                                if (data.type === 'research') {
+                                    researchId = data.data.id;
+                                    log(`Research started: ${researchId}`, 'debug');
+                                }
+                                
+                                // Track report
+                                if (data.type === 'message_chunk' && data.data.agent === 'reporter') {
+                                    hasReport = true;
+                                    log('Report generation started', 'success');
+                                }
+                                
+                            } catch (e) {
+                                // Ignore JSON parse errors
+                            }
+                        }
+                    }
+                }
+                
+                log('\nTest Summary:', 'success');
+                log(`- Plan Message ID: ${planMessageId}`);
+                log(`- Research ID: ${researchId}`);
+                log(`- Has Report: ${hasReport}`);
+                log('\nCheck the main application to verify plan visibility', 'success');
+                
+            } catch (error) {
+                log(`Error: ${error.message}`, 'error');
+            }
+        }
+    </script>
+</body>
+</html>

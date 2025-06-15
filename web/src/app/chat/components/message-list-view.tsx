@@ -138,14 +138,37 @@ function MessageListItem({
 }) {
   const message = useMessage(messageId);
   const researchIds = useStore((state) => state.researchIds);
+  const researchPlanIds = useStore((state) => state.researchPlanIds);
+  const researchReportIds = useStore((state) => state.researchReportIds);
+  const messageIds = useStore((state) => state.messageIds); // Add this to track all messages
+  
   const startOfResearch = useMemo(() => {
     return researchIds.includes(messageId);
   }, [researchIds, messageId]);
+  
+  // Check if this plan message has a completed report
+  const planHasCompletedReport = useMemo(() => {
+    if (message?.agent === "planner") {
+      // Check if there's a reporter message after this planner message in the same thread
+      const planIndex = messageIds.indexOf(messageId);
+      
+      // Look for reporter messages that come after this plan
+      for (let i = planIndex + 1; i < messageIds.length; i++) {
+        const msg = useStore.getState().messages.get(messageIds[i]);
+        if (msg && msg.threadId === message.threadId && msg.agent === "reporter") {
+          console.log('[DEBUG] Plan', messageId, 'has completed report');
+          return true;
+        }
+      }
+    }
+    return false;
+  }, [message?.agent, messageId, message?.threadId, messageIds]); // Added messageIds dependency
+  
   if (message) {
     if (
       message.role === "user" ||
       message.agent === "coordinator" ||
-      message.agent === "planner" ||
+      (message.agent === "planner" && !planHasCompletedReport) ||
       message.agent === "podcast" ||
       startOfResearch
     ) {
