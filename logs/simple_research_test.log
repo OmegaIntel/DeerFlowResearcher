@@ -1,0 +1,26 @@
+============================================================
+SIMPLE RESEARCH TEST
+============================================================
+[2025-06-16 21:20:39.787919] 1. LOGGING IN...
+✓ Login successful
+
+[2025-06-16 21:20:40.135435] 2. STARTING SIMPLE RESEARCH...
+Thread ID: simple_research_20250616_212040
+✓ Sending simple research request...
+✓ Received coordinator response
+
+[2025-06-16 21:20:41.746316] 3. RESEARCH COMPLETED!
+
+Messages received from agents:
+  - coordinator: 442 characters
+
+[2025-06-16 21:20:41.746343] 4. CHECKING SAVED MESSAGES...
+✓ Session successfully saved and retrieved!
+
+Session Details:
+  - Session ID: 072dc69d-3c06-4d3a-9dec-5526f6a00105
+  - Messages saved: 2
+  - Message types: ['user', 'other']
+
+⚠️  WARNING: No reporter message found in saved messages
+============================================================

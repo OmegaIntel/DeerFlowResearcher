@@ -1,0 +1,18 @@
+[2025-06-16 20:59:20.136393] Logging in...
+[2025-06-16 20:59:20.530122] Login successful
+[2025-06-16 20:59:20.530184] Starting research with thread_id: research_test_20250616_205920
+[2025-06-16 20:59:20.530192] Sending research request...
+[2025-06-16 20:59:20.559172] Response status: 200
+[2025-06-16 20:59:21.602166] Completed coordinator message (length: 0)
+[2025-06-16 20:59:34.484783] Completed planner message (length: 3528)
+[2025-06-16 20:59:34.487889] Completed unknown message (length: 23)
+
+[2025-06-16 20:59:34.488294] Research completed!
+Messages received:
+  - coordinator: 0 chars, finished: True
+  - planner: 3528 chars, finished: True
+  - unknown: 23 chars, finished: True
+
+[2025-06-16 20:59:36.490061] Checking chat history...
+Failed to retrieve chat history: 404
+Error: {"detail":"Not Found"}

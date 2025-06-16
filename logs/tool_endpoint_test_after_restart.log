@@ -1,0 +1,17 @@
+[2025-06-16 22:30:17.609045] Logging in...
+✓ Login successful
+
+[2025-06-16 22:30:18.005863] Testing tool endpoint with thread_id: test_tool_20250616_223018
+✓ Sending request to /api/chat/tool...
+Response status: 200
+  Event 16: coordinator - finish_reason=tool_calls
+  Event 316: planner - finish_reason=stop
+  Event 319: unknown - finish_reason=interrupt
+
+[2025-06-16 22:30:36.272547] Stream completed
+Total events: 319
+Agents seen: unknown, planner, coordinator
+Finish reasons: coordinator:tool_calls, planner:stop, unknown:interrupt
+
+[2025-06-16 22:30:36.272575] Checking if session was saved...
+⚠️  Session NOT found in database!

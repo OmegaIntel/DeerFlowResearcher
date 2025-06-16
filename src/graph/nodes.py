@@ -79,6 +79,9 @@ def planner_node(
 ) -> Command[Literal["human_feedback", "reporter"]]:
     """Planner node that generate the full plan."""
     logger.info("Planner generating full plan")
+    logger.info(f"[DEBUG PLANNER] State keys: {list(state.keys())}")
+    logger.info(f"[DEBUG PLANNER] Observations count: {len(state.get('observations', []))}")
+    logger.info(f"[DEBUG PLANNER] Current plan: {state.get('current_plan')}")
     configurable = Configuration.from_runnable_config(config)
     plan_iterations = state["plan_iterations"] if state.get("plan_iterations", 0) else 0
     messages = apply_prompt_template("planner", state, configurable)
@@ -127,9 +130,27 @@ def planner_node(
     except json.JSONDecodeError:
         logger.warning("Planner response is not a valid JSON")
         if plan_iterations > 0:
+            logger.info("[DEBUG PLANNER] JSON decode error but plan_iterations > 0, going to reporter")
             return Command(goto="reporter")
         else:
+            logger.info("[DEBUG PLANNER] JSON decode error and plan_iterations == 0, ending")
             return Command(goto="__end__")
+    
+    logger.info(f"[DEBUG PLANNER] Parsed plan successfully")
+    logger.info(f"[DEBUG PLANNER] has_enough_context: {curr_plan.get('has_enough_context')}")
+    logger.info(f"[DEBUG PLANNER] plan_iterations: {plan_iterations}")
+    
+    # If we have observations from research, we should go to reporter
+    if state.get("observations") and len(state.get("observations", [])) > 0:
+        logger.info(f"[DEBUG PLANNER] Have {len(state.get('observations'))} observations, going to reporter")
+        return Command(
+            update={
+                "messages": [AIMessage(content=full_response, name="planner")],
+                "current_plan": Plan.model_validate(curr_plan) if isinstance(curr_plan, dict) else curr_plan,
+            },
+            goto="reporter",
+        )
+    
     if curr_plan.get("has_enough_context"):
         logger.info("Planner response has enough context, going to reporter.")
         new_plan = Plan.model_validate(curr_plan)
@@ -292,7 +313,13 @@ def reporter_node(state: State):
     response_content = response.content
     logger.info(f"reporter response: {response_content}")
 
-    return Command(update={"final_report": response_content}, goto=END)
+    return Command(
+        update={
+            "final_report": response_content,
+            "messages": [AIMessage(content=response_content, name="reporter")]
+        }, 
+        goto=END
+    )
 
 
 def research_team_node(

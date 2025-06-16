@@ -1,0 +1,30 @@
+deer-flow-backend  |             "title": "Study the Impact of Regulatory Changes",
+deer-flow-backend  |             "description": "Find out how recent and anticipated regulatory changes are influencing AI research priorities and directions for 2024.",
+deer-flow-backend  |             "step_type": "research"
+deer-flow-backend  |         },
+deer-flow-backend  |         {
+deer-flow-backend  |             "need_web_search": true,
+deer-flow-backend  |             "title": "Analyze Technological Advancements Driving AI",
+deer-flow-backend  |             "description": "Investigate technological breakthroughs (e.g., hardware, algorithms) that are expected to significantly impact AI research in 2024.",
+deer-flow-backend  |             "step_type": "research"
+deer-flow-backend  |         },
+deer-flow-backend  |         {
+deer-flow-backend  |             "need_web_search": true,
+deer-flow-backend  |             "title": "Identify Collaborative Research Initiatives",
+deer-flow-backend  |             "description": "Research recent collaborative initiatives between academia, industry, and government in the AI domain that may influence research trends for 2024.",
+deer-flow-backend  |             "step_type": "research"
+deer-flow-backend  |         },
+deer-flow-backend  |         {
+deer-flow-backend  |             "need_web_search": true,
+deer-flow-backend  |             "title": "Look into Global AI Research Landscape",
+deer-flow-backend  |             "description": "Examine the global landscape of AI research in 2024, focusing on key regions leading the way and their specific areas of focus.",
+deer-flow-backend  |             "step_type": "research"
+deer-flow-backend  |         }
+deer-flow-backend  |     ]
+deer-flow-backend  | }
+deer-flow-backend  | 2025-06-16 20:43:03,297 - src.graph.nodes - INFO - Planner response needs more context (has_enough_context=False), going to human_feedback.
+deer-flow-backend  | 2025-06-16 20:43:03,300 - src.server.app - INFO - [DEBUG] Event with interrupt - agent: (), event_data keys: ['__interrupt__']
+deer-flow-backend  | 2025-06-16 20:43:03,300 - src.server.app - INFO - [DEBUG] Interrupt data: type=<class 'tuple'>, len=0, content=()
+deer-flow-backend  | 2025-06-16 20:43:03,300 - src.server.app - INFO - Empty interrupt detected - creating interrupt event
+deer-flow-backend  | 2025-06-16 20:43:03,300 - src.server.app - INFO - [RESEARCH SAVE] Completed persistence wrapper, pending messages: ['coordinator:run--2986eb52-7caa-4c4e-8d62-c8ead72add6e', 'planner:run--96133deb-8e2a-413b-ac10-7787018d7793']
+deer-flow-backend  | INFO:     172.18.0.1:40052 - "GET /api/chat-history/sessions/by-thread/research_test_20250616_204250 HTTP/1.1" 404 Not Found

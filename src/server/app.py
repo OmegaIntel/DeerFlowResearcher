@@ -144,12 +144,102 @@ async def shutdown_event():
 
 
 @app.post("/api/chat/stream")
-async def chat_stream(request: ChatRequest):
+async def chat_stream(request: ChatRequest, req: Request):
+    from src.api.api_get_current_user import get_current_user
+    from src.db.db_session import get_db, get_or_create_chat_session, add_chat_message, SessionLocal
+    from src.db_models.chat_message import ChatMessage as ChatMessageModel
+    from src.db_models.chat_session import ChatSession
+    
+    # Get current user
+    current_user = None
+    try:
+        # Get the authorization header
+        auth_header = req.headers.get("authorization")
+        logger.info(f"[RESEARCH SAVE] Auth header present: {bool(auth_header)}")
+        
+        if auth_header and auth_header.startswith("Bearer "):
+            token = auth_header.split(" ")[1]
+            logger.info(f"[RESEARCH SAVE] Token extracted: {token[:20]}...")
+            
+            db_temp = SessionLocal()
+            try:
+                current_user = await get_current_user(token, db_temp)
+                logger.info(f"[RESEARCH SAVE] Authenticated user: {current_user.email if current_user else 'None'}")
+            finally:
+                db_temp.close()
+        else:
+            logger.warning("[RESEARCH SAVE] No valid authorization header for research stream")
+    except Exception as e:
+        logger.error(f"[RESEARCH SAVE] Failed to authenticate user: {str(e)}")
+        import traceback
+        logger.error(f"[RESEARCH SAVE] Traceback: {traceback.format_exc()}")
+    
+    # Get database session - don't use next() to avoid closing it prematurely
+    db = SessionLocal()
+    
     thread_id = request.thread_id
     if thread_id == "__default__":
-        thread_id = str(uuid.uuid4())
+        thread_id = f"research_{uuid.uuid4()}"
+    
+    logger.info(f"[RESEARCH SAVE] Thread ID: {thread_id}")
+    
+    # Get or create chat session
+    session_obj = None
+    if current_user:
+        try:
+            # Check if session exists
+            session_obj = db.query(ChatSession).filter(
+                ChatSession.thread_id == thread_id,
+                ChatSession.user_id == uuid.UUID(current_user.id)
+            ).first()
+            
+            if not session_obj:
+                logger.info(f"[RESEARCH SAVE] Creating new session for user {current_user.email}")
+                # Get the user message to use as title
+                user_msg_content = request.messages[-1].content if request.messages else ""
+                session_obj = ChatSession(
+                    thread_id=thread_id,
+                    user_id=uuid.UUID(current_user.id),
+                    mode='research',
+                    title=user_msg_content[:100] if user_msg_content else None
+                )
+                db.add(session_obj)
+                db.commit()
+                db.refresh(session_obj)
+                logger.info(f"[RESEARCH SAVE] Created session with ID: {session_obj.id}")
+            else:
+                logger.info(f"[RESEARCH SAVE] Found existing session with ID: {session_obj.id}")
+                # Update mode to research if needed
+                if session_obj.mode != "research":
+                    session_obj.mode = "research"
+                    db.commit()
+        except Exception as e:
+            logger.error(f"[RESEARCH SAVE] Error creating/getting session: {str(e)}")
+            import traceback
+            logger.error(f"[RESEARCH SAVE] Traceback: {traceback.format_exc()}")
+    else:
+        logger.warning(f"[RESEARCH SAVE] No authenticated user for thread_id: {thread_id}")
+    
+    # Save user message if we have a session
+    if session_obj and request.messages:
+        user_msg = request.messages[-1]
+        if user_msg.role == "user":
+            attachments_data = None
+            if hasattr(user_msg, 'attachments') and user_msg.attachments:
+                attachments_data = [
+                    {
+                        "filename": att.filename,
+                        "size": att.size,
+                        "type": att.type,
+                        "documentId": att.documentId
+                    }
+                    for att in user_msg.attachments
+                ]
+            add_chat_message(db, session_obj, "user", str(user_msg.content), attachments=attachments_data)
+            logger.info(f"[RESEARCH SAVE] Saved user message to session {session_obj.id}")
+    
     return StreamingResponse(
-        _astream_workflow_generator(
+        _astream_workflow_generator_with_persistence(
             request.model_dump()["messages"],
             thread_id,
             request.max_plan_iterations,
@@ -158,6 +248,8 @@ async def chat_stream(request: ChatRequest):
             request.interrupt_feedback,
             request.mcp_settings,
             request.enable_background_investigation,
+            session_obj,
+            db,
         ),
         media_type="text/event-stream",
     )
@@ -429,8 +521,31 @@ IMPORTANT:
 
 
 @app.post("/api/chat/tool")
-async def chat_tool(request: ChatRequest):
+async def chat_tool(request: ChatRequest, req: Request):
     """Handle single tool queries with @ mention."""
+    from src.api.api_get_current_user import get_current_user
+    from src.db.db_session import get_db, get_or_create_chat_session, add_chat_message, SessionLocal
+    
+    # Get current user
+    current_user = None
+    try:
+        auth_header = req.headers.get("authorization")
+        logger.info(f"[TOOL] Auth header present: {bool(auth_header)}")
+        
+        if auth_header and auth_header.startswith("Bearer "):
+            token = auth_header.split(" ")[1]
+            db_temp = SessionLocal()
+            try:
+                current_user = await get_current_user(token, db_temp)
+                logger.info(f"[TOOL] Authenticated user: {current_user.email if current_user else 'None'}")
+            finally:
+                db_temp.close()
+    except Exception as e:
+        logger.error(f"[TOOL] Failed to authenticate user: {str(e)}")
+    
+    # Get database session
+    db = SessionLocal()
+    
     thread_id = request.thread_id
     if thread_id == "__default__":
         thread_id = str(uuid.uuid4())
@@ -443,6 +558,39 @@ async def chat_tool(request: ChatRequest):
         raise HTTPException(status_code=400, detail="Missing tool_id or tool_type")
 
     user_message = request.messages[-1].content if request.messages else ""
+    
+    # Get or create chat session
+    session_obj = None
+    if current_user:
+        try:
+            session_obj = db.query(ChatSession).filter(
+                ChatSession.thread_id == thread_id,
+                ChatSession.user_id == uuid.UUID(current_user.id)
+            ).first()
+            
+            if not session_obj:
+                logger.info(f"[TOOL] Creating new session for user {current_user.email}")
+                # Determine mode based on tool
+                mode = 'research' if tool_id == 'research' else 'chat'
+                session_obj = ChatSession(
+                    thread_id=thread_id,
+                    user_id=uuid.UUID(current_user.id),
+                    mode=mode,
+                    title=user_message[:100] if user_message else None
+                )
+                db.add(session_obj)
+                db.commit()
+                db.refresh(session_obj)
+                logger.info(f"[TOOL] Created session with ID: {session_obj.id}")
+            else:
+                logger.info(f"[TOOL] Found existing session with ID: {session_obj.id}")
+        except Exception as e:
+            logger.error(f"[TOOL] Error creating/getting session: {str(e)}")
+    
+    # Save user message if we have a session
+    if session_obj and request.messages and user_message:
+        add_chat_message(db, session_obj, "user", user_message)
+        logger.info(f"[TOOL] Saved user message to session {session_obj.id}")
 
     async def iter_response():
         try:
@@ -452,8 +600,8 @@ async def chat_tool(request: ChatRequest):
                     yield event
             elif tool_type == "agent":
                 if tool_id == "research":
-                    # Handle research agent query
-                    async for event in _handle_research_query(user_message, thread_id, request):
+                    # Handle research agent query with persistence
+                    async for event in _handle_research_query_with_persistence(user_message, thread_id, request, session_obj, db):
                         yield event
                 elif tool_id == "documents":
                     # Handle documents query
@@ -865,6 +1013,41 @@ async def _handle_research_query(user_message: str, thread_id: str, request: Cha
         yield f"event: message_chunk\ndata: {json.dumps(error_data)}\n\n"
 
 
+async def _handle_research_query_with_persistence(user_message: str, thread_id: str, request: ChatRequest, session_obj, db):
+    """Handle research agent query with message persistence."""
+    try:
+        # If we have interrupt feedback, we're resuming an interrupted flow
+        # Don't create a new message in this case
+        messages = []
+        if not request.interrupt_feedback and user_message:
+            messages = [{"role": "user", "content": user_message}]
+        
+        # Use the persistence wrapper for research
+        async for event in _astream_workflow_generator_with_persistence(
+            messages,
+            thread_id,
+            request.max_plan_iterations or 3,
+            request.max_step_num or 25,
+            request.auto_accepted_plan or False,
+            request.interrupt_feedback or "",
+            request.mcp_settings or {},
+            request.enable_background_investigation or True,
+            session_obj,
+            db,
+        ):
+            yield event
+    except Exception as e:
+        logger.exception(f"Error in research query with persistence: {str(e)}")
+        error_data = {
+            "thread_id": thread_id,
+            "id": str(uuid.uuid4()),
+            "role": "assistant",
+            "content": f"Error during research: {str(e)}",
+            "finish_reason": "error",
+        }
+        yield f"event: message_chunk\ndata: {json.dumps(error_data)}\n\n"
+
+
 def _handle_documents_query(user_message: str, thread_id: str, _request: ChatRequest):
     """Handle documents query - search and Q&A over uploaded documents."""
     try:
@@ -1015,6 +1198,97 @@ Answer:"""
         }
         yield f"event: message_chunk\ndata: {json.dumps(error_data)}\n\n"
 
+
+async def _astream_workflow_generator_with_persistence(
+    messages: List[ChatMessage],
+    thread_id: str,
+    max_plan_iterations: int,
+    max_step_num: int,
+    auto_accepted_plan: bool,
+    interrupt_feedback: str,
+    mcp_settings: dict,
+    enable_background_investigation,
+    session_obj,
+    db,
+):
+    from src.db.db_session import add_chat_message
+    
+    # Dictionary to accumulate messages per agent
+    agent_messages = {}
+    
+    logger.info(f"[RESEARCH SAVE] Starting persistence wrapper for thread {thread_id}, session: {session_obj.id if session_obj else 'None'}")
+    
+    async for event in _astream_workflow_generator(
+        messages,
+        thread_id,
+        max_plan_iterations,
+        max_step_num,
+        auto_accepted_plan,
+        interrupt_feedback,
+        mcp_settings,
+        enable_background_investigation,
+    ):
+        # Log all events for debugging
+        if "message_chunk" in event:
+            logger.debug(f"[RESEARCH SAVE] Received event: {event[:200]}...")
+        
+        # Extract event data to check for complete messages
+        if event.startswith("event: message_chunk\ndata: "):
+            try:
+                data_str = event[len("event: message_chunk\ndata: "):-2]  # Remove trailing \n\n
+                data = json.loads(data_str)
+                
+                agent = data.get("agent", "coordinator")
+                msg_id = data.get("id")
+                content = data.get("content", "")
+                finish_reason = data.get("finish_reason")
+                
+                logger.debug(f"[RESEARCH SAVE] Processing chunk - Agent: {agent}, ID: {msg_id}, Content length: {len(content)}, Finish: {finish_reason}")
+                
+                # Accumulate message content per agent/message
+                msg_key = f"{agent}:{msg_id}"
+                if msg_key not in agent_messages:
+                    agent_messages[msg_key] = {
+                        "agent": agent,
+                        "content": "",
+                        "id": msg_id
+                    }
+                    logger.info(f"[RESEARCH SAVE] Started accumulating message for {msg_key}")
+                
+                agent_messages[msg_key]["content"] += content
+                
+                # Save complete message when finished
+                if finish_reason and session_obj:
+                    complete_content = agent_messages[msg_key]["content"]
+                    logger.info(f"[RESEARCH SAVE] Message complete for {agent} (ID: {msg_id}), content length: {len(complete_content)}")
+                    
+                    if complete_content.strip():  # Only save non-empty messages
+                        # Save message (the agent info is already in the content for planner/reporter)
+                        try:
+                            msg = add_chat_message(
+                                db, 
+                                session_obj, 
+                                "assistant", 
+                                complete_content
+                            )
+                            logger.info(f"[RESEARCH SAVE] Successfully saved {agent} message to chat history (msg id: {msg.id}): {complete_content[:100]}...")
+                        except Exception as save_error:
+                            logger.error(f"[RESEARCH SAVE] Failed to save message: {save_error}")
+                    else:
+                        logger.warning(f"[RESEARCH SAVE] Skipping empty message for {agent}")
+                    
+                    # Clean up accumulated message
+                    del agent_messages[msg_key]
+                elif finish_reason and not session_obj:
+                    logger.warning(f"[RESEARCH SAVE] No session object, cannot save {agent} message")
+                    
+            except Exception as e:
+                logger.error(f"[RESEARCH SAVE] Error processing message for persistence: {e}", exc_info=True)
+        
+        # Always yield the original event
+        yield event
+    
+    logger.info(f"[RESEARCH SAVE] Completed persistence wrapper, pending messages: {list(agent_messages.keys())}")
 
 async def _astream_workflow_generator(
     messages: List[ChatMessage],

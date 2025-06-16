@@ -1,0 +1,7 @@
+deer-flow-backend  | 2025-06-16 20:42:50,772 - src.server.app - INFO - [RESEARCH SAVE] Starting persistence wrapper for thread research_test_20250616_204250, session: None
+deer-flow-backend  | 2025-06-16 20:42:51,645 - src.server.app - INFO - [RESEARCH SAVE] Started accumulating message for coordinator:run--2986eb52-7caa-4c4e-8d62-c8ead72add6e
+deer-flow-backend  | 2025-06-16 20:42:51,646 - src.server.app - WARNING - [RESEARCH SAVE] No session object, cannot save coordinator message
+deer-flow-backend  | 2025-06-16 20:42:52,443 - src.server.app - INFO - [RESEARCH SAVE] Started accumulating message for planner:run--96133deb-8e2a-413b-ac10-7787018d7793
+deer-flow-backend  | 2025-06-16 20:43:03,260 - src.server.app - WARNING - [RESEARCH SAVE] No session object, cannot save planner message
+deer-flow-backend  | 2025-06-16 20:43:03,300 - src.server.app - INFO - [RESEARCH SAVE] Completed persistence wrapper, pending messages: ['coordinator:run--2986eb52-7caa-4c4e-8d62-c8ead72add6e', 'planner:run--96133deb-8e2a-413b-ac10-7787018d7793']
+deer-flow-backend  | INFO:     172.18.0.1:40052 - "GET /api/chat-history/sessions/by-thread/research_test_20250616_204250 HTTP/1.1" 404 Not Found

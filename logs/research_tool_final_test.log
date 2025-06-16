@@ -1,0 +1,32 @@
+[2025-06-16 22:34:33.583391] Logging in...
+✓ Login successful
+
+[2025-06-16 22:34:33.980435] Starting research with thread_id: test_research_tool_20250616_223433
+✓ Sending research request via /api/chat/tool...
+Response status: 200
+  coordinator: finish_reason=tool_calls
+  planner: finish_reason=stop
+  unknown: finish_reason=interrupt
+✓ Received interrupt for plan review
+
+[2025-06-16 22:34:43.339466] Accepting plan...
+  researcher: finish_reason=tool_calls
+  unknown: finish_reason=error
+
+⚠️  No reporter message received in stream
+
+[2025-06-16 22:34:53.972223] Checking if saved in database...
+✓ Found test session: 63584355-89fc-45be-a114-5eda293237a1
+  Mode: research
+  Title: What are the benefits of exercise?...
+  Messages: 2
+
+⚠️  Reporter message NOT found in database
+
+All messages:
+  1. user: 34 chars
+  2. assistant: 1814 chars
+
+============================================================
+❌ FAILURE: @research reports still not saved
+============================================================
