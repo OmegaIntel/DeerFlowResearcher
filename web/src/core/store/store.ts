@@ -98,6 +98,9 @@ export const useStore = create<{
     });
   },
   async loadChat(threadId: string) {
+    console.log('[Store] loadChat called with threadId:', threadId);
+    console.log('[Store] Version: v2 with agent detection');
+    
     // First, reset the state with the new thread ID
     set({
       responding: false,
@@ -115,23 +118,53 @@ export const useStore = create<{
     try {
       // Fetch the chat session by thread ID
       const session = await getChatSessionByThread(threadId);
+      console.log('[Store] Fetched session:', session);
       
       // Convert the messages to the expected format and update the store
       const messageMap = new Map<string, Message>();
       const messageIds: string[] = [];
       
       session.messages.forEach((msg) => {
+        // Detect agent type from message content
+        let agent: Message["agent"] = undefined;
+        
+        if (msg.role === "assistant" && msg.content) {
+          const content = msg.content.trim();
+          
+          // Check if it's a JSON message from planner/coordinator
+          if (content.startsWith('{')) {
+            try {
+              const parsed = JSON.parse(content);
+              if (parsed.has_enough_context !== undefined || parsed.thought) {
+                agent = "planner";
+              }
+            } catch (e) {
+              // Not JSON, continue checking
+            }
+          }
+          
+          // Check for reporter messages (usually contain markdown headers)
+          if (content.includes('# ') && content.length > 500) {
+            agent = "reporter";
+          }
+        }
+        
         const message: Message = {
           id: msg.id,
           threadId: threadId,
           role: msg.role as "user" | "assistant",
+          agent: agent,
           content: msg.content,
           contentChunks: [msg.content],
           attachments: (msg as any).attachments,
           citations: (msg as any).citations,  // Add citations
         };
-        console.log('[Store] Loading message with citations:', {
+        console.log('[Store] Loading message v2:', {
           id: msg.id,
+          role: msg.role,
+          agent: agent,
+          contentLength: msg.content.length,
+          contentPreview: msg.content.substring(0, 50),
           hasCitations: !!(msg as any).citations,
           citationCount: (msg as any).citations?.length || 0
         });
@@ -139,11 +172,39 @@ export const useStore = create<{
         messageIds.push(msg.id);
       });
       
+      // For research mode, also populate research-related state
+      let researchIds: string[] = [];
+      let researchPlanIds = new Map<string, string>();
+      let researchReportIds = new Map<string, string>();
+      
+      if (session.mode === "research") {
+        // Find the first user message as the research start
+        const firstUserMsg = session.messages.find(m => m.role === "user");
+        if (firstUserMsg) {
+          researchIds.push(firstUserMsg.id);
+          
+          // Find planner and reporter messages
+          let plannerMsgId: string | undefined;
+          session.messages.forEach((msg) => {
+            const msgObj = messageMap.get(msg.id);
+            if (msgObj?.agent === "planner" && !plannerMsgId) {
+              plannerMsgId = msg.id;
+              researchPlanIds.set(firstUserMsg.id, msg.id);
+            } else if (msgObj?.agent === "reporter" && plannerMsgId) {
+              researchReportIds.set(firstUserMsg.id, msg.id);
+            }
+          });
+        }
+      }
+      
       // Update the store with the loaded messages
       set({
         messages: messageMap,
         messageIds: messageIds,
         mode: session.mode as "chat" | "research",
+        researchIds: researchIds,
+        researchPlanIds: researchPlanIds,
+        researchReportIds: researchReportIds,
       });
     } catch (error) {
       console.error("Failed to load chat history:", error);

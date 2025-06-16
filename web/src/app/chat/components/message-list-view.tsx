@@ -173,7 +173,8 @@ function MessageListItem({
       message.agent === "coordinator" ||
       (message.agent === "planner" && !planHasCompletedReport) ||
       message.agent === "podcast" ||
-      startOfResearch
+      startOfResearch ||
+      (message.role === "assistant" && !message.agent) // Regular assistant messages
     ) {
       let content: React.ReactNode;
       if (message.agent === "planner") {
@@ -204,6 +205,12 @@ function MessageListItem({
           </div>
         );
       } else if (message.agent !== "reporter" && message.agent !== "researcher") {
+        console.log('[MessageList] Rendering regular message:', {
+          id: message.id,
+          role: message.role,
+          agent: message.agent,
+          contentLength: message.content?.length
+        });
         content = message.content ? (
           <div
             className={cn(
