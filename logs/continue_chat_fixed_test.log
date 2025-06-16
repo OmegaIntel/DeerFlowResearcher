@@ -1,0 +1,54 @@
+Traceback (most recent call last):
+  File "/root/deer-flow/test_continue_chat_fixed.py", line 53, in test_continue_chat
+    login_user(driver, wait)
+  File "/root/deer-flow/test_continue_chat_fixed.py", line 20, in login_user
+    email_input = wait.until(EC.presence_of_element_located((By.NAME, "email")))
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/root/miniconda3/lib/python3.12/site-packages/selenium/webdriver/support/wait.py", line 138, in until
+    raise TimeoutException(message, screen, stacktrace)
+selenium.common.exceptions.TimeoutException: Message: 
+Stacktrace:
+#0 0x597989c1b0ba <unknown>
+#1 0x5979896e4e00 <unknown>
+#2 0x597989734f27 <unknown>
+#3 0x597989735121 <unknown>
+#4 0x597989783844 <unknown>
+#5 0x59798975ad5d <unknown>
+#6 0x597989780c42 <unknown>
+#7 0x59798975ab03 <unknown>
+#8 0x597989727664 <unknown>
+#9 0x5979897282c1 <unknown>
+#10 0x597989be0e1f <unknown>
+#11 0x597989be4ed8 <unknown>
+#12 0x597989bc8042 <unknown>
+#13 0x597989be567e <unknown>
+#14 0x597989baedae <unknown>
+#15 0x597989c09078 <unknown>
+#16 0x597989c09288 <unknown>
+#17 0x597989c19b58 <unknown>
+#18 0x76be8daaeac3 <unknown>
+
+[2025-06-16 22:56:15.049673] Starting test...
+
+✗ Error: Message: 
+Stacktrace:
+#0 0x597989c1b0ba <unknown>
+#1 0x5979896e4e00 <unknown>
+#2 0x597989734f27 <unknown>
+#3 0x597989735121 <unknown>
+#4 0x597989783844 <unknown>
+#5 0x59798975ad5d <unknown>
+#6 0x597989780c42 <unknown>
+#7 0x59798975ab03 <unknown>
+#8 0x597989727664 <unknown>
+#9 0x5979897282c1 <unknown>
+#10 0x597989be0e1f <unknown>
+#11 0x597989be4ed8 <unknown>
+#12 0x597989bc8042 <unknown>
+#13 0x597989be567e <unknown>
+#14 0x597989baedae <unknown>
+#15 0x597989c09078 <unknown>
+#16 0x597989c09288 <unknown>
+#17 0x597989c19b58 <unknown>
+#18 0x76be8daaeac3 <unknown>
+

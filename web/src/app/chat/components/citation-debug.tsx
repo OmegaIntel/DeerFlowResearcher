@@ -8,7 +8,7 @@ export function CitationDebugger() {
       if (target.tagName === 'A') {
         const href = (target as HTMLAnchorElement).href;
         const text = target.textContent;
-        console.error('[CITATION-CLICK]', {
+        console.debug('[CITATION-CLICK]', {
           href,
           text,
           tagName: target.tagName,
@@ -18,7 +18,7 @@ export function CitationDebugger() {
         });
         
         if (href.includes('document-viewer')) {
-          console.error('[CITATION-CLICK] DOCUMENT-VIEWER LINK CLICKED!');
+          console.warn('[CITATION-CLICK] DOCUMENT-VIEWER LINK CLICKED!');
           console.trace();
           e.preventDefault();
           e.stopPropagation();
@@ -32,7 +32,7 @@ export function CitationDebugger() {
       const links = document.querySelectorAll('a');
       links.forEach(link => {
         if (link.href.includes('document-viewer')) {
-          console.error('[CITATION-DEBUG] Found document-viewer link:', {
+          console.debug('[CITATION-DEBUG] Found document-viewer link:', {
             href: link.href,
             text: link.textContent,
             parent: link.parentElement?.className,
