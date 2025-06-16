@@ -1,0 +1,34 @@
+[2025-06-16 22:06:12.706325] Logging in...
+✓ Login successful
+
+[2025-06-16 22:06:13.115699] Starting research with thread_id: test_final_20250616_220613
+✓ Sending research request with auto_accepted_plan=True...
+  coordinator: finish_reason=tool_calls, content_length=0
+  planner: finish_reason=stop, content_length=0
+  unknown: finish_reason=interrupt, content_length=23
+
+[2025-06-16 22:07:05.344376] Streaming completed!
+
+Total messages received: 351
+
+Messages by agent:
+  - planner: 350
+  - unknown: 1
+
+Large messages (>500 chars): 0
+
+⚠️  Reporter message NOT received in stream
+
+[2025-06-16 22:07:08.347627] Checking database...
+✓ Found test session: a371d531-66c4-43b0-94d9-290e8ec8d7a0
+✓ Session has 2 saved messages
+
+⚠️  Reporter message NOT found in database
+
+All messages in DB:
+  1. user: 26 chars
+  2. assistant: 1870 chars
+
+============================================================
+❌ FAILURE: Reporter message neither streamed nor saved
+============================================================

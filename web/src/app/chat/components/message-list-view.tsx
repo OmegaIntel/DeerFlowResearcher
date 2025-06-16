@@ -154,10 +154,13 @@ function MessageListItem({
       
       // Look for reporter messages that come after this plan
       for (let i = planIndex + 1; i < messageIds.length; i++) {
-        const msg = useStore.getState().messages.get(messageIds[i]);
-        if (msg && msg.threadId === message.threadId && msg.agent === "reporter") {
-          console.log('[DEBUG] Plan', messageId, 'has completed report');
-          return true;
+        const msgId = messageIds[i];
+        if (msgId) {
+          const msg = useStore.getState().messages.get(msgId);
+          if (msg && msg.threadId === message.threadId && msg.agent === "reporter") {
+            console.log('[DEBUG] Plan', messageId, 'has completed report');
+            return true;
+          }
         }
       }
     }
