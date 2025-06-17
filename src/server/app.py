@@ -55,6 +55,7 @@ from src.api.api_get_current_user import current_user_router
 from src.api.api_verify_user import verify_user_router
 from src.api.api_debug_headers import router as debug_router
 from src.server.auth_debug_middleware import log_auth_headers
+from src.server.oauth_routes import router as oauth_router
 
 logger = logging.getLogger(__name__)
 
@@ -75,6 +76,7 @@ app.include_router(chat_history_router, prefix="/api/chat")
 app.include_router(fix_titles_router, prefix="/api/chat")
 app.include_router(documents_router, prefix="/api/documents")
 app.include_router(project_router, prefix="/api")
+app.include_router(oauth_router, prefix="/api")
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,

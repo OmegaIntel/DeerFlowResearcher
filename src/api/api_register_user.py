@@ -26,6 +26,7 @@ class UserOut(BaseModel):
 async def register(
     email: EmailStr = Form(...),
     password: str = Form(...),
+    name: str = Form(...),
     db: Session = Depends(get_db),
 ):
     existing_user = db.query(DbUser).filter(DbUser.email == email).first()
@@ -34,7 +35,8 @@ async def register(
 
     new_user = DbUser(
         email=email,
-        password_hash=get_password_hash(password)
+        password_hash=get_password_hash(password),
+        full_name=name
     )
     db.add(new_user)
     db.commit()

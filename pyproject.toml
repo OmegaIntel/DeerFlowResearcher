@@ -41,6 +41,7 @@ dependencies = [
     "mysql-connector-python>=8.3.0",
     "python-multipart",
     "PyJWT",
+    "authlib>=1.3.2",
     # LlamaCloud MCP dependencies
     "llama-index>=0.12.0",
     "llama-index-llms-openai>=0.3.28",

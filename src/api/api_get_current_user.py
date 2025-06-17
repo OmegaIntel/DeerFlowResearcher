@@ -24,6 +24,7 @@ class User(BaseModel):
     id: str
     email: str
     is_admin: bool
+    full_name: Optional[str] = None
 
     class Config:
         from_attributes = True
@@ -54,7 +55,12 @@ async def get_current_user(
     if user is None:
         raise credentials_exception
 
-    return User(id=str(user.id), email=user.email, is_admin=user.is_master_admin)
+    return User(
+        id=str(user.id), 
+        email=user.email, 
+        is_admin=user.is_master_admin,
+        full_name=user.full_name
+    )
 
 
 # API route to get the current logged-in user

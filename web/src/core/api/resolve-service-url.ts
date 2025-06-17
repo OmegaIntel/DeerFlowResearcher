@@ -11,11 +11,21 @@ export function resolveServiceURL(path: string) {
     const currentHost = window.location.hostname;
     const currentProtocol = window.location.protocol;
     
-    // If accessing from an EC2 instance or any non-localhost address,
-    // use the same host but on port 8000
-    if (currentHost !== 'localhost' && currentHost !== '127.0.0.1') {
+    // Check if we're on a domain (not localhost and not an IP)
+    const isDomain = currentHost !== 'localhost' && 
+                    currentHost !== '127.0.0.1' && 
+                    !currentHost.includes('ec2') && 
+                    !currentHost.includes('compute') &&
+                    !currentHost.match(/^\d+\.\d+\.\d+\.\d+$/);
+    
+    if (isDomain) {
+      // For domains with NGINX proxy, use same origin
+      BASE_URL = '/api';
+      console.log(`[API] Using domain proxy: ${BASE_URL}`);
+    } else if (currentHost !== 'localhost' && currentHost !== '127.0.0.1') {
+      // For EC2 or direct IP access
       BASE_URL = `${currentProtocol}//${currentHost}:8000/api`;
-      console.log(`[API] Using dynamic URL for EC2/remote access: ${BASE_URL}`);
+      console.log(`[API] Using direct access: ${BASE_URL}`);
     }
   }
   

@@ -43,6 +43,7 @@ import {
   SidebarRail,
 } from "~/components/ui/sidebar";
 import { useAuth } from "~/hooks/use-auth";
+import { useCurrentUser } from "~/hooks/use-current-user";
 import { startNewChat } from "~/core/store";
 import { ProjectSwitcher } from "~/components/projects/project-switcher";
 
@@ -101,7 +102,7 @@ interface User {
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { getToken, logout } = useAuth();
   const router = useRouter();
-  const [user, setUser] = useState<User | null>(null);
+  const { user: currentUser, loading } = useCurrentUser();
   const [isAuth, setIsAuth] = useState(false);
   const [currentProject, setCurrentProject] = useState<string | null>(null);
 
@@ -110,30 +111,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     const checkAuth = () => {
       const token = getToken();
       const authStatus = !!token;
-      
       setIsAuth(authStatus);
-      
-      if (authStatus) {
-        // Get user info if authenticated
-        const userInfo = localStorage.getItem('userInfo');
-        if (userInfo) {
-          try {
-            setUser(JSON.parse(userInfo));
-          } catch {
-            setUser({
-              name: "User",
-              email: "user@example.com",
-            });
-          }
-        } else {
-          setUser({
-            name: "User",
-            email: "user@example.com",
-          });
-        }
-      } else {
-        setUser(null);
-      }
     };
 
     // Initial check
@@ -146,7 +124,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 
   const handleLogout = () => {
     logout();
-    setUser(null);
   };
 
   const handleLogin = () => {
@@ -221,7 +198,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       <SidebarFooter>
         <SidebarMenu>
           <SidebarMenuItem>
-            {isAuth && user ? (
+            {isAuth && currentUser ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <SidebarMenuButton
@@ -232,8 +209,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                       <User className="size-4" />
                     </div>
                     <div className="grid flex-1 text-left text-sm leading-tight">
-                      <span className="truncate font-semibold">{user.name}</span>
-                      <span className="truncate text-xs">{user.email}</span>
+                      <span className="truncate font-semibold">
+                        {currentUser.full_name || currentUser.email.split('@')[0]}
+                      </span>
                     </div>
                     <ChevronUp className="ml-auto size-4" />
                   </SidebarMenuButton>
@@ -250,8 +228,9 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         <User className="size-4" />
                       </div>
                       <div className="grid flex-1 text-left text-sm leading-tight">
-                        <span className="truncate font-semibold">{user.name}</span>
-                        <span className="truncate text-xs">{user.email}</span>
+                        <span className="truncate font-semibold">
+                          {currentUser.full_name || currentUser.email.split('@')[0]}
+                        </span>
                       </div>
                     </div>
                   </DropdownMenuLabel>
