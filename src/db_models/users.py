@@ -5,7 +5,6 @@ from sqlalchemy_utils import UUIDType
 import uuid
 
 
-
 # Define the User model
 class User(Base):
     __tablename__ = "users"
@@ -14,4 +13,4 @@ class User(Base):
     email = Column(String(255), unique=True, index=True, nullable=False)
     password_hash = Column(String(255), nullable=False)
     created_at = Column(TIMESTAMP, server_default=func.current_timestamp())
-    is_master_admin=Column(Boolean, default=False,nullable=False)
+    is_master_admin = Column(Boolean, default=False, nullable=False)
