@@ -27,5 +27,7 @@ export function resolveServiceURL(path: string) {
   if (!path.startsWith("/")) {
     path = "/" + path;
   }
-  return BASE_URL + path;
+  const fullUrl = BASE_URL + path;
+  console.log(`[resolveServiceURL] Resolved URL: ${fullUrl}`);
+  return fullUrl;
 }

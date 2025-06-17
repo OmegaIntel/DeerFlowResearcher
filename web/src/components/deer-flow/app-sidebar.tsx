@@ -5,6 +5,7 @@ import {
   Bot,
   ChevronUp,
   Command,
+  Folder,
   Frame,
   LifeBuoy,
   LogOut,
@@ -65,6 +66,11 @@ const data = {
       title: "Documents",
       url: "/documents",
       icon: Frame,
+    },
+    {
+      title: "Projects",
+      url: "/projects",
+      icon: Folder,
     },
   ],
   projects: [
@@ -162,9 +168,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-sidebar-primary text-sidebar-primary-foreground">
                   <LogoIcon className="size-4" />
                 </div>
-                <div className="grid flex-1 text-left text-sm leading-tight">
-                  <span className="truncate font-semibold">Omega Intelligence</span>
-                  <span className="truncate text-xs">AI Research Assistant</span>
+                <div className="flex flex-1 items-center text-left">
+                  <span className="truncate font-semibold text-base">Omega Intelligence</span>
                 </div>
               </Link>
             </SidebarMenuButton>
@@ -173,26 +178,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       
       <SidebarContent>
-        {/* Project Switcher */}
-        {isAuth && (
-          <SidebarGroup>
-            <SidebarGroupLabel>Projects</SidebarGroupLabel>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <ProjectSwitcher
-                  currentProjectId={currentProject || undefined}
-                  onProjectSelect={(project) => {
-                    setCurrentProject(project?.id || null);
-                    // Could add navigation or state management here
-                  }}
-                  onManageProjects={() => router.push('/projects')}
-                  compact={true}
-                />
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroup>
-        )}
-        
         <SidebarGroup>
           <SidebarGroupLabel>Platform</SidebarGroupLabel>
           <SidebarMenu>

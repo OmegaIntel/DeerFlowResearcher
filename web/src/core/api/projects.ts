@@ -187,6 +187,41 @@ export async function getDefaultProject(): Promise<Project> {
   return response.json();
 }
 
+// Get project content
+export async function getProjectSessions(projectId: string): Promise<any[]> {
+  const response = await fetch(
+    resolveServiceURL(`projects/${projectId}/sessions`),
+    {
+      headers: {
+        Authorization: `Bearer ${getAuthToken()}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch project sessions");
+  }
+
+  return response.json();
+}
+
+export async function getProjectDocuments(projectId: string): Promise<any[]> {
+  const response = await fetch(
+    resolveServiceURL(`projects/${projectId}/documents`),
+    {
+      headers: {
+        Authorization: `Bearer ${getAuthToken()}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch project documents");
+  }
+
+  return response.json();
+}
+
 // Predefined project colors and icons
 export const PROJECT_COLORS = [
   "#6366F1", // Indigo

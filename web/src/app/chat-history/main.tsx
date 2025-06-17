@@ -371,15 +371,6 @@ export default function ChatHistoryMain() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={(e) => {
-                            e.stopPropagation();
-                            handleContinueChat(session);
-                          }}>
-                            Continue Chat
-                          </DropdownMenuItem>
-                          
-                          <DropdownMenuSeparator />
-                          
                           <DropdownMenuSub>
                             <DropdownMenuSubTrigger disabled={moveLoading === session.id}>
                               <FolderPlus className="mr-2 h-4 w-4" />
