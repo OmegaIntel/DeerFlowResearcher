@@ -1,6 +1,13 @@
 import { resolveServiceURL } from "./resolve-service-url";
 import { getAuthToken } from "~/services/auth";
 
+export interface ProjectInfo {
+  id: string;
+  name: string;
+  color?: string;
+  icon?: string;
+}
+
 export interface ChatSession {
   id: string;
   title?: string;
@@ -8,6 +15,7 @@ export interface ChatSession {
   message_count: number;
   last_message_at: string;
   created_at: string;
+  project?: ProjectInfo;
 }
 
 export interface ChatMessage {
@@ -28,6 +36,7 @@ export interface ChatSessionDetail {
 export interface CreateChatSessionRequest {
   title?: string;
   mode?: string;
+  project_id?: string;
 }
 
 export interface UpdateChatSessionRequest {

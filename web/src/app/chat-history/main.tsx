@@ -14,6 +14,8 @@ import {
   Filter,
   Bot,
   MessageCircle,
+  FolderPlus,
+  ChevronRight,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 
@@ -25,10 +27,24 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuSeparator,
 } from "~/components/ui/dropdown-menu";
 import { SidebarTrigger } from "~/components/ui/sidebar";
 import { resolveServiceURL } from "~/core/api/resolve-service-url";
 import { getAuthToken } from "~/services/auth";
+import { PROJECT_ICONS, getProjects, moveSessionToProject } from "~/core/api/projects";
+import type { Project } from "~/core/api/projects";
+import { toast } from "sonner";
+
+interface ProjectInfo {
+  id: string;
+  name: string;
+  color?: string;
+  icon?: string;
+}
 
 interface ChatSession {
   id: string;
@@ -38,6 +54,7 @@ interface ChatSession {
   message_count: number;
   last_message_at: string;
   created_at: string;
+  project?: ProjectInfo;
 }
 
 export default function ChatHistoryMain() {
@@ -47,6 +64,8 @@ export default function ChatHistoryMain() {
   const [modeFilter, setModeFilter] = useState<string>("");
   const [refreshing, setRefreshing] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState<string | null>(null);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [moveLoading, setMoveLoading] = useState<string | null>(null);
   const router = useRouter();
 
   const fetchSessions = async () => {
@@ -77,8 +96,18 @@ export default function ChatHistoryMain() {
     }
   };
 
+  const fetchProjects = async () => {
+    try {
+      const projectsData = await getProjects();
+      setProjects(projectsData);
+    } catch (error) {
+      console.error("Failed to fetch projects:", error);
+    }
+  };
+
   useEffect(() => {
     fetchSessions();
+    fetchProjects();
   }, [modeFilter]);
 
   const handleRefresh = () => {
@@ -123,6 +152,41 @@ export default function ChatHistoryMain() {
     router.push('/chat');
   };
 
+  const handleMoveToProject = async (sessionId: string, projectId: string | null, e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    setMoveLoading(sessionId);
+    
+    try {
+      await moveSessionToProject(sessionId, projectId || undefined);
+      
+      // Update the session in the local state
+      setSessions(sessions.map(session => {
+        if (session.id === sessionId) {
+          const project = projectId ? projects.find(p => p.id === projectId) : null;
+          return {
+            ...session,
+            project: project ? {
+              id: project.id,
+              name: project.name,
+              color: project.color,
+              icon: project.icon
+            } : undefined
+          };
+        }
+        return session;
+      }));
+      
+      const projectName = projectId ? projects.find(p => p.id === projectId)?.name : "No Project";
+      toast.success(`Chat moved to ${projectName}`);
+    } catch (error) {
+      console.error("Failed to move chat to project:", error);
+      toast.error("Failed to move chat to project");
+    } finally {
+      setMoveLoading(null);
+    }
+  };
+
   const getModeIcon = (mode: string) => {
     switch (mode) {
       case 'chat':
@@ -147,6 +211,11 @@ export default function ChatHistoryMain() {
       default:
         return 'bg-muted text-muted-foreground';
     }
+  };
+
+  const getProjectIcon = (iconId: string) => {
+    const icon = PROJECT_ICONS.find(i => i.id === iconId);
+    return icon?.emoji || "📁";
   };
 
   const filteredSessions = sessions.filter(session => {
@@ -270,6 +339,18 @@ export default function ChatHistoryMain() {
                         <div className="flex items-center gap-4 text-xs text-muted-foreground">
                           <span>{session.message_count} {session.message_count === 1 ? 'message' : 'messages'}</span>
                           <span>{format(new Date(session.last_message_at), 'MMM d, yyyy')}</span>
+                          {session.project && (
+                            <div className="flex items-center gap-1">
+                              <span>{getProjectIcon(session.project.icon || "folder")}</span>
+                              <span>{session.project.name}</span>
+                              {session.project.color && (
+                                <div
+                                  className="w-2 h-2 rounded-full"
+                                  style={{ backgroundColor: session.project.color }}
+                                />
+                              )}
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -296,6 +377,44 @@ export default function ChatHistoryMain() {
                           }}>
                             Continue Chat
                           </DropdownMenuItem>
+                          
+                          <DropdownMenuSeparator />
+                          
+                          <DropdownMenuSub>
+                            <DropdownMenuSubTrigger disabled={moveLoading === session.id}>
+                              <FolderPlus className="mr-2 h-4 w-4" />
+                              {moveLoading === session.id ? 'Moving...' : 'Move to Project'}
+                              <ChevronRight className="ml-auto h-4 w-4" />
+                            </DropdownMenuSubTrigger>
+                            <DropdownMenuSubContent>
+                              <DropdownMenuItem 
+                                onClick={(e) => handleMoveToProject(session.id, null, e)}
+                                className={!session.project ? "bg-muted" : ""}
+                              >
+                                <span className="mr-2">📂</span>
+                                No Project
+                              </DropdownMenuItem>
+                              {projects.map((project) => (
+                                <DropdownMenuItem
+                                  key={project.id}
+                                  onClick={(e) => handleMoveToProject(session.id, project.id, e)}
+                                  className={session.project?.id === project.id ? "bg-muted" : ""}
+                                >
+                                  <span className="mr-2">{getProjectIcon(project.icon || "folder")}</span>
+                                  <span className="flex-1">{project.name}</span>
+                                  {project.color && (
+                                    <div
+                                      className="w-2 h-2 rounded-full ml-2"
+                                      style={{ backgroundColor: project.color }}
+                                    />
+                                  )}
+                                </DropdownMenuItem>
+                              ))}
+                            </DropdownMenuSubContent>
+                          </DropdownMenuSub>
+                          
+                          <DropdownMenuSeparator />
+                          
                           <DropdownMenuItem
                             onClick={(e) => handleDeleteSession(session.id, e)}
                             className="text-destructive"

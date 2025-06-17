@@ -37,6 +37,7 @@ from src.server.pinecone_routes import router as pinecone_router
 from src.server.chat_history_routes import router as chat_history_router
 from src.server.documents_routes import router as documents_router, enhanced_document_processor
 from src.server.fix_titles_route import router as fix_titles_router
+from src.server.project_routes import router as project_router
 from src.db.db_session import (
     create_db_tables,
     SessionLocal,
@@ -73,6 +74,7 @@ app.include_router(pinecone_router, prefix="/api/pinecone")
 app.include_router(chat_history_router, prefix="/api/chat")
 app.include_router(fix_titles_router, prefix="/api/chat")
 app.include_router(documents_router, prefix="/api/documents")
+app.include_router(project_router, prefix="/api")
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
