@@ -201,24 +201,28 @@ export default function DocumentsMain() {
 
       {/* Content */}
       <div className="flex flex-1 flex-col px-4 pt-4 pb-4 overflow-hidden justify-center">
-        {/* Search and Filters - Centered with max width like chat */}
-        <div className="w-full max-w-4xl mx-auto mb-4 flex items-center gap-4 flex-shrink-0">
-          <div className="relative flex-1 min-w-0">
-            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-            <Input
-              placeholder="Search documents..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
-            />
+        {/* Search and Upload - Aligned with content width */}
+        <div className="w-full max-w-4xl mx-auto mb-4 flex-shrink-0">
+          <div className="w-3/4">
+            <div className="flex items-center gap-2">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  placeholder="Search documents..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+              <Button
+                onClick={() => setUploadDialogOpen(true)}
+                className="gap-2 flex-shrink-0"
+              >
+                <Upload className="h-4 w-4" />
+                Upload
+              </Button>
+            </div>
           </div>
-          <Button
-            onClick={() => setUploadDialogOpen(true)}
-            className="gap-2 flex-shrink-0"
-          >
-            <Upload className="h-4 w-4" />
-            Upload
-          </Button>
         </div>
 
         {/* Documents Grid - Centered with max width like chat */}

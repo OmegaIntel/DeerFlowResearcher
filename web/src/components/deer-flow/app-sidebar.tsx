@@ -57,7 +57,7 @@ const data = {
     },
     {
       title: "Chat History",
-      url: "/chat/history",
+      url: "/chat-history",
       icon: BookOpen,
     },
     {
