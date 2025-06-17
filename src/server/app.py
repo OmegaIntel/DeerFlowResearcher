@@ -30,7 +30,7 @@ from src.server.mcp_request import MCPServerMetadataRequest, MCPServerMetadataRe
 from src.server.mcp_utils import load_mcp_tools
 from src.tools import VolcengineTTS
 
-#Routes from API folders
+# Routes from API folders
 from src.api.api_register_user import router as register_user_router
 from src.api.api_generate_token import user_generate_token_router
 from src.api.api_get_current_user import current_user_router

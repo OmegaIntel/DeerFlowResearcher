@@ -1,0 +1,15 @@
+{
+  "manifest_version": 3,
+  "name": "DeerFlow Meeting Browser",
+  "version": "0.1",
+  "description": "Prototype extension combining meeting-minutes and nanobrowser features.",
+  "permissions": ["storage", "activeTab", "tabs", "scripting", "microphone"],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "action": {
+    "default_title": "DeerFlow Assistant",
+    "default_popup": "popup.html"
+  },
+  "host_permissions": ["<all_urls>"]
+}

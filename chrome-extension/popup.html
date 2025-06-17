@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DeerFlow Assistant</title>
+<style>
+body {font-family: sans-serif; width: 320px; padding: 10px;}
+button {margin-top: 5px;}
+textarea {width: 100%; height: 80px;}
+#history {max-height: 150px; overflow-y: auto; border: 1px solid #ccc; padding: 5px;}
+</style>
+</head>
+<body>
+<h3>Meeting Recorder</h3>
+<button id="recordBtn">Start Recording</button>
+<button id="summarizeBtn">Summarize</button>
+<p id="status"></p>
+<textarea id="transcript" placeholder="Transcript will appear here"></textarea>
+<button id="downloadTranscript">Download Transcript</button>
+<hr>
+<h3>Automation</h3>
+<textarea id="prompt" placeholder="Commands: open:, search:, click:, fill:, scrape:, agent:"></textarea>
+<button id="runPrompt">Run</button>
+<p id="result"></p>
+<img id="screenshotImg" style="width:100%; display:none;" />
+<button id="downloadScreenshot" style="display:none;">Download Screenshot</button>
+<h3>Meeting Summary</h3>
+<textarea id="summary" placeholder="Summary will appear here"></textarea>
+<button id="downloadSummary">Download Summary</button>
+
+<h3>History</h3>
+<div id="history"></div>
+<button id="clearHistory">Clear History</button>
+<button id="downloadHistory">Download History</button>
+<script src="popup.js"></script>
+</body>
+</html>

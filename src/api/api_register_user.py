@@ -10,8 +10,10 @@ router = APIRouter(tags=["auth"])
 # Password hashing setup
 pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
+
 def get_password_hash(password: str) -> str:
     return pwd_context.hash(password)
+
 
 # Pydantic schema for response
 class UserOut(BaseModel):
@@ -21,6 +23,7 @@ class UserOut(BaseModel):
 
     class Config:
         from_attributes = True
+
 
 @router.post("/api/register", response_model=UserOut)
 async def register(
@@ -32,16 +35,11 @@ async def register(
     if existing_user:
         raise HTTPException(status_code=400, detail="Email already registered")
 
-    new_user = DbUser(
-        email=email,
-        password_hash=get_password_hash(password)
-    )
+    new_user = DbUser(email=email, password_hash=get_password_hash(password))
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
 
     return UserOut(
-        id=str(new_user.id),
-        email=new_user.email,
-        is_admin=new_user.is_master_admin
+        id=str(new_user.id), email=new_user.email, is_admin=new_user.is_master_admin
     )
