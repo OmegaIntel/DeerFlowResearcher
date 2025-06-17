@@ -3,7 +3,7 @@ from dotenv import load_dotenv
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, Session
 
-from src.db_models import Base, ChatSession, ChatMessage
+from src.db_models import Base, ChatSession, ChatMessage, Project
 
 load_dotenv()
 
@@ -34,12 +34,12 @@ def get_db() -> Session:
         db.close()
 
 
-def get_or_create_chat_session(db: Session, thread_id: str, user_id: str = None) -> ChatSession:
+def get_or_create_chat_session(db: Session, thread_id: str, user_id: str = None, project_id: str = None) -> ChatSession:
     session_obj = (
         db.query(ChatSession).filter(ChatSession.thread_id == thread_id).first()
     )
     if not session_obj:
-        session_obj = ChatSession(thread_id=thread_id, user_id=user_id, mode='chat')
+        session_obj = ChatSession(thread_id=thread_id, user_id=user_id, mode='chat', project_id=project_id)
         db.add(session_obj)
         db.commit()
         db.refresh(session_obj)

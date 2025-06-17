@@ -30,6 +30,7 @@ export const useStore = create<{
   researchActivityIds: Map<string, string[]>;
   ongoingResearchId: string | null;
   openResearchId: string | null;
+  sessionProject: string | null;
 
   appendMessage: (message: Message) => void;
   updateMessage: (message: Message) => void;
@@ -38,6 +39,7 @@ export const useStore = create<{
   closeResearch: () => void;
   setOngoingResearch: (researchId: string | null) => void;
   setMode: (mode: "chat" | "research") => void;
+  setSessionProject: (projectId: string | null) => void;
   startNewChat: () => void;
   loadChat: (threadId: string) => Promise<void>;
 }>((set) => ({
@@ -52,6 +54,7 @@ export const useStore = create<{
   researchActivityIds: new Map<string, string[]>(),
   ongoingResearchId: null,
   openResearchId: null,
+  sessionProject: null,
 
   appendMessage(message: Message) {
     set((state) => ({
@@ -83,6 +86,9 @@ export const useStore = create<{
   setMode(mode: "chat" | "research") {
     set({ mode });
   },
+  setSessionProject(projectId: string | null) {
+    set({ sessionProject: projectId });
+  },
   startNewChat() {
     set({
       responding: false,
@@ -95,6 +101,7 @@ export const useStore = create<{
       researchActivityIds: new Map<string, string[]>(),
       ongoingResearchId: null,
       openResearchId: null,
+      sessionProject: null,
     });
   },
   async loadChat(threadId: string) {
@@ -113,6 +120,7 @@ export const useStore = create<{
       researchActivityIds: new Map<string, string[]>(),
       ongoingResearchId: null,
       openResearchId: null,
+      sessionProject: null,
     });
 
     try {
@@ -285,6 +293,7 @@ export async function sendMessage(
         mcp_settings: settings.mcpSettings,
         tool_id: toolId,
         tool_type: toolType,
+        project_id: state.sessionProject || undefined,
       },
       options,
     );
@@ -294,6 +303,7 @@ export async function sendMessage(
       content ?? "",
       { 
         thread_id: currentThreadId,
+        project_id: state.sessionProject || undefined,
         attachments: attachments 
       },
       options,

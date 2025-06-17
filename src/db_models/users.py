@@ -19,3 +19,4 @@ class User(Base):
     # Relationships
     chat_sessions = relationship("ChatSession", back_populates="user")
     documents = relationship("Document", back_populates="user")
+    projects = relationship("Project", back_populates="user")

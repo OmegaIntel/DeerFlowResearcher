@@ -22,6 +22,7 @@ export async function* chatStream(
     enable_background_investigation: boolean;
     tool_id?: string;
     tool_type?: "mcp" | "agent" | "research";
+    project_id?: string;
     mcp_settings?: {
       servers: Record<
         string,
@@ -65,7 +66,11 @@ export async function* chatStream(
 
 export async function* chatSimpleStream(
   userMessage: string,
-  params: { thread_id: string; attachments?: Array<{filename: string; size: number; type: string; documentId?: string}> },
+  params: { 
+    thread_id: string; 
+    project_id?: string;
+    attachments?: Array<{filename: string; size: number; type: string; documentId?: string}> 
+  },
   options: { abortSignal?: AbortSignal } = {},
 ) {
   console.log("[chatSimpleStream] Called with params:", params);
@@ -82,6 +87,7 @@ export async function* chatSimpleStream(
     body: JSON.stringify({
       messages,
       thread_id: params.thread_id,
+      project_id: params.project_id,
     }),
     signal: options.abortSignal,
   });

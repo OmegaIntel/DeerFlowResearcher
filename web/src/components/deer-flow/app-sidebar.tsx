@@ -43,6 +43,7 @@ import {
 } from "~/components/ui/sidebar";
 import { useAuth } from "~/hooks/use-auth";
 import { startNewChat } from "~/core/store";
+import { ProjectSwitcher } from "~/components/projects/project-switcher";
 
 import { LogoIcon } from "./logo";
 
@@ -96,6 +97,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const router = useRouter();
   const [user, setUser] = useState<User | null>(null);
   const [isAuth, setIsAuth] = useState(false);
+  const [currentProject, setCurrentProject] = useState<string | null>(null);
 
   useEffect(() => {
     // Simple auth check using token presence
@@ -171,6 +173,26 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
       </SidebarHeader>
       
       <SidebarContent>
+        {/* Project Switcher */}
+        {isAuth && (
+          <SidebarGroup>
+            <SidebarGroupLabel>Projects</SidebarGroupLabel>
+            <SidebarMenu>
+              <SidebarMenuItem>
+                <ProjectSwitcher
+                  currentProjectId={currentProject || undefined}
+                  onProjectSelect={(project) => {
+                    setCurrentProject(project?.id || null);
+                    // Could add navigation or state management here
+                  }}
+                  onManageProjects={() => router.push('/projects')}
+                  compact={true}
+                />
+              </SidebarMenuItem>
+            </SidebarMenu>
+          </SidebarGroup>
+        )}
+        
         <SidebarGroup>
           <SidebarGroupLabel>Platform</SidebarGroupLabel>
           <SidebarMenu>

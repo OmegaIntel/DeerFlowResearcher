@@ -7,10 +7,17 @@ from datetime import datetime
 import uuid
 
 from src.db.db_session import get_db
-from src.db_models import ChatSession, ChatMessage, User
+from src.db_models import ChatSession, ChatMessage, User, Project
 from src.server.auth import get_current_user
 
 router = APIRouter()
+
+
+class ProjectInfo(BaseModel):
+    id: str
+    name: str
+    color: Optional[str]
+    icon: Optional[str]
 
 
 class ChatSessionResponse(BaseModel):
@@ -21,6 +28,7 @@ class ChatSessionResponse(BaseModel):
     message_count: int
     last_message_at: datetime
     created_at: datetime
+    project: Optional[ProjectInfo] = None
 
     class Config:
         from_attributes = True
@@ -53,6 +61,7 @@ class ChatSessionDetailResponse(BaseModel):
 class CreateChatSessionRequest(BaseModel):
     title: Optional[str] = None
     mode: str = "chat"
+    project_id: Optional[str] = None
 
 
 class UpdateChatSessionRequest(BaseModel):
@@ -75,10 +84,23 @@ async def get_chat_sessions(
     
     sessions = query.order_by(desc(ChatSession.last_message_at)).offset(skip).limit(limit).all()
     
-    # Add message count to each session
+    # Add message count and project info to each session
     sessions_with_count = []
     for session in sessions:
         message_count = db.query(ChatMessage).filter(ChatMessage.session_id == session.id).count()
+        
+        # Get project info if session has a project
+        project_info = None
+        if session.project_id:
+            project = db.query(Project).filter(Project.id == session.project_id).first()
+            if project:
+                project_info = ProjectInfo(
+                    id=str(project.id),
+                    name=project.name,
+                    color=project.color,
+                    icon=project.icon
+                )
+        
         session_data = ChatSessionResponse(
             id=str(session.id),
             thread_id=session.thread_id,
@@ -86,7 +108,8 @@ async def get_chat_sessions(
             mode=session.mode,
             message_count=message_count,
             last_message_at=session.last_message_at,
-            created_at=session.created_at
+            created_at=session.created_at,
+            project=project_info
         )
         sessions_with_count.append(session_data)
     
@@ -193,7 +216,8 @@ async def create_chat_session(
         user_id=current_user.id,
         thread_id=thread_id,
         title=request.title,
-        mode=request.mode
+        mode=request.mode,
+        project_id=request.project_id
     )
     
     db.add(session)

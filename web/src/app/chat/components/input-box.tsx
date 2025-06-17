@@ -659,8 +659,8 @@ export function InputBox({
         <textarea
           ref={textareaRef}
           className={cn(
-            "m-0 w-full resize-none border-none px-4 py-3 text-lg",
-            size === "large" ? "min-h-32" : "min-h-4",
+            "m-0 w-full resize-none border-none px-4 py-2.5 text-base",
+            size === "large" ? "min-h-24" : "min-h-4",
           )}
           style={{ textIndent: feedback ? `${indent}px` : 0 }}
           placeholder={
