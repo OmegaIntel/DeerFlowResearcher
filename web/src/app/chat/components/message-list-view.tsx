@@ -3,8 +3,14 @@
 
 import { LoadingOutlined } from "@ant-design/icons";
 import { motion } from "framer-motion";
-import { Download, Headphones } from "lucide-react";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { Download, Headphones, FileIcon, Paperclip } from "lucide-react";
+import React, { useCallback, useMemo, useRef, useState, useEffect } from "react";
+import { toast } from "sonner";
+import { getDocumentDownloadUrl } from "~/core/api/documents";
+import { getAuthToken } from "~/services/auth";
+import { processMessageContent } from "~/lib/process-content";
+import { ensureNoCitationLinks } from "~/lib/replace-citations";
+import { stripAllLinks } from "~/lib/strip-all-links";
 
 import { LoadingAnimation } from "~/components/deer-flow/loading-animation";
 import { Markdown } from "~/components/deer-flow/markdown";
@@ -46,7 +52,11 @@ export function MessageListView({
   onFeedback?: (feedback: { option: Option }) => void;
   onSendMessage?: (
     message: string,
-    options?: { interruptFeedback?: string },
+    options?: { 
+      interruptFeedback?: string;
+      toolId?: string;
+      toolType?: "mcp" | "agent" | "research";
+    },
   ) => void;
 }) {
   const scrollContainerRef = useRef<ScrollContainerRef>(null);
@@ -76,12 +86,12 @@ export function MessageListView({
 
   return (
     <ScrollContainer
-      className={cn("flex h-full w-full flex-col overflow-hidden", className)}
+      className={cn("h-full w-full overflow-y-auto", className)}
       scrollShadowColor="var(--app-background)"
       autoScrollToBottom
       ref={scrollContainerRef}
     >
-      <ul className="flex flex-col">
+      <ul className="flex flex-col px-4">
         {messageIds.map((messageId) => (
           <MessageListItem
             key={messageId}
@@ -118,27 +128,58 @@ function MessageListItem({
   interruptMessage?: Message | null;
   onSendMessage?: (
     message: string,
-    options?: { interruptFeedback?: string },
+    options?: { 
+      interruptFeedback?: string;
+      toolId?: string;
+      toolType?: "mcp" | "agent" | "research";
+    },
   ) => void;
   onToggleResearch?: () => void;
 }) {
   const message = useMessage(messageId);
   const researchIds = useStore((state) => state.researchIds);
+  const researchPlanIds = useStore((state) => state.researchPlanIds);
+  const researchReportIds = useStore((state) => state.researchReportIds);
+  const messageIds = useStore((state) => state.messageIds); // Add this to track all messages
+  
   const startOfResearch = useMemo(() => {
     return researchIds.includes(messageId);
   }, [researchIds, messageId]);
+  
+  // Check if this plan message has a completed report
+  const planHasCompletedReport = useMemo(() => {
+    if (message?.agent === "planner") {
+      // Check if there's a reporter message after this planner message in the same thread
+      const planIndex = messageIds.indexOf(messageId);
+      
+      // Look for reporter messages that come after this plan
+      for (let i = planIndex + 1; i < messageIds.length; i++) {
+        const msgId = messageIds[i];
+        if (msgId) {
+          const msg = useStore.getState().messages.get(msgId);
+          if (msg && msg.threadId === message.threadId && msg.agent === "reporter") {
+            console.log('[DEBUG] Plan', messageId, 'has completed report');
+            return true;
+          }
+        }
+      }
+    }
+    return false;
+  }, [message?.agent, messageId, message?.threadId, messageIds]); // Added messageIds dependency
+  
   if (message) {
     if (
       message.role === "user" ||
       message.agent === "coordinator" ||
-      message.agent === "planner" ||
+      (message.agent === "planner" && !planHasCompletedReport) ||
       message.agent === "podcast" ||
-      startOfResearch
+      startOfResearch ||
+      (message.role === "assistant" && !message.agent) // Regular assistant messages
     ) {
       let content: React.ReactNode;
       if (message.agent === "planner") {
         content = (
-          <div className="w-full px-4">
+          <div className="w-full">
             <PlanCard
               message={message}
               waitForFeedback={waitForFeedback}
@@ -150,33 +191,75 @@ function MessageListItem({
         );
       } else if (message.agent === "podcast") {
         content = (
-          <div className="w-full px-4">
+          <div className="w-full">
             <PodcastCard message={message} />
           </div>
         );
       } else if (startOfResearch) {
         content = (
-          <div className="w-full px-4">
+          <div className="w-full">
             <ResearchCard
               researchId={message.id}
               onToggleResearch={onToggleResearch}
             />
           </div>
         );
-      } else {
+      } else if (message.agent !== "reporter" && message.agent !== "researcher") {
+        console.log('[MessageList] Rendering regular message:', {
+          id: message.id,
+          role: message.role,
+          agent: message.agent,
+          contentLength: message.content?.length
+        });
         content = message.content ? (
           <div
             className={cn(
-              "flex w-full px-4",
-              message.role === "user" && "justify-end",
+              "flex flex-col w-full",
+              message.role === "user" && "items-end",
               className,
             )}
           >
-            <MessageBubble message={message}>
-              <div className="flex w-full flex-col">
-                <Markdown>{message?.content}</Markdown>
+            <div
+              className={cn(
+                "flex w-full",
+                message.role === "user" && "justify-end",
+              )}
+            >
+              <MessageBubble message={message}>
+                <div className="flex w-full flex-col">
+                  <Markdown onLinkClick={(href) => {
+                    console.log('[MessageList] Markdown link clicked:', href);
+                  }}>{stripAllLinks(message?.content || '')}</Markdown>
+                  {message.citations && message.citations.length > 0 && (
+                    <div className="mt-3 border-t pt-3">
+                      <p className="text-xs font-semibold text-muted-foreground mb-2">📚 References:</p>
+                      <div className="space-y-1">
+                        {message.citations.map((citation) => (
+                          <CitationDisplay 
+                            key={citation.id} 
+                            citation={citation}
+                          />
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </MessageBubble>
+            </div>
+            {message.attachments && message.attachments.length > 0 && (
+              <div className={cn(
+                "mt-2 flex flex-wrap gap-1",
+                message.role === "user" ? "max-w-[85%]" : "max-w-[85%]"
+              )}>
+                {message.attachments.map((attachment) => (
+                  <AttachmentDisplay 
+                    key={attachment.id} 
+                    attachment={attachment}
+                    threadId={message.threadId}
+                  />
+                ))}
               </div>
-            </MessageBubble>
+            )}
           </div>
         ) : null;
       }
@@ -303,7 +386,11 @@ function PlanCard({
   onFeedback?: (feedback: { option: Option }) => void;
   onSendMessage?: (
     message: string,
-    options?: { interruptFeedback?: string },
+    options?: { 
+      interruptFeedback?: string;
+      toolId?: string;
+      toolType?: "mcp" | "agent" | "research";
+    },
   ) => void;
   waitForFeedback?: boolean;
 }) {
@@ -316,10 +403,13 @@ function PlanCard({
   }, [message.content]);
   const handleAccept = useCallback(async () => {
     if (onSendMessage) {
+      // Don't send a new message - just continue with the interrupted flow
       onSendMessage(
-        `${GREETINGS[Math.floor(Math.random() * GREETINGS.length)]}! ${Math.random() > 0.5 ? "Let's get started." : "Let's start."}`,
+        "", // Empty message to continue the interrupted flow
         {
           interruptFeedback: "accepted",
+          toolId: "research",
+          toolType: "agent",
         },
       );
     }
@@ -463,5 +553,195 @@ function PodcastCard({
         )}
       </CardContent>
     </Card>
+  );
+}
+
+function AttachmentDisplay({ 
+  attachment, 
+  threadId 
+}: { 
+  attachment: { id: string; filename: string; size: number; type: string; uploadTime?: string; documentId?: string };
+  threadId: string;
+}) {
+  const [downloading, setDownloading] = useState(false);
+  
+  const formatFileSize = (bytes: number) => {
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+  };
+  
+  const handleOpen = async () => {
+    try {
+      setDownloading(true);
+      
+      // Get presigned download URL from backend
+      // Use documentId if available, otherwise use the attachment id
+      const docId = attachment.documentId || attachment.id;
+      const { download_url } = await getDocumentDownloadUrl(docId);
+      
+      // Open in new tab
+      window.open(download_url, '_blank', 'noopener,noreferrer');
+      
+      toast.success(`Opening ${attachment.filename}`);
+    } catch (error) {
+      console.error("Open error:", error);
+      toast.error("Failed to open file", {
+        description: error instanceof Error ? error.message : 'Unknown error'
+      });
+    } finally {
+      setDownloading(false);
+    }
+  };
+  
+  return (
+    <div 
+      className="inline-flex items-center gap-2 rounded-md bg-muted/50 px-2 py-1 cursor-pointer hover:bg-muted/70 transition-colors max-w-fit"
+      onClick={handleOpen}
+      title={`Click to open ${attachment.filename}`}
+    >
+      <FileIcon className="h-3.5 w-3.5 flex-shrink-0 text-muted-foreground" />
+      <p className="text-sm font-medium truncate max-w-[150px]">
+        {attachment.filename}
+      </p>
+      {downloading && (
+        <LoadingOutlined className="h-3.5 w-3.5 text-muted-foreground" />
+      )}
+    </div>
+  );
+}
+
+function CitationDisplay({ 
+  citation 
+}: { 
+  citation: { id: string; document_id: string; filename: string; page_number: number; chunk_id: string; char_start: number; char_end: number };
+}) {
+  const [loading, setLoading] = useState(false);
+  
+  // Debug: Log when component mounts
+  useEffect(() => {
+    console.log("[Citation] Component mounted with citation:", citation);
+  }, [citation]);
+  
+  const handleViewCitation = async () => {
+    console.log("[Citation] Click handler triggered!");
+    console.log("[Citation] Citation object:", citation);
+    
+    try {
+      setLoading(true);
+      console.log("[Citation] Full citation data:", citation);
+      console.log("[Citation] Document ID:", citation.document_id);
+      console.log("[Citation] Document ID type:", typeof citation.document_id);
+      
+      // Validate document_id exists
+      if (!citation.document_id) {
+        throw new Error("Citation missing document_id");
+      }
+      
+      // Get document download URL
+      console.log("[Citation] Calling getDocumentDownloadUrl...");
+      const response = await getDocumentDownloadUrl(citation.document_id);
+      console.log("[Citation] Download URL response:", response);
+      
+      if (response && response.download_url) {
+        // Open the document directly
+        console.log("[Citation] Opening URL:", response.download_url);
+        
+        // Use a small delay to avoid popup blockers
+        setTimeout(() => {
+          console.log("[Citation] About to open URL:", response.download_url);
+          console.log("[Citation] URL type:", typeof response.download_url);
+          console.log("[Citation] URL starts with http:", response.download_url?.startsWith('http'));
+          
+          const newWindow = window.open(response.download_url, '_blank', 'noopener,noreferrer');
+          if (!newWindow) {
+            console.error("[Citation] Window.open was blocked");
+            // Fallback: create a temporary link
+            const link = document.createElement('a');
+            link.href = response.download_url;
+            link.target = '_blank';
+            link.rel = 'noopener noreferrer';
+            console.log("[Citation] Fallback link href:", link.href);
+            link.click();
+          }
+        }, 100);
+        
+        toast.success(`Opening ${citation.filename} (page ${citation.page_number})`);
+      } else {
+        throw new Error("No download URL received");
+      }
+    } catch (error) {
+      console.error("[Citation] Primary method failed:", error);
+      console.error("[Citation] Error details:", {
+        message: error instanceof Error ? error.message : 'Unknown error',
+        citation: citation,
+        stack: error instanceof Error ? error.stack : undefined
+      });
+      
+      // Fallback: Try to construct a direct API URL
+      try {
+        console.log("[Citation] Trying fallback method...");
+        const fallbackUrl = `/api/documents/${citation.document_id}/download-url`;
+        console.log("[Citation] Fallback URL:", fallbackUrl);
+        
+        const response = await fetch(fallbackUrl, {
+          headers: {
+            'Authorization': `Bearer ${getAuthToken() || ''}`,
+          },
+        });
+        
+        console.log("[Citation] Fallback response status:", response.status);
+        
+        if (response.ok) {
+          const data = await response.json();
+          console.log("[Citation] Fallback response data:", data);
+          
+          if (data.download_url) {
+            console.log("[Citation] Fallback: Opening URL:", data.download_url);
+            
+            // Use a small delay to avoid popup blockers
+            setTimeout(() => {
+              const newWindow = window.open(data.download_url, '_blank', 'noopener,noreferrer');
+              if (!newWindow) {
+                console.error("[Citation] Fallback: Window.open was blocked");
+                // Fallback: create a temporary link
+                const link = document.createElement('a');
+                link.href = data.download_url;
+                link.target = '_blank';
+                link.rel = 'noopener noreferrer';
+                link.click();
+              }
+            }, 100);
+            
+            toast.info(`Opening ${citation.filename} (page ${citation.page_number})`);
+            return;
+          }
+        } else {
+          const errorText = await response.text();
+          console.error("[Citation] Fallback error response:", errorText);
+        }
+      } catch (fallbackError) {
+        console.error("[Citation] Fallback also failed:", fallbackError);
+      }
+      
+      toast.error("Failed to open citation");
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  return (
+    <div 
+      className="flex items-center gap-2 text-xs cursor-pointer hover:bg-muted/50 rounded px-2 py-1 transition-colors"
+      onClick={handleViewCitation}
+    >
+      <span className="font-semibold text-primary">{citation.id}</span>
+      <FileIcon className="h-3 w-3 text-muted-foreground" />
+      <span className="text-muted-foreground truncate max-w-[200px]" title={citation.filename}>
+        {citation.filename}
+      </span>
+      <span className="text-muted-foreground">- Page {citation.page_number}</span>
+      {loading && <LoadingOutlined className="h-3 w-3" />}
+    </div>
   );
 }

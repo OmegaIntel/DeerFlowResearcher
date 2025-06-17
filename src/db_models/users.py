@@ -14,4 +14,9 @@ class User(Base):
     email = Column(String(255), unique=True, index=True, nullable=False)
     password_hash = Column(String(255), nullable=False)
     created_at = Column(TIMESTAMP, server_default=func.current_timestamp())
-    is_master_admin=Column(Boolean, default=False,nullable=False)
+    is_master_admin = Column(Boolean, default=False, nullable=False)
+
+    # Relationships
+    chat_sessions = relationship("ChatSession", back_populates="user")
+    documents = relationship("Document", back_populates="user")
+    projects = relationship("Project", back_populates="user")

@@ -1,0 +1,21 @@
+INFO:     Started reloader process [9] using StatReload
+DEBUG: Starting pinecone_routes.py import
+DEBUG: Imports completed
+DEBUG: Router created
+DEBUG: After /search route
+DEBUG: About to register /query route
+DEBUG: Successfully registered /query route
+INFO:     Started server process [14]
+INFO:     Waiting for application startup.
+2025-06-17 15:51:33,943 - src.config.mcp_servers - INFO - Loaded 1 tools for server llamacloud
+2025-06-17 15:51:33,943 - src.server.app - INFO - Loaded 1 MCP servers from backend configuration
+2025-06-17 15:51:33,944 - src.server.upload_queue - INFO - Started 2 upload workers
+2025-06-17 15:51:33,944 - src.server.app - INFO - Started upload queue workers
+2025-06-17 15:51:33,945 - src.server.pinecone_upload - INFO - Started 2 Pinecone upload workers
+2025-06-17 15:51:33,945 - src.server.app - INFO - Started Pinecone upload queue workers
+2025-06-17 15:51:33,945 - src.server.upload_queue - INFO - Upload worker worker-0 started
+2025-06-17 15:51:33,945 - src.server.upload_queue - INFO - Upload worker worker-1 started
+2025-06-17 15:51:33,945 - src.server.pinecone_upload - INFO - Pinecone upload worker pinecone-worker-0 started
+2025-06-17 15:51:33,945 - src.server.pinecone_upload - INFO - Pinecone upload worker pinecone-worker-1 started
+INFO:     Application startup complete.
+context canceled

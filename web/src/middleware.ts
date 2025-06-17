@@ -1,41 +1,59 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-const protectedRoutes = ['/dashboard', '/profile', '/projects', '/chat'];
-
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-
-  console.log('=== MIDDLEWARE DEBUG ===');
-  console.log('Pathname:', pathname);
-  console.log('All cookies:', request.cookies.getAll());
-
-  const token = request.cookies.get('authToken')?.value;
-  console.log('Auth token:', token);
-
-  const isProtected = protectedRoutes.some((route) => pathname.startsWith(route));
-  console.log('Is protected route:', isProtected);
-
-  if (isProtected && !token) {
-    console.log('REDIRECTING TO LOGIN');
+  
+  // Get auth token from cookies
+  const authToken = request.cookies.get('authToken')?.value;
+  
+  console.log('[Middleware] Request:', {
+    pathname,
+    method: request.method,
+    hasAuthToken: !!authToken,
+    tokenPreview: authToken ? `${authToken.substring(0, 20)}...` : null,
+    cookies: request.cookies.getAll().map(c => c.name),
+  });
+  
+  
+  // Define protected routes
+  const protectedRoutes = ['/chat', '/chat-history', '/research', '/documents', '/settings'];
+  const authRoutes = ['/auth/login', '/auth/register'];
+  
+  // Check if current path is protected
+  const isProtectedRoute = protectedRoutes.some(route => 
+    pathname.startsWith(route)
+  );
+  
+  // Check if current path is auth route
+  const isAuthRoute = authRoutes.some(route => 
+    pathname.startsWith(route)
+  );
+  
+  // If user is not authenticated and trying to access protected route
+  if (isProtectedRoute && !authToken) {
     const loginUrl = new URL('/auth/login', request.url);
-    loginUrl.searchParams.set('returnTo', pathname);
+    loginUrl.searchParams.set('callbackUrl', pathname);
     return NextResponse.redirect(loginUrl);
   }
-
-  console.log('ALLOWING ACCESS');
+  
+  // If user is authenticated and trying to access auth routes, redirect to chat
+  if (isAuthRoute && authToken) {
+    return NextResponse.redirect(new URL('/chat', request.url));
+  }
+  
+  // For root path, redirect to chat if authenticated, otherwise to login
+  if (pathname === '/') {
+    if (authToken) {
+      return NextResponse.redirect(new URL('/chat', request.url));
+    } else {
+      return NextResponse.redirect(new URL('/auth/login', request.url));
+    }
+  }
+  
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: [
-    '/dashboard/:path*', 
-    '/profile/:path*', 
-    '/projects/:path*', 
-    '/chat/:path*',
-    '/dashboard',
-    '/profile',
-    '/projects', 
-    '/chat'
-  ],
+  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|images|public).*)'],
 };

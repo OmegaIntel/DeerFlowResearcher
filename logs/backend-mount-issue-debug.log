@@ -1,0 +1,22 @@
+Backend Mount Issue Debug Log
+=============================
+Test Time: 2025-06-17 15:00
+Purpose: Debug why backend isn't using updated code despite mounting
+
+Issue:
+- Still getting ProjectResponse validation error despite code being fixed
+- The mounted file shows correct code with ProjectInfo
+- Backend seems to be using cached Python bytecode
+
+Debugging Steps:
+1. Verified code is correct in mounted file
+2. Restarted backend multiple times
+3. Force recreated container
+
+Key Finding:
+- Python may be caching the imported modules
+- Even with volume mounts, Python doesn't reload modules automatically
+
+Solution Needed:
+- Need to ensure Python reloads the modified modules
+- May need to clear Python cache or use development mode with auto-reload

@@ -1,4 +1,24 @@
 services:
+  mysql:
+    image: mysql:8.0
+    container_name: deer-flow-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: deer_flow
+      MYSQL_USER: deer_user
+      MYSQL_PASSWORD: deer_password
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: unless-stopped
+    networks:
+      - deer-flow-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 10
+
   backend:
     build:
       context: .
@@ -8,9 +28,19 @@ services:
       - "8000:8000"
     env_file:
       - .env
+    environment:
+      DATABASE_HOST: mysql
+      DATABASE_USER_NAME: deer_user
+      DATABASE_PASSWORD: deer_password
+      DATABASE_NAME: deer_flow
+      PYTHONUNBUFFERED: 1
     volumes:
       - ./conf.yaml:/app/conf.yaml
+      - ./mcp-servers:/app/mcp-servers
     restart: unless-stopped
+    depends_on:
+      mysql:
+        condition: service_healthy
     networks:
       - deer-flow-network
 
@@ -34,3 +64,6 @@ services:
 networks:
   deer-flow-network:
     driver: bridge
+
+volumes:
+  mysql_data:

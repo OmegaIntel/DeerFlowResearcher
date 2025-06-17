@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Chat Creation</title>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .error { color: red; }
+        .success { color: green; }
+        .info { color: blue; }
+        pre { background: #f0f0f0; padding: 10px; overflow: auto; }
+        button { padding: 10px 20px; margin: 5px; cursor: pointer; }
+        input { padding: 5px; width: 300px; margin: 5px; }
+    </style>
+</head>
+<body>
+    <h1>Debug Chat Creation</h1>
+    
+    <div>
+        <input type="text" id="messageInput" placeholder="Enter test message" value="Test message from debug page">
+        <button onclick="sendChat()">Send Chat Message</button>
+        <button onclick="checkSessions()">Check Sessions</button>
+        <button onclick="clearLog()">Clear Log</button>
+    </div>
+    
+    <hr>
+    <div id="log"></div>
+
+    <script>
+        const logDiv = document.getElementById('log');
+        
+        function log(message, type = 'info') {
+            const className = type === 'error' ? 'error' : type === 'success' ? 'success' : 'info';
+            const timestamp = new Date().toLocaleTimeString();
+            logDiv.innerHTML += `<p class="${className}">[${timestamp}] ${message}</p>`;
+        }
+        
+        function clearLog() {
+            logDiv.innerHTML = '';
+        }
+        
+        async function sendChat() {
+            const message = document.getElementById('messageInput').value;
+            log('Starting chat test...');
+            
+            // Get auth token
+            const authToken = Cookies.get('authToken') || 
+                             localStorage.getItem('authToken') || 
+                             sessionStorage.getItem('authToken');
+            
+            if (!authToken) {
+                log('No auth token found!', 'error');
+                return;
+            }
+            
+            log('Auth token found');
+            
+            // Generate thread ID
+            const threadId = 'debug-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+            log(`Generated thread ID: ${threadId}`);
+            
+            // Determine API URL
+            const currentHost = window.location.hostname;
+            const baseUrl = currentHost === 'localhost' || currentHost === '127.0.0.1'
+                ? 'http://localhost:8000/api'
+                : `http://${currentHost}:8000/api`;
+            
+            const chatData = {
+                messages: [{ role: "user", content: message }],
+                thread_id: threadId,
+                temperature: 0.7,
+                max_tokens: 150
+            };
+            
+            log('Request data:');
+            log(`<pre>${JSON.stringify(chatData, null, 2)}</pre>`);
+            
+            try {
+                log('Sending request to: ' + baseUrl + '/chat/simple');
+                
+                const response = await fetch(`${baseUrl}/chat/simple`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Content-Type': 'application/json',
+                        'Cache-Control': 'no-cache'
+                    },
+                    body: JSON.stringify(chatData)
+                });
+                
+                log(`Response status: ${response.status}`);
+                log(`Response headers: Authorization header sent: Bearer ${authToken.substring(0, 20)}...`);
+                
+                if (response.ok) {
+                    log('Chat request successful!', 'success');
+                    
+                    // Read streaming response
+                    const reader = response.body.getReader();
+                    const decoder = new TextDecoder();
+                    let buffer = '';
+                    let eventCount = 0;
+                    
+                    while (true) {
+                        const { done, value } = await reader.read();
+                        if (done) break;
+                        
+                        buffer += decoder.decode(value, { stream: true });
+                        
+                        // Process complete events
+                        let boundary;
+                        while ((boundary = buffer.indexOf('\n\n')) !== -1) {
+                            const chunk = buffer.slice(0, boundary);
+                            buffer = buffer.slice(boundary + 2);
+                            
+                            if (chunk.trim()) {
+                                eventCount++;
+                                if (eventCount <= 3) {
+                                    log(`Event ${eventCount}: ${chunk.substring(0, 100)}...`);
+                                }
+                            }
+                        }
+                    }
+                    
+                    log(`Total events received: ${eventCount}`, 'success');
+                    
+                    // Wait a moment then check sessions
+                    setTimeout(() => checkSessions(), 2000);
+                } else {
+                    const errorText = await response.text();
+                    log(`Failed: ${response.status} - ${errorText}`, 'error');
+                }
+            } catch (error) {
+                log(`Network error: ${error.message}`, 'error');
+            }
+        }
+        
+        async function checkSessions() {
+            log('Checking sessions...');
+            
+            const authToken = Cookies.get('authToken') || 
+                             localStorage.getItem('authToken') || 
+                             sessionStorage.getItem('authToken');
+            
+            if (!authToken) {
+                log('No auth token found!', 'error');
+                return;
+            }
+            
+            const currentHost = window.location.hostname;
+            const baseUrl = currentHost === 'localhost' || currentHost === '127.0.0.1'
+                ? 'http://localhost:8000/api'
+                : `http://${currentHost}:8000/api`;
+            
+            try {
+                const response = await fetch(`${baseUrl}/chat/sessions`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`,
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                if (response.ok) {
+                    const sessions = await response.json();
+                    log(`Found ${sessions.length} sessions`, 'success');
+                    
+                    // Show recent sessions
+                    const recent = sessions.slice(0, 3);
+                    recent.forEach((session, i) => {
+                        log(`Session ${i+1}: Thread ${session.thread_id.substring(0, 20)}... (${session.message_count} messages)`);
+                    });
+                    
+                    // Check for debug sessions
+                    const debugSessions = sessions.filter(s => s.thread_id.startsWith('debug-'));
+                    log(`Debug sessions found: ${debugSessions.length}`, debugSessions.length > 0 ? 'success' : 'info');
+                } else {
+                    log(`Failed to get sessions: ${response.status}`, 'error');
+                }
+            } catch (error) {
+                log(`Error checking sessions: ${error.message}`, 'error');
+            }
+        }
+        
+        // Check auth on load
+        window.onload = () => {
+            const authToken = Cookies.get('authToken') || 
+                             localStorage.getItem('authToken') || 
+                             sessionStorage.getItem('authToken');
+            
+            if (authToken) {
+                log('Page loaded - Auth token found', 'success');
+                try {
+                    const parts = authToken.split('.');
+                    if (parts.length === 3) {
+                        const payload = JSON.parse(atob(parts[1]));
+                        log(`Logged in as: ${payload.sub}`);
+                    }
+                } catch (e) {
+                    log('Could not decode token');
+                }
+            } else {
+                log('Page loaded - No auth token found', 'error');
+                log('Please login first at /signin');
+            }
+        };
+    </script>
+</body>
+</html>

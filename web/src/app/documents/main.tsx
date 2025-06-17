@@ -1,0 +1,469 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { format } from "date-fns";
+import {
+  FileText,
+  Download,
+  Trash2,
+  Upload,
+  RefreshCw,
+  FileIcon,
+  Search,
+  Filter,
+  FolderPlus,
+  ChevronRight,
+} from "lucide-react";
+import { resolveServiceURL } from "~/core/api/resolve-service-url";
+import { getAuthToken } from "~/services/auth";
+
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { Badge } from "~/components/ui/badge";
+import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuSeparator,
+} from "~/components/ui/dropdown-menu";
+import { SidebarTrigger } from "~/components/ui/sidebar";
+import { InputBox } from "~/app/chat/components/input-box";
+import { UploadDialog } from "~/components/documents/upload-dialog-simple";
+import { toast } from "sonner";
+import type { Project } from "~/core/api/projects";
+import { 
+  getProjects, 
+  moveDocumentToProject,
+  PROJECT_ICONS 
+} from "~/core/api/projects";
+
+interface Document {
+  id: string;
+  filename: string;
+  original_filename: string;
+  file_size: number;
+  content_type: string;
+  processing_status: string;
+  vectors_created: number;
+  chunks_created: number;
+  pinecone_index?: string;
+  created_at: string;
+  download_url?: string;
+  project_id?: string;
+  project?: Project;
+}
+
+interface DocumentsResponse {
+  documents: Document[];
+  total: number;
+  page: number;
+  per_page: number;
+}
+
+export default function DocumentsMain() {
+  const [documents, setDocuments] = useState<Document[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("");
+  const [page, setPage] = useState(1);
+  const [total, setTotal] = useState(0);
+  const [refreshing, setRefreshing] = useState(false);
+  const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [moveLoading, setMoveLoading] = useState<string | null>(null);
+
+  const fetchDocuments = async () => {
+    try {
+      const params = new URLSearchParams({
+        page: page.toString(),
+        per_page: "20",
+      });
+      
+      if (statusFilter) {
+        params.append("status_filter", statusFilter);
+      }
+
+      const response = await fetch(resolveServiceURL(`documents?${params}`), {
+        headers: {
+          Authorization: `Bearer ${getAuthToken()}`,
+        },
+        credentials: 'include'
+      });
+
+      if (response.ok) {
+        const data: DocumentsResponse = await response.json();
+        setDocuments(data.documents);
+        setTotal(data.total);
+      } else {
+        console.error("Failed to fetch documents");
+      }
+    } catch (error) {
+      console.error("Error fetching documents:", error);
+    } finally {
+      setLoading(false);
+      setRefreshing(false);
+    }
+  };
+
+  const fetchProjects = async () => {
+    try {
+      const projectsData = await getProjects();
+      setProjects(projectsData);
+    } catch (error) {
+      console.error("Failed to fetch projects:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchDocuments();
+    fetchProjects();
+  }, [page, statusFilter]);
+
+  const handleRefresh = () => {
+    setRefreshing(true);
+    fetchDocuments();
+  };
+
+  const handleMoveToProject = async (documentId: string, projectId: string | null, e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    setMoveLoading(documentId);
+    
+    try {
+      await moveDocumentToProject(documentId, projectId || undefined);
+      
+      // Update the document in the local state
+      setDocuments(documents.map(doc => {
+        if (doc.id === documentId) {
+          const targetProject = projectId ? projects.find(p => p.id === projectId) : null;
+          return {
+            ...doc,
+            project_id: projectId || undefined,
+            project: targetProject || undefined
+          };
+        }
+        return doc;
+      }));
+      
+      toast.success("Document moved to project");
+    } catch (error) {
+      console.error("Failed to move document:", error);
+      toast.error("Failed to move document to project");
+    } finally {
+      setMoveLoading(null);
+    }
+  };
+
+  const getProjectIcon = (iconId?: string) => {
+    const icon = PROJECT_ICONS.find(i => i.id === iconId);
+    return icon?.emoji || "📁";
+  };
+
+  const handleDownload = async (doc: Document) => {
+    if (doc.download_url) {
+      window.open(doc.download_url, '_blank');
+      return;
+    }
+
+    try {
+      // For download URL, we still need to call backend directly
+      const token = getAuthToken();
+      const response = await fetch(resolveServiceURL(`documents/${doc.id}/download-url`), {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        window.open(data.download_url, '_blank');
+      } else {
+        console.error("Failed to get download URL");
+      }
+    } catch (error) {
+      console.error("Error downloading file:", error);
+    }
+  };
+
+  const handleDelete = async (docId: string) => {
+    if (!confirm("Are you sure you want to delete this document?")) {
+      return;
+    }
+
+    try {
+      const response = await fetch(resolveServiceURL(`documents/${docId}`), {
+        method: 'DELETE',
+        headers: {
+          Authorization: `Bearer ${getAuthToken()}`,
+        },
+        credentials: 'include'
+      });
+
+      if (response.ok) {
+        setDocuments(docs => docs.filter(doc => doc.id !== docId));
+      } else {
+        console.error("Failed to delete document");
+      }
+    } catch (error) {
+      console.error("Error deleting document:", error);
+    }
+  };
+
+  const getStatusColor = (status: string) => {
+    switch (status) {
+      case 'completed':
+        return 'bg-green-100 text-green-800 dark:bg-green-900/20 dark:text-green-400';
+      case 'processing':
+        return 'bg-blue-100 text-blue-800 dark:bg-blue-900/20 dark:text-blue-400';
+      case 'failed':
+        return 'bg-red-100 text-red-800 dark:bg-red-900/20 dark:text-red-400';
+      case 'pending':
+        return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/20 dark:text-yellow-400';
+      default:
+        return 'bg-muted text-muted-foreground';
+    }
+  };
+
+  const formatFileSize = (bytes: number) => {
+    if (bytes === 0) return '0 Bytes';
+    const k = 1024;
+    const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+    const i = Math.floor(Math.log(bytes) / Math.log(k));
+    return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
+
+  const filteredDocuments = documents.filter(doc =>
+    doc.original_filename.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  return (
+    <div className="flex h-full w-full flex-col overflow-hidden">
+      {/* Header */}
+      <header className="flex h-12 w-full items-center justify-between border-b px-4 flex-shrink-0">
+        <div className="flex items-center gap-2">
+          <SidebarTrigger className="-ml-1" />
+          <h1 className="text-lg font-semibold">Documents</h1>
+        </div>
+        <div className="flex items-center gap-2">
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={handleRefresh}
+            disabled={refreshing}
+          >
+            <RefreshCw className={`h-4 w-4 ${refreshing ? 'animate-spin' : ''}`} />
+          </Button>
+        </div>
+      </header>
+
+      {/* Content */}
+      <div className="flex flex-1 flex-col px-4 pt-4 pb-4 overflow-hidden justify-center">
+        {/* Search and Upload - Aligned with content width */}
+        <div className="w-full max-w-4xl mx-auto mb-4 flex-shrink-0">
+          <div className="w-3/4">
+            <div className="flex items-center gap-2">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                <Input
+                  placeholder="Search documents..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="pl-10"
+                />
+              </div>
+              <Button
+                onClick={() => setUploadDialogOpen(true)}
+                className="gap-2 flex-shrink-0"
+              >
+                <Upload className="h-4 w-4" />
+                Upload
+              </Button>
+            </div>
+          </div>
+        </div>
+
+        {/* Documents Grid - Centered with max width like chat */}
+        <div className="w-full max-w-4xl mx-auto flex-1 overflow-auto min-h-0">
+          {loading ? (
+            <div className="flex h-full items-center justify-center">
+              <div className="text-center">
+                <RefreshCw className="mx-auto h-8 w-8 animate-spin text-muted-foreground" />
+                <p className="mt-2 text-muted-foreground">Loading documents...</p>
+              </div>
+            </div>
+          ) : filteredDocuments.length === 0 ? (
+            <div className="flex h-full items-center justify-center">
+              <div className="text-center">
+                <FileIcon className="mx-auto h-12 w-12 text-muted-foreground" />
+                <h3 className="mt-4 text-lg font-semibold">No documents found</h3>
+                <p className="text-muted-foreground">
+                  {searchTerm || statusFilter
+                    ? "Try adjusting your search or filters"
+                    : "Upload documents to get started"}
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-2 w-3/4">
+              {filteredDocuments.map((doc) => (
+                <div
+                  key={doc.id}
+                  className="group flex items-center justify-between p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors"
+                >
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    <FileText className="h-5 w-5 text-blue-500 flex-shrink-0" />
+                    <div className="flex-1 min-w-0">
+                      <p className="text-sm font-medium truncate">
+                        {doc.original_filename}
+                      </p>
+                      <div className="flex items-center gap-4 text-xs text-muted-foreground">
+                        <span>{formatFileSize(doc.file_size)}</span>
+                        <span>{format(new Date(doc.created_at), 'MMM d, yyyy')}</span>
+                        {doc.processing_status === 'completed' && doc.vectors_created > 0 && (
+                          <span>Chunks: {doc.chunks_created}</span>
+                        )}
+                        {doc.project && (
+                          <div className="flex items-center gap-1">
+                            <span>{getProjectIcon(doc.project.icon || "folder")}</span>
+                            <span>{doc.project.name}</span>
+                            {doc.project.color && (
+                              <div
+                                className="w-2 h-2 rounded-full"
+                                style={{ backgroundColor: doc.project.color }}
+                              />
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center gap-2 flex-shrink-0">
+                    <Badge className={`${getStatusColor(doc.processing_status)} text-xs`}>
+                      {doc.processing_status}
+                    </Badge>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity">
+                          <span className="sr-only">More options</span>
+                          <div className="flex flex-col gap-1">
+                            <div className="h-1 w-1 rounded-full bg-current" />
+                            <div className="h-1 w-1 rounded-full bg-current" />
+                            <div className="h-1 w-1 rounded-full bg-current" />
+                          </div>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => handleDownload(doc)}>
+                          <Download className="mr-2 h-4 w-4" />
+                          Download
+                        </DropdownMenuItem>
+                        
+                        <DropdownMenuSeparator />
+                        
+                        <DropdownMenuSub>
+                          <DropdownMenuSubTrigger disabled={moveLoading === doc.id}>
+                            <FolderPlus className="mr-2 h-4 w-4" />
+                            {moveLoading === doc.id ? 'Moving...' : 'Move to Project'}
+                            <ChevronRight className="ml-auto h-4 w-4" />
+                          </DropdownMenuSubTrigger>
+                          <DropdownMenuSubContent>
+                            <DropdownMenuItem 
+                              onClick={(e) => handleMoveToProject(doc.id, null, e)}
+                              className={!doc.project ? "bg-muted" : ""}
+                            >
+                              <span className="mr-2">📂</span>
+                              No Project
+                            </DropdownMenuItem>
+                            {projects.map((project) => (
+                              <DropdownMenuItem
+                                key={project.id}
+                                onClick={(e) => handleMoveToProject(doc.id, project.id, e)}
+                                className={doc.project?.id === project.id ? "bg-muted" : ""}
+                              >
+                                <span className="mr-2">{getProjectIcon(project.icon || "folder")}</span>
+                                <span className="flex-1">{project.name}</span>
+                                {project.color && (
+                                  <div
+                                    className="w-2 h-2 rounded-full ml-2"
+                                    style={{ backgroundColor: project.color }}
+                                  />
+                                )}
+                              </DropdownMenuItem>
+                            ))}
+                          </DropdownMenuSubContent>
+                        </DropdownMenuSub>
+                        
+                        <DropdownMenuSeparator />
+                        
+                        <DropdownMenuItem
+                          onClick={() => handleDelete(doc.id)}
+                          className="text-destructive"
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Pagination - Centered with max width like chat */}
+        {total > 20 && (
+          <div className="w-full max-w-4xl mx-auto mt-4 flex items-center justify-between flex-shrink-0">
+            <p className="text-sm text-muted-foreground">
+              Showing {filteredDocuments.length} of {total} documents
+            </p>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage(p => Math.max(1, p - 1))}
+                disabled={page === 1}
+              >
+                Previous
+              </Button>
+              <span className="text-sm">Page {page}</span>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setPage(p => p + 1)}
+                disabled={page * 20 >= total}
+              >
+                Next
+              </Button>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Chat Input at Bottom - Centered with max width like chat */}
+      <div className="border-t p-4 flex-shrink-0">
+        <div className="w-full max-w-4xl mx-auto">
+          <InputBox
+            className="w-full"
+          />
+        </div>
+      </div>
+
+      {/* Upload Dialog */}
+      <UploadDialog
+        open={uploadDialogOpen}
+        onOpenChange={setUploadDialogOpen}
+        onUploadComplete={() => {
+          handleRefresh();
+          setUploadDialogOpen(false);
+        }}
+      />
+    </div>
+  );
+}

@@ -10,9 +10,17 @@ def replace_env_vars(value: str) -> str:
     """Replace environment variables in string values."""
     if not isinstance(value, str):
         return value
+    
+    # Handle ${VARIABLE} format
+    if value.startswith("${") and value.endswith("}"):
+        env_var = value[2:-1]
+        return os.getenv(env_var, value)
+    
+    # Handle $VARIABLE format
     if value.startswith("$"):
         env_var = value[1:]
         return os.getenv(env_var, value)
+    
     return value
 
 
@@ -32,21 +40,28 @@ def process_dict(config: Dict[str, Any]) -> Dict[str, Any]:
 _config_cache: Dict[str, Dict[str, Any]] = {}
 
 
-def load_yaml_config(file_path: str) -> Dict[str, Any]:
+def clear_config_cache() -> None:
+    """Clear the configuration cache."""
+    global _config_cache
+    _config_cache.clear()
+
+
+def load_yaml_config(file_path: str, use_cache: bool = True) -> Dict[str, Any]:
     """Load and process YAML configuration file."""
     # 如果文件不存在，返回{}
     if not os.path.exists(file_path):
         return {}
 
-    # 检查缓存中是否已存在配置
-    if file_path in _config_cache:
+    # 检查缓存中是否已存在配置（如果使用缓存）
+    if use_cache and file_path in _config_cache:
         return _config_cache[file_path]
 
-    # 如果缓存中不存在，则加载并处理配置
+    # 加载并处理配置
     with open(file_path, "r") as f:
         config = yaml.safe_load(f)
     processed_config = process_dict(config)
 
-    # 将处理后的配置存入缓存
-    _config_cache[file_path] = processed_config
+    # 将处理后的配置存入缓存（如果使用缓存）
+    if use_cache:
+        _config_cache[file_path] = processed_config
     return processed_config

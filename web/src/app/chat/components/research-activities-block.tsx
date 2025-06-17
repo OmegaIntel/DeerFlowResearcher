@@ -39,29 +39,37 @@ export function ResearchActivitiesBlock({
 }) {
   const activityIds = useStore((state) =>
     state.researchActivityIds.get(researchId),
-  )!;
+  ) || [];
   const ongoing = useStore((state) => state.ongoingResearchId === researchId);
+  
+  if (activityIds.length === 0 && !ongoing) {
+    return (
+      <div className={cn("flex flex-col items-center justify-center py-8", className)}>
+        <p className="text-muted-foreground">No activities yet</p>
+      </div>
+    );
+  }
+  
   return (
     <>
       <ul className={cn("flex flex-col py-4", className)}>
         {activityIds.map(
-          (activityId, i) =>
-            i !== 0 && (
-              <motion.li
-                key={activityId}
-                style={{ transition: "all 0.4s ease-out" }}
-                initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: 0.4,
-                  ease: "easeOut",
-                }}
-              >
-                <ActivityMessage messageId={activityId} />
-                <ActivityListItem messageId={activityId} />
-                {i !== activityIds.length - 1 && <hr className="my-8" />}
-              </motion.li>
-            ),
+          (activityId, i) => (
+            <motion.li
+              key={activityId}
+              style={{ transition: "all 0.4s ease-out" }}
+              initial={{ opacity: 0, y: 24 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.4,
+                ease: "easeOut",
+              }}
+            >
+              <ActivityMessage messageId={activityId} />
+              <ActivityListItem messageId={activityId} />
+              {i !== activityIds.length - 1 && <hr className="my-8" />}
+            </motion.li>
+          ),
         )}
       </ul>
       {ongoing && <LoadingAnimation className="mx-4 my-12" />}

@@ -7,3 +7,39 @@ BASIC_MODEL:
   base_url: https://ark.cn-beijing.volces.com/api/v3
   model: "doubao-1-5-pro-32k-250115"
   api_key: xxxx
+
+# MCP Server Configuration
+# These servers will be automatically loaded and available in the @ mentions
+# You can add multiple MCP servers here
+MCP_SERVERS:
+  # Example stdio server (uncomment to enable)
+  # filesystem:
+  #   name: "Filesystem"
+  #   transport: "stdio"
+  #   command: "npx"
+  #   args: ["-y", "@modelcontextprotocol/server-filesystem"]
+  #   env:
+  #     FILESYSTEM_ROOT: "/path/to/root"
+  #   enabled: true
+  #   add_to_agents: ["researcher", "coder"]  # Optional: specify which agents can use this
+  
+  # Example SSE server (uncomment to enable)
+  # weather:
+  #   name: "Weather API"
+  #   transport: "sse"
+  #   url: "http://localhost:3000/sse"
+  #   enabled: true
+  #   add_to_agents: ["researcher"]
+  
+  # Pinecone Document Search (requires PINECONE_API_KEY and OPENAI_API_KEY)
+  # Uncomment and configure API keys to enable @documents functionality
+  # documents:
+  #   name: "Documents"
+  #   transport: "stdio"
+  #   command: "uv"
+  #   args: ["run", "python", "mcp-servers/pinecone-mcp/mcp-server.py"]
+  #   env:
+  #     PINECONE_API_KEY: "${PINECONE_API_KEY}"
+  #     OPENAI_API_KEY: "${OPENAI_API_KEY}"
+  #   enabled: true
+  #   add_to_agents: ["researcher"]

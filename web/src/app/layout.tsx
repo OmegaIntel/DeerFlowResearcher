@@ -42,8 +42,12 @@ export default function RootLayout({
           `}
         </Script>
       </head>
-      <body className="bg-app">
-        <ThemeProviderWrapper>{children}</ThemeProviderWrapper>
+      <body className="bg-background h-full overflow-x-hidden">
+        <ThemeProviderWrapper>
+          <div className="h-full w-full overflow-x-hidden">
+            {children}
+          </div>
+        </ThemeProviderWrapper>
         <Toaster />
         {
           // NO USER BEHAVIOR TRACKING OR PRIVATE DATA COLLECTION BY DEFAULT

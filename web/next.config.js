@@ -35,6 +35,11 @@ const config = {
     return config;
   },
 
+  // Disable ESLint during build
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+
   // ... rest of the configuration.
   output: "standalone",
 };

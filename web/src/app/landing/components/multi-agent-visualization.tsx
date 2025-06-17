@@ -52,7 +52,7 @@ export function MultiAgentVisualization({ className }: { className?: string }) {
     activeStepIndex,
     playing,
   } = useMAVStore((state) => state);
-  const flowRef = useRef<ReactFlowInstance<GraphNode, Edge>>(null);
+  const flowRef = useRef<ReactFlowInstance<GraphNode, Edge> | null>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [hasPlayed, setHasPlayed] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);

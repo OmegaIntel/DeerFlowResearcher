@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Authentication</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .section { margin: 20px 0; padding: 10px; border: 1px solid #ccc; }
+        .log { background: #f0f0f0; padding: 10px; white-space: pre-wrap; font-family: monospace; }
+        button { margin: 5px; padding: 10px; }
+        input { margin: 5px; padding: 5px; width: 300px; }
+    </style>
+</head>
+<body>
+    <h1>Authentication Test Page</h1>
+    
+    <div class="section">
+        <h2>1. Login</h2>
+        <input type="email" id="email" placeholder="Email" value="test@example.com"><br>
+        <input type="password" id="password" placeholder="Password" value="testpassword123"><br>
+        <button onclick="testLogin()">Login</button>
+    </div>
+
+    <div class="section">
+        <h2>2. Check Auth State</h2>
+        <button onclick="checkAuth()">Check Auth State</button>
+    </div>
+
+    <div class="section">
+        <h2>3. Test Upload</h2>
+        <input type="file" id="fileInput">
+        <button onclick="testUpload()">Upload File</button>
+    </div>
+
+    <div class="section">
+        <h2>Log Output</h2>
+        <div id="log" class="log"></div>
+    </div>
+
+    <script>
+        const API_URL = 'http://ec2-54-91-85-225.compute-1.amazonaws.com:8000/api';
+        
+        function log(message) {
+            const logDiv = document.getElementById('log');
+            logDiv.textContent += new Date().toISOString() + ' - ' + message + '\n';
+            console.log(message);
+        }
+
+        async function testLogin() {
+            log('Starting login...');
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            const formData = new FormData();
+            formData.append('username', email);
+            formData.append('password', password);
+
+            try {
+                const response = await fetch(`${API_URL}/token`, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    log(`Login failed: ${response.status} ${response.statusText}`);
+                    return;
+                }
+
+                const data = await response.json();
+                const token = data.access_token;
+                log(`Login successful! Token: ${token.substring(0, 20)}...`);
+
+                // Store token in multiple places
+                localStorage.setItem('authToken', token);
+                sessionStorage.setItem('authToken', token);
+                document.cookie = `authToken=${token}; path=/`;
+                
+                log('Token stored in localStorage, sessionStorage, and cookie');
+                
+                // Verify storage
+                checkAuth();
+            } catch (error) {
+                log(`Login error: ${error.message}`);
+            }
+        }
+
+        function checkAuth() {
+            log('\n=== Auth State Check ===');
+            
+            // Check cookie
+            const cookies = document.cookie;
+            log(`Cookies: ${cookies || 'None'}`);
+            
+            // Check localStorage
+            const localToken = localStorage.getItem('authToken');
+            log(`localStorage token: ${localToken ? localToken.substring(0, 20) + '...' : 'None'}`);
+            
+            // Check sessionStorage
+            const sessionToken = sessionStorage.getItem('authToken');
+            log(`sessionStorage token: ${sessionToken ? sessionToken.substring(0, 20) + '...' : 'None'}`);
+            
+            // Try to parse cookie manually
+            const authCookie = cookies.split(';').find(c => c.trim().startsWith('authToken='));
+            if (authCookie) {
+                const token = authCookie.split('=')[1];
+                log(`Parsed cookie token: ${token.substring(0, 20)}...`);
+            }
+        }
+
+        async function testUpload() {
+            log('\n=== Testing Upload ===');
+            
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+            
+            if (!file) {
+                log('No file selected');
+                return;
+            }
+
+            // Get token from storage
+            let token = localStorage.getItem('authToken') || 
+                       sessionStorage.getItem('authToken') ||
+                       getCookieValue('authToken');
+            
+            if (!token) {
+                log('No auth token found! Please login first.');
+                return;
+            }
+
+            log(`Using token: ${token.substring(0, 20)}...`);
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                const response = await fetch(`${API_URL}/documents/upload`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: formData
+                });
+
+                const responseText = await response.text();
+                log(`Upload response: ${response.status} ${response.statusText}`);
+                log(`Response body: ${responseText}`);
+
+                if (response.ok) {
+                    const data = JSON.parse(responseText);
+                    log(`Upload successful! Document ID: ${data.document.id}`);
+                }
+            } catch (error) {
+                log(`Upload error: ${error.message}`);
+            }
+        }
+
+        function getCookieValue(name) {
+            const cookies = document.cookie.split(';');
+            for (let cookie of cookies) {
+                const [key, value] = cookie.trim().split('=');
+                if (key === name) return value;
+            }
+            return null;
+        }
+
+        // Check auth state on load
+        window.onload = () => {
+            log('Page loaded');
+            checkAuth();
+        };
+    </script>
+</body>
+</html>

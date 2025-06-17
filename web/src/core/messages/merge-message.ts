@@ -10,10 +10,12 @@ import type {
   ToolCallsEvent,
 } from "../api";
 import { deepClone } from "../utils/deep-clone";
+import { debugCitations } from "~/lib/debug-citations";
 
 import type { Message } from "./types";
 
 export function mergeMessage(message: Message, event: ChatEvent) {
+  debugCitations('merge-message-input', { message, event });
   if (event.type === "message_chunk") {
     mergeTextMessage(message, event);
   } else if (event.type === "tool_calls" || event.type === "tool_call_chunks") {
@@ -35,13 +37,20 @@ export function mergeMessage(message: Message, event: ChatEvent) {
       });
     }
   }
-  return deepClone(message);
+  const result = deepClone(message);
+  debugCitations('merge-message-output', result);
+  return result;
 }
 
 function mergeTextMessage(message: Message, event: MessageChunkEvent) {
   if (event.data.content) {
     message.content += event.data.content;
     message.contentChunks.push(event.data.content);
+  }
+  // Preserve citations if they exist in the event
+  if (event.data.citations) {
+    message.citations = event.data.citations;
+    debugCitations('merge-message-citations', event.data.citations);
   }
 }
 

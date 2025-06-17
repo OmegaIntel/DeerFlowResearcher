@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Frontend Tools</title>
+</head>
+<body>
+    <h1>Testing Tool Loading</h1>
+    <div id="tools"></div>
+    
+    <script>
+        // Simulate the tool loading logic from input-box.tsx
+        async function loadTools() {
+            const tools = [
+                // Add research and agent options
+                { id: "research", name: "Research", description: "Deep research on any topic", type: "agent" },
+                { id: "documents", name: "Documents", description: "Search and ask questions about uploaded documents", type: "agent" },
+            ];
+            
+            // Fetch backend-configured MCP servers
+            try {
+                const response = await fetch('http://localhost:8000/api/mcp/backend-servers');
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log("Backend servers response:", data);
+                    const backendServers = data.servers || [];
+                    
+                    // Add backend servers to tools
+                    backendServers.forEach((server) => {
+                        if (server.enabled && server.tools) {
+                            server.tools.forEach((tool) => {
+                                tools.push({
+                                    id: `${server.id}.${tool.name}`,
+                                    name: tool.name,
+                                    description: tool.description,
+                                    type: "mcp"
+                                });
+                            });
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error("Failed to fetch backend MCP servers:", error);
+            }
+            
+            // Display tools
+            const toolsDiv = document.getElementById('tools');
+            toolsDiv.innerHTML = '<h2>Available Tools:</h2><ul>' + 
+                tools.map(tool => `<li><strong>${tool.name}</strong> (${tool.type}) - ${tool.description}</li>`).join('') + 
+                '</ul>';
+            
+            console.log(`Loaded ${tools.length} tools:`, tools);
+        }
+        
+        loadTools();
+    </script>
+</body>
+</html>

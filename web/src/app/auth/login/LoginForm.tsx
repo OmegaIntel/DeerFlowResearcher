@@ -1,6 +1,7 @@
 'use client';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState, useTransition } from 'react';
+import { useState, useTransition, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 
 import { Alert, AlertDescription } from '~/components/ui/alert';
 import { Button } from '~/components/ui/button';
@@ -15,13 +16,18 @@ import { Input } from '~/components/ui/input';
 import { Label } from '~/components/ui/label';
 import { loginUser, setAuthToken } from '~/services/auth';
 
-export default function LoginForm() {
+function LoginFormComponent() {
+  const [isClient, setIsClient] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [isPending] = useTransition();
   const router = useRouter();
   const searchParams = useSearchParams();
+  
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,7 +38,10 @@ export default function LoginForm() {
 
     try {
       const { access_token } = await loginUser(formData);
+      console.log('[LoginForm] Token received:', access_token);
+      
       setAuthToken(access_token);
+      
       const returnTo = searchParams.get('returnTo') ?? '/';
       router.push(returnTo);
     } catch (error: unknown) {
@@ -40,6 +49,21 @@ export default function LoginForm() {
       // ... rest of error handling
     }
   };
+
+  if (!isClient) {
+    return (
+      <div className="flex justify-center items-center min-h-screen bg-muted/20">
+        <Card className="w-[400px] shadow-lg">
+          <CardHeader className="space-y-1">
+            <CardTitle className="text-2xl font-bold">Login</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="text-center">Loading...</div>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-muted/20">
@@ -103,3 +127,9 @@ export default function LoginForm() {
     </div>
   );
 }
+
+const LoginForm = dynamic(() => Promise.resolve(LoginFormComponent), {
+  ssr: false,
+});
+
+export default LoginForm;

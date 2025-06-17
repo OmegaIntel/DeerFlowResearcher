@@ -2,6 +2,16 @@
 @import "tw-animate-css";
 @plugin "@tailwindcss/typography";
 
+/* Global overflow and sizing fixes */
+html, body {
+  height: 100%;
+  overflow-x: hidden;
+}
+
+#__next {
+  height: 100%;
+}
+
 @custom-variant dark (&:is(.dark *));
 
 @theme {

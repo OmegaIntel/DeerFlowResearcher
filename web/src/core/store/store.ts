@@ -6,10 +6,13 @@ import { toast } from "sonner";
 import { create } from "zustand";
 import { useShallow } from "zustand/react/shallow";
 
-import { chatStream, generatePodcast } from "../api";
+import { chatStream, chatSimpleStream, generatePodcast } from "../api";
+import type { ChatEvent } from "../api/types";
 import type { Message } from "../messages";
 import { mergeMessage } from "../messages";
 import { parseJSON } from "../utils";
+import { getChatSessionByThread } from "../api/chat-history";
+import { debugCitations } from "~/lib/debug-citations";
 
 import { getChatStreamSettings } from "./settings-store";
 
@@ -18,6 +21,7 @@ const THREAD_ID = nanoid();
 export const useStore = create<{
   responding: boolean;
   threadId: string | undefined;
+  mode: "chat" | "research";
   messageIds: string[];
   messages: Map<string, Message>;
   researchIds: string[];
@@ -26,6 +30,7 @@ export const useStore = create<{
   researchActivityIds: Map<string, string[]>;
   ongoingResearchId: string | null;
   openResearchId: string | null;
+  sessionProject: string | null;
 
   appendMessage: (message: Message) => void;
   updateMessage: (message: Message) => void;
@@ -33,9 +38,14 @@ export const useStore = create<{
   openResearch: (researchId: string | null) => void;
   closeResearch: () => void;
   setOngoingResearch: (researchId: string | null) => void;
+  setMode: (mode: "chat" | "research") => void;
+  setSessionProject: (projectId: string | null) => void;
+  startNewChat: () => void;
+  loadChat: (threadId: string) => Promise<void>;
 }>((set) => ({
   responding: false,
   threadId: THREAD_ID,
+  mode: "chat",
   messageIds: [],
   messages: new Map<string, Message>(),
   researchIds: [],
@@ -44,6 +54,7 @@ export const useStore = create<{
   researchActivityIds: new Map<string, string[]>(),
   ongoingResearchId: null,
   openResearchId: null,
+  sessionProject: null,
 
   appendMessage(message: Message) {
     set((state) => ({
@@ -72,42 +83,232 @@ export const useStore = create<{
   setOngoingResearch(researchId: string | null) {
     set({ ongoingResearchId: researchId });
   },
+  setMode(mode: "chat" | "research") {
+    set({ mode });
+  },
+  setSessionProject(projectId: string | null) {
+    set({ sessionProject: projectId });
+  },
+  startNewChat() {
+    set({
+      responding: false,
+      threadId: nanoid(),
+      messageIds: [],
+      messages: new Map<string, Message>(),
+      researchIds: [],
+      researchPlanIds: new Map<string, string>(),
+      researchReportIds: new Map<string, string>(),
+      researchActivityIds: new Map<string, string[]>(),
+      ongoingResearchId: null,
+      openResearchId: null,
+      sessionProject: null,
+    });
+  },
+  async loadChat(threadId: string) {
+    console.log('[Store] loadChat called with threadId:', threadId);
+    console.log('[Store] Version: v2 with agent detection');
+    
+    // First, reset the state with the new thread ID
+    set({
+      responding: false,
+      threadId: threadId,
+      messageIds: [],
+      messages: new Map<string, Message>(),
+      researchIds: [],
+      researchPlanIds: new Map<string, string>(),
+      researchReportIds: new Map<string, string>(),
+      researchActivityIds: new Map<string, string[]>(),
+      ongoingResearchId: null,
+      openResearchId: null,
+      sessionProject: null,
+    });
+
+    try {
+      // Fetch the chat session by thread ID
+      const session = await getChatSessionByThread(threadId);
+      console.log('[Store] Fetched session:', session);
+      
+      // Convert the messages to the expected format and update the store
+      const messageMap = new Map<string, Message>();
+      const messageIds: string[] = [];
+      
+      session.messages.forEach((msg) => {
+        // Detect agent type from message content
+        let agent: Message["agent"] = undefined;
+        
+        if (msg.role === "assistant" && msg.content) {
+          const content = msg.content.trim();
+          
+          // Check if it's a JSON message from planner/coordinator
+          if (content.startsWith('{')) {
+            try {
+              const parsed = JSON.parse(content);
+              if (parsed.has_enough_context !== undefined || parsed.thought) {
+                agent = "planner";
+              }
+            } catch (e) {
+              // Not JSON, continue checking
+            }
+          }
+          
+          // Check for reporter messages (usually contain markdown headers)
+          if (content.includes('# ') && content.length > 500) {
+            agent = "reporter";
+          }
+        }
+        
+        const message: Message = {
+          id: msg.id,
+          threadId: threadId,
+          role: msg.role as "user" | "assistant",
+          agent: agent,
+          content: msg.content,
+          contentChunks: [msg.content],
+          attachments: (msg as any).attachments,
+          citations: (msg as any).citations,  // Add citations
+        };
+        console.log('[Store] Loading message v2:', {
+          id: msg.id,
+          role: msg.role,
+          agent: agent,
+          contentLength: msg.content.length,
+          contentPreview: msg.content.substring(0, 50),
+          hasCitations: !!(msg as any).citations,
+          citationCount: (msg as any).citations?.length || 0
+        });
+        messageMap.set(msg.id, message);
+        messageIds.push(msg.id);
+      });
+      
+      // For research mode, also populate research-related state
+      let researchIds: string[] = [];
+      let researchPlanIds = new Map<string, string>();
+      let researchReportIds = new Map<string, string>();
+      
+      if (session.mode === "research") {
+        // Find the first user message as the research start
+        const firstUserMsg = session.messages.find(m => m.role === "user");
+        if (firstUserMsg) {
+          researchIds.push(firstUserMsg.id);
+          
+          // Find planner and reporter messages
+          let plannerMsgId: string | undefined;
+          session.messages.forEach((msg) => {
+            const msgObj = messageMap.get(msg.id);
+            if (msgObj?.agent === "planner" && !plannerMsgId) {
+              plannerMsgId = msg.id;
+              researchPlanIds.set(firstUserMsg.id, msg.id);
+            } else if (msgObj?.agent === "reporter" && plannerMsgId) {
+              researchReportIds.set(firstUserMsg.id, msg.id);
+            }
+          });
+        }
+      }
+      
+      // Update the store with the loaded messages
+      set({
+        messages: messageMap,
+        messageIds: messageIds,
+        mode: session.mode as "chat" | "research",
+        researchIds: researchIds,
+        researchPlanIds: researchPlanIds,
+        researchReportIds: researchReportIds,
+      });
+    } catch (error) {
+      console.error("Failed to load chat history:", error);
+      toast.error("Failed to load chat history");
+    }
+  },
 }));
 
 export async function sendMessage(
   content?: string,
   {
     interruptFeedback,
+    toolId,
+    toolType,
+    attachments,
   }: {
     interruptFeedback?: string;
+    toolId?: string;
+    toolType?: "mcp" | "agent" | "research";
+    attachments?: { filename: string; size: number; type: string; documentId?: string }[];
   } = {},
   options: { abortSignal?: AbortSignal } = {},
 ) {
-  if (content != null) {
+  const state = useStore.getState();
+  const currentThreadId = state.threadId || THREAD_ID;
+  
+  console.log("[sendMessage] Called with attachments:", attachments);
+  
+  if (content != null && content !== "") {
+    const messageAttachments = attachments?.map(att => ({
+      id: att.documentId || nanoid(),
+      filename: att.filename,
+      size: att.size,
+      type: att.type,
+      uploadTime: new Date().toISOString(),
+      documentId: att.documentId
+    }));
+    
+    console.log("[sendMessage] Creating message with attachments:", messageAttachments);
+    
     appendMessage({
       id: nanoid(),
-      threadId: THREAD_ID,
+      threadId: currentThreadId,
       role: "user",
       content: content,
       contentChunks: [content],
+      attachments: messageAttachments,
     });
   }
 
+  let stream: AsyncIterable<ChatEvent>;
   const settings = getChatStreamSettings();
-  const stream = chatStream(
-    content ?? "[REPLAY]",
-    {
-      thread_id: THREAD_ID,
-      interrupt_feedback: interruptFeedback,
-      auto_accepted_plan: settings.autoAcceptedPlan,
-      enable_background_investigation:
-        settings.enableBackgroundInvestigation ?? true,
-      max_plan_iterations: settings.maxPlanIterations,
-      max_step_num: settings.maxStepNum,
-      mcp_settings: settings.mcpSettings,
-    },
-    options,
-  );
+  
+  // Debug logging
+  console.log("[sendMessage] Decision logic:", {
+    mode: state.mode,
+    toolId,
+    enableBackgroundInvestigation: settings.enableBackgroundInvestigation,
+    settings
+  });
+  
+  // Trigger research mode if:
+  // 1. Mode is set to "research" OR
+  // 2. Tool is specified (e.g., @research) OR
+  // 3. Investigation toggle is ON
+  if (state.mode === "research" || toolId || settings.enableBackgroundInvestigation) {
+    console.log("[sendMessage] Using research flow (chatStream)");
+    stream = chatStream(
+      content ?? "[REPLAY]",
+      {
+        thread_id: currentThreadId,
+        interrupt_feedback: interruptFeedback,
+        auto_accepted_plan: settings.autoAcceptedPlan,
+        enable_background_investigation:
+          settings.enableBackgroundInvestigation ?? true,
+        max_plan_iterations: settings.maxPlanIterations,
+        max_step_num: settings.maxStepNum,
+        mcp_settings: settings.mcpSettings,
+        tool_id: toolId,
+        tool_type: toolType,
+        project_id: state.sessionProject || undefined,
+      },
+      options,
+    );
+  } else {
+    console.log("[sendMessage] Using simple chat flow (chatSimpleStream)");
+    stream = chatSimpleStream(
+      content ?? "",
+      { 
+        thread_id: currentThreadId,
+        project_id: state.sessionProject || undefined,
+        attachments: attachments 
+      },
+      options,
+    );
+  }
 
   setResponding(true);
   let messageId: string | undefined;
@@ -118,7 +319,7 @@ export async function sendMessage(
       let message: Message | undefined;
       if (type === "tool_call_result") {
         message = findMessageByToolCallId(data.tool_call_id);
-      } else if (!existsMessage(messageId)) {
+      } else if (messageId && !existsMessage(messageId)) {
         message = {
           id: messageId,
           threadId: data.thread_id,
@@ -131,9 +332,17 @@ export async function sendMessage(
         };
         appendMessage(message);
       }
-      message ??= getMessage(messageId);
+      message ??= messageId ? getMessage(messageId) : undefined;
       if (message) {
+        // Debug: Log events with citations
+        if ('citations' in event.data && event.data.citations) {
+          console.log("[Store] Event has citations:", event.data.citations);
+          debugCitations('store-event-citations', event.data.citations);
+        }
+        debugCitations('store-before-merge', { message, event });
         message = mergeMessage(message, event);
+        console.log("[Store] Message after merge:", message);
+        debugCitations('store-after-merge', message);
         updateMessage(message);
       }
     }
@@ -209,24 +418,28 @@ function getOngoingResearchId() {
 }
 
 function appendResearch(researchId: string) {
+  console.log('[DEBUG] appendResearch called with:', researchId);
   let planMessage: Message | undefined;
   const reversedMessageIds = [...useStore.getState().messageIds].reverse();
   for (const messageId of reversedMessageIds) {
     const message = getMessage(messageId);
     if (message?.agent === "planner") {
       planMessage = message;
+      console.log('[DEBUG] Found planner message:', planMessage.id);
       break;
     }
   }
   const messageIds = [researchId];
   messageIds.unshift(planMessage!.id);
+  const newPlanIds = new Map(useStore.getState().researchPlanIds).set(
+    researchId,
+    planMessage!.id,
+  );
+  console.log('[DEBUG] Setting researchPlanIds:', newPlanIds);
   useStore.setState({
     ongoingResearchId: researchId,
     researchIds: [...useStore.getState().researchIds, researchId],
-    researchPlanIds: new Map(useStore.getState().researchPlanIds).set(
-      researchId,
-      planMessage!.id,
-    ),
+    researchPlanIds: newPlanIds,
     researchActivityIds: new Map(useStore.getState().researchActivityIds).set(
       researchId,
       messageIds,
@@ -248,11 +461,14 @@ function appendResearchActivity(message: Message) {
       });
     }
     if (message.agent === "reporter") {
+      const newReportIds = new Map(useStore.getState().researchReportIds).set(
+        researchId,
+        message.id,
+      );
+      console.log('[DEBUG] Setting researchReportIds:', newReportIds);
+      console.log('[DEBUG] Research', researchId, 'now has report:', message.id);
       useStore.setState({
-        researchReportIds: new Map(useStore.getState().researchReportIds).set(
-          researchId,
-          message.id,
-        ),
+        researchReportIds: newReportIds,
       });
     }
   }
@@ -266,6 +482,10 @@ export function closeResearch() {
   useStore.getState().closeResearch();
 }
 
+export function startNewChat() {
+  useStore.getState().startNewChat();
+}
+
 export async function listenToPodcast(researchId: string) {
   const planMessageId = useStore.getState().researchPlanIds.get(researchId);
   const reportMessageId = useStore.getState().researchReportIds.get(researchId);
@@ -274,9 +494,10 @@ export async function listenToPodcast(researchId: string) {
     const title = parseJSON(planMessage.content, { title: "Untitled" }).title;
     const reportMessage = getMessage(reportMessageId);
     if (reportMessage?.content) {
+      const currentThreadId = useStore.getState().threadId || THREAD_ID;
       appendMessage({
         id: nanoid(),
-        threadId: THREAD_ID,
+        threadId: currentThreadId,
         role: "user",
         content: "Please generate a podcast for the above research.",
         contentChunks: [],
@@ -285,7 +506,7 @@ export async function listenToPodcast(researchId: string) {
       const podcastObject = { title, researchId };
       const podcastMessage: Message = {
         id: podCastMessageId,
-        threadId: THREAD_ID,
+        threadId: currentThreadId,
         role: "assistant",
         agent: "podcast",
         content: JSON.stringify(podcastObject),
@@ -345,6 +566,10 @@ export function useMessage(messageId: string | null | undefined) {
 
 export function useMessageIds() {
   return useStore(useShallow((state) => state.messageIds));
+}
+
+export function useChatMode() {
+  return useStore(useShallow((state) => state.mode));
 }
 
 export function useLastInterruptMessage() {

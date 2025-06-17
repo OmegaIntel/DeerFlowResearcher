@@ -2,16 +2,32 @@
 // SPDX-License-Identifier: MIT
 
 import { type StreamEvent } from "./StreamEvent";
+import { getAuthToken } from "~/services/auth";
 
 export async function* fetchStream(
   url: string,
   init: RequestInit,
 ): AsyncIterable<StreamEvent> {
+  const token = getAuthToken();
+  console.log("[fetchStream] Auth token:", token ? `${token.substring(0, 20)}...` : "null");
+  
+  const headers: Record<string, string> = {
+    "Content-Type": "application/json",
+    "Cache-Control": "no-cache",
+  };
+  
+  if (token) {
+    headers["Authorization"] = `Bearer ${token}`;
+    console.log("[fetchStream] Added Authorization header");
+  } else {
+    console.log("[fetchStream] No token - request will be anonymous");
+  }
+  
   const response = await fetch(url, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
-      "Cache-Control": "no-cache",
+      ...headers,
+      ...(init.headers as Record<string, string> || {}),
     },
     ...init,
   });

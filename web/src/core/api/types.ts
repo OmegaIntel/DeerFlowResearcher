@@ -38,6 +38,15 @@ export interface MessageChunkEvent
     "message_chunk",
     {
       content?: string;
+      citations?: Array<{
+        id: string;
+        document_id: string;
+        filename: string;
+        page_number: number;
+        chunk_id: string;
+        char_start: number;
+        char_end: number;
+      }>;
     }
   > {}
 

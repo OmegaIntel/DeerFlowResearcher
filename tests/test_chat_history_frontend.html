@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Test Chat History</title>
+    <script src="https://cdn.jsdelivr.net/npm/js-cookie@3.0.5/dist/js.cookie.min.js"></script>
+</head>
+<body>
+    <h1>Chat History Test</h1>
+    
+    <div>
+        <button onclick="loginAndFetchHistory()">Login and Fetch Chat History</button>
+    </div>
+    
+    <h2>Results:</h2>
+    <pre id="results"></pre>
+    
+    <script>
+        const resultsDiv = document.getElementById('results');
+        
+        function log(message, data = null) {
+            const timestamp = new Date().toISOString();
+            const logEntry = `[${timestamp}] ${message}`;
+            console.log(logEntry, data);
+            resultsDiv.textContent += logEntry + '\n';
+            if (data) {
+                resultsDiv.textContent += JSON.stringify(data, null, 2) + '\n';
+            }
+            resultsDiv.textContent += '\n';
+        }
+        
+        async function loginAndFetchHistory() {
+            try {
+                // Step 1: Login
+                log('Step 1: Logging in...');
+                const loginResponse = await fetch('http://localhost:8000/api/token', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'username=test@example.com&password=testpassword123'
+                });
+                
+                if (!loginResponse.ok) {
+                    log('Login failed', await loginResponse.text());
+                    return;
+                }
+                
+                const loginData = await loginResponse.json();
+                log('Login successful', loginData);
+                
+                // Store token in multiple places like the frontend does
+                const token = loginData.access_token;
+                Cookies.set('authToken', token, {
+                    path: '/',
+                    expires: 1/12,
+                    sameSite: 'Lax',
+                });
+                localStorage.setItem('authToken', token);
+                sessionStorage.setItem('authToken', token);
+                
+                // Step 2: Fetch chat sessions
+                log('Step 2: Fetching chat sessions...');
+                const sessionsResponse = await fetch('http://localhost:8000/api/chat/sessions', {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    }
+                });
+                
+                if (!sessionsResponse.ok) {
+                    log('Failed to fetch sessions', await sessionsResponse.text());
+                    return;
+                }
+                
+                const sessions = await sessionsResponse.json();
+                log('Chat sessions retrieved successfully', sessions);
+                
+                // Step 3: Check if sessions exist
+                if (sessions.length === 0) {
+                    log('No chat sessions found for this user');
+                } else {
+                    log(`Found ${sessions.length} chat sessions`);
+                    
+                    // Test fetching details of first session
+                    if (sessions[0]) {
+                        log('Fetching details of first session...');
+                        const detailResponse = await fetch(`http://localhost:8000/api/chat/sessions/${sessions[0].id}`, {
+                            headers: {
+                                'Authorization': `Bearer ${token}`
+                            }
+                        });
+                        
+                        if (detailResponse.ok) {
+                            const detail = await detailResponse.json();
+                            log('Session detail retrieved', detail);
+                        }
+                    }
+                }
+                
+                // Step 4: Test what the frontend would see
+                log('Step 4: Testing frontend auth flow...');
+                
+                // Check all storage locations
+                const cookieToken = Cookies.get('authToken');
+                const localToken = localStorage.getItem('authToken');
+                const sessionToken = sessionStorage.getItem('authToken');
+                
+                log('Token storage check:', {
+                    cookie: cookieToken ? 'Present' : 'Missing',
+                    localStorage: localToken ? 'Present' : 'Missing',
+                    sessionStorage: sessionToken ? 'Present' : 'Missing'
+                });
+                
+                // Simulate frontend API call
+                const frontendToken = cookieToken || localToken || sessionToken;
+                if (frontendToken) {
+                    const frontendResponse = await fetch('http://localhost:3000/api/chat/sessions', {
+                        headers: {
+                            'Authorization': `Bearer ${frontendToken}`
+                        }
+                    });
+                    
+                    if (frontendResponse.ok) {
+                        const frontendData = await frontendResponse.json();
+                        log('Frontend API call successful', frontendData);
+                    } else {
+                        log('Frontend API call failed', await frontendResponse.text());
+                    }
+                }
+                
+            } catch (error) {
+                log('Error occurred', error.message);
+            }
+        }
+    </script>
+</body>
+</html>

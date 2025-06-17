@@ -21,6 +21,27 @@ export interface Message {
   options?: Option[];
   finishReason?: "stop" | "interrupt" | "tool_calls";
   interruptFeedback?: string;
+  attachments?: MessageAttachment[];
+  citations?: Citation[];
+}
+
+export interface Citation {
+  id: string;
+  document_id: string;
+  filename: string;
+  page_number: number;
+  chunk_id: string;
+  char_start: number;
+  char_end: number;
+}
+
+export interface MessageAttachment {
+  id: string;
+  filename: string;
+  size: number;
+  type: string;
+  uploadTime?: string;
+  documentId?: string;
 }
 
 export interface Option {
