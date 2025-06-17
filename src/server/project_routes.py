@@ -11,6 +11,7 @@ from src.db.project_service import (
     get_or_create_default_project
 )
 from src.api.api_get_current_user import get_current_user
+from src.server.chat_history_routes import ProjectInfo
 
 router = APIRouter()
 
@@ -190,6 +191,86 @@ async def delete_existing_project(
         raise HTTPException(status_code=404, detail="Project not found")
     
     return {"message": "Project deleted successfully"}
+
+
+@router.get("/projects/{project_id}/sessions")
+async def get_project_sessions_endpoint(
+    project_id: str,
+    db: Session = Depends(get_db),
+    current_user = Depends(get_current_user)
+):
+    """Get all chat sessions for a project"""
+    sessions = get_project_sessions(db, project_id, str(current_user.id))
+    
+    # Convert to response format
+    from src.server.chat_history_routes import ChatSessionResponse, ProjectInfo
+    return [
+        ChatSessionResponse(
+            id=str(session.id),
+            thread_id=session.thread_id,
+            title=session.title or f"{session.mode.capitalize()} session",
+            mode=session.mode,
+            message_count=len(session.messages),
+            last_message_at=session.last_message_at.isoformat() if session.last_message_at else session.created_at.isoformat(),
+            created_at=session.created_at.isoformat(),
+            project=ProjectInfo(
+                id=str(session.project.id),
+                name=session.project.name,
+                color=session.project.color,
+                icon=session.project.icon
+            ) if session.project else None
+        )
+        for session in sessions
+    ]
+
+
+# Define document response model inline
+class DocumentResponse(BaseModel):
+    id: str
+    filename: str
+    original_filename: str
+    file_size: int
+    content_type: str
+    processing_status: str
+    vectors_created: int
+    chunks_created: int
+    created_at: str
+    project: Optional[ProjectInfo] = None
+    
+    class Config:
+        from_attributes = True
+
+
+@router.get("/projects/{project_id}/documents")
+async def get_project_documents_endpoint(
+    project_id: str,
+    db: Session = Depends(get_db),
+    current_user = Depends(get_current_user)
+):
+    """Get all documents for a project"""
+    documents = get_project_documents(db, project_id, str(current_user.id))
+    
+    # Convert to response format
+    return [
+        DocumentResponse(
+            id=str(doc.id),
+            filename=doc.filename,
+            original_filename=doc.original_filename,
+            file_size=doc.file_size,
+            content_type=doc.content_type,
+            processing_status=doc.processing_status,
+            vectors_created=doc.vectors_created,
+            chunks_created=doc.chunks_created,
+            created_at=doc.created_at.isoformat(),
+            project=ProjectInfo(
+                id=str(doc.project.id),
+                name=doc.project.name,
+                color=doc.project.color,
+                icon=doc.project.icon
+            ) if doc.project else None
+        )
+        for doc in documents
+    ]
 
 
 @router.post("/projects/{project_id}/archive")

@@ -123,27 +123,35 @@ export async function getDocumentDownloadUrl(
   if (expiration) searchParams.append('expiration', expiration.toString());
 
   const url = resolveServiceURL(`documents/${documentId}/download-url?${searchParams.toString()}`);
+  console.log('[getDocumentDownloadUrl] Document ID:', documentId);
   console.log('[getDocumentDownloadUrl] Fetching from URL:', url);
   console.log('[getDocumentDownloadUrl] Auth token exists:', !!getAuthToken());
+  console.log('[getDocumentDownloadUrl] Full auth header:', `Bearer ${getAuthToken()}`);
   
-  const response = await fetch(url, {
-    headers: {
-      'Authorization': `Bearer ${getAuthToken()}`,
-    },
-  });
+  try {
+    const response = await fetch(url, {
+      headers: {
+        'Authorization': `Bearer ${getAuthToken()}`,
+      },
+    });
 
-  console.log('[getDocumentDownloadUrl] Response status:', response.status);
-  console.log('[getDocumentDownloadUrl] Response headers:', response.headers);
+    console.log('[getDocumentDownloadUrl] Response status:', response.status);
+    console.log('[getDocumentDownloadUrl] Response status text:', response.statusText);
 
-  if (!response.ok) {
-    const errorText = await response.text();
-    console.error('[getDocumentDownloadUrl] Error response:', errorText);
-    throw new Error(`Failed to get download URL: ${response.statusText} - ${errorText}`);
+    if (!response.ok) {
+      const errorText = await response.text();
+      console.error('[getDocumentDownloadUrl] Error response:', errorText);
+      console.error('[getDocumentDownloadUrl] Full URL was:', url);
+      throw new Error(`Failed to get download URL: ${response.status}`);
+    }
+
+    const data = await response.json();
+    console.log('[getDocumentDownloadUrl] Response data:', data);
+    return data;
+  } catch (error) {
+    console.error('[getDocumentDownloadUrl] Fetch error:', error);
+    throw error;
   }
-
-  const data = await response.json();
-  console.log('[getDocumentDownloadUrl] Response data:', data);
-  return data;
 }
 
 export async function reprocessDocument(documentId: string): Promise<{ message: string }> {

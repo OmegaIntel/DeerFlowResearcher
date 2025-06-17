@@ -11,7 +11,8 @@ export default function DocumentViewerRedirect() {
   useEffect(() => {
     async function redirect() {
       try {
-        console.log('[DocumentViewer] Redirecting for document:', documentId);
+        console.log('[DocumentViewer] Document ID from params:', documentId);
+        console.log('[DocumentViewer] Full params:', params);
         const response = await getDocumentDownloadUrl(documentId);
         if (response?.download_url) {
           window.location.href = response.download_url;

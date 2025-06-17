@@ -11,6 +11,8 @@ import {
   FileIcon,
   Search,
   Filter,
+  FolderPlus,
+  ChevronRight,
 } from "lucide-react";
 import { resolveServiceURL } from "~/core/api/resolve-service-url";
 import { getAuthToken } from "~/services/auth";
@@ -24,10 +26,21 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
+  DropdownMenuSeparator,
 } from "~/components/ui/dropdown-menu";
 import { SidebarTrigger } from "~/components/ui/sidebar";
 import { InputBox } from "~/app/chat/components/input-box";
 import { UploadDialog } from "~/components/documents/upload-dialog-simple";
+import { toast } from "sonner";
+import type { Project } from "~/core/api/projects";
+import { 
+  getProjects, 
+  moveDocumentToProject,
+  PROJECT_ICONS 
+} from "~/core/api/projects";
 
 interface Document {
   id: string;
@@ -41,6 +54,8 @@ interface Document {
   pinecone_index?: string;
   created_at: string;
   download_url?: string;
+  project_id?: string;
+  project?: Project;
 }
 
 interface DocumentsResponse {
@@ -59,6 +74,8 @@ export default function DocumentsMain() {
   const [total, setTotal] = useState(0);
   const [refreshing, setRefreshing] = useState(false);
   const [uploadDialogOpen, setUploadDialogOpen] = useState(false);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [moveLoading, setMoveLoading] = useState<string | null>(null);
 
   const fetchDocuments = async () => {
     try {
@@ -93,13 +110,58 @@ export default function DocumentsMain() {
     }
   };
 
+  const fetchProjects = async () => {
+    try {
+      const projectsData = await getProjects();
+      setProjects(projectsData);
+    } catch (error) {
+      console.error("Failed to fetch projects:", error);
+    }
+  };
+
   useEffect(() => {
     fetchDocuments();
+    fetchProjects();
   }, [page, statusFilter]);
 
   const handleRefresh = () => {
     setRefreshing(true);
     fetchDocuments();
+  };
+
+  const handleMoveToProject = async (documentId: string, projectId: string | null, e: React.MouseEvent) => {
+    e.stopPropagation();
+    
+    setMoveLoading(documentId);
+    
+    try {
+      await moveDocumentToProject(documentId, projectId || undefined);
+      
+      // Update the document in the local state
+      setDocuments(documents.map(doc => {
+        if (doc.id === documentId) {
+          const targetProject = projectId ? projects.find(p => p.id === projectId) : null;
+          return {
+            ...doc,
+            project_id: projectId || undefined,
+            project: targetProject || undefined
+          };
+        }
+        return doc;
+      }));
+      
+      toast.success("Document moved to project");
+    } catch (error) {
+      console.error("Failed to move document:", error);
+      toast.error("Failed to move document to project");
+    } finally {
+      setMoveLoading(null);
+    }
+  };
+
+  const getProjectIcon = (iconId?: string) => {
+    const icon = PROJECT_ICONS.find(i => i.id === iconId);
+    return icon?.emoji || "📁";
   };
 
   const handleDownload = async (doc: Document) => {
@@ -265,6 +327,18 @@ export default function DocumentsMain() {
                         {doc.processing_status === 'completed' && doc.vectors_created > 0 && (
                           <span>Chunks: {doc.chunks_created}</span>
                         )}
+                        {doc.project && (
+                          <div className="flex items-center gap-1">
+                            <span>{getProjectIcon(doc.project.icon || "folder")}</span>
+                            <span>{doc.project.name}</span>
+                            {doc.project.color && (
+                              <div
+                                className="w-2 h-2 rounded-full"
+                                style={{ backgroundColor: doc.project.color }}
+                              />
+                            )}
+                          </div>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -289,6 +363,44 @@ export default function DocumentsMain() {
                           <Download className="mr-2 h-4 w-4" />
                           Download
                         </DropdownMenuItem>
+                        
+                        <DropdownMenuSeparator />
+                        
+                        <DropdownMenuSub>
+                          <DropdownMenuSubTrigger disabled={moveLoading === doc.id}>
+                            <FolderPlus className="mr-2 h-4 w-4" />
+                            {moveLoading === doc.id ? 'Moving...' : 'Move to Project'}
+                            <ChevronRight className="ml-auto h-4 w-4" />
+                          </DropdownMenuSubTrigger>
+                          <DropdownMenuSubContent>
+                            <DropdownMenuItem 
+                              onClick={(e) => handleMoveToProject(doc.id, null, e)}
+                              className={!doc.project ? "bg-muted" : ""}
+                            >
+                              <span className="mr-2">📂</span>
+                              No Project
+                            </DropdownMenuItem>
+                            {projects.map((project) => (
+                              <DropdownMenuItem
+                                key={project.id}
+                                onClick={(e) => handleMoveToProject(doc.id, project.id, e)}
+                                className={doc.project?.id === project.id ? "bg-muted" : ""}
+                              >
+                                <span className="mr-2">{getProjectIcon(project.icon || "folder")}</span>
+                                <span className="flex-1">{project.name}</span>
+                                {project.color && (
+                                  <div
+                                    className="w-2 h-2 rounded-full ml-2"
+                                    style={{ backgroundColor: project.color }}
+                                  />
+                                )}
+                              </DropdownMenuItem>
+                            ))}
+                          </DropdownMenuSubContent>
+                        </DropdownMenuSub>
+                        
+                        <DropdownMenuSeparator />
+                        
                         <DropdownMenuItem
                           onClick={() => handleDelete(doc.id)}
                           className="text-destructive"

@@ -1,0 +1,24 @@
+Backend Restart for Code Reload Log
+===================================
+Test Time: 2025-06-17 14:47
+Purpose: Document backend restart to reload Python code changes
+
+Issue:
+- "Failed to load chat sessions" error when opening project
+- Backend logs showed it was still using old code (ProjectResponse instead of ProjectInfo)
+
+Root Cause:
+- Python code changes require backend restart to take effect
+- Even though we're mounting the source directory, Python imports are cached
+- The previous validation error fix wasn't applied until restart
+
+Action Taken:
+- Restarted backend container with: docker restart deer-flow-backend
+- Backend successfully reloaded with the fixed code
+
+Current Status:
+- Backend running successfully
+- Code changes are now active
+- Project session loading should work properly
+
+Note: For future Python code changes in the backend, always restart the container to ensure changes take effect.

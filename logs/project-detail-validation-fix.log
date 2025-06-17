@@ -1,0 +1,32 @@
+Project Detail Validation Fix Log
+=================================
+Test Time: 2025-06-17 13:45
+Purpose: Fix validation errors in project detail endpoints
+
+Issue:
+- When opening a project, got "failed to load chat session" error
+- Backend logs showed: "Input should be a valid dictionary or instance of ProjectInfo [type=model_type, input_value=ProjectResponse..."
+
+Root Cause:
+- ChatSessionResponse expects ProjectInfo object for the project field
+- Code was passing ProjectResponse object instead
+- Same issue in DocumentResponse
+
+Fix Applied:
+1. In get_project_sessions_endpoint:
+   - Import ProjectInfo from chat_history_routes
+   - Changed from ProjectResponse to ProjectInfo when creating the project object
+
+2. In get_project_documents_endpoint:
+   - Changed DocumentResponse model to expect ProjectInfo instead of ProjectResponse
+   - Changed from ProjectResponse to ProjectInfo when creating the project object
+
+3. Added import at top of file:
+   - from src.server.chat_history_routes import ProjectInfo
+
+Current Status:
+- Backend restarted successfully
+- Validation errors should be resolved
+- Project detail view should now load sessions and documents properly
+
+Next: User should test opening a project again to verify the fix works.

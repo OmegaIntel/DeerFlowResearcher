@@ -5,6 +5,7 @@ import { Plus, MoreVertical, Settings, Archive, Trash2, Edit } from "lucide-reac
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { Badge } from "~/components/ui/badge";
+import { ProjectDetail } from "./project-detail";
 import {
   Dialog,
   DialogContent,
@@ -50,6 +51,7 @@ export function ProjectManager({ currentProjectId, onProjectSelect }: ProjectMan
   const [createDialogOpen, setCreateDialogOpen] = useState(false);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editingProject, setEditingProject] = useState<Project | null>(null);
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
 
   // Form state
   const [formData, setFormData] = useState<CreateProjectData>({
@@ -162,6 +164,17 @@ export function ProjectManager({ currentProjectId, onProjectSelect }: ProjectMan
     return <div className="p-4">Loading projects...</div>;
   }
 
+  // Show project detail view if a project is selected
+  if (selectedProject) {
+    return (
+      <ProjectDetail 
+        project={selectedProject} 
+        allProjects={projects}
+        onBack={() => setSelectedProject(null)}
+      />
+    );
+  }
+
   return (
     <div className="p-4">
       <div className="flex items-center justify-between mb-4">
@@ -243,22 +256,6 @@ export function ProjectManager({ currentProjectId, onProjectSelect }: ProjectMan
       </div>
 
       <div className="space-y-2">
-        {/* No Project option */}
-        <div
-          className={`p-3 rounded-lg border cursor-pointer transition-colors ${
-            !currentProjectId ? "bg-muted border-gray-900 dark:border-gray-100" : "bg-card hover:bg-muted/50"
-          }`}
-          onClick={() => onProjectSelect?.(null)}
-        >
-          <div className="flex items-center gap-3">
-            <div className="text-lg">📂</div>
-            <div className="flex-1">
-              <p className="font-medium">All Projects</p>
-              <p className="text-xs text-muted-foreground">View all content</p>
-            </div>
-          </div>
-        </div>
-
         {/* Project list */}
         {projects.map((project) => (
           <div
@@ -266,7 +263,7 @@ export function ProjectManager({ currentProjectId, onProjectSelect }: ProjectMan
             className={`p-3 rounded-lg border cursor-pointer transition-colors group ${
               currentProjectId === project.id ? "bg-muted border-gray-900 dark:border-gray-100" : "bg-card hover:bg-muted/50"
             }`}
-            onClick={() => onProjectSelect?.(project)}
+            onClick={() => setSelectedProject(project)}
           >
             <div className="flex items-center gap-3">
               <div className="text-lg">{getIconEmoji(project.icon || "folder")}</div>
