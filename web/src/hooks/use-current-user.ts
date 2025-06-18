@@ -1,11 +1,14 @@
 import { useEffect, useState } from 'react';
 import { getAuthToken } from '~/services/auth';
+import { resolveServiceURL } from '~/core/api/resolve-service-url';
 
 interface User {
   id: string;
   email: string;
   full_name: string | null;
   is_admin: boolean;
+  created_at?: string;
+  oauth_provider?: string;
 }
 
 export function useCurrentUser() {
@@ -23,7 +26,7 @@ export function useCurrentUser() {
           return;
         }
 
-        const response = await fetch('/api/users/me', {
+        const response = await fetch(resolveServiceURL('/users/me'), {
           headers: {
             'Authorization': `Bearer ${token}`,
           },

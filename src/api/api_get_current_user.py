@@ -25,6 +25,8 @@ class User(BaseModel):
     email: str
     is_admin: bool
     full_name: Optional[str] = None
+    created_at: Optional[str] = None
+    oauth_provider: Optional[str] = None
 
     class Config:
         from_attributes = True
@@ -59,7 +61,9 @@ async def get_current_user(
         id=str(user.id), 
         email=user.email, 
         is_admin=user.is_master_admin,
-        full_name=user.full_name
+        full_name=user.full_name,
+        created_at=user.created_at.isoformat() if user.created_at else None,
+        oauth_provider=user.oauth_provider
     )
 
 

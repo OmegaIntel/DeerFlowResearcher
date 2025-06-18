@@ -17,7 +17,7 @@ export function middleware(request: NextRequest) {
   
   
   // Define protected routes
-  const protectedRoutes = ['/chat', '/chat-history', '/research', '/documents', '/settings'];
+  const protectedRoutes = ['/chat', '/chat-history', '/research', '/documents', '/settings', '/account'];
   const authRoutes = ['/auth/login', '/auth/register'];
   
   // Check if current path is protected

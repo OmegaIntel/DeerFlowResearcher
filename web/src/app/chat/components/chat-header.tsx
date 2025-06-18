@@ -16,7 +16,7 @@ import { useStore } from "~/core/store";
 
 import { ThemeToggle } from "../../../components/deer-flow/theme-toggle";
 import { Tooltip } from "../../../components/deer-flow/tooltip";
-import { SettingsDialog } from "../../settings/dialogs/settings-dialog";
+import { UserDropdown } from "../../../components/deer-flow/user-dropdown";
 
 export function ChatHeader() {
   const [currentProject, setCurrentProject] = useState<string | null>(null);
@@ -40,8 +40,8 @@ export function ChatHeader() {
         <h1 className="text-lg font-semibold">Chat</h1>
       </div>
       
-      <div className="flex items-center gap-2">
-        {/* Project Switcher for new chats */}
+      <div className="flex items-center gap-3">
+        {/* Project Switcher */}
         <div className="flex items-center gap-2">
           <span className="text-sm text-muted-foreground">Project:</span>
           <ProjectSwitcher
@@ -51,22 +51,11 @@ export function ChatHeader() {
           />
         </div>
         
-        <div className="flex items-center">
-          <Tooltip title="Connect with us">
-            <Button variant="ghost" size="icon" asChild>
-              <Link
-                href="https://www.omegaintelligence.ai/"
-                target="_blank"
-              >
-                <GithubOutlined />
-              </Link>
-            </Button>
-          </Tooltip>
-          <ThemeToggle />
-          <Suspense>
-            <SettingsDialog />
-          </Suspense>
-        </div>
+        {/* Theme Toggle */}
+        <ThemeToggle />
+        
+        {/* User Dropdown */}
+        <UserDropdown />
       </div>
     </header>
   );
