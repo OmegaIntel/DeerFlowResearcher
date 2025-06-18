@@ -1,0 +1,18 @@
+1. Navigating to login page...
+2. Filling login form...
+3. Clicking login button...
+Browser console: log [LoginForm] Token received: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjaGV0YW5Ab21lZ2FpbnRlbGxpZ2VuY2UuYWkiLCJleHAiOjE3NTAyODEwODR9.YTWMhJFtHbBlCJweB_3rL99Fkg3ZGbu4OzhPf2Z22xI
+Browser console: log [Auth Service] Setting auth token: eyJhbGciOiJIUzI1NiIs...
+Browser console: log [Auth Service] Cookie set with js-cookie
+Browser console: log [Auth Service] Saved token to localStorage as backup
+Browser console: log [Auth Service] Saved token to sessionStorage
+Browser console: log [Auth Service] Token after setting: {cookie: eyJhbGciOiJIUzI1NiIs..., localStorage: eyJhbGciOiJIUzI1NiIs..., sessionStorage: eyJhbGciOiJIUzI1NiIs..., cookieString: authToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ…wODR9.YTWMhJFtHbBlCJweB_3rL99Fkg3ZGbu4OzhPf2Z22xI}
+Browser console: warning The resource http://localhost:3000/_next/static/css/cffd52bf4f3a8ac2.css was preloaded using link preload but not used within a few seconds from the window's load event. Please make sure it has an appropriate `as` value and it is preloaded intentionally.
+Test failed: page.waitForURL: Timeout 10000ms exceeded.
+=========================== logs ===========================
+waiting for navigation to "**/chat" until "load"
+  navigated to "http://localhost:3000/"
+============================================================
+    at testAPIDeckIntegration (/root/deer-flow/test-apideck-integration.js:50:16) {
+  name: 'TimeoutError'
+}

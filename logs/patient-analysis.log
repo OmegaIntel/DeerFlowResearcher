@@ -1,0 +1,9 @@
+Navigating to application...
+Looking for sign in form...
+Error: page.waitForSelector: Timeout 30000ms exceeded.
+Call log:
+[2m  - waiting for locator('input[type="email"]') to be visible[22m
+
+    at /root/deer-flow/logs/patient_component_check.js:23:16 {
+  name: 'TimeoutError'
+}

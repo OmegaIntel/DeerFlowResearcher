@@ -1,7 +1,10 @@
 // Copyright (c) 2025 Bytedance Ltd. and/or its affiliates
 // SPDX-License-Identifier: MIT
 
-import { useMemo } from "react";
+"use client";
+
+import { useMemo, useEffect } from "react";
+import { removeAuthToken } from "~/services/auth";
 
 import { SiteHeader } from "./chat/components/site-header";
 import { Jumbotron } from "./landing/components/jumbotron";
@@ -12,6 +15,16 @@ import { JoinCommunitySection } from "./landing/sections/join-community-section"
 import { MultiAgentSection } from "./landing/sections/multi-agent-section";
 
 export default function HomePage() {
+  useEffect(() => {
+    // Check URL params for force logout
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('logout') === 'true') {
+      removeAuthToken();
+      // Clear the URL param
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+  }, []);
+
   return (
     <div className="flex flex-col items-center">
       <SiteHeader />

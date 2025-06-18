@@ -18,12 +18,9 @@ import { useReplayMetadata } from "~/core/api/hooks";
 import type { Option } from "~/core/messages";
 import { useReplay } from "~/core/replay";
 import { sendMessage, useMessageIds, useStore } from "~/core/store";
-import { env } from "~/env";
 import { cn } from "~/lib/utils";
 
-import { ConversationStarter } from "./conversation-starter";
-import { InputBox } from "./input-box";
-import { MessageListView } from "./message-list-view";
+import { AnimatedChatContainer } from "./animated-chat-container";
 
 export function MessagesBlock({ className }: { className?: string }) {
   const messageIds = useMessageIds();
@@ -83,32 +80,18 @@ export function MessagesBlock({ className }: { className?: string }) {
     setFastForwarding(!fastForwarding);
     fastForwardReplay(!fastForwarding);
   }, [fastForwarding]);
+  
   return (
-    <div className={cn("flex h-full flex-col", className)}>
-      <div className="flex-1 min-h-0 relative">
-        <MessageListView
-          className="absolute inset-0 overflow-y-auto pr-4"
-          onFeedback={handleFeedback}
-          onSendMessage={handleSend}
-        />
-      </div>
+    <div className={cn("h-full", className)}>
       {!isReplay ? (
-        <div className="flex-shrink-0 w-full pt-4 bg-background border-t">
-          {!responding && messageCount === 0 && (
-            <ConversationStarter
-              className="mb-4"
-              onSend={handleSend}
-            />
-          )}
-          <InputBox
-            className="w-full"
-            responding={responding}
-            feedback={feedback}
-            onSend={handleSend}
-            onCancel={handleCancel}
-            onRemoveFeedback={handleRemoveFeedback}
-          />
-        </div>
+        <AnimatedChatContainer
+          className="h-full"
+          onSendMessage={handleSend}
+          onCancel={handleCancel}
+          onFeedback={handleFeedback}
+          onRemoveFeedback={handleRemoveFeedback}
+          feedback={feedback}
+        />
       ) : (
         <>
           <motion.div
@@ -150,13 +133,18 @@ export function MessagesBlock({ className }: { className?: string }) {
                         variant={fastForwarding ? "default" : "outline"}
                         onClick={handleFastForwardReplay}
                       >
-                        <FastForward size={16} />
-                        Fast Forward
+                        <FastForward
+                          className={cn(
+                            "mr-2",
+                            fastForwarding && "stroke-neutral-900",
+                          )}
+                        />
+                        Fast forward
                       </Button>
                     )}
-                    {!replayStarted && (
-                      <Button className="w-24" onClick={handleStartReplay}>
-                        <Play size={16} />
+                    {!responding && !replayStarted && (
+                      <Button onClick={handleStartReplay}>
+                        <Play className="mr-2" />
                         Play
                       </Button>
                     )}
@@ -164,21 +152,6 @@ export function MessagesBlock({ className }: { className?: string }) {
                 )}
               </div>
             </Card>
-            {!replayStarted && env.NEXT_PUBLIC_STATIC_WEBSITE_ONLY && (
-              <div className="text-muted-foreground w-full text-center text-xs">
-                * This site is for demo purposes only. If you want to try your
-                own question, please{" "}
-                <a
-                  className="underline"
-                  href="https://www.omegaintelligence.ai/"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  click here
-                </a>{" "}
-                to clone it locally and run it.
-              </div>
-            )}
           </motion.div>
         </>
       )}

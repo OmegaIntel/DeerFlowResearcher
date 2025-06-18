@@ -57,6 +57,7 @@ from src.api.api_debug_headers import router as debug_router
 from src.server.auth_debug_middleware import log_auth_headers
 from src.server.oauth_routes import router as oauth_router
 from src.server.user_routes import router as user_router
+from src.server.integrations_routes import router as integrations_router
 
 logger = logging.getLogger(__name__)
 
@@ -79,6 +80,7 @@ app.include_router(documents_router, prefix="/api/documents")
 app.include_router(project_router, prefix="/api")
 app.include_router(oauth_router, prefix="/api")
 app.include_router(user_router, prefix="/api")
+app.include_router(integrations_router, prefix="/api")
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,

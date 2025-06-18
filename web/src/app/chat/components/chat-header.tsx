@@ -16,7 +16,6 @@ import { useStore } from "~/core/store";
 
 import { ThemeToggle } from "../../../components/deer-flow/theme-toggle";
 import { Tooltip } from "../../../components/deer-flow/tooltip";
-import { UserDropdown } from "../../../components/deer-flow/user-dropdown";
 
 export function ChatHeader() {
   const [currentProject, setCurrentProject] = useState<string | null>(null);
@@ -53,9 +52,6 @@ export function ChatHeader() {
         
         {/* Theme Toggle */}
         <ThemeToggle />
-        
-        {/* User Dropdown */}
-        <UserDropdown />
       </div>
     </header>
   );

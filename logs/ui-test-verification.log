@@ -1,0 +1,45 @@
+UI Test Verification Log
+========================
+Date: 2025-06-18
+Test User: chetan@omegaintelligence.ai / Test123.
+
+Changes Implemented:
+1. ✅ Account page access fixed
+   - Fixed dropdown menu navigation
+   - Added missing API fields
+   - Protected route in middleware
+   - Fixed useSearchParams build errors
+
+2. ✅ Account settings reorganized
+   - Security merged into Profile tab
+   - New Integrations tab added
+   - All integrations displayed (Web Search, Drive, Gmail, Calendar)
+
+3. ✅ User icon moved to sidebar footer
+   - Now appears at bottom left of sidebar
+   - Shows user avatar and name
+   - Visible on all pages (not just chat)
+   - Dropdown menu preserved
+
+4. ✅ Chat page redesign
+   - Centered chat box with animation
+   - Animation triggers only on Enter press (not focus)
+   - Finance-themed sample prompts
+   - Enhanced input box with tools and model selector
+
+5. ✅ OpenRouter integration
+   - Using Google Gemini 2.5 Flash model
+   - API key configured
+   - Environment variables loaded
+
+6. ✅ Google OAuth fixed
+   - Client ID and secret configured
+   - Sign-in functionality restored
+
+Navigation Test:
+- Click user icon in sidebar footer -> Account menu appears
+- Click "Account" -> Account page loads with tabs
+- Click "Add integrations" in chat tools -> Navigates to Account page, Integrations tab
+
+Build Status: SUCCESS
+All containers running

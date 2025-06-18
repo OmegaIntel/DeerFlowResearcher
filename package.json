@@ -1,0 +1,9 @@
+{
+  "devDependencies": {
+    "@playwright/test": "^1.53.1",
+    "playwright": "^1.53.1"
+  },
+  "dependencies": {
+    "node-fetch": "^2.7.0"
+  }
+}

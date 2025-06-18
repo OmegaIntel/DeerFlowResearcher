@@ -2,8 +2,7 @@
 // SPDX-License-Identifier: MIT
 
 "use client";
-import { useMemo, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useMemo, useEffect, useState } from "react";
 
 import { useStore } from "~/core/store";
 import { cn } from "~/lib/utils";
@@ -15,10 +14,16 @@ import { ResearchBlock } from "./components/research-block";
 import { CitationDebugger } from "./components/citation-debug";
 
 export default function Main() {
-  const searchParams = useSearchParams();
-  const threadId = searchParams.get("thread");
+  const [threadId, setThreadId] = useState<string | null>(null);
   const loadChat = useStore((state) => state.loadChat);
   const openResearchId = useStore((state) => state.openResearchId);
+  
+  useEffect(() => {
+    // Only access search params on client side
+    const searchParams = new URLSearchParams(window.location.search);
+    const thread = searchParams.get("thread");
+    setThreadId(thread);
+  }, []);
   
   useEffect(() => {
     if (threadId) {

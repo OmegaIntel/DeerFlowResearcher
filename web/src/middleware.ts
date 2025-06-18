@@ -32,6 +32,7 @@ export function middleware(request: NextRequest) {
   
   // If user is not authenticated and trying to access protected route
   if (isProtectedRoute && !authToken) {
+    console.log('[Middleware] No auth token, redirecting to login');
     const loginUrl = new URL('/auth/login', request.url);
     loginUrl.searchParams.set('callbackUrl', pathname);
     return NextResponse.redirect(loginUrl);
@@ -42,13 +43,10 @@ export function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/chat', request.url));
   }
   
-  // For root path, redirect to chat if authenticated, otherwise to login
+  // For root path, let it through to show the landing page
+  // Users can navigate to login/chat from there
   if (pathname === '/') {
-    if (authToken) {
-      return NextResponse.redirect(new URL('/chat', request.url));
-    } else {
-      return NextResponse.redirect(new URL('/auth/login', request.url));
-    }
+    return NextResponse.next();
   }
   
   return NextResponse.next();

@@ -1,0 +1,50 @@
+deer-flow-frontend  | }
+deer-flow-frontend  | [Middleware] Request: {
+deer-flow-frontend  |   pathname: '/',
+deer-flow-frontend  |   method: 'GET',
+deer-flow-frontend  |   hasAuthToken: false,
+deer-flow-frontend  |   tokenPreview: null,
+deer-flow-frontend  |   cookies: []
+deer-flow-frontend  | }
+deer-flow-frontend  | [Middleware] Request: {
+deer-flow-frontend  |   pathname: '/',
+deer-flow-frontend  |   method: 'GET',
+deer-flow-frontend  |   hasAuthToken: false,
+deer-flow-frontend  |   tokenPreview: null,
+deer-flow-frontend  |   cookies: []
+deer-flow-frontend  | }
+deer-flow-frontend  |    ▲ Next.js 15.3.0
+deer-flow-frontend  |    - Local:        http://ad01d196899a:3000
+deer-flow-frontend  |    - Network:      http://ad01d196899a:3000
+deer-flow-frontend  | 
+deer-flow-frontend  |  ✓ Starting...
+deer-flow-frontend  |  ✓ Ready in 455ms
+deer-flow-frontend  | [Middleware] Request: {
+deer-flow-frontend  |   pathname: '/',
+deer-flow-frontend  |   method: 'GET',
+deer-flow-frontend  |   hasAuthToken: false,
+deer-flow-frontend  |   tokenPreview: null,
+deer-flow-frontend  |   cookies: []
+deer-flow-frontend  | }
+deer-flow-frontend  | [Middleware] Request: {
+deer-flow-frontend  |   pathname: '/',
+deer-flow-frontend  |   method: 'GET',
+deer-flow-frontend  |   hasAuthToken: false,
+deer-flow-frontend  |   tokenPreview: null,
+deer-flow-frontend  |   cookies: []
+deer-flow-frontend  | }
+deer-flow-frontend  | [Middleware] Request: {
+deer-flow-frontend  |   pathname: '/sitemap.xml',
+deer-flow-frontend  |   method: 'GET',
+deer-flow-frontend  |   hasAuthToken: false,
+deer-flow-frontend  |   tokenPreview: null,
+deer-flow-frontend  |   cookies: []
+deer-flow-frontend  | }
+deer-flow-frontend  | [Middleware] Request: {
+deer-flow-frontend  |   pathname: '/account',
+deer-flow-frontend  |   method: 'GET',
+deer-flow-frontend  |   hasAuthToken: false,
+deer-flow-frontend  |   tokenPreview: null,
+deer-flow-frontend  |   cookies: []
+deer-flow-frontend  | }
+deer-flow-frontend  | [Middleware] No auth token, redirecting to login

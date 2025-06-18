@@ -1,0 +1,144 @@
+#0 building with "default" instance using docker driver
+
+#1 [frontend internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.42kB 0.0s done
+#1 DONE 0.0s
+
+#2 [frontend internal] load metadata for docker.io/library/node:20-alpine
+#2 DONE 0.2s
+
+#3 [frontend internal] load metadata for gcr.io/distroless/nodejs20-debian12:latest
+#3 DONE 0.3s
+
+#4 [frontend internal] load .dockerignore
+#4 transferring context: 118B done
+#4 DONE 0.0s
+
+#5 [frontend deps 1/5] FROM docker.io/library/node:20-alpine@sha256:d3507a213936fe4ef54760a186e113db5188472d9efdf491686bd94580a1c1e8
+#5 DONE 0.0s
+
+#6 [frontend runner 1/7] FROM gcr.io/distroless/nodejs20-debian12:latest@sha256:7a9dc35e49140e0d23e3c4e4855438d6ec66b1fdc106be451f52dfb982f39cac
+#6 DONE 0.0s
+
+#7 [frontend internal] load build context
+#7 transferring context: 14.30kB 0.0s done
+#7 DONE 0.1s
+
+#8 [frontend deps 2/5] RUN apk add --no-cache libc6-compat openssl
+#8 CACHED
+
+#9 [frontend deps 5/5] RUN     if [ -f yarn.lock ]; then yarn --frozen-lockfile;     elif [ -f package-lock.json ]; then npm ci;     elif [ -f pnpm-lock.yaml ]; then npm install -g pnpm && pnpm i;     else echo "Lockfile not found." && exit 1;     fi
+#9 CACHED
+
+#10 [frontend deps 3/5] WORKDIR /app
+#10 CACHED
+
+#11 [frontend deps 4/5] COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
+#11 CACHED
+
+#12 [frontend builder 3/5] COPY --from=deps /app/node_modules ./node_modules
+#12 CACHED
+
+#13 [frontend builder 2/5] WORKDIR /app
+#13 CACHED
+
+#14 [frontend builder 4/5] COPY . .
+#14 CACHED
+
+#15 [frontend builder 5/5] RUN     if [ -f yarn.lock ]; then SKIP_ENV_VALIDATION=1 yarn build;     elif [ -f package-lock.json ]; then SKIP_ENV_VALIDATION=1 npm run build;     elif [ -f pnpm-lock.yaml ]; then npm install -g pnpm && SKIP_ENV_VALIDATION=1 pnpm run build;     else echo "Lockfile not found." && exit 1;     fi
+#15 2.604 
+#15 2.604 added 1 package in 2s
+#15 2.604 
+#15 2.604 1 package is looking for funding
+#15 2.604   run `npm fund` for details
+#15 2.606 npm notice
+#15 2.606 npm notice New major version of npm available! 10.8.2 -> 11.4.2
+#15 2.606 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.4.2
+#15 2.606 npm notice To update run: npm install -g npm@11.4.2
+#15 2.606 npm notice
+#15 5.758 
+#15 5.758 > deer-flow-web@0.1.0 build /app
+#15 5.758 > next build
+#15 5.758 
+#15 6.986    ▲ Next.js 15.3.0
+#15 6.987    - Environments: .env.local
+#15 6.987 
+#15 7.019    Creating an optimized production build ...
+#15 68.51  ✓ Compiled successfully in 60s
+#15 68.51    Skipping linting
+#15 68.51    Checking validity of types ...
+#15 83.64    Collecting page data ...
+#15 87.17    Generating static pages (0/24) ...
+#15 88.19    Generating static pages (6/24) 
+#15 88.66 [AccountPage] Rendering, user: null loading: true
+#15 88.67    Generating static pages (12/24) 
+#15 89.01    Generating static pages (18/24) 
+#15 89.01  ✓ Generating static pages (24/24)
+#15 89.82    Finalizing page optimization ...
+#15 89.82    Collecting build traces ...
+#15 132.6 
+#15 132.6 Route (app)                                 Size  First Load JS
+#15 132.6 ┌ ○ /                                    78.2 kB         227 kB
+#15 132.6 ├ ○ /_not-found                            986 B         104 kB
+#15 132.6 ├ ○ /account                             3.63 kB         377 kB
+#15 132.6 ├ ƒ /api/auth/logout                       159 B         103 kB
+#15 132.6 ├ ƒ /api/debug                             159 B         103 kB
+#15 132.6 ├ ƒ /api/debug/auth                        159 B         103 kB
+#15 132.6 ├ ƒ /api/test-backend                      159 B         103 kB
+#15 132.6 ├ ○ /auth/callback                       2.79 kB         113 kB
+#15 132.6 ├ ○ /auth/login                          7.38 kB         118 kB
+#15 132.6 ├ ○ /auth/register                       6.07 kB         117 kB
+#15 132.6 ├ ○ /chat                                1.47 kB         375 kB
+#15 132.6 ├ ○ /chat-history                        1.44 kB         375 kB
+#15 132.6 ├ ○ /chat-history-minimal                1.09 kB         104 kB
+#15 132.6 ├ ○ /chat-history-test                    2.4 kB         120 kB
+#15 132.6 ├ ○ /chat/history                        1.46 kB         375 kB
+#15 132.6 ├ ○ /debug/auth                             5 kB         131 kB
+#15 132.6 ├ ƒ /document-viewer/[id]                2.72 kB         121 kB
+#15 132.6 ├ ○ /documents                           1.46 kB         375 kB
+#15 132.6 ├ ○ /projects                            11.9 kB         386 kB
+#15 132.6 ├ ○ /test                                  159 B         103 kB
+#15 132.6 ├ ○ /test-chat-history                    2.4 kB         120 kB
+#15 132.6 ├ ○ /test-route                            159 B         103 kB
+#15 132.6 └ ○ /whoami                              2.42 kB         120 kB
+#15 132.6 + First Load JS shared by all             103 kB
+#15 132.6   ├ chunks/7052-2c5dd4ba8d188f92.js      46.5 kB
+#15 132.6   ├ chunks/ff3c9725-c3e2a59bb556722b.js  53.2 kB
+#15 132.6   └ other shared chunks (total)          2.82 kB
+#15 132.6 
+#15 132.6 
+#15 132.6 ƒ Middleware                             32.3 kB
+#15 132.6 
+#15 132.6 ○  (Static)   prerendered as static content
+#15 132.6 ƒ  (Dynamic)  server-rendered on demand
+#15 132.6 
+#15 DONE 132.9s
+
+#16 [frontend runner 2/7] WORKDIR /app
+#16 CACHED
+
+#17 [frontend runner 3/7] COPY --from=builder /app/next.config.js ./
+#17 CACHED
+
+#18 [frontend runner 4/7] COPY --from=builder /app/public ./public
+#18 CACHED
+
+#19 [frontend runner 5/7] COPY --from=builder /app/package.json ./package.json
+#19 CACHED
+
+#20 [frontend runner 6/7] COPY --from=builder /app/.next/standalone ./
+#20 DONE 0.8s
+
+#21 [frontend runner 7/7] COPY --from=builder /app/.next/static ./.next/static
+#21 DONE 0.1s
+
+#22 [frontend] exporting to image
+#22 exporting layers
+#22 exporting layers 0.8s done
+#22 writing image sha256:db63177b8b0b895bf44708f009718f8cb97913f33ef9d123f16465f44c49e750 done
+#22 naming to docker.io/library/deer-flow-frontend done
+#22 DONE 0.8s
+
+#23 [frontend] resolving provenance for metadata file
+#23 DONE 0.0s
+ frontend  Built

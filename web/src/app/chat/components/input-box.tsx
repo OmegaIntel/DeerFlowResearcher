@@ -64,6 +64,8 @@ export function InputBox({
   onSend,
   onCancel,
   onRemoveFeedback,
+  onFocus,
+  placeholder,
 }: {
   className?: string;
   size?: "large" | "normal";
@@ -72,6 +74,8 @@ export function InputBox({
   onSend?: (message: string, options?: { interruptFeedback?: string; toolId?: string; toolType?: "mcp" | "agent" | "research" }) => void;
   onCancel?: () => void;
   onRemoveFeedback?: () => void;
+  onFocus?: () => void;
+  placeholder?: string;
 }) {
   const [message, setMessage] = useState("");
   const [imeStatus, setImeStatus] = useState<"active" | "inactive">("inactive");
@@ -666,9 +670,10 @@ export function InputBox({
           placeholder={
             feedback
               ? `Describe how you ${feedback.option.text.toLocaleLowerCase()}?`
-              : "What can I do for you?"
+              : placeholder || "What can I do for you?"
           }
           value={message}
+          onFocus={onFocus}
           onCompositionStart={() => setImeStatus("active")}
           onCompositionEnd={() => setImeStatus("inactive")}
           onKeyDown={handleKeyDown}

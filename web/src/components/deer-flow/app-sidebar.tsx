@@ -46,6 +46,7 @@ import { useAuth } from "~/hooks/use-auth";
 import { useCurrentUser } from "~/hooks/use-current-user";
 import { startNewChat } from "~/core/store";
 import { ProjectSwitcher } from "~/components/projects/project-switcher";
+import { SettingsDialogControlled } from "./settings-dialog-controlled";
 
 import { LogoIcon } from "./logo";
 
@@ -105,6 +106,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
   const { user: currentUser, loading } = useCurrentUser();
   const [isAuth, setIsAuth] = useState(false);
   const [currentProject, setCurrentProject] = useState<string | null>(null);
+  const [showSettings, setShowSettings] = useState(false);
 
   useEffect(() => {
     // Simple auth check using token presence
@@ -195,8 +197,81 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         </SidebarGroup>
       </SidebarContent>
       
+      <SidebarFooter>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            {currentUser ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <SidebarMenuButton
+                    size="lg"
+                    className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground"
+                  >
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                      <span className="text-sm font-medium">
+                        {(currentUser.full_name || currentUser.email)?.[0]?.toUpperCase() || 'U'}
+                      </span>
+                    </div>
+                    <div className="flex flex-col gap-0.5 text-left">
+                      <span className="truncate font-semibold">
+                        {currentUser.full_name || currentUser.email.split('@')[0]}
+                      </span>
+                      <span className="truncate text-xs text-muted-foreground">
+                        {currentUser.email}
+                      </span>
+                    </div>
+                    <ChevronUp className="ml-auto size-4" />
+                  </SidebarMenuButton>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent
+                  side="top"
+                  className="w-[--radix-dropdown-menu-trigger-width] min-w-56"
+                >
+                  <DropdownMenuLabel className="font-normal">
+                    <div className="flex flex-col space-y-1">
+                      <p className="text-sm font-medium leading-none">
+                        {currentUser.full_name || currentUser.email.split('@')[0]}
+                      </p>
+                      <p className="text-xs leading-none text-muted-foreground">
+                        {currentUser.email}
+                      </p>
+                    </div>
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => router.push('/account')}>
+                    <User className="mr-2 h-4 w-4" />
+                    <span>Account</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => setShowSettings(true)}>
+                    <Settings2 className="mr-2 h-4 w-4" />
+                    <span>Settings</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onSelect={() => {
+                    console.log('[AppSidebar] Support clicked - placeholder');
+                    // TODO: Implement support action
+                  }}>
+                    <LifeBuoy className="mr-2 h-4 w-4" />
+                    <span>Support</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onSelect={handleLogout}>
+                    <LogOut className="mr-2 h-4 w-4" />
+                    <span>Log out</span>
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <SidebarMenuButton size="lg" onClick={handleLogin}>
+                <User className="h-5 w-5" />
+                <span>Sign In</span>
+              </SidebarMenuButton>
+            )}
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
       
       <SidebarRail />
+      <SettingsDialogControlled open={showSettings} onOpenChange={setShowSettings} />
     </Sidebar>
   );
 }

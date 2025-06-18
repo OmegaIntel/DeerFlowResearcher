@@ -1,0 +1,62 @@
+Navigating to application...
+Clicking Sign In...
+Signing in...
+[BROWSER] log: [LoginForm] Token received: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjaGV0YW5Ab21lZ2FpbnRlbGxpZ2VuY2UuYWkiLCJleHAiOjE3NTAyOTA5MTh9.09FdR3dQioC3tWXsXBM6tVzMM3pnc5ZDjJwux7GJwBQ
+[BROWSER] log: [Auth Service] Setting auth token: eyJhbGciOiJIUzI1NiIs...
+[BROWSER] log: [Auth Service] Cookie set with js-cookie
+[BROWSER] log: [Auth Service] Saved token to localStorage as backup
+[BROWSER] log: [Auth Service] Saved token to sessionStorage
+[BROWSER] log: [Auth Service] Token after setting: {cookie: eyJhbGciOiJIUzI1NiIs..., localStorage: eyJhbGciOiJIUzI1NiIs..., sessionStorage: eyJhbGciOiJIUzI1NiIs..., cookieString: authToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ…5MTh9.09FdR3dQioC3tWXsXBM6tVzMM3pnc5ZDjJwux7GJwBQ}
+Navigating to integrations...
+[BROWSER] log: [AccountPage] Rendering, user: null loading: true
+[BROWSER] log: [Auth Service] Getting auth token: {exists: true, length: 153, preview: eyJhbGciOiJIUzI1NiIs..., source: cookie, allCookies: authToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ…iOiJjaGV0YW5Ab21lZ2FpbnRlbGxpZ2VuY2UuYWkiLCJle...}
+[BROWSER] log: [resolveServiceURL] Resolved URL: http://localhost:8000/api/users/me
+[BROWSER] log: [Auth Service] Getting auth token: {exists: true, length: 153, preview: eyJhbGciOiJIUzI1NiIs..., source: cookie, allCookies: authToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ…iOiJjaGV0YW5Ab21lZ2FpbnRlbGxpZ2VuY2UuYWkiLCJle...}
+[BROWSER] log: [resolveServiceURL] Resolved URL: http://localhost:8000/api/users/me
+[BROWSER] log: [AccountPage] Rendering, user: null loading: true
+[BROWSER] log: [AccountPage] Rendering, user: null loading: true
+[BROWSER] log: [AccountPage] Rendering, user: {id: b6395347-9046-4620-8f82-fdcdc9b765cf, email: chetan@omegaintelligence.ai, is_admin: false, full_name: Chetan Goel, created_at: 2025-06-17T19:29:57} loading: false
+[BROWSER] log: [IntegrationsList] Component mounted, loading integrations...
+[BROWSER] log: [Auth Service] Getting auth token: {exists: true, length: 153, preview: eyJhbGciOiJIUzI1NiIs..., source: cookie, allCookies: authToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ…iOiJjaGV0YW5Ab21lZ2FpbnRlbGxpZ2VuY2UuYWkiLCJle...}
+[BROWSER] log: [IntegrationsList] Loading integrations with token: present
+[BROWSER] log: [resolveServiceURL] Resolved URL: http://localhost:8000/api/integrations
+[BROWSER] log: [AccountPage] Rendering, user: {id: b6395347-9046-4620-8f82-fdcdc9b765cf, email: chetan@omegaintelligence.ai, is_admin: false, full_name: Chetan Goel, created_at: 2025-06-17T19:29:57} loading: false
+[BROWSER] error: Failed to load resource: the server responded with a status of 404 (Not Found)
+[BROWSER] error: Failed to load resource: the server responded with a status of 404 (Not Found)
+[BROWSER] error: Failed to load resource: the server responded with a status of 404 (Not Found)
+[BROWSER] log: [IntegrationsList] Response status: 200
+[BROWSER] log: [IntegrationsList] Loaded integrations: [Object, Object, Object, Object, Object, Object, Object]
+[BROWSER] log: [IntegrationsList] Rendering with integrations: [Object, Object, Object, Object, Object, Object, Object]
+[BROWSER] log: [IntegrationsList] Enterprise integrations: [Object, Object, Object, Object, Object, Object, Object]
+Integrations page info: {
+  "title": "Omega Intelligence",
+  "url": "http://localhost:3000/account?tab=integrations",
+  "hasConnectButtons": 1,
+  "buttonTexts": [
+    "Chat",
+    "CChetan Goelchetan@omegaintelligence.ai",
+    "Toggle Sidebar",
+    "Profile",
+    "Integrations",
+    "Notifications",
+    "Danger Zone",
+    "Connect",
+    "Configure",
+    "Coming Soon",
+    "Coming Soon"
+  ]
+}
+Connect button analysis:
+======================
+Has onClick handler: YES
+Is popup version: false
+Is direct navigation: false
+Contains window.open: false
+Contains location.href: false
+Contains location.replace: false
+Contains setConnecting: false
+Contains toast.success: false
+Contains vault_url: false
+Contains apideck: false
+Function preview:
+()=>h(e.service_type)

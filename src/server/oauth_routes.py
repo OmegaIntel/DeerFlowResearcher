@@ -7,7 +7,7 @@ from urllib.parse import urlencode
 
 # from authlib.integrations.starlette_client import OAuth  # Not needed for manual implementation
 from fastapi import APIRouter, Depends, HTTPException, Request
-from fastapi.responses import RedirectResponse
+from fastapi.responses import RedirectResponse, JSONResponse
 from sqlalchemy.orm import Session
 from starlette.config import Config
 
@@ -63,6 +63,16 @@ async def oauth_login(provider: str, request: Request):
     try:
         environment = get_environment(request)
         config = get_provider_config(provider, environment)
+        
+        # Check if OAuth credentials are configured
+        if not config.get("client_id") or not config.get("client_secret"):
+            return JSONResponse(
+                status_code=503,
+                content={
+                    "error": "oauth_not_configured",
+                    "message": f"{provider.title()} OAuth is not configured. Please contact the administrator."
+                }
+            )
         
         # Use dynamic redirect URI based on request
         redirect_uri = get_redirect_uri(provider, request)
