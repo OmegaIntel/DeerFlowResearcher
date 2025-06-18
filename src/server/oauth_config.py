@@ -5,8 +5,8 @@ from typing import Dict, Any
 # OAuth provider configurations
 OAUTH_PROVIDERS = {
     "google": {
-        "client_id": os.getenv("GOOGLE_CLIENT_ID", "REMOVED_CLIENT_ID"),
-        "client_secret": os.getenv("GOOGLE_CLIENT_SECRET", "REMOVED_CLIENT_SECRET"),
+        "client_id": os.getenv("GOOGLE_CLIENT_ID", ""),
+        "client_secret": os.getenv("GOOGLE_CLIENT_SECRET", ""),
         "authorize_url": "https://accounts.google.com/o/oauth2/v2/auth",
         "token_url": "https://oauth2.googleapis.com/token",
         "userinfo_url": "https://www.googleapis.com/oauth2/v2/userinfo",
