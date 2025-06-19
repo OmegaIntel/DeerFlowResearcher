@@ -1,0 +1,7 @@
+Testing with network logs...
+API REQUEST: GET http://localhost:8000/api/integrations/google-drive/files
+API RESPONSE: 200 http://localhost:8000/api/integrations/google-drive/files
+--- Initial files loaded ---
+--- Clicking on Omega Intelligence folder ---
+API REQUEST: GET http://localhost:8000/api/integrations/google-drive/files
+API RESPONSE: 200 http://localhost:8000/api/integrations/google-drive/files

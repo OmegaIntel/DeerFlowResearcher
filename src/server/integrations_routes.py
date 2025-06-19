@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends, status, Request
+from fastapi import APIRouter, HTTPException, Depends, status, Request, Response, Query
 from pydantic import BaseModel
 from typing import Optional, List, Dict, Any, Annotated
 from sqlalchemy.orm import Session
@@ -6,6 +6,7 @@ from sqlalchemy import and_
 import logging
 import os
 import httpx
+import time
 from datetime import datetime
 import uuid
 from urllib.parse import urlparse
@@ -16,6 +17,10 @@ from src.api.api_get_current_user import get_current_user, User
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
+
+# Log route registration
+logger.info("[Integrations] Registering integrations routes")
+print("DEBUG: Integrations routes module loaded")
 
 # APIdeck configuration
 APIDECK_APP_ID = os.getenv("APIDECK_APP_ID")
@@ -94,6 +99,18 @@ class VaultSessionResponse(BaseModel):
 async def test_integrations():
     """Test endpoint to verify integrations API is working."""
     return {"status": "ok", "message": "Integrations API is working"}
+
+
+@router.get("/integrations/test-files")
+async def test_files_endpoint():
+    """Test endpoint to verify files route is accessible."""
+    return {"status": "ok", "message": "Files endpoint is accessible"}
+
+
+@router.get("/integrations/google-drive/files-test")
+async def test_google_drive_files():
+    """Test endpoint specifically for google drive files."""
+    return {"status": "ok", "files": []}
 
 
 @router.get("/integrations")
@@ -488,14 +505,28 @@ async def check_and_update_connection(
                 connections = response.json().get("data", [])
                 logger.info(f"[Integrations] Found {len(connections)} connections for {unified_api}")
                 
+                # Map our service types to APIdeck service IDs
+                service_id_map = {
+                    'microsoft-onedrive': 'onedrive',
+                    'microsoft-sharepoint': 'sharepoint',
+                    'microsoft-outlook': 'microsoft-outlook'
+                }
+                expected_service_id = service_id_map.get(service_type, service_type)
+                
                 # Find our specific service connection
                 for conn in connections:
-                    if conn.get("service_id") == service_type and conn.get("state") == "callable":
+                    conn_service_id = conn.get("service_id")
+                    conn_state = conn.get("state")
+                    
+                    # Log for debugging
+                    logger.info(f"[Integrations] Checking connection: service_id={conn_service_id}, state={conn_state}, expected={expected_service_id}")
+                    
+                    if conn_service_id == expected_service_id and conn_state in ["callable", "added"]:
                         # Update integration as connected
                         integration.is_connected = True
                         integration.connection_id = conn.get("id")
                         integration.connection_metadata = {
-                            "state": conn.get("state"),
+                            "state": conn_state,
                             "auth_type": conn.get("auth_type"),
                             "created_at": conn.get("created_at"),
                             "updated_at": conn.get("updated_at"),
@@ -516,7 +547,8 @@ async def check_and_update_connection(
                         return {
                             "status": "connected",
                             "service_type": service_type,
-                            "account_name": conn.get("metadata", {}).get("account", {}).get("name")
+                            "account_name": conn.get("metadata", {}).get("account", {}).get("name"),
+                            "connection_state": conn_state
                         }
                 
                 # No callable connection found
@@ -538,6 +570,227 @@ async def check_and_update_connection(
             "service_type": service_type,
             "error": str(e)
         }
+
+
+@router.post("/integrations/{service_type}/session")
+async def get_file_picker_session(
+    service_type: str,
+    current_user: Annotated[User, Depends(get_current_user)],
+    db: Session = Depends(get_db)
+):
+    """Get a session token for the APIdeck File Picker."""
+    try:
+        integration = db.query(Integration).filter(
+            and_(
+                Integration.user_id == current_user.id,
+                Integration.service_type == service_type,
+                Integration.is_connected == True
+            )
+        ).first()
+        
+        if not integration:
+            raise HTTPException(status_code=404, detail="Integration not found or not connected")
+        
+        # Create a session token for the file picker
+        consumer_id = f"user-{current_user.id}"
+        
+        # Create JWT for file picker session
+        payload = {
+            "consumer_id": consumer_id,
+            "application_id": APIDECK_APP_ID,
+            "service_id": service_type,
+            "iat": int(time.time()),
+            "exp": int(time.time()) + 3600  # 1 hour expiration
+        }
+        
+        # For now, return the same session token format
+        # In production, you might want to create a specific file picker token
+        headers = {
+            "Authorization": f"Bearer {APIDECK_API_KEY}",
+            "x-apideck-app-id": APIDECK_APP_ID,
+            "x-apideck-consumer-id": consumer_id,
+            "Content-Type": "application/json"
+        }
+        
+        # Create a vault session for file picker
+        vault_data = {
+            "consumer_metadata": {
+                "user_id": str(current_user.id),
+                "email": current_user.email,
+                "full_name": current_user.full_name or current_user.email
+            },
+            "settings": {
+                "unified_apis": ["file-storage"],
+                "service_id": service_type,
+                "hide_resource_settings": True,
+                "auto_redirect": True
+            }
+        }
+        
+        async with httpx.AsyncClient() as client:
+            response = await client.post(
+                f"{APIDECK_BASE_URL}/vault/sessions",
+                headers=headers,
+                json=vault_data
+            )
+            
+            if response.status_code in [200, 201]:
+                session_data = response.json()
+                session_token = session_data.get("data", {}).get("session_token")
+                
+                if session_token:
+                    return {"session_token": session_token}
+                else:
+                    raise HTTPException(status_code=500, detail="Failed to get session token")
+            else:
+                logger.error(f"[Integrations] Vault session error: {response.status_code} - {response.text}")
+                raise HTTPException(status_code=500, detail="Failed to create file picker session")
+                
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"[Integrations] Error creating file picker session: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to create file picker session")
+
+
+@router.get("/integrations/{service_type}/files", response_model=Dict[str, List[Dict[str, Any]]])
+async def list_cloud_files(
+    service_type: str,
+    current_user: Annotated[User, Depends(get_current_user)],
+    db: Session = Depends(get_db),
+    parent_id: Optional[str] = Query(None)
+):
+    """List files from cloud storage."""
+    logger.info(f"[Integrations] List files called for {service_type}, user: {current_user.email if current_user else 'None'}, parent_id: {parent_id}")
+    try:
+        if not current_user:
+            logger.error("[Integrations] No current user found")
+            raise HTTPException(status_code=401, detail="Not authenticated")
+            
+        integration = db.query(Integration).filter(
+            and_(
+                Integration.user_id == current_user.id,
+                Integration.service_type == service_type,
+                Integration.is_connected == True
+            )
+        ).first()
+        
+        if not integration:
+            logger.error(f"[Integrations] Integration not found for {service_type}, user_id: {current_user.id}")
+            raise HTTPException(status_code=404, detail="Integration not found or not connected")
+        
+        consumer_id = f"user-{current_user.id}"
+        
+        # Map our service types to APIdeck service IDs
+        service_id_map = {
+            'microsoft-onedrive': 'onedrive',
+            'microsoft-sharepoint': 'sharepoint',
+            'microsoft-outlook': 'microsoft-outlook'
+        }
+        actual_service_id = service_id_map.get(service_type, service_type)
+        
+        headers = {
+            "Authorization": f"Bearer {APIDECK_API_KEY}",
+            "x-apideck-app-id": APIDECK_APP_ID,
+            "x-apideck-consumer-id": consumer_id,
+            "x-apideck-service-id": actual_service_id
+        }
+        
+        async with httpx.AsyncClient() as client:
+            # Get files from APIdeck
+            url = f"{APIDECK_BASE_URL}/file-storage/files"
+            params = {}
+            
+            # Use APIdeck's filter syntax for folder navigation
+            if parent_id:
+                params["filter[folder_id]"] = parent_id
+                logger.info(f"[Integrations] Filtering files by folder_id: {parent_id}")
+            
+            response = await client.get(url, headers=headers, params=params)
+            
+            if response.status_code == 200:
+                data = response.json()
+                files = data.get("data", [])
+                
+                # Transform to our format
+                formatted_files = []
+                for file in files:
+                    formatted_files.append({
+                        "id": file.get("id"),
+                        "name": file.get("name"),
+                        "type": file.get("type"),  # 'file' or 'folder'
+                        "size": file.get("size"),
+                        "mime_type": file.get("mime_type"),
+                        "modified_at": file.get("updated_at"),
+                        "parent_id": file.get("parent_folder_id")
+                    })
+                
+                return {"files": formatted_files}
+            else:
+                logger.error(f"[Integrations] File list error: {response.status_code} - {response.text}")
+                raise HTTPException(status_code=response.status_code, detail="Failed to list files")
+                
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"[Integrations] Error listing files: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to list files")
+
+
+@router.get("/integrations/{service_type}/files/{file_id}/download")
+async def download_file_from_cloud(
+    service_type: str,
+    file_id: str,
+    current_user: Annotated[User, Depends(get_current_user)],
+    db: Session = Depends(get_db)
+):
+    """Download a file from cloud storage."""
+    try:
+        integration = db.query(Integration).filter(
+            and_(
+                Integration.user_id == current_user.id,
+                Integration.service_type == service_type,
+                Integration.is_connected == True
+            )
+        ).first()
+        
+        if not integration:
+            raise HTTPException(status_code=404, detail="Integration not found or not connected")
+        
+        consumer_id = f"user-{current_user.id}"
+        headers = {
+            "Authorization": f"Bearer {APIDECK_API_KEY}",
+            "x-apideck-app-id": APIDECK_APP_ID,
+            "x-apideck-consumer-id": consumer_id,
+            "x-apideck-service-id": service_type
+        }
+        
+        async with httpx.AsyncClient() as client:
+            # Get file content from APIdeck
+            response = await client.get(
+                f"{APIDECK_BASE_URL}/file-storage/files/{file_id}/download",
+                headers=headers,
+                follow_redirects=True
+            )
+            
+            if response.status_code == 200:
+                # Return file content
+                return Response(
+                    content=response.content,
+                    media_type=response.headers.get("content-type", "application/octet-stream"),
+                    headers={
+                        "Content-Disposition": response.headers.get("content-disposition", f"attachment; filename={file_id}")
+                    }
+                )
+            else:
+                logger.error(f"[Integrations] File download error: {response.status_code}")
+                raise HTTPException(status_code=response.status_code, detail="Failed to download file")
+                
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"[Integrations] Error downloading file: {str(e)}")
+        raise HTTPException(status_code=500, detail="Failed to download file")
 
 
 @router.get("/integrations/{service_type}/status")

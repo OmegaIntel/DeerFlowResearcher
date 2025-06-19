@@ -1,0 +1,62 @@
+Starting detailed debug test...
+BROWSER: [LoginForm] Token received: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjaGV0YW5Ab21lZ2FpbnRlbGxpZ2VuY2UuYWkiLCJleHAiOjE3NTAzMDA5OTd9.DSUr0rXiQailoss6u_RGJrY6H3Ho46bdN_NUqZs1QSI
+BROWSER: [Auth Service] Setting auth token: eyJhbGciOiJIUzI1NiIs...
+BROWSER: [Auth Service] Cookie set with js-cookie
+BROWSER: [Auth Service] Saved token to localStorage as backup
+BROWSER: [Auth Service] Saved token to sessionStorage
+BROWSER: [Auth Service] Token after setting: {cookie: eyJhbGciOiJIUzI1NiIs..., localStorage: eyJhbGciOiJIUzI1NiIs..., sessionStorage: eyJhbGciOiJIUzI1NiIs..., cookieString: authToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ…5OTd9.DSUr0rXiQailoss6u_RGJrY6H3Ho46bdN_NUqZs1QSI}
+BROWSER: [Auth Service] Getting auth token: {exists: true, length: 153, preview: eyJhbGciOiJIUzI1NiIs..., source: cookie, allCookies: authToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ…iOiJjaGV0YW5Ab21lZ2FpbnRlbGxpZ2VuY2UuYWkiLCJle...}
+BROWSER: [resolveServiceURL] Resolved URL: http://localhost:8000/api/users/me
+BROWSER: Failed to load resource: the server responded with a status of 404 (Not Found)
+BROWSER: Failed to load resource: the server responded with a status of 404 (Not Found)
+BROWSER: Failed to load resource: the server responded with a status of 404 (Not Found)
+BROWSER: [resolveServiceURL] Resolved URL: http://localhost:8000/api/projects?include_archived=false
+BROWSER: [Auth Service] Getting auth token: {exists: true, length: 153, preview: eyJhbGciOiJIUzI1NiIs..., source: cookie, allCookies: authToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ…iOiJjaGV0YW5Ab21lZ2FpbnRlbGxpZ2VuY2UuYWkiLCJle...}
+BROWSER: [Auth Service] Getting auth token: {exists: true, length: 153, preview: eyJhbGciOiJIUzI1NiIs..., source: cookie, allCookies: authToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ…iOiJjaGV0YW5Ab21lZ2FpbnRlbGxpZ2VuY2UuYWkiLCJle...}
+BROWSER: [resolveServiceURL] Resolved URL: http://localhost:8000/api/integrations
+BROWSER: [EnhancedInputBox] Loaded integrations: [Object, Object, Object, Object, Object, Object, Object]
+BROWSER: [EnhancedInputBox] Enabled integrations: 2
+BROWSER: [EnhancedInputBox] Connected integrations: 1
+BROWSER: [EnhancedInputBox] Integration tools created: [Object, Object]
+BROWSER: [EnhancedInputBox] Browse button clicked for: google-drive
+BROWSER: [Auth Service] Getting auth token: {exists: true, length: 153, preview: eyJhbGciOiJIUzI1NiIs..., source: cookie, allCookies: authToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ…iOiJjaGV0YW5Ab21lZ2FpbnRlbGxpZ2VuY2UuYWkiLCJle...}
+BROWSER: [resolveServiceURL] Resolved URL: http://localhost:8000/api/integrations/google-drive/files
+
+=== API REQUEST ===
+URL: http://localhost:8000/api/integrations/google-drive/files
+Method: GET
+Headers: {
+  'sec-ch-ua-platform': '"Linux"',
+  authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjaGV0YW5Ab21lZ2FpbnRlbGxpZ2VuY2UuYWkiLCJleHAiOjE3NTAzMDA5OTd9.DSUr0rXiQailoss6u_RGJrY6H3Ho46bdN_NUqZs1QSI',
+  referer: 'http://localhost:3000/',
+  'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/138.0.7204.23 Safari/537.36',
+  'sec-ch-ua': '"Not)A;Brand";v="8", "Chromium";v="138", "HeadlessChrome";v="138"',
+  'sec-ch-ua-mobile': '?0'
+}
+BROWSER: Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}.
+
+=== API RESPONSE ===
+URL: http://localhost:8000/api/integrations/google-drive/files
+Status: 200
+
+=== CLICKING FOLDER ===
+BROWSER: [Auth Service] Getting auth token: {exists: true, length: 153, preview: eyJhbGciOiJIUzI1NiIs..., source: cookie, allCookies: authToken=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ…iOiJjaGV0YW5Ab21lZ2FpbnRlbGxpZ2VuY2UuYWkiLCJle...}
+BROWSER: [resolveServiceURL] Resolved URL: http://localhost:8000/api/integrations/google-drive/files
+
+=== API REQUEST ===
+URL: http://localhost:8000/api/integrations/google-drive/files
+Method: GET
+Headers: {
+  'sec-ch-ua-platform': '"Linux"',
+  authorization: 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjaGV0YW5Ab21lZ2FpbnRlbGxpZ2VuY2UuYWkiLCJleHAiOjE3NTAzMDA5OTd9.DSUr0rXiQailoss6u_RGJrY6H3Ho46bdN_NUqZs1QSI',
+  referer: 'http://localhost:3000/',
+  'user-agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/138.0.7204.23 Safari/537.36',
+  'sec-ch-ua': '"Not)A;Brand";v="8", "Chromium";v="138", "HeadlessChrome";v="138"',
+  'sec-ch-ua-mobile': '?0'
+}
+
+=== API RESPONSE ===
+URL: http://localhost:8000/api/integrations/google-drive/files
+Status: 200
+
+=== TEST COMPLETE ===

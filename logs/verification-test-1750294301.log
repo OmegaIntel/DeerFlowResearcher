@@ -1,0 +1,37 @@
+Testing folder navigation...
+BROWSER: [CloudFileBrowser] State changed - isOpen: true currentFolderId: null
+BROWSER: [CloudFileBrowser] Resetting state for root folder
+BROWSER: [CloudFileBrowser] Loading files for folder: root
+BROWSER: [CloudFileBrowser] Fetching URL: http://localhost:8000/api/integrations/google-drive/files
+BROWSER: [CloudFileBrowser] Received files: 20
+✓ File browser opened
+Initial folders: [
+  'Barnes',
+  'Ragie',
+  'andrew@omegaintelligence.ai',
+  'darwin godel machine 2025',
+  'Omega Intelligence'
+]
+✓ Found Omega Intelligence folder, clicking...
+BROWSER: [CloudFileBrowser] Navigating to folder: Omega Intelligence ID: 1faVUna6ct5x6yxTLvdITSxOUrutiDcff
+BROWSER: [CloudFileBrowser] State changed - isOpen: true currentFolderId: 1faVUna6ct5x6yxTLvdITSxOUrutiDcff
+BROWSER: [CloudFileBrowser] Loading files for folder: 1faVUna6ct5x6yxTLvdITSxOUrutiDcff
+BROWSER: [CloudFileBrowser] Fetching URL: http://localhost:8000/api/integrations/google-drive/files?parent_id=1faVUna6ct5x6yxTLvdITSxOUrutiDcff
+BROWSER: [CloudFileBrowser] Received files: 7
+Items after navigation: [
+  'Omega Intelligence R2.mp4',
+  'Steve Kaplans Zoom Meeting - Zoom.mp4',
+  'Omega Intelligence Round 1.mp4',
+  'Omega presentation 1 feedback.xlsx',
+  'Omega presentation 2 feedback.xlsx',
+  'Omega Intelligence Pitch 2.pptx',
+  'Omega Pitchdeck Pitch 1.pptx'
+]
+✅ SUCCESS: Folder navigation works! Now showing files instead of folders.
+Test error: locator.textContent: Error: strict mode violation: locator('[role="dialog"]').locator('span.text-muted-foreground') resolved to 2 elements:
+    1) <span class="text-sm text-muted-foreground">/ Omega Intelligence</span> aka getByText('/ Omega Intelligence')
+    2) <span class="text-sm text-muted-foreground">0 file(s) selected</span> aka getByText('file(s) selected')
+
+Call log:
+[2m  - waiting for locator('[role="dialog"]').locator('span.text-muted-foreground')[22m
+

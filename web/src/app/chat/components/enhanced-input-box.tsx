@@ -35,6 +35,7 @@ import {
 import { Switch } from '~/components/ui/switch';
 import { getAuthToken } from '~/services/auth';
 import { resolveServiceURL } from '~/core/api/resolve-service-url';
+import { CloudFileBrowser } from '~/components/deer-flow/cloud-file-browser';
 
 interface Tool {
   id: string;
@@ -92,6 +93,8 @@ export function EnhancedInputBox({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [integrationsLoaded, setIntegrationsLoaded] = useState(false);
+  const [filePickerOpen, setFilePickerOpen] = useState(false);
+  const [selectedCloudService, setSelectedCloudService] = useState<{type: string, name: string} | null>(null);
 
   const handleSend = useCallback(() => {
     if (responding) {
@@ -150,21 +153,30 @@ export function EnhancedInputBox({
 
       if (response.ok) {
         const integrations = await response.json();
+        console.log('[EnhancedInputBox] Loaded integrations:', integrations);
         
         // Add enabled and connected integrations to tools
+        const enabledIntegrations = integrations.filter((int: any) => int.enabled);
+        const connectedIntegrations = integrations.filter((int: any) => int.enabled && int.is_connected);
+        
+        console.log('[EnhancedInputBox] Enabled integrations:', enabledIntegrations.length);
+        console.log('[EnhancedInputBox] Connected integrations:', connectedIntegrations.length);
+        
         const integrationTools: Tool[] = integrations
-          .filter((int: any) => int.enabled && int.is_connected)
+          .filter((int: any) => int.enabled)
           .map((int: any) => {
             const Icon = SERVICE_ICONS[int.service_type] || Building2;
+            const isConnected = int.is_connected;
             return {
               id: `integration-${int.service_type}`,
-              name: int.service_name,
+              name: int.service_name + (isConnected ? '' : ' (Not Connected)'),
               icon: <Icon className="w-4 h-4" />,
-              enabled: true,
+              enabled: isConnected, // Only allow selection if connected
               type: 'integration' as const,
             };
           });
         
+        console.log('[EnhancedInputBox] Integration tools created:', integrationTools);
         setTools([...defaultTools, ...integrationTools]);
         setIntegrationsLoaded(true);
       }
@@ -246,21 +258,92 @@ export function EnhancedInputBox({
                   <div className="mb-2">
                     <span className="px-2 text-xs text-muted-foreground">Connected Services</span>
                   </div>
-                  {tools.filter(t => t.type === 'integration').map((tool) => (
-                    <div
-                      key={tool.id}
-                      className="flex items-center justify-between rounded-md px-2 py-2 hover:bg-accent"
-                    >
-                      <div className="flex items-center gap-3">
-                        {tool.icon}
-                        <span className="text-sm font-medium">{tool.name}</span>
+                  {tools.filter(t => t.type === 'integration').map((tool) => {
+                    const isNotConnected = tool.name.includes('(Not Connected)');
+                    const serviceType = tool.id.replace('integration-', '');
+                    return (
+                      <div
+                        key={tool.id}
+                        className={cn(
+                          "flex items-center justify-between rounded-md px-2 py-2",
+                          !isNotConnected && "hover:bg-accent cursor-pointer"
+                        )}
+                        onClick={() => {
+                          console.log('[EnhancedInputBox] Clicked on service:', {
+                            serviceType,
+                            toolName: tool.name,
+                            isNotConnected,
+                            enabled: tool.enabled
+                          });
+                          
+                          if (!isNotConnected && tool.enabled) {
+                            // Open file picker for connected and enabled services
+                            console.log('[EnhancedInputBox] Opening file browser for:', serviceType);
+                            setSelectedCloudService({ 
+                              type: serviceType, 
+                              name: tool.name 
+                            });
+                            setFilePickerOpen(true);
+                            setShowToolMenu(false);
+                          }
+                        }}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className={cn(!isNotConnected && "opacity-100", isNotConnected && "opacity-50")}>
+                            {tool.icon}
+                          </div>
+                          <span className={cn(
+                            "text-sm font-medium",
+                            isNotConnected && "text-muted-foreground"
+                          )}>
+                            {tool.name}
+                          </span>
+                        </div>
+                        {isNotConnected ? (
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            className="h-7 text-xs"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              setShowToolMenu(false);
+                              router.push('/account?tab=integrations');
+                            }}
+                          >
+                            Connect
+                          </Button>
+                        ) : (
+                          <div className="flex items-center gap-2">
+                            {tool.enabled ? (
+                              <Button
+                                size="sm"
+                                variant="secondary"
+                                className="h-7 text-xs"
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  console.log('[EnhancedInputBox] Browse button clicked for:', serviceType);
+                                  setSelectedCloudService({ 
+                                    type: serviceType, 
+                                    name: tool.name 
+                                  });
+                                  setFilePickerOpen(true);
+                                  setShowToolMenu(false);
+                                }}
+                              >
+                                Browse Files
+                              </Button>
+                            ) : (
+                              <Switch
+                                checked={tool.enabled}
+                                onCheckedChange={() => toggleTool(tool.id)}
+                                onClick={(e) => e.stopPropagation()}
+                              />
+                            )}
+                          </div>
+                        )}
                       </div>
-                      <Switch
-                        checked={tool.enabled}
-                        onCheckedChange={() => toggleTool(tool.id)}
-                      />
-                    </div>
-                  ))}
+                    );
+                  })}
                 </>
               )}
               <DropdownMenuSeparator className="my-2" />
@@ -381,6 +464,33 @@ export function EnhancedInputBox({
         onChange={handleFileSelect}
         accept=".pdf,.doc,.docx,.txt,.csv,.json,.md,.xlsx,.xls,.ppt,.pptx"
       />
+      
+      {/* Cloud File Browser */}
+      {filePickerOpen && selectedCloudService && (
+        <CloudFileBrowser
+          isOpen={filePickerOpen}
+          onClose={() => {
+            setFilePickerOpen(false);
+            setSelectedCloudService(null);
+          }}
+          serviceType={selectedCloudService.type}
+          serviceName={selectedCloudService.name}
+          onFilesSelected={(cloudFiles) => {
+            // Convert cloud files to File objects for chat
+            cloudFiles.forEach(cloudFile => {
+              // Create a placeholder file object with cloud file info
+              const file = new File([''], cloudFile.name, { type: cloudFile.mime_type || 'application/octet-stream' });
+              // Add cloud metadata to the file
+              (file as any).cloudMetadata = {
+                id: cloudFile.id,
+                service: selectedCloudService.type,
+                size: cloudFile.size
+              };
+              setAttachedFiles(prev => [...prev, file]);
+            });
+          }}
+        />
+      )}
     </div>
   );
 }

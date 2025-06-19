@@ -187,14 +187,15 @@ export function IntegrationsTabContent() {
           if (popup) {
             toast.success('Opening connection window...');
             
-            // Monitor popup and reload integrations when closed
+            // Monitor popup and check connection status when closed
             const checkClosed = setInterval(() => {
               if (popup.closed) {
                 clearInterval(checkClosed);
-                toast.info('Connection window closed. Refreshing integrations...');
+                toast.info('Connection window closed. Checking connection status...');
+                // Check connection status after a delay to allow APIdeck to update
                 setTimeout(() => {
-                  loadIntegrations();
-                }, 1000);
+                  checkConnectionStatus(serviceType);
+                }, 2000);
               }
             }, 1000);
           } else {

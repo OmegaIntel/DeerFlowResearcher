@@ -1,0 +1,30 @@
+Testing folder navigation...
+✓ File browser opened
+Initial folders: [
+  'Barnes',
+  'Ragie',
+  'andrew@omegaintelligence.ai',
+  'darwin godel machine 2025',
+  'Omega Intelligence'
+]
+✓ Found Omega Intelligence folder, clicking...
+Items after navigation: [
+  'Barnes',
+  'Ragie',
+  'andrew@omegaintelligence.ai',
+  'darwin godel machine 2025',
+  'Omega Intelligence',
+  'Presentation Feedback and Follow Up',
+  'IC Memo',
+  'Contrary ',
+  'Week 8',
+  'Prospecting Assets'
+]
+❌ FAILED: Still showing folders instead of files.
+Test error: locator.textContent: Error: strict mode violation: locator('[role="dialog"]').locator('span.text-muted-foreground') resolved to 2 elements:
+    1) <span class="text-sm text-muted-foreground">/ Omega Intelligence</span> aka getByText('/ Omega Intelligence')
+    2) <span class="text-sm text-muted-foreground">0 file(s) selected</span> aka getByText('file(s) selected')
+
+Call log:
+[2m  - waiting for locator('[role="dialog"]').locator('span.text-muted-foreground')[22m
+
