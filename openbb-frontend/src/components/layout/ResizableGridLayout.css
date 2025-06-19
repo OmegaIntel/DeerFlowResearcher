@@ -1,0 +1,196 @@
+.openbb-widget-container {
+  background: var(--openbb-bg-widget);
+  border: 1px solid var(--openbb-border);
+  border-radius: 8px;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.2s ease;
+}
+
+.openbb-widget-container > div {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Widget content area with scrolling */
+.widget-content-wrapper {
+  flex: 1;
+  overflow: auto;
+  padding: 1rem;
+}
+
+/* Custom scrollbar for widgets */
+.widget-content-wrapper::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.widget-content-wrapper::-webkit-scrollbar-track {
+  background: var(--openbb-bg-primary);
+}
+
+.widget-content-wrapper::-webkit-scrollbar-thumb {
+  background: var(--openbb-border);
+  border-radius: 3px;
+}
+
+.widget-content-wrapper::-webkit-scrollbar-thumb:hover {
+  background: var(--openbb-text-muted);
+}
+
+.react-grid-item {
+  transition: all 200ms ease;
+  transition-property: left, top, width, height;
+}
+
+.react-grid-item.cssTransforms {
+  transition-property: transform, width, height;
+}
+
+.react-grid-item.resizing {
+  z-index: 100;
+  will-change: width, height;
+}
+
+.react-grid-item.dragging {
+  transition: none;
+  z-index: 100;
+  will-change: transform;
+}
+
+.react-grid-item.react-draggable-dragging {
+  opacity: 0.9;
+}
+
+/* Base styles for all resize handles - invisible interaction areas */
+.react-resizable-handle {
+  position: absolute;
+  opacity: 0;
+}
+
+/* Corner handles - larger invisible area for easier interaction */
+.react-resizable-handle-se,
+.react-resizable-handle-sw,
+.react-resizable-handle-ne,
+.react-resizable-handle-nw {
+  width: 20px;
+  height: 20px;
+}
+
+.react-resizable-handle-se {
+  bottom: 0;
+  right: 0;
+  cursor: se-resize;
+}
+
+.react-resizable-handle-sw {
+  bottom: 0;
+  left: 0;
+  cursor: sw-resize;
+}
+
+.react-resizable-handle-ne {
+  top: 0;
+  right: 0;
+  cursor: ne-resize;
+}
+
+.react-resizable-handle-nw {
+  top: 0;
+  left: 0;
+  cursor: nw-resize;
+}
+
+/* Edge handles - invisible interaction areas */
+.react-resizable-handle-e,
+.react-resizable-handle-w {
+  width: 8px;
+  height: 100%;
+  top: 0;
+}
+
+.react-resizable-handle-e {
+  right: 0;
+  cursor: e-resize;
+}
+
+.react-resizable-handle-w {
+  left: 0;
+  cursor: w-resize;
+}
+
+.react-resizable-handle-n,
+.react-resizable-handle-s {
+  height: 8px;
+  width: 100%;
+  left: 0;
+}
+
+.react-resizable-handle-n {
+  top: 0;
+  cursor: n-resize;
+}
+
+.react-resizable-handle-s {
+  bottom: 0;
+  cursor: s-resize;
+}
+
+/* Very subtle visual indicator only on bottom-right corner */
+.react-resizable-handle-se::after {
+  content: '';
+  position: absolute;
+  bottom: 4px;
+  right: 4px;
+  width: 4px;
+  height: 4px;
+  background-color: var(--openbb-text-muted);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+/* Show subtle indicator on widget hover */
+.react-grid-item:hover .react-resizable-handle-se::after {
+  opacity: 0.3;
+}
+
+/* Slightly stronger on direct hover */
+.react-resizable-handle-se:hover::after {
+  opacity: 0.5;
+}
+
+/* Add very subtle border change on widget hover */
+.react-grid-item:hover .openbb-widget-container {
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Make widgets scrollable when content overflows */
+.openbb-widget-container .widget-content {
+  overflow-y: auto;
+  overflow-x: hidden;
+  flex: 1;
+  max-height: 100%;
+}
+
+/* Widget header styling */
+.widget-drag-handle {
+  cursor: move !important;
+}
+
+/* Prevent text selection while dragging */
+.react-grid-item.dragging .widget-drag-handle {
+  user-select: none;
+}
+
+/* Ensure widget content area is properly contained */
+.openbb-widget-container > div > div {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+}

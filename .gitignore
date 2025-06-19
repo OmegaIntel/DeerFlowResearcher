@@ -1,0 +1,87 @@
+# Dependencies
+node_modules/
+*/node_modules/
+
+# Environment files
+.env
+.env.local
+.env.production
+.env.development
+*/.env
+*/.env.*
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+venv/
+env/
+ENV/
+.venv
+
+# Build directories
+build/
+dist/
+*.egg-info/
+.pytest_cache/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Testing
+coverage/
+.coverage
+htmlcov/
+test-results/
+playwright-report/
+
+# Screenshots and test files
+*.png
+screenshot/
+screenshots/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# Backend specific
+openbb-backend/venv/
+openbb-backend/.pytest_cache/
+openbb-backend/.ruff_cache/
+openbb-backend/server.log
+openbb-backend/__pycache__/
+
+# Frontend specific
+openbb-frontend/node_modules/
+openbb-frontend/dist/
+openbb-frontend/.vite/
+
+# Test scripts
+test-*.js
+test_*.py
+test_*.sh
+clear-*.js
+debug-*.js
+
+# Documentation that should be tracked selectively
+# Uncomment specific docs you want to track:
+# !API_PROVIDER_ANALYSIS.md
+# !OPENBB_INTEGRATION_PLAN.md

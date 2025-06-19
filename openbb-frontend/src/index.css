@@ -1,0 +1,106 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* CSS Variables for OpenBB theme */
+:root {
+  --openbb-bg-primary: #0A0A0A;
+  --openbb-bg-secondary: #121212;
+  --openbb-bg-widget: #1A1A1A;
+  --openbb-bg-hover: #252525;
+  --openbb-border: #2A2A2A;
+  --openbb-text-primary: #E5E5E5;
+  --openbb-text-secondary: #A0A0A0;
+  --openbb-text-muted: #666666;
+  --openbb-accent: #00D9FF;
+  --openbb-accent-hover: #00B8E0;
+  --openbb-danger: #FF3838;
+}
+
+@layer base {
+  * {
+    @apply border-openbb-border;
+  }
+  
+  html {
+    @apply bg-openbb-bg-primary;
+  }
+  
+  body {
+    @apply bg-openbb-bg-primary text-openbb-text-primary font-mono text-sm;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Custom scrollbar for dark theme */
+  ::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-openbb-bg-secondary;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gray-700 rounded;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gray-600;
+  }
+  
+  /* Tailwind scrollbar utilities */
+  .scrollbar-thin::-webkit-scrollbar {
+    @apply w-1;
+  }
+  
+  .scrollbar-thumb-openbb-border::-webkit-scrollbar-thumb {
+    @apply bg-openbb-border;
+  }
+  
+  .scrollbar-track-openbb-bg-primary::-webkit-scrollbar-track {
+    @apply bg-openbb-bg-primary;
+  }
+  
+  /* Line clamp utility */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+@layer components {
+  /* Widget container */
+  .widget-container {
+    @apply bg-openbb-bg-widget rounded border border-openbb-border p-4;
+  }
+  
+  /* Widget header */
+  .widget-header {
+    @apply flex items-center gap-2 mb-3;
+  }
+  
+  .widget-title {
+    @apply text-sm font-mono font-semibold text-openbb-text-primary;
+  }
+  
+  .widget-badge {
+    @apply bg-openbb-blue text-white px-2 py-0.5 rounded text-xs font-mono;
+  }
+  
+  /* Form elements */
+  .input-dark {
+    @apply bg-openbb-bg-widget border border-openbb-border rounded text-sm text-openbb-text-primary placeholder-openbb-text-muted focus:outline-none focus:border-openbb-accent font-mono;
+  }
+  
+  /* Buttons */
+  .btn-primary {
+    @apply bg-openbb-blue text-white px-3 py-1.5 rounded text-sm hover:bg-blue-600 transition-colors;
+  }
+  
+  .btn-secondary {
+    @apply bg-openbb-bg-secondary text-openbb-text-secondary px-3 py-1.5 rounded text-sm hover:text-openbb-text-primary transition-colors;
+  }
+}
