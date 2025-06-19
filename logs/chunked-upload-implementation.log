@@ -1,0 +1,39 @@
+Thu Jun 19 06:15:44 UTC 2025: Implemented chunked upload functionality for large files
+
+
+## Implementation Summary:
+
+1. **Backend chunked upload endpoint**: /documents/upload-chunk
+   - Handles 1MB chunks to stay under nginx limits
+   - Stores chunks in memory and reassembles when complete
+   - Full document processing and S3 upload on completion
+
+2. **Frontend chunked upload client**: documents-chunked.ts
+   - Splits files > 5MB into 1MB chunks
+   - Base64 encodes each chunk to send via JSON
+   - Shows progress feedback during upload
+
+3. **Updated upload logic**: documents.ts
+   - Files > 5MB use chunked upload directly
+   - Falls back to chunked for 413 errors on smaller files
+   - Three-tier strategy: regular -> chunked -> error
+
+4. **UI improvements**: enhanced-input-box.tsx
+   - Increased file size limit to 50MB
+   - Shows upload method (direct/chunked) in file selection
+   - Better error messages and progress indication
+
+5. **Docker integration**: All routes included in main documents router
+
+## Testing:
+- Login successful ✓
+- UI shows paperclip icon ✓
+- File size limits updated ✓
+- Ready to test with 7MB PDF file
+
+
+Thu Jun 19 06:23:16 UTC 2025: Reduced chunk size to 50KB to bypass strict nginx limits
+Thu Jun 19 11:09:24 UTC 2025: Fixed UUID format mismatch between database (no hyphens) and application (with hyphens)
+- Updated documents table to associate document with correct session
+- Added UUID normalization in RAG search logic
+- Document 94242313-b5ee-46ef-b834-9b7a0365b5da now properly linked to session c5315823-4e23-4a59-a4b7-8cdf00ff7307

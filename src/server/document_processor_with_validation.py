@@ -42,9 +42,18 @@ class ValidatedDocumentProcessor:
             
             # If session_id provided, filter by session
             if session_id:
-                valid_docs_query = valid_docs_query.filter(
-                    Document.session_id == uuid.UUID(session_id)
-                )
+                # Try both UUID formats
+                try:
+                    # If session_id is already a valid UUID with dashes
+                    session_uuid = uuid.UUID(session_id)
+                    valid_docs_query = valid_docs_query.filter(
+                        Document.session_id == session_uuid
+                    )
+                except ValueError:
+                    # If not, try without dashes
+                    valid_docs_query = valid_docs_query.filter(
+                        Document.session_id == session_id
+                    )
             
             # Get valid documents and store IDs in both formats (with and without dashes)
             valid_docs = valid_docs_query.all()
@@ -71,7 +80,13 @@ class ValidatedDocumentProcessor:
                 
             filter_dict = {"user_id": formatted_user_id}
             if session_id:
-                filter_dict["session_id"] = session_id
+                # Ensure session_id has dashes for Pinecone filter
+                if len(session_id) == 32 and '-' not in session_id:
+                    # Format: 8-4-4-4-12
+                    formatted_session_id = f"{session_id[:8]}-{session_id[8:12]}-{session_id[12:16]}-{session_id[16:20]}-{session_id[20:]}"
+                    filter_dict["session_id"] = formatted_session_id
+                else:
+                    filter_dict["session_id"] = session_id
             
             # Get more results than needed since some might be filtered out
             search_results = self.processor.search_documents_with_citations(

@@ -1,0 +1,20 @@
+  cookies: []
+}
+[Middleware] Request: {
+  pathname: '/',
+  method: 'GET',
+  hasAuthToken: false,
+  tokenPreview: null,
+  cookies: []
+}
+ ✓ Compiled / in 16.7s
+ GET / 200 in 17075ms
+ GET / 200 in 18280ms
+[Middleware] Request: {
+  pathname: '/chat-history',
+  method: 'GET',
+  hasAuthToken: false,
+  tokenPreview: null,
+  cookies: []
+}
+[Middleware] No auth token, redirecting to login

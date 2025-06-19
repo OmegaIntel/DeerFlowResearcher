@@ -1,0 +1,10 @@
+
+The update-session endpoint is working! The 401 error means authentication is required, not that the method is wrong.
+
+Please try uploading a document and asking a question again. The system should now:
+1. Upload the document (without session)
+2. When you send the message, update the document session
+3. Enable RAG to find the document
+
+Watch the backend logs with: docker-compose logs -f backend
+

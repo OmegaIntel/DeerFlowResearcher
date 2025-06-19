@@ -69,7 +69,8 @@ export async function* chatSimpleStream(
   params: { 
     thread_id: string; 
     project_id?: string;
-    attachments?: Array<{filename: string; size: number; type: string; documentId?: string}> 
+    attachments?: Array<{filename: string; size: number; type: string; documentId?: string}>; 
+    model?: string;
   },
   options: { abortSignal?: AbortSignal } = {},
 ) {
@@ -88,6 +89,7 @@ export async function* chatSimpleStream(
       messages,
       thread_id: params.thread_id,
       project_id: params.project_id,
+      model: params.model,
     }),
     signal: options.abortSignal,
   });

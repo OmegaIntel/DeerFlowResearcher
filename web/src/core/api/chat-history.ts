@@ -10,6 +10,7 @@ export interface ProjectInfo {
 
 export interface ChatSession {
   id: string;
+  thread_id: string;
   title?: string;
   mode: string;
   message_count: number;
@@ -103,21 +104,32 @@ export async function getChatSessionByThread(threadId: string): Promise<ChatSess
 
 export async function createChatSession(data: CreateChatSessionRequest): Promise<ChatSession> {
   const url = resolveServiceURL('chat/sessions');
+  const token = getAuthToken();
+  
+  console.log('[createChatSession] URL:', url);
+  console.log('[createChatSession] Token exists:', !!token);
+  console.log('[createChatSession] Request data:', data);
   
   const response = await fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'Authorization': `Bearer ${getAuthToken()}`,
+      'Authorization': `Bearer ${token}`,
     },
     body: JSON.stringify(data),
   });
 
+  console.log('[createChatSession] Response status:', response.status);
+  
   if (!response.ok) {
-    throw new Error(`Failed to create chat session: ${response.statusText}`);
+    const errorText = await response.text();
+    console.error('[createChatSession] Error response:', errorText);
+    throw new Error(`Failed to create chat session: ${response.status} ${response.statusText} - ${errorText}`);
   }
 
-  return response.json();
+  const result = await response.json();
+  console.log('[createChatSession] Success response:', result);
+  return result;
 }
 
 export async function updateChatSession(

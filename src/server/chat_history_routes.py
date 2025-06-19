@@ -210,7 +210,7 @@ async def create_chat_session(
     current_user: User = Depends(get_current_user)
 ):
     """Create a new chat session"""
-    thread_id = f"chat_{uuid.uuid4()}"
+    thread_id = str(uuid.uuid4())
     
     session = ChatSession(
         user_id=current_user.id,

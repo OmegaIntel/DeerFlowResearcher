@@ -17,6 +17,7 @@ export default function Main() {
   const [threadId, setThreadId] = useState<string | null>(null);
   const loadChat = useStore((state) => state.loadChat);
   const openResearchId = useStore((state) => state.openResearchId);
+  const storeThreadId = useStore((state) => state.threadId);
   
   useEffect(() => {
     // Only access search params on client side
@@ -29,8 +30,21 @@ export default function Main() {
     if (threadId) {
       // Load the specific chat thread
       loadChat(threadId);
+    } else if (!threadId && !storeThreadId) {
+      // If no thread ID in URL or store, create a new chat session
+      import('~/core/store').then(({ startNewChat }) => {
+        startNewChat().then(() => {
+          // Update URL with the new thread ID
+          const newThreadId = useStore.getState().threadId;
+          if (newThreadId && window.history.pushState) {
+            const newUrl = `/chat?thread=${newThreadId}`;
+            window.history.pushState({}, '', newUrl);
+            setThreadId(newThreadId);
+          }
+        });
+      });
     }
-  }, [threadId, loadChat]);
+  }, [threadId, storeThreadId, loadChat]);
   
   useEffect(() => {
     // Start citation inspector

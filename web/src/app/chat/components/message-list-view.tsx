@@ -251,9 +251,9 @@ function MessageListItem({
                 "mt-2 flex flex-wrap gap-1",
                 message.role === "user" ? "max-w-[85%]" : "max-w-[85%]"
               )}>
-                {message.attachments.map((attachment) => (
+                {message.attachments.map((attachment, index) => (
                   <AttachmentDisplay 
-                    key={attachment.id} 
+                    key={attachment.id || `${attachment.documentId}-${index}`} 
                     attachment={attachment}
                     threadId={message.threadId}
                   />
@@ -647,24 +647,17 @@ function CitationDisplay({
         // Open the document directly
         console.log("[Citation] Opening URL:", response.download_url);
         
-        // Use a small delay to avoid popup blockers
-        setTimeout(() => {
-          console.log("[Citation] About to open URL:", response.download_url);
-          console.log("[Citation] URL type:", typeof response.download_url);
-          console.log("[Citation] URL starts with http:", response.download_url?.startsWith('http'));
-          
-          const newWindow = window.open(response.download_url, '_blank', 'noopener,noreferrer');
-          if (!newWindow) {
-            console.error("[Citation] Window.open was blocked");
-            // Fallback: create a temporary link
-            const link = document.createElement('a');
-            link.href = response.download_url;
-            link.target = '_blank';
-            link.rel = 'noopener noreferrer';
-            console.log("[Citation] Fallback link href:", link.href);
-            link.click();
-          }
-        }, 100);
+        // Direct link click to avoid popup blockers
+        const link = document.createElement('a');
+        link.href = response.download_url;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        console.log("[Citation] Opened document via direct link click");
         
         toast.success(`Opening ${citation.filename} (page ${citation.page_number})`);
       } else {

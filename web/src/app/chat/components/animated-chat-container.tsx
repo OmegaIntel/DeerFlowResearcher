@@ -31,6 +31,7 @@ export function AnimatedChatContainer({
   const messageIds = useMessageIds();
   const messageCount = messageIds.length;
   const responding = useStore((state) => state.responding);
+  const threadId = useStore((state) => state.threadId);
 
   // Move to bottom when there are messages
   useEffect(() => {
@@ -106,40 +107,25 @@ export function AnimatedChatContainer({
 
       <motion.div
         className={cn(
-          "flex-shrink-0 w-full transition-all duration-500",
+          "flex-shrink-0 w-full",
           isCentered ? "max-w-3xl" : "pt-4 bg-background border-t"
         )}
-        layout
+        initial={false}
+        animate={{
+          y: 0,
+        }}
         transition={{
-          layout: {
-            duration: 0.5,
-            ease: "easeInOut",
-          },
+          duration: 0.3,
+          ease: "easeOut",
         }}
       >
         {isCentered && (
-          <motion.div
-            className="text-center mb-8"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.3, delay: 0.2 }}
-          >
-            <h1 className="text-4xl font-semibold text-foreground mb-2">
-              Welcome to Omega Intelligence
-            </h1>
-            <p className="text-lg text-muted-foreground">
-              Your AI-powered financial analysis assistant
-            </p>
-          </motion.div>
-        )}
-
-        {!responding && messageCount === 0 && !hasInteracted && (
-          <FinanceConversationStarter
-            className="mb-4"
-            onSend={handlePromptClick}
-            isCentered={isCentered}
-          />
+          <div className="mb-6">
+            <FinanceConversationStarter
+              onSend={handlePromptClick}
+              isCentered={isCentered}
+            />
+          </div>
         )}
         
         <EnhancedInputBox
@@ -147,7 +133,8 @@ export function AnimatedChatContainer({
           onCancel={onCancel}
           responding={responding}
           onFocus={handleInputFocus}
-          placeholder={isCentered ? "Ask me about financial analysis, M&A deals, or market insights..." : "How can I help you today?"}
+          placeholder="How can I help you today?"
+          threadId={threadId}
           className={cn(
             "transition-all duration-500",
             isCentered && "shadow-lg"

@@ -1,0 +1,45 @@
+CHAT SESSION CREATION FIX
+=========================
+Date: 2025-01-19
+Issue: Documents uploaded before sending the first message were not being associated with the chat session
+
+PROBLEM:
+- Chat thread ID was only created when the user sent their first message
+- Documents uploaded before the first message had no session ID
+- This caused the RAG system to not find the documents
+
+SOLUTION:
+1. Modified startNewChat() function to create a backend session immediately when user clicks "New Chat"
+2. Updated the function to:
+   - Call createChatSession API to create a session in the database
+   - Get the thread_id from the backend response
+   - Set the thread_id in the store immediately
+   
+3. Updated EnhancedInputBox component to:
+   - Accept threadId as a prop
+   - Use the threadId from props for document uploads
+   
+4. Updated AnimatedChatContainer to:
+   - Get threadId from the store
+   - Pass it to EnhancedInputBox
+
+FILES MODIFIED:
+- /root/deer-flow/web/src/core/store/store.ts
+  - Modified startNewChat() to be async and create session immediately
+  - Uses backend-generated thread_id instead of client-side nanoid()
+  
+- /root/deer-flow/web/src/components/deer-flow/app-sidebar.tsx
+  - Updated handleChatClick to be async to await startNewChat()
+  
+- /root/deer-flow/web/src/app/chat/components/enhanced-input-box.tsx
+  - Added threadId prop to interface
+  - Uses threadId prop for document uploads
+  
+- /root/deer-flow/web/src/app/chat/components/animated-chat-container.tsx
+  - Gets threadId from store
+  - Passes threadId to EnhancedInputBox
+
+RESULT:
+- When user clicks "New Chat", a session is created immediately with a thread_id
+- Documents uploaded are now associated with the correct session from the start
+- RAG system can find documents even before the first message is sent

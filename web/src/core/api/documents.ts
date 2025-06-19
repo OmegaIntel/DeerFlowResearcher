@@ -1,5 +1,7 @@
 import { resolveServiceURL } from "./resolve-service-url";
 import { getAuthToken } from "~/services/auth";
+import { uploadDocumentBase64 } from "./documents-base64";
+import { uploadDocumentChunked } from "./documents-chunked";
 
 export interface Document {
   id: string;
@@ -77,27 +79,92 @@ export async function getDocument(documentId: string): Promise<Document> {
   return response.json();
 }
 
-export async function uploadDocuments(files: File[]): Promise<DocumentUploadResponse> {
-  const url = resolveServiceURL('documents/upload');
-  
-  const formData = new FormData();
-  files.forEach(file => {
-    formData.append('files', file);
+export async function uploadDocuments(files: File[], sessionId?: string): Promise<DocumentUploadResponse[]> {
+  // Upload files one by one since the backend expects individual files
+  const uploadPromises = files.map(async (file) => {
+    const fileSizeMB = file.size / (1024 * 1024);
+    
+    // For files larger than 5MB, use chunked upload directly
+    if (fileSizeMB > 5) {
+      console.log(`File ${file.name} is ${fileSizeMB.toFixed(1)}MB, using chunked upload`);
+      try {
+        const chunkedResult = await uploadDocumentChunked(file, sessionId, (progress) => {
+          console.log(`Upload progress for ${file.name}: ${progress.toFixed(1)}%`);
+        });
+        return {
+          success: chunkedResult.success,
+          message: chunkedResult.message,
+          document_id: chunkedResult.document_id,
+          job_id: undefined
+        };
+      } catch (chunkedError) {
+        console.error(`Chunked upload failed for ${file.name}:`, chunkedError);
+        throw chunkedError;
+      }
+    }
+    
+    try {
+      // First try regular upload for smaller files
+      const url = resolveServiceURL(`documents/upload${sessionId ? `?session_id=${sessionId}` : ''}`);
+      
+      const formData = new FormData();
+      formData.append('file', file);
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${getAuthToken()}`,
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        // If we get 413 (Entity Too Large), try chunked upload
+        if (response.status === 413) {
+          console.log(`File ${file.name} too large for regular upload, trying chunked upload...`);
+          const chunkedResult = await uploadDocumentChunked(file, sessionId, (progress) => {
+            console.log(`Upload progress for ${file.name}: ${progress.toFixed(1)}%`);
+          });
+          return {
+            success: chunkedResult.success,
+            message: chunkedResult.message,
+            document_id: chunkedResult.document_id,
+            job_id: undefined
+          };
+        }
+        throw new Error(`Failed to upload document ${file.name}: ${response.statusText}`);
+      }
+
+      const data = await response.json();
+      
+      // Transform the response to match DocumentUploadResponse interface
+      return {
+        success: data.success,
+        message: data.message,
+        document_id: data.document?.id,  // Extract document.id to document_id
+        job_id: data.job_id
+      };
+    } catch (error) {
+      // If regular upload fails with network error, try chunked upload
+      console.log(`Error uploading ${file.name}, trying chunked upload fallback:`, error);
+      try {
+        const chunkedResult = await uploadDocumentChunked(file, sessionId, (progress) => {
+          console.log(`Upload progress for ${file.name}: ${progress.toFixed(1)}%`);
+        });
+        return {
+          success: chunkedResult.success,
+          message: chunkedResult.message,
+          document_id: chunkedResult.document_id,
+          job_id: undefined
+        };
+      } catch (chunkedError) {
+        console.error(`Chunked upload also failed for ${file.name}:`, chunkedError);
+        throw error; // Throw the original error
+      }
+    }
   });
 
-  const response = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Authorization': `Bearer ${getAuthToken()}`,
-    },
-    body: formData,
-  });
-
-  if (!response.ok) {
-    throw new Error(`Failed to upload documents: ${response.statusText}`);
-  }
-
-  return response.json();
+  return Promise.all(uploadPromises);
 }
 
 export async function deleteDocument(documentId: string): Promise<void> {

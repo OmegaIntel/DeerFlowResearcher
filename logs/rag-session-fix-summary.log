@@ -1,0 +1,41 @@
+RAG SESSION FIX SUMMARY
+=======================
+Date: 2025-01-19
+
+ISSUES IDENTIFIED:
+1. Session ID not being sent during initial document upload
+2. UUID format inconsistency between database and Pinecone
+3. Document session update only updates database, not always Pinecone metadata
+4. Search filters using wrong UUID format
+
+FIXES APPLIED:
+1. Enhanced session ID handling in app.py:
+   - Converts session IDs to consistent format with dashes
+   - Creates both dash and no-dash versions for compatibility
+   
+2. Fixed document processor validation:
+   - Ensures session_id in Pinecone filter has dashes
+   - Handles both UUID formats during search
+   
+3. Frontend already generates and passes session ID:
+   - Enhanced input box creates thread ID when needed
+   - Passes it during document upload
+
+REMAINING ISSUE:
+The core problem is that documents are being uploaded WITHOUT a session_id initially (as shown in logs: "[CHUNK-UPLOAD] Session ID in request: None"). This happens because:
+
+1. The frontend is not passing the session_id correctly in the chunked upload
+2. OR the session_id is being lost somewhere in the request
+
+NEXT STEPS TO FIX:
+1. Debug why session_id is None in the chunked upload request
+2. Ensure the frontend is actually sending the session_id
+3. Check if there's a parameter naming issue (session_id vs sessionId)
+
+WORKAROUND:
+The update-session endpoint DOES work and updates both database and Pinecone metadata. So documents can be found after this update, but there's a timing issue.
+
+TEST RESULTS:
+- Documents are uploaded successfully
+- Session update endpoint works
+- But RAG search still returns 0 results due to timing or format issues

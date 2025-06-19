@@ -1,0 +1,41 @@
+DOCUMENT PRIVACY/SECURITY FIXES SUMMARY
+======================================
+Date: 2025-01-19
+Issue: Documents from one chat were being accessed in other chats
+
+FIXES APPLIED:
+-------------
+
+1. Fixed /api/chat/simple endpoint (app.py):
+   - REMOVED the fallback search without session filter
+   - Previously: If no documents found with session filter, it would search ALL user documents
+   - Now: Only searches within the current session
+   - Location: app.py, lines 424-433
+
+2. Fixed _handle_documents_query function (app.py):
+   - Added proper user authentication check
+   - Modified to use validated_document_processor with session filtering
+   - Previously: Searched across ALL Pinecone indices without any filtering
+   - Now: Only searches documents belonging to the authenticated user and current session
+   - Location: app.py, lines 1083-1250
+
+3. TypeScript fixes in frontend:
+   - Fixed optional chaining in enhanced-input-box.tsx
+   - Fixed type error in documents-chunked.ts
+
+SECURITY IMPROVEMENTS:
+--------------------
+1. Documents are now strictly filtered by session_id
+2. No fallback to searching other sessions' documents
+3. Proper user authentication required for document search
+4. Warning logs added for security audit trail
+
+TESTING NEEDED:
+--------------
+1. Upload documents to one chat session
+2. Create a new chat session
+3. Try to search for documents - should only see documents from current session
+4. Verify that documents from other sessions are NOT accessible
+
+STATUS: FIXED AND DEPLOYED
+Docker containers have been rebuilt and are running with the security fixes.

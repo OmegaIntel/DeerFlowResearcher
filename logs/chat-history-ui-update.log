@@ -1,0 +1,74 @@
+CHAT HISTORY UI UPDATE LOG
+==========================
+Date: 2025-01-19
+
+CHANGES MADE:
+1. Modified the "New Chat" button to be icon-only
+   - Changed from full button with text to icon button
+   - Uses outline variant
+   - Shows only the Plus icon
+   - Added title="New chat" for tooltip
+
+2. Added "Delete All" button
+   - Icon-only button with Trash2 icon
+   - Outline variant with destructive (red) hover color
+   - Disabled when no sessions or loading
+   - Has double confirmation for safety
+   - Added title="Delete all chats" for tooltip
+
+3. Layout changes:
+   - Both buttons are now compact icon buttons
+   - They fit nicely next to the search bar and filter button
+   - All within the 3/4 width constraint
+
+CODE CHANGES:
+From:
+```jsx
+{/* New Chat Button */}
+<Button
+  onClick={handleCreateNewChat}
+  size="sm"
+  className="gap-2 flex-shrink-0"
+>
+  <Plus className="h-4 w-4" />
+  New Chat
+</Button>
+```
+
+To:
+```jsx
+{/* New Chat Button */}
+<Button
+  onClick={handleCreateNewChat}
+  size="icon"
+  variant="outline"
+  className="flex-shrink-0"
+  title="New chat"
+>
+  <Plus className="h-4 w-4" />
+</Button>
+
+{/* Delete All Button */}
+<Button
+  onClick={handleDeleteAllSessions}
+  size="icon"
+  variant="outline"
+  className="flex-shrink-0 text-destructive hover:text-destructive"
+  disabled={loading || filteredSessions.length === 0}
+  title="Delete all chats"
+>
+  <Trash2 className="h-4 w-4" />
+</Button>
+```
+
+TESTING:
+- Navigate to http://localhost:3000/chat-history
+- Look for the new icon buttons next to the search bar
+- The layout should show: [Search bar] [Filter icon] [+ icon] [Trash icon]
+- All buttons should be the same height and style
+
+TROUBLESHOOTING:
+- Hard refresh the page (Ctrl+F5)
+- Clear browser cache
+- Check browser console for the log message
+- Container has been rebuilt with --no-cache

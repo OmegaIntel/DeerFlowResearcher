@@ -132,9 +132,29 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
     router.push('/auth/login');
   };
 
-  const handleChatClick = () => {
-    startNewChat();
-    router.push('/chat');
+  const handleChatClick = async () => {
+    console.log('[AppSidebar] handleChatClick called');
+    
+    try {
+      // Start new chat and get the thread ID
+      await startNewChat();
+      
+      // Get the new thread ID from the store
+      const state = (await import('~/core/store')).useStore.getState();
+      const newThreadId = state.threadId;
+      console.log('[AppSidebar] New thread ID:', newThreadId);
+      
+      // Navigate to chat with the thread ID in the URL
+      if (newThreadId) {
+        router.push(`/chat?thread=${newThreadId}`);
+      } else {
+        router.push('/chat');
+      }
+    } catch (error) {
+      console.error('[AppSidebar] Error in handleChatClick:', error);
+      // Navigate anyway
+      router.push('/chat');
+    }
   };
 
   return (

@@ -24,12 +24,12 @@ export function SiteHeader() {
 
   return (
     <header className="supports-backdrop-blur:bg-background/80 bg-background/40 sticky top-0 left-0 z-40 flex h-15 w-full flex-col items-center backdrop-blur-lg">
-      <div className="container flex h-15 items-center justify-between px-3">
-        <div className="text-xl font-medium">
+      <div className="container flex h-15 items-center justify-between px-3" suppressHydrationWarning>
+        <div className="text-xl font-medium" suppressHydrationWarning>
           <span className="mr-1 text-2xl">🦌</span>
           <span>Omega Intelligence</span>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3" suppressHydrationWarning>
           {isAuthenticated ? (
             <Button
               size="sm"
@@ -54,13 +54,14 @@ export function SiteHeader() {
               </Button>
             </>
           )}
-          <div className="relative flex items-center">
+          <div className="relative flex items-center" suppressHydrationWarning>
             <div
               className="pointer-events-none absolute inset-0 z-0 h-full w-full rounded-full opacity-60 blur-2xl"
               style={{
                 background: "linear-gradient(90deg, #ff80b5 0%, #9089fc 100%)",
                 filter: "blur(32px)",
               }}
+              suppressHydrationWarning
             />
             <Button
               variant="outline"

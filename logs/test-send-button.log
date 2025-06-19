@@ -1,0 +1,28 @@
+Testing Send button specifically...
+
+=== Send Button Search ===
+Buttons with "Send" text: 0
+Buttons with send icon: 0
+Total buttons in input container: 3
+
+Button 0:
+  Text: ""
+  Has Send in HTML: false
+  Has send icon: false
+  Parent visible: true
+
+Button 1:
+  Text: "Tools"
+  Has Send in HTML: false
+  Has send icon: false
+  Parent visible: true
+
+Button 2:
+  Text: "Gemini 2.5 Flash"
+  Has Send in HTML: false
+  Has send icon: false
+  Parent visible: true
+
+=== Toolbar Structure ===
+Direct children of toolbar: 1
+Child 0: 2 buttons (classes: flex items-center gap-2)

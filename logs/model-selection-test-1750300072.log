@@ -1,0 +1,11 @@
+Testing model selection functionality...
+✓ Successfully loaded chat page
+
+=== Testing Gemini 2.5 Flash ===
+✓ Sent test message with Gemini
+
+=== Testing Claude Sonnet 4 ===
+✓ Switched to Claude Sonnet 4
+✓ Sent test message with Claude
+
+✓ Model selection test completed

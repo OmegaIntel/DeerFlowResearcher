@@ -1,0 +1,27 @@
+=== COMPLETE DOCUMENT UPLOAD AND RAG TEST ===
+
+Step 1: Navigate and Login
+Current URL: http://localhost:3000/
+Logging in...
+Waiting for login to complete...
+[Browser error] Failed to load resource: net::ERR_CONNECTION_REFUSED
+
+Step 2: Navigate to Chat
+Thread ID: test-rag-1750309608325
+Waiting for chat page to load...
+
+Step 3: Verify Page Elements
+Textarea: 0 found, visible: ❌
+File input: 0 found, visible: ❌
+Paperclip button: 0 found, visible: ❌
+Send button (text): 0 found, visible: ❌
+Send button (icon): 0 found, visible: ❌
+Any button: 3 found, visible: ✅
+
+Diagnostic screenshot saved to /tmp/chat-page-state.png
+
+⚠️  Cannot test document upload - file input not found
+
+Final screenshot saved to /tmp/final-state.png
+
+=== TEST COMPLETE ===

@@ -8,19 +8,23 @@ WORKDIR /app
 COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
 
 # Install dependencies
-RUN if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
+RUN \
+    if [ -f yarn.lock ]; then yarn --frozen-lockfile; \
     elif [ -f package-lock.json ]; then npm ci; \
     elif [ -f pnpm-lock.yaml ]; then npm install -g pnpm && pnpm i; \
     else echo "Lockfile not found." && exit 1; \
     fi
 
-# Copy source code
-COPY . .
+# The actual source code will be mounted as volumes
+# Copy only necessary config files that won't change often
+COPY next.config.js* ./
+COPY tsconfig.json* ./
+COPY tailwind.config.ts* ./
+COPY postcss.config.js* ./
+
+ENV NODE_ENV=development
+ENV NEXT_TELEMETRY_DISABLED=1
 
 EXPOSE 3000
 
-# Set development environment
-ENV NODE_ENV=development
-
-# Start development server
-CMD npm run dev
+CMD ["npm", "run", "dev"]

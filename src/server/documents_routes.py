@@ -12,9 +12,21 @@ from src.db_models import Document, User
 from src.api.api_get_current_user import get_current_user, User as UserResponse
 from src.server.s3_utils import s3_manager
 from src.server.document_processor_enhanced import enhanced_document_processor
+from src.server.documents_routes_base64 import router as base64_router
+from src.server.documents_routes_chunked import router as chunked_router
+from src.server.documents_session_update import router as session_update_router
 
 logger = logging.getLogger(__name__)
 router = APIRouter()
+
+# Include base64 upload routes
+router.include_router(base64_router)
+
+# Include chunked upload routes
+router.include_router(chunked_router)
+
+# Include session update routes
+router.include_router(session_update_router)
 
 
 @router.get("")
@@ -89,7 +101,7 @@ async def get_documents(
 
 @router.post("/upload")
 async def upload_document(
-    file: UploadFile = File(...),
+    file: UploadFile = File(..., max_length=100 * 1024 * 1024),  # 100MB max
     session_id: Optional[str] = Query(None),
     db: Session = Depends(get_db),
     current_user: UserResponse = Depends(get_current_user)

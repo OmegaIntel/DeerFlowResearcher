@@ -1,0 +1,12 @@
+Starting Voice Integration Test...
+
+1. Navigating to login page...
+Browser Console Error: Failed to load resource: the server responded with a status of 404 (Not Found)
+2. Logging in...
+
+Test Error: Error: No element found for selector: input[name="username"]
+    at assert (/root/deer-flow/node_modules/puppeteer-core/lib/cjs/puppeteer/util/assert.js:18:15)
+    at CdpFrame.type (/root/deer-flow/node_modules/puppeteer-core/lib/cjs/puppeteer/api/Frame.js:889:40)
+    at async testVoiceIntegration (/root/deer-flow/test-voice-integration.js:36:5)
+
+Test completed.

@@ -67,6 +67,7 @@ export default function ChatHistoryMain() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [moveLoading, setMoveLoading] = useState<string | null>(null);
   const router = useRouter();
+  
 
   const fetchSessions = async () => {
     try {
@@ -141,6 +142,42 @@ export default function ChatHistoryMain() {
       console.error("Error deleting session:", error);
     } finally {
       setDeleteLoading(null);
+    }
+  };
+
+  const handleDeleteAllSessions = async () => {
+    if (!confirm("Are you sure you want to delete ALL chat sessions? This action cannot be undone.")) {
+      return;
+    }
+
+    // Second confirmation for safety
+    if (!confirm("This will permanently delete all your chat history. Are you absolutely sure?")) {
+      return;
+    }
+
+    setLoading(true);
+    
+    try {
+      // Delete all sessions one by one
+      const deletePromises = sessions.map(session => 
+        fetch(resolveServiceURL(`chat/sessions/${session.id}`), {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${getAuthToken()}`,
+          },
+        })
+      );
+
+      await Promise.all(deletePromises);
+      setSessions([]);
+      toast.success("All chat sessions deleted successfully");
+    } catch (error) {
+      console.error("Error deleting all sessions:", error);
+      toast.error("Failed to delete some sessions");
+      // Refresh to get accurate state
+      fetchSessions();
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -289,11 +326,24 @@ export default function ChatHistoryMain() {
               {/* New Chat Button */}
               <Button
                 onClick={handleCreateNewChat}
-                size="sm"
-                className="gap-2 flex-shrink-0"
+                size="icon"
+                variant="outline"
+                className="flex-shrink-0"
+                title="New chat"
               >
                 <Plus className="h-4 w-4" />
-                New Chat
+              </Button>
+              
+              {/* Delete All Button */}
+              <Button
+                onClick={handleDeleteAllSessions}
+                size="icon"
+                variant="outline"
+                className="flex-shrink-0 text-destructive hover:text-destructive"
+                disabled={loading || filteredSessions.length === 0}
+                title="Delete all chats"
+              >
+                <Trash2 className="h-4 w-4" />
               </Button>
             </div>
           </div>

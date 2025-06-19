@@ -19,7 +19,13 @@ def main():
         "src.server.app:app",
         host=args.host,
         port=args.port,
-        reload=args.reload
+        reload=args.reload,
+        limit_max_requests=None,
+        # Increase max request body size to 100MB (in bytes)
+        limit_concurrency=None,
+        server_header=False,
+        # Set h11 max incomplete event size to 100MB
+        h11_max_incomplete_event_size=100 * 1024 * 1024
     )
 
 if __name__ == "__main__":

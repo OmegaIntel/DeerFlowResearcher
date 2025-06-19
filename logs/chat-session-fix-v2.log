@@ -1,0 +1,48 @@
+CHAT SESSION CREATION FIX - V2
+==============================
+Date: 2025-01-19
+Issue: Documents not being associated with chat sessions properly
+
+CURRENT BEHAVIOR:
+1. User clicks "New Chat"
+2. Frontend generates a thread ID using nanoid() (e.g., swZQmKiGIsDnfDIXUW7U1)
+3. User uploads a document
+4. Document gets uploaded but with no session ID initially
+5. When user sends message, document session is updated but RAG still can't find it
+
+ROOT CAUSE:
+The frontend is attempting to create a backend session but may be failing silently due to:
+- Authentication issues
+- Network errors
+- CORS issues
+When it fails, it falls back to using a client-generated thread ID that doesn't match backend expectations.
+
+IMPLEMENTED FIXES:
+1. Added logging to startNewChat() to track session creation
+2. Updated handleChatClick to include thread ID in URL navigation
+3. Enhanced input box now receives thread ID as a prop from the store
+4. Added detailed logging to track thread ID flow
+
+DEBUGGING STEPS TO VERIFY:
+1. Open browser console
+2. Click "New Chat"
+3. Look for console logs:
+   - [startNewChat] Creating new session...
+   - [startNewChat] Created new session with thread ID: chat_xxxxx
+   - OR error messages if session creation fails
+4. Check URL - should show ?thread=<threadId>
+5. Upload a document and check console for:
+   - [EnhancedInputBox] Thread ID from props: <threadId>
+   - [EnhancedInputBox] Final sessionId for upload: <threadId>
+
+POTENTIAL ISSUES TO CHECK:
+1. Authentication token might be expired or invalid
+2. CORS configuration might be blocking the request
+3. Network connectivity issues
+4. Backend session creation endpoint might have issues
+
+NEXT STEPS IF STILL FAILING:
+1. Check browser network tab for /api/chat/sessions POST request
+2. Verify authentication token is being sent correctly
+3. Check backend logs for session creation attempts
+4. Ensure CORS is properly configured for the frontend origin

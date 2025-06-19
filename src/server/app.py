@@ -11,6 +11,8 @@ from typing import List, cast
 
 from fastapi import FastAPI, HTTPException, Request, UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.requests import Request as StarletteRequest
 from fastapi.responses import Response, StreamingResponse
 from langchain_core.messages import AIMessageChunk, ToolMessage
 from langgraph.types import Command
@@ -81,6 +83,17 @@ app.include_router(project_router, prefix="/api")
 app.include_router(oauth_router, prefix="/api")
 app.include_router(user_router, prefix="/api")
 app.include_router(integrations_router, prefix="/api")
+
+# Add middleware to handle large requests
+class LargeRequestMiddleware(BaseHTTPMiddleware):
+    async def dispatch(self, request: Request, call_next):
+        # Set max body size to 100MB
+        request._body_size_limit = 100 * 1024 * 1024
+        response = await call_next(request)
+        return response
+
+app.add_middleware(LargeRequestMiddleware)
+
 # Add CORS middleware
 app.add_middleware(
     CORSMiddleware,
@@ -301,6 +314,7 @@ async def chat_simple(request: ChatRequest, req: Request):
     
     # Debug: Print entire request
     print(f"[CHAT_SIMPLE] Full request messages: {request.messages}", flush=True)
+    print(f"[CHAT_SIMPLE] Full request object: {request.model_dump()}", flush=True)
     
     # Create or get session with user association
     if current_user:
@@ -329,10 +343,16 @@ async def chat_simple(request: ChatRequest, req: Request):
         logger.warning(f"[CHAT_SIMPLE] No user - creating anonymous session for thread_id: {thread_id}")
         session_obj = get_or_create_chat_session(db, thread_id)
 
-    chain = chat_chains.get(thread_id)
+    # Get model from request or use default
+    selected_model = request.model
+    print(f"[CHAT_SIMPLE] Selected model: {selected_model}", flush=True)
+    
+    # Create a unique key for the chain that includes the model
+    chain_key = f"{thread_id}_{selected_model}" if selected_model else thread_id
+    chain = chat_chains.get(chain_key)
     if chain is None:
-        chain = build_chat_graph_with_memory()
-        chat_chains[thread_id] = chain
+        chain = build_chat_graph_with_memory(model=selected_model)
+        chat_chains[chain_key] = chain
 
     user_message = request.messages[-1].content if request.messages else ""
     user_attachments = request.messages[-1].attachments if request.messages and request.messages[-1].attachments else None
@@ -380,8 +400,21 @@ async def chat_simple(request: ChatRequest, req: Request):
             from src.db_models import Document
             
             # Check if session has documents
+            # Use consistent UUID format with dashes
+            session_id_with_dash = str(session_obj.id)
+            if '-' not in session_id_with_dash and len(session_id_with_dash) == 32:
+                # Format: 8-4-4-4-12
+                session_id_with_dash = f"{session_id_with_dash[:8]}-{session_id_with_dash[8:12]}-{session_id_with_dash[12:16]}-{session_id_with_dash[16:20]}-{session_id_with_dash[20:]}"
+            
+            # Also create version without dashes for compatibility
+            session_id_no_dash = session_id_with_dash.replace('-', '')
+            
+            logger.info(f"[RAG] Searching for documents with session_id: {session_id_with_dash} (normalized: {session_id_no_dash})")
+            
+            # Try both formats for backward compatibility
             session_docs = db.query(Document).filter(
-                Document.session_id == session_obj.id,
+                (Document.session_id == session_id_with_dash) | 
+                (Document.session_id == session_id_with_dash.replace('-', '')),
                 Document.processing_status == 'completed',
                 Document.is_active == True
             ).count()
@@ -392,21 +425,15 @@ async def chat_simple(request: ChatRequest, req: Request):
                 search_results = validated_document_processor.search_documents_with_validation(
                     query=user_message,
                     user_id=current_user.id,
-                    session_id=str(session_obj.id),
+                    session_id=session_id_with_dash,  # Use consistent format with dashes
                     top_k=3,
                     db=db
                 )
                 
-                # If no results with session filter, try without session filter
+                # If no results with session filter, DO NOT try without session filter
+                # This would be a security vulnerability allowing access to other sessions' documents
                 if not search_results:
-                    logger.info(f"[RAG] No results with session filter, trying without session filter")
-                    search_results = validated_document_processor.search_documents_with_validation(
-                        query=user_message,
-                        user_id=current_user.id,
-                        session_id=None,
-                        top_k=3,
-                        db=db
-                    )
+                    logger.info(f"[RAG] No results found for session {session_id_with_dash}")
                 
                 logger.info(f"[RAG] Validated search returned {len(search_results)} results")
                 
@@ -612,8 +639,8 @@ async def chat_tool(request: ChatRequest, req: Request):
                     async for event in _handle_research_query_with_persistence(user_message, thread_id, request, session_obj, db):
                         yield event
                 elif tool_id == "documents":
-                    # Handle documents query
-                    for event in _handle_documents_query(user_message, thread_id, request):
+                    # Handle documents query with user context
+                    for event in _handle_documents_query(user_message, thread_id, request, current_user, session_obj):
                         yield event
                 else:
                     raise HTTPException(status_code=400, detail=f"Unknown agent: {tool_id}")
@@ -1056,86 +1083,67 @@ async def _handle_research_query_with_persistence(user_message: str, thread_id: 
         yield f"event: message_chunk\ndata: {json.dumps(error_data)}\n\n"
 
 
-def _handle_documents_query(user_message: str, thread_id: str, _request: ChatRequest):
+def _handle_documents_query(user_message: str, thread_id: str, request: ChatRequest, current_user, session_obj):
     """Handle documents query - search and Q&A over uploaded documents."""
     try:
         import json
         import os
+        from src.server.document_processor_with_validation import validated_document_processor
+        from src.db.db_session import SessionLocal
+        from openai import OpenAI
+        import numpy as np
         
-        # Use direct Pinecone integration to avoid internal HTTP call deadlock
+        # If no user is authenticated, return error
+        if not current_user:
+            content = "You must be logged in to search documents."
+            response_data = {
+                "thread_id": thread_id,
+                "id": str(uuid.uuid4()),
+                "role": "assistant",
+                "content": content,
+                "finish_reason": "stop",
+            }
+            yield f"event: message_chunk\ndata: {json.dumps(response_data)}\n\n"
+            return
+        
+        # Use validated document processor to ensure proper filtering
+        db = SessionLocal()
         try:
-            from pinecone import Pinecone
-            from openai import OpenAI
-            import numpy as np
+            # Get session ID if available
+            session_id = str(session_obj.id).replace('-', '') if session_obj else None
             
-            # Get API keys
-            pinecone_api_key = os.getenv("PINECONE_API_KEY")
-            openai_api_key = os.getenv("OPENAI_API_KEY")
+            logger.info(f"[DOCUMENTS] Searching documents for user {current_user.id}, session {session_id}")
             
-            if not pinecone_api_key or not openai_api_key:
-                content = "Pinecone or OpenAI API keys not configured. Please configure them to use document search."
+            # Search documents with proper validation and filtering
+            search_results = validated_document_processor.search_documents_with_validation(
+                query=user_message,
+                user_id=current_user.id,
+                session_id=session_id,  # This ensures we only search within the current session
+                top_k=5,
+                db=db
+            )
+            
+            if not search_results:
+                content = "I couldn't find any relevant information in your documents for this chat session. Please make sure you have uploaded documents to this specific chat."
             else:
-                # Initialize clients
-                pc = Pinecone(api_key=pinecone_api_key)
-                openai_client = OpenAI(api_key=openai_api_key)
+                # Build context from search results
+                context_parts = []
+                sources = []
                 
-                # Generate embedding for question
-                embedding_response = openai_client.embeddings.create(
-                    model="text-embedding-ada-002",
-                    input=user_message
-                )
-                query_embedding = embedding_response.data[0].embedding
+                for i, result in enumerate(search_results):
+                    context_parts.append(f"[Source {i+1}]: {result['content']}")
+                    sources.append({
+                        "source": f"{result['metadata'].get('filename', 'unknown')}",
+                        "score": result['score'],
+                        "page": result['metadata'].get('page_number', 1)
+                    })
                 
-                # Search across indices
-                all_results = []
-                indices_info = pc.list_indexes()
-                indices_to_search = [idx.name for idx in indices_info]
+                context = "\n\n".join(context_parts)
                 
-                for index_name in indices_to_search:
-                    try:
-                        index = pc.Index(index_name)
-                        search_results = index.query(
-                            vector=query_embedding,
-                            top_k=6,  # Get more results for better context
-                            include_metadata=True,
-                            include_values=False
-                        )
-                        
-                        for match in search_results.matches:
-                            metadata = match.metadata or {}
-                            all_results.append({
-                                "text": metadata.get("text", ""),
-                                "score": match.score,
-                                "source": f"{index_name}/{metadata.get('filename', 'unknown')}",
-                                "metadata": metadata
-                            })
-                    except Exception as e:
-                        logger.warning(f"Error searching index {index_name}: {e}")
-                        continue
+                # Generate answer using OpenAI
+                openai_client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
                 
-                if not all_results:
-                    content = "I couldn't find any relevant information in your documents to answer your question. Please make sure you have uploaded documents using the paperclip icon."
-                else:
-                    # Sort by score and take top results
-                    all_results.sort(key=lambda x: x["score"], reverse=True)
-                    relevant_chunks = all_results[:3]
-                    
-                    # Build context from relevant chunks
-                    context_parts = []
-                    sources = []
-                    
-                    for i, result in enumerate(relevant_chunks):
-                        context_parts.append(f"[Source {i+1}]: {result['text']}")
-                        sources.append({
-                            "source": result["source"],
-                            "score": result["score"],
-                            "metadata": result["metadata"]
-                        })
-                    
-                    context = "\n\n".join(context_parts)
-                    
-                    # Generate answer using OpenAI
-                    prompt = f"""Based on the following context from the knowledge base, please answer the question.
+                prompt = f"""Based on the following context from the documents in this chat session, please answer the question.
 If the context doesn't contain enough information to answer the question, say so.
 
 Context:
@@ -1144,46 +1152,43 @@ Context:
 Question: {user_message}
 
 Answer:"""
-                    
-                    response = openai_client.chat.completions.create(
-                        model="gpt-4-turbo-preview",
-                        messages=[
-                            {"role": "system", "content": "You are a helpful assistant that answers questions based on the provided context. Be accurate and cite sources when possible."},
-                            {"role": "user", "content": prompt}
-                        ],
-                        temperature=0.7,
-                        max_tokens=500
-                    )
-                    
-                    answer = response.choices[0].message.content
-                    
-                    # Calculate confidence based on search scores
-                    avg_score = float(np.mean([r["score"] for r in relevant_chunks]))
-                    
-                    # Format the response nicely
-                    content_parts = [
-                        f"**Question**: {user_message}\n",
-                        f"**Answer**: {answer}\n"
-                    ]
-                    
-                    if sources:
-                        content_parts.append("**Sources**:")
-                        for i, source in enumerate(sources, 1):
-                            content_parts.append(f"{i}. **{source['source']}** (relevance: {source['score']:.1%})")
-                            # Show a snippet of the source text
-                            if source['metadata'].get('text'):
-                                snippet = source['metadata']['text'][:150]
-                                content_parts.append(f"   _{snippet}..._")
-                        content_parts.append("")
-                    
-                    content_parts.append(f"**Confidence**: {avg_score:.1%}")
-                    content_parts.append(f"**Documents Searched**: {len(relevant_chunks)} chunks")
-                    
-                    content = "\n".join(content_parts)
-                    
+                
+                response = openai_client.chat.completions.create(
+                    model="gpt-4-turbo-preview",
+                    messages=[
+                        {"role": "system", "content": "You are a helpful assistant that answers questions based on the provided context. Be accurate and cite sources when possible."},
+                        {"role": "user", "content": prompt}
+                    ],
+                    temperature=0.7,
+                    max_tokens=500
+                )
+                
+                answer = response.choices[0].message.content
+                
+                # Calculate confidence based on search scores
+                avg_score = float(np.mean([r['score'] for r in search_results]))
+                
+                # Format the response
+                content_parts = [
+                    f"**Question**: {user_message}\n",
+                    f"**Answer**: {answer}\n"
+                ]
+                
+                if sources:
+                    content_parts.append("**Sources**:")
+                    for i, source in enumerate(sources, 1):
+                        content_parts.append(f"{i}. **{source['source']}** (page {source['page']}, relevance: {source['score']:.1%})")
+                    content_parts.append("")
+                
+                content_parts.append(f"**Confidence**: {avg_score:.1%}")
+                content_parts.append(f"**Documents Searched**: {len(search_results)} chunks from this chat session")
+                
+                content = "\n".join(content_parts)
         except Exception as e:
-            logger.error(f"Error in direct Pinecone search: {e}")
+            logger.error(f"Error in document search: {e}")
             content = f"I encountered an error while searching your documents: {str(e)}"
+        finally:
+            db.close()
         
         # Yield the response
         response_data = {

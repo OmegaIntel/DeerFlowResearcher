@@ -34,20 +34,36 @@ export interface MoveToProjectData {
 
 // Project CRUD operations
 export async function getProjects(includeArchived: boolean = false): Promise<Project[]> {
-  const response = await fetch(
-    resolveServiceURL(`projects?include_archived=${includeArchived}`),
-    {
-      headers: {
-        Authorization: `Bearer ${getAuthToken()}`,
-      },
+  try {
+    const token = getAuthToken();
+    if (!token) {
+      console.warn('[Projects] No auth token available, returning empty array');
+      return [];
     }
-  );
 
-  if (!response.ok) {
-    throw new Error("Failed to fetch projects");
+    const response = await fetch(
+      resolveServiceURL(`projects?include_archived=${includeArchived}`),
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (!response.ok) {
+      if (response.status === 401) {
+        console.warn('[Projects] Unauthorized - user needs to log in');
+        return [];
+      }
+      throw new Error(`Failed to fetch projects: ${response.status} ${response.statusText}`);
+    }
+
+    return response.json();
+  } catch (error) {
+    console.error('[Projects] Error fetching projects:', error);
+    // Return empty array instead of throwing to prevent UI crashes
+    return [];
   }
-
-  return response.json();
 }
 
 export async function createProject(data: CreateProjectData): Promise<Project> {

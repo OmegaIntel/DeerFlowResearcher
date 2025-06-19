@@ -1,0 +1,54 @@
+Database Investigation - Session Associations
+================================================
+Date: 2025-06-19
+Investigation for Chat Session ID: c5315823-4e23-4a59-a4b7-8cdf00ff7307
+Document ID: 94242313-b5ee-46ef-b834-9b7a0365b5da
+Thread ID: DtkNQpeQi78a17dtqgXy4
+
+FINDINGS:
+=========
+
+1. DOCUMENT EXISTS AND MATCHES SESSION:
+   Document ID (without hyphens): 94242313b5ee46efb8349b7a0365b5da
+   Session ID (without hyphens): c53158234e234a59a4b78cdf00ff7307
+   User ID: b6395347904646208f82fdcdc9b765cf
+   Filename: global-private-markets-report-2025-braced-for-shifting-weather.pdf
+   Created: 2025-06-19 06:27:00
+
+2. CHAT SESSION EXISTS AND MATCHES:
+   Session ID (without hyphens): c53158234e234a59a4b78cdf00ff7307
+   User ID: b6395347904646208f82fdcdc9b765cf
+   Thread ID: DtkNQpeQi78a17dtqgXy4
+   Title: Summarize this document
+   Mode: chat
+   Created: 2025-06-19 06:27:10
+
+3. KEY INSIGHT - UUID FORMAT ISSUE:
+   The issue appears to be a UUID format mismatch between the application and database:
+   - Database stores UUIDs WITHOUT hyphens (32 chars)
+   - Application/logs show UUIDs WITH hyphens (36 chars with hyphens)
+   
+   Log values WITH hyphens:
+   - Chat session ID: c5315823-4e23-4a59-a4b7-8cdf00ff7307
+   - Document ID: 94242313-b5ee-46ef-b834-9b7a0365b5da
+   
+   Database values WITHOUT hyphens:
+   - Chat session ID: c53158234e234a59a4b78cdf00ff7307
+   - Document ID: 94242313b5ee46efb8349b7b7a0365b5da
+
+4. SESSION ASSOCIATION IS CORRECT:
+   - The document's session_id matches the chat_session's id
+   - Both belong to the same user
+   - The thread_id matches what's in the logs
+   - Timestamps show the session was created 10 seconds after the document
+
+CONCLUSION:
+===========
+The session associations in the database are CORRECT. The issue is likely in the application's UUID handling - it's comparing UUIDs with hyphens to database values without hyphens, causing lookup failures.
+
+RECOMMENDATION:
+===============
+Need to ensure consistent UUID formatting throughout the application, either:
+1. Strip hyphens before database queries
+2. Store UUIDs with hyphens in the database
+3. Add UUID normalization functions to handle both formats

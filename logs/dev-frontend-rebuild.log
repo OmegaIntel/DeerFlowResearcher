@@ -1,0 +1,165 @@
+#0 building with "default" instance using docker driver
+
+#1 [frontend internal] load build definition from Dockerfile.dev
+#1 transferring dockerfile: 608B done
+#1 DONE 0.0s
+
+#2 [frontend internal] load metadata for docker.io/library/node:20-alpine
+#2 DONE 0.2s
+
+#3 [frontend internal] load .dockerignore
+#3 transferring context: 118B done
+#3 DONE 0.0s
+
+#4 [frontend 1/6] FROM docker.io/library/node:20-alpine@sha256:d3507a213936fe4ef54760a186e113db5188472d9efdf491686bd94580a1c1e8
+#4 CACHED
+
+#5 [frontend internal] load build context
+#5 transferring context: 14.95kB 0.0s done
+#5 DONE 0.1s
+
+#6 [frontend 2/6] RUN apk add --no-cache libc6-compat openssl
+#6 0.260 fetch https://dl-cdn.alpinelinux.org/alpine/v3.22/main/x86_64/APKINDEX.tar.gz
+#6 0.351 fetch https://dl-cdn.alpinelinux.org/alpine/v3.22/community/x86_64/APKINDEX.tar.gz
+#6 0.773 (1/4) Installing musl-obstack (1.2.3-r2)
+#6 0.776 (2/4) Installing libucontext (1.3.2-r0)
+#6 0.779 (3/4) Installing gcompat (1.1.0-r4)
+#6 0.781 (4/4) Installing openssl (3.5.0-r0)
+#6 0.794 Executing busybox-1.37.0-r18.trigger
+#6 0.800 OK: 11 MiB in 22 packages
+#6 DONE 1.0s
+
+#7 [frontend 3/6] WORKDIR /app
+#7 DONE 0.1s
+
+#8 [frontend 4/6] COPY package.json yarn.lock* package-lock.json* pnpm-lock.yaml* ./
+#8 DONE 0.1s
+
+#9 [frontend 5/6] RUN if [ -f yarn.lock ]; then yarn --frozen-lockfile;     elif [ -f package-lock.json ]; then npm ci;     elif [ -f pnpm-lock.yaml ]; then npm install -g pnpm && pnpm i;     else echo "Lockfile not found." && exit 1;     fi
+#9 2.454 
+#9 2.454 added 1 package in 2s
+#9 2.454 
+#9 2.454 1 package is looking for funding
+#9 2.454   run `npm fund` for details
+#9 2.457 npm notice
+#9 2.457 npm notice New major version of npm available! 10.8.2 -> 11.4.2
+#9 2.457 npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.4.2
+#9 2.457 npm notice To update run: npm install -g npm@11.4.2
+#9 2.457 npm notice
+#9 5.671 Lockfile is up to date, resolution step is skipped
+#9 5.821 Progress: resolved 1, reused 0, downloaded 0, added 0
+#9 6.041 Packages: +799
+#9 6.041 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+#9 6.826 Progress: resolved 799, reused 0, downloaded 11, added 0
+#9 7.826 Progress: resolved 799, reused 0, downloaded 120, added 61
+#9 8.842 Progress: resolved 799, reused 0, downloaded 201, added 103
+#9 9.844 Progress: resolved 799, reused 0, downloaded 209, added 105
+#9 10.84 Progress: resolved 799, reused 0, downloaded 221, added 109
+#9 11.85 Progress: resolved 799, reused 0, downloaded 277, added 143
+#9 12.85 Progress: resolved 799, reused 0, downloaded 382, added 202
+#9 13.85 Progress: resolved 799, reused 0, downloaded 546, added 330
+#9 14.85 Progress: resolved 799, reused 0, downloaded 768, added 507
+#9 15.20 Progress: resolved 799, reused 0, downloaded 799, added 799, done
+#9 15.79 
+#9 15.79 dependencies:
+#9 15.79 + @ant-design/icons 6.0.0
+#9 15.79 + @apideck/file-picker 1.0.3
+#9 15.79 + @hookform/resolvers 5.0.1
+#9 15.79 + @radix-ui/react-accordion 1.2.8
+#9 15.79 + @radix-ui/react-checkbox 1.2.3
+#9 15.79 + @radix-ui/react-collapsible 1.1.8
+#9 15.79 + @radix-ui/react-dialog 1.1.10
+#9 15.79 + @radix-ui/react-dropdown-menu 2.1.11
+#9 15.79 + @radix-ui/react-icons 1.3.2
+#9 15.79 + @radix-ui/react-label 2.1.4
+#9 15.79 + @radix-ui/react-popover 1.1.11
+#9 15.79 + @radix-ui/react-progress 1.1.7
+#9 15.79 + @radix-ui/react-scroll-area 1.2.4
+#9 15.79 + @radix-ui/react-select 2.2.2
+#9 15.79 + @radix-ui/react-separator 1.1.4
+#9 15.79 + @radix-ui/react-slider 1.3.2
+#9 15.79 + @radix-ui/react-slot 1.2.0
+#9 15.79 + @radix-ui/react-switch 1.2.2
+#9 15.79 + @radix-ui/react-tabs 1.1.4
+#9 15.79 + @radix-ui/react-tooltip 1.2.0
+#9 15.79 + @t3-oss/env-nextjs 0.11.1
+#9 15.79 + @tailwindcss/typography 0.5.16
+#9 15.79 + @tiptap/extension-table 2.11.7
+#9 15.79 + @tiptap/extension-table-cell 2.11.7
+#9 15.79 + @tiptap/extension-table-header 2.11.7
+#9 15.79 + @tiptap/extension-table-row 2.11.7
+#9 15.79 + @tiptap/react 2.11.7
+#9 15.79 + @xyflow/react 12.6.0
+#9 15.79 + best-effort-json-parser 1.1.3
+#9 15.79 + class-variance-authority 0.7.1
+#9 15.79 + clsx 2.1.1
+#9 15.79 + cmdk 1.1.1
+#9 15.79 + date-fns 4.1.0
+#9 15.79 + framer-motion 12.7.4
+#9 15.79 + hast 1.0.0
+#9 15.79 + highlight.js 11.11.1
+#9 15.79 + immer 10.1.1
+#9 15.79 + js-cookie 3.0.5
+#9 15.79 + katex 0.16.21
+#9 15.79 + lowlight 3.3.0
+#9 15.79 + lru-cache 11.1.0
+#9 15.79 + lucide-react 0.487.0
+#9 15.79 + motion 12.7.4
+#9 15.79 + nanoid 5.1.5
+#9 15.79 + next 15.3.0
+#9 15.79 + next-themes 0.4.6
+#9 15.79 + novel 1.0.2
+#9 15.79 + react 19.1.0
+#9 15.79 + react-dom 19.1.0
+#9 15.79 + react-dropzone 14.3.8
+#9 15.79 + react-hook-form 7.56.1
+#9 15.79 + react-markdown 10.1.0
+#9 15.79 + react-syntax-highlighter 15.6.1
+#9 15.79 + rehype-katex 7.0.1
+#9 15.79 + remark-gfm 4.0.1
+#9 15.79 + remark-math 6.0.0
+#9 15.79 + sonner 2.0.3
+#9 15.79 + tailwind-merge 3.2.0
+#9 15.79 + tiptap-markdown 0.8.10
+#9 15.79 + tw-animate-css 1.2.5
+#9 15.79 + unist-util-visit 5.0.0
+#9 15.79 + use-debounce 10.0.4
+#9 15.79 + use-stick-to-bottom 1.1.0
+#9 15.79 + zod 3.24.3
+#9 15.79 + zustand 5.0.3
+#9 15.79 
+#9 15.79 devDependencies:
+#9 15.79 + @eslint/eslintrc 3.3.1
+#9 15.79 + @tailwindcss/postcss 4.1.4
+#9 15.79 + @types/hast 3.0.4
+#9 15.79 + @types/js-cookie 3.0.6
+#9 15.79 + @types/node 20.17.30
+#9 15.79 + @types/react 19.1.2
+#9 15.79 + @types/react-dom 19.1.1
+#9 15.79 + @types/react-syntax-highlighter 15.5.13
+#9 15.79 + eslint 9.24.0
+#9 15.79 + eslint-config-next 15.3.0
+#9 15.79 + postcss 8.5.3
+#9 15.79 + prettier 3.5.3
+#9 15.79 + prettier-plugin-tailwindcss 0.6.11
+#9 15.79 + raw-loader 4.0.2
+#9 15.79 + tailwindcss 4.1.4
+#9 15.79 + typescript 5.8.3
+#9 15.79 + typescript-eslint 8.30.1
+#9 15.79 
+#9 15.85 Done in 10.9s using pnpm v10.6.5
+#9 DONE 20.4s
+
+#10 [frontend 6/6] COPY . .
+#10 DONE 0.1s
+
+#11 [frontend] exporting to image
+#11 exporting layers
+#11 exporting layers 15.8s done
+#11 writing image sha256:20951893fd5d1b1dd1e763914452557370694b1d6c152f6765b338866ed5c233 done
+#11 naming to docker.io/library/deer-flow-frontend done
+#11 DONE 15.8s
+
+#12 [frontend] resolving provenance for metadata file
+#12 DONE 0.0s
+ frontend  Built

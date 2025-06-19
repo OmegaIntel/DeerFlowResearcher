@@ -228,11 +228,13 @@ export async function sendMessage(
     toolId,
     toolType,
     attachments,
+    model,
   }: {
     interruptFeedback?: string;
     toolId?: string;
     toolType?: "mcp" | "agent" | "research";
     attachments?: { filename: string; size: number; type: string; documentId?: string }[];
+    model?: string;
   } = {},
   options: { abortSignal?: AbortSignal } = {},
 ) {
@@ -261,6 +263,25 @@ export async function sendMessage(
       contentChunks: [content],
       attachments: messageAttachments,
     });
+  }
+  
+  // Update document sessions if there are attachments without sessions
+  if (attachments && attachments.length > 0) {
+    const documentIds = attachments
+      .filter(att => att.documentId)
+      .map(att => att.documentId!);
+    
+    if (documentIds.length > 0) {
+      console.log("[sendMessage] Updating document sessions for thread:", currentThreadId);
+      try {
+        const { updateDocumentSessions } = await import('~/core/api/documents-session');
+        await updateDocumentSessions(documentIds, currentThreadId);
+        console.log("[sendMessage] Document sessions updated successfully");
+      } catch (error) {
+        console.error("[sendMessage] Failed to update document sessions:", error);
+        // Continue anyway - documents can still be uploaded without session
+      }
+    }
   }
 
   let stream: AsyncIterable<ChatEvent>;
@@ -304,7 +325,8 @@ export async function sendMessage(
       { 
         thread_id: currentThreadId,
         project_id: state.sessionProject || undefined,
-        attachments: attachments 
+        attachments: attachments,
+        model: model
       },
       options,
     );
@@ -482,8 +504,44 @@ export function closeResearch() {
   useStore.getState().closeResearch();
 }
 
-export function startNewChat() {
-  useStore.getState().startNewChat();
+export async function startNewChat() {
+  // Create a new session immediately and get the thread ID from backend
+  try {
+    console.log('[startNewChat] Creating new session...');
+    const { createChatSession } = await import('../api/chat-history');
+    const newSession = await createChatSession({
+      title: "New Chat",
+      mode: "chat"
+    });
+    
+    // Extract the thread_id from the response
+    const threadId = newSession.thread_id || nanoid();
+    console.log('[startNewChat] Created new session with thread ID:', threadId);
+    console.log('[startNewChat] Full session response:', newSession);
+    
+    // Update the store with the correct thread ID
+    useStore.setState({
+      responding: false,
+      threadId: threadId,
+      messageIds: [],
+      messages: new Map<string, Message>(),
+      researchIds: [],
+      researchPlanIds: new Map<string, string>(),
+      researchReportIds: new Map<string, string>(),
+      researchActivityIds: new Map<string, string[]>(),
+      ongoingResearchId: null,
+      openResearchId: null,
+      sessionProject: null,
+    });
+  } catch (error) {
+    console.error('[startNewChat] Failed to create session:', error);
+    console.error('[startNewChat] Error details:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined
+    });
+    // Fallback to original behavior
+    useStore.getState().startNewChat();
+  }
 }
 
 export async function listenToPodcast(researchId: string) {

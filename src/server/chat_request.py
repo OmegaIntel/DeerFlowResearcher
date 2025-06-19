@@ -66,6 +66,9 @@ class ChatRequest(BaseModel):
     tool_type: Optional[str] = Field(
         None, description="Type of the tool (mcp, agent) for @ queries"
     )
+    model: Optional[str] = Field(
+        None, description="The model to use for this chat request"
+    )
 
 
 class TTSRequest(BaseModel):

@@ -1,0 +1,29 @@
+
+## New Chat Document Upload Fix
+
+### Problem:
+- Documents uploaded to new chats had NULL session_id
+- Chat sessions only created when first message is sent
+- RAG couldn't find documents without session association
+
+### Solution Implemented:
+1. **Backend**: Added /documents/update-session endpoint
+   - Updates document session associations after chat starts
+   - Handles UUID format normalization
+   - Creates chat session if needed
+
+2. **Frontend**: Modified sendMessage to update document sessions
+   - When sending a message with attachments
+   - Calls update-session API to link documents to chat
+   - Documents get properly associated even if uploaded before chat starts
+
+3. **Flow**:
+   - User uploads document (no session yet)
+   - User sends first message with question
+   - System creates chat session
+   - System updates document to link to new session
+   - RAG can now find and use the document
+
+### Result:
+Users can now upload documents to new chats and ask questions immediately\!
+

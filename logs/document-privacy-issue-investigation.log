@@ -1,0 +1,39 @@
+DOCUMENT PRIVACY/SECURITY INVESTIGATION LOG
+==========================================
+Date: 2025-01-19
+Issue: Documents from one chat are being used to answer questions in other chats
+
+FINDINGS:
+--------
+
+1. CRITICAL BUG in /api/chat/simple endpoint (app.py, lines 424-433):
+   - First searches for documents WITH session filter
+   - If no results found, it FALLS BACK to searching WITHOUT session filter
+   - This means documents from OTHER sessions can be accessed
+   - This is a severe privacy/security vulnerability
+
+2. CRITICAL BUG in _handle_documents_query function (app.py, lines 1118-1138):
+   - Searches across ALL Pinecone indices
+   - NO filtering by user_id or session_id
+   - Any user can potentially access any document in the system
+   - This is an even more severe security vulnerability
+
+3. Document processor issues:
+   - enhanced_document_processor.py properly stores session_id in metadata (line 223)
+   - But the search implementation doesn't always use proper filtering
+
+ROOT CAUSES:
+-----------
+1. Fallback logic in chat/simple endpoint that removes session filtering
+2. No user/session filtering in the documents tool query handler
+3. Inconsistent UUID format handling (with/without dashes)
+
+FIXES NEEDED:
+------------
+1. Remove the fallback search without session filter in chat/simple endpoint
+2. Add proper user/session filtering to _handle_documents_query
+3. Ensure consistent UUID format handling throughout the system
+4. Add validation to ensure users can only access their own documents
+
+SEVERITY: CRITICAL
+This allows users to access documents from other users' sessions, which is a severe privacy violation.

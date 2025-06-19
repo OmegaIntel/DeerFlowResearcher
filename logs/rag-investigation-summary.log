@@ -1,0 +1,19 @@
+
+## Summary of RAG Issues and Fixes:
+
+1. **UUID Format Mismatch**: Database stores UUIDs without hyphens, app uses with hyphens
+   - Fixed by adding UUID normalization in app.py
+
+2. **Session Association**: Documents uploaded before chat session exists get NULL session_id
+   - Documents need to be linked to chat sessions for RAG to work
+   - Fixed existing documents manually in database
+
+3. **New Uploads Still Failing**: New chunked uploads still getting NULL session_id
+   - Session might not exist when document is uploaded
+   - Need to investigate frontend session ID passing
+
+Current status:
+- Old document fixed and linked to session ✓
+- UUID normalization added to backend ✓
+- New uploads still not linking properly ✗
+

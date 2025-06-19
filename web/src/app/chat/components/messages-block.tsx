@@ -37,6 +37,8 @@ export function MessagesBlock({ className }: { className?: string }) {
       toolId?: string; 
       toolType?: "mcp" | "agent" | "research";
       attachments?: { filename: string; size: number; type: string; documentId?: string }[];
+      model?: string;
+      files?: File[];
     }) => {
       const abortController = new AbortController();
       abortControllerRef.current = abortController;
@@ -48,7 +50,12 @@ export function MessagesBlock({ className }: { className?: string }) {
               options?.interruptFeedback ?? feedback?.option.value,
             toolId: options?.toolId,
             toolType: options?.toolType,
-            attachments: options?.attachments,
+            attachments: options?.attachments || options?.files?.map(f => ({
+              filename: f.name,
+              size: f.size,
+              type: f.type,
+            })),
+            model: options?.model,
           },
           {
             abortSignal: abortController.signal,

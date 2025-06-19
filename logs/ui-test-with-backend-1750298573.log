@@ -1,0 +1,14 @@
+Testing UI changes with development frontend...
+✓ Successfully loaded chat page
+Welcome message count: 0 (should be 0)
+ResearchBETA count: 0 (should be 0)
+Model selector with Gemini 2.5 Flash: 1 (should be 1)
+Tools positioned below input: true (should be true)
+Input Y: 478.96875, Tools Y: 602.96875
+Textarea min-height: 80px (should be 80px)
+
+=== UI CHANGES SUMMARY ===
+✓ Welcome message removed: true
+✓ ResearchBETA removed: true
+✓ Model selector updated: true
+✓ Development frontend is working with volume mounting

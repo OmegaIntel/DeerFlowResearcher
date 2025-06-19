@@ -1,0 +1,11 @@
+Testing UI changes with development frontend...
+✓ Successfully loaded chat page
+Welcome message count: 1 (should be 0)
+ResearchBETA count: 0 (should be 0)
+Model selector with Gemini 2.5 Flash: 1 (should be 1)
+
+=== UI CHANGES SUMMARY ===
+✓ Welcome message removed: false
+✓ ResearchBETA removed: true
+✓ Model selector updated: true
+✓ Development frontend is working with volume mounting
