@@ -4,7 +4,8 @@ import { useHistoricalPrice, useFundamentalOverview } from '../../hooks/useOpenB
 import classNames from 'classnames';
 import WidgetHeaderWithTicker from '../common/WidgetHeaderWithTicker';
 import { useCopilot } from '../../contexts/CopilotContext';
-import type { WidgetType } from '../../services/copilotService';
+import { WidgetType } from '../../services/copilotService';
+import { safeDateCalc } from '../../utils/dateUtils';
 
 interface TickerInfoProps {
   ticker: string;
@@ -15,8 +16,8 @@ interface TickerInfoProps {
 
 const TickerInfo: React.FC<TickerInfoProps> = ({ ticker, onTickerChange, onSettings, onRemove }) => {
   // Get today's date and 2 days ago for recent price data
-  const endDate = new Date().toISOString().split('T')[0];
-  const startDate = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+  const endDate = useMemo(() => safeDateCalc(0), []);
+  const startDate = useMemo(() => safeDateCalc(2), []);
   
   const { data: priceData, isLoading: priceLoading, error: priceError } = useHistoricalPrice(ticker, startDate, endDate, '1d');
   const { data: fundamentalData, isLoading: fundamentalLoading, error: fundamentalError } = useFundamentalOverview(ticker);

@@ -3,7 +3,7 @@ import { useInsiderTrading } from '../../hooks/useOpenBBData';
 import WidgetHeaderWithTicker from '../common/WidgetHeaderWithTicker';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 import { useCopilot } from '../../contexts/CopilotContext';
-import type { WidgetType } from '../../services/copilotService';
+import { WidgetType } from '../../services/copilotService';
 import { safeDate, safeDateString } from '../../utils/dateUtils';
 
 interface InsiderTradingProps {

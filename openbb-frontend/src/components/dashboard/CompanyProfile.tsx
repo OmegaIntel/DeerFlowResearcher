@@ -3,7 +3,7 @@ import { Globe, Phone, MapPin, DollarSign, TrendingUp, Users } from 'lucide-reac
 import { useCompanyProfileRealTime } from '../../hooks/useRealTimeData';
 import WidgetHeaderWithTicker from '../common/WidgetHeaderWithTicker';
 import { useCopilot } from '../../contexts/CopilotContext';
-import type { WidgetType } from '../../services/copilotService';
+import { WidgetType } from '../../services/copilotService';
 
 interface CompanyProfileProps {
   ticker: string;
@@ -115,7 +115,7 @@ const CompanyProfile: React.FC<CompanyProfileProps> = ({ ticker, onTickerChange,
             <div className="flex items-center gap-1">
               <Users size={12} className="text-openbb-accent" />
               <span className="text-openbb-text-muted">Employees:</span>
-              <span className="ml-1 text-openbb-text-secondary">{profile.fullTimeEmployees.toLocaleString()}</span>
+              <span className="ml-1 text-openbb-text-secondary">{profile.fullTimeEmployees ? profile.fullTimeEmployees.toLocaleString() : 'N/A'}</span>
             </div>
             <div>
               <span className="text-openbb-text-muted">IPO Date:</span>

@@ -6,7 +6,7 @@ import { chartColors, defaultChartOptions } from '../../utils/chartConfig';
 import classNames from 'classnames';
 import WidgetHeaderWithTicker from '../common/WidgetHeaderWithTicker';
 import { useCopilot } from '../../contexts/CopilotContext';
-import type { WidgetType } from '../../services/copilotService';
+import { WidgetType } from '../../services/copilotService';
 
 interface RevenueChartsProps {
   ticker: string;

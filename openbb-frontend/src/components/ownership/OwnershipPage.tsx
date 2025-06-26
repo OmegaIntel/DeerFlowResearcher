@@ -4,7 +4,7 @@ import classNames from 'classnames';
 import { useInstitutionalOwnership, useStockOwnership } from '../../hooks/useOwnershipData';
 import { apiCache } from '../../services/cacheService';
 import { useCopilot } from '../../contexts/CopilotContext';
-import type { WidgetType } from '../../services/copilotService';
+import { WidgetType } from '../../services/copilotService';
 
 interface OwnershipPageProps {
   ticker: string;

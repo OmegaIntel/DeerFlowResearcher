@@ -149,9 +149,9 @@ class OwnershipService {
       return acc;
     }, {} as Record<string, InstitutionalOwnershipData>);
 
-    return Object.values(grouped).sort((a, b) => 
+    return Object.values(grouped).sort((a: InstitutionalOwnershipData, b: InstitutionalOwnershipData) => 
       new Date(b.date).getTime() - new Date(a.date).getTime()
-    );
+    ) as InstitutionalOwnershipData[];
   }
 
   /**

@@ -3,7 +3,7 @@ import { RefreshCw, Download, Settings, Maximize2, ExternalLink } from 'lucide-r
 import { useSecFilingsRealTime } from '../../hooks/useRealTimeDataExtended';
 import WidgetHeaderWithTicker from '../common/WidgetHeaderWithTicker';
 import { useCopilot } from '../../contexts/CopilotContext';
-import type { WidgetType } from '../../services/copilotService';
+import { WidgetType } from '../../services/copilotService';
 import { safeISOString } from '../../utils/dateUtils';
 
 interface CompanyFilingsProps {

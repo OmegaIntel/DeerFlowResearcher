@@ -1,6 +1,6 @@
 import React from 'react';
 import { useCopilot } from '../../contexts/CopilotContext';
-import type { WidgetType } from '../../services/copilotService';
+import { WidgetType } from '../../services/copilotService';
 
 export interface WithCopilotProps {
   onAddToCopilot: () => void;

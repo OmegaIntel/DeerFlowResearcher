@@ -205,4 +205,4 @@ class PrivateCompanyService {
 }
 
 export const privateCompanyService = new PrivateCompanyService();
-export { type PrivateCompany, type CompanyFilters, type FilterOptions };
+// Types are already exported above

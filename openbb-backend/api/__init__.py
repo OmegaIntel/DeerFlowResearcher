@@ -1,3 +1,1 @@
-from .main import app
-
-__all__ = ["app"]
+# Empty __init__.py to make api a package

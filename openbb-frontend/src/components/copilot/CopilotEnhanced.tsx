@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { X, Send, Sparkles, Plus, Trash2, Lightbulb, MessageSquare, Globe, Paperclip, Shield, ChevronDown, Check, Edit2, GripVertical, AlertCircle, Move } from 'lucide-react';
 import OmegaMainLogo from '../icons/OmegaMainLogo';
 import { useCopilot } from '../../contexts/CopilotContext';
-import type { WidgetType } from '../../services/copilotService';
+import { WidgetType } from '../../services/copilotService';
 
 interface CopilotEnhancedProps {
   selectedTicker: string;

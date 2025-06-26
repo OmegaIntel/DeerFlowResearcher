@@ -3,7 +3,7 @@ import { RefreshCw, Download, Settings, Maximize2, Plus } from 'lucide-react';
 import classNames from 'classnames';
 import { useFinancialStatementsRealTime } from '../../hooks/useRealTimeDataExtended';
 import { useCopilot } from '../../contexts/CopilotContext';
-import type { WidgetType } from '../../services/copilotService';
+import { WidgetType } from '../../services/copilotService';
 import { FINANCIALS_TEST_VERSION } from '../../test-financials-changes';
 
 interface FinancialsPageProps {

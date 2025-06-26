@@ -5,7 +5,7 @@ import { useValuationMultiplesRealTime } from '../../hooks/useRealTimeDataExtend
 import WidgetHeaderWithTicker from '../common/WidgetHeaderWithTicker';
 import classNames from 'classnames';
 import { useCopilot } from '../../contexts/CopilotContext';
-import type { WidgetType } from '../../services/copilotService';
+import { WidgetType } from '../../services/copilotService';
 import { safeDate } from '../../utils/dateUtils';
 
 interface ValuationMultiplesProps {
@@ -254,7 +254,7 @@ const ValuationMultiples: React.FC<ValuationMultiplesProps> = ({ ticker, onTicke
         <WidgetHeaderWithTicker
           title="Valuation Multiples"
           ticker={ticker}
-          onTickerChange={onTickerChange}
+          onTickerChange={onTickerChange || (() => {})}
           onAdd={() => {
             const valuationData = {
               periodType,
@@ -283,7 +283,7 @@ const ValuationMultiples: React.FC<ValuationMultiplesProps> = ({ ticker, onTicke
       <WidgetHeaderWithTicker
         title="Valuation Multiples"
         ticker={ticker}
-        onTickerChange={onTickerChange}
+        onTickerChange={onTickerChange || (() => {})}
         onAdd={() => {
           const valuationData = {
             periodType,

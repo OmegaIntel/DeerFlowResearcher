@@ -4,7 +4,7 @@ import { useValuationMultiplesRealTime } from '../../hooks/useRealTimeDataExtend
 import WidgetHeaderWithTicker from '../common/WidgetHeaderWithTicker';
 import classNames from 'classnames';
 import { useCopilot } from '../../contexts/CopilotContext';
-import type { WidgetType } from '../../services/copilotService';
+import { WidgetType } from '../../services/copilotService';
 import { safeDate } from '../../utils/dateUtils';
 
 interface ValuationMultiplesProps {

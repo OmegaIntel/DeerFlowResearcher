@@ -107,3 +107,8 @@ test.html
 test-*.html
 excel-viewer.html
 simple-excel-viewer.html
+# AWS credentials and environment files
+.env.aws
+.env.aws-prod
+*.pem
+*-credentials.json

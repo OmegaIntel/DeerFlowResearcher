@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { TrendingUp, TrendingDown, Filter, RefreshCw, AlertCircle, Activity } from 'lucide-react';
 import WidgetHeaderWithTicker from '../common/WidgetHeaderWithTicker';
 import { useCopilot } from '../../contexts/CopilotContext';
-import type { WidgetType } from '../../services/copilotService';
+import { WidgetType } from '../../services/copilotService';
 
 interface OptionsFlowProps {
   ticker: string;

@@ -3,7 +3,7 @@ import { Calendar, ExternalLink } from 'lucide-react';
 import { useCompanyNewsExtended } from '../../hooks/useRealTimeDataExtended';
 import WidgetHeaderWithTicker from '../common/WidgetHeaderWithTicker';
 import { useCopilot } from '../../contexts/CopilotContext';
-import type { WidgetType } from '../../services/copilotService';
+import { WidgetType } from '../../services/copilotService';
 
 interface CompanyNewsProps {
   ticker: string;

@@ -2,8 +2,9 @@ import React from 'react';
 import { Line } from 'react-chartjs-2';
 import WidgetHeaderWithTicker from '../common/WidgetHeaderWithTicker';
 import { useCopilot } from '../../contexts/CopilotContext';
-import type { WidgetType } from '../../services/copilotService';
-import { useHistoricalData } from '../../hooks/useStockData';
+import { WidgetType } from '../../services/copilotService';
+import { useHistoricalData } from '../../hooks/useHistoricalData';
+import { safeDateString } from '../../utils/dateUtils';
 
 interface PriceChartProps {
   ticker: string;
@@ -14,11 +15,12 @@ interface PriceChartProps {
 
 const PriceChart: React.FC<PriceChartProps> = ({ ticker, onTickerChange, onSettings, onRemove }) => {
   const { addWidgetContext } = useCopilot();
-  const { data: historicalData, isLoading, error } = useHistoricalData(ticker, '1d');
+  const interval = '1d'; // Default interval
+  const { data: historicalData, isLoading, error } = useHistoricalData(ticker, interval);
   
   // Process historical data for chart
   const priceData = React.useMemo(() => {
-    if (!historicalData || !historicalData.data || historicalData.data.length === 0) {
+    if (!historicalData || !Array.isArray(historicalData) || historicalData.length === 0) {
       return {
         labels: [],
         datasets: [{
@@ -35,9 +37,12 @@ const PriceChart: React.FC<PriceChartProps> = ({ ticker, onTickerChange, onSetti
       };
     }
     
-    const data = historicalData.data.slice(-20); // Last 20 data points
+    const data = historicalData.slice(-20); // Last 20 data points
     return {
-      labels: data.map((d: any) => new Date(d.date).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })),
+      labels: data.map((d: any) => {
+        const dateFormat = (interval === '1d' || interval === '5d' || interval === '1wk' || interval === '1mo') ? 'date' : 'time';
+        return safeDateString(d.date, dateFormat);
+      }),
       datasets: [{
         label: 'Price',
         data: data.map((d: any) => d.close),
@@ -50,7 +55,7 @@ const PriceChart: React.FC<PriceChartProps> = ({ ticker, onTickerChange, onSetti
         fill: true,
       }],
     };
-  }, [historicalData]);
+  }, [historicalData, interval]);
 
   const options = {
     responsive: true,

@@ -2,7 +2,7 @@ import React from 'react';
 import { Building2, TrendingUp, MapPin, Calendar } from 'lucide-react';
 import WidgetHeader from '../../common/WidgetHeader';
 import { useCopilot } from '../../../contexts/CopilotContext';
-import type { WidgetType } from '../../../services/copilotService';
+import { WidgetType } from '../../../services/copilotService';
 
 interface CompanyStatisticsProps {
   statistics: any;

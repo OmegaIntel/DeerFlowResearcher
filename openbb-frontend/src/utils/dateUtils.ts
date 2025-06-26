@@ -9,6 +9,24 @@ export const safeDate = (dateInput: any): Date | null => {
   }
   
   try {
+    // Check if it's already a Date object
+    if (dateInput instanceof Date) {
+      if (isNaN(dateInput.getTime())) {
+        console.warn('safeDate: Invalid Date object', dateInput);
+        return null;
+      }
+      return dateInput;
+    }
+    
+    // Check for specific invalid strings
+    if (typeof dateInput === 'string') {
+      const trimmed = dateInput.trim();
+      if (!trimmed || trimmed === 'null' || trimmed === 'undefined' || trimmed === 'Invalid Date' || trimmed.toLowerCase() === 'invalid date') {
+        console.warn('safeDate: Invalid date string', dateInput);
+        return null;
+      }
+    }
+    
     const date = new Date(dateInput);
     if (isNaN(date.getTime())) {
       console.warn('safeDate: Invalid date value', dateInput);

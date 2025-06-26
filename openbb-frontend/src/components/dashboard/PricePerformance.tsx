@@ -3,7 +3,7 @@ import { useStockData } from '../../hooks/useStockData';
 import { usePricePerformance } from '../../hooks/usePricePerformance';
 import WidgetHeaderWithTicker from '../common/WidgetHeaderWithTicker';
 import { useCopilot } from '../../contexts/CopilotContext';
-import type { WidgetType } from '../../services/copilotService';
+import { WidgetType } from '../../services/copilotService';
 
 interface PricePerformanceProps {
   ticker: string;
@@ -22,16 +22,16 @@ const PricePerformance: React.FC<PricePerformanceProps> = ({ ticker, onTickerCha
 
     const csvContent = [
       ['Period', 'Return (%)'],
-      ['1 Day', performanceData.performance['1D']?.toFixed(2) || 'N/A'],
-      ['5 Days', performanceData.performance['5D']?.toFixed(2) || 'N/A'],
-      ['1 Week', performanceData.performance['1W']?.toFixed(2) || 'N/A'],
-      ['1 Month', performanceData.performance['1M']?.toFixed(2) || 'N/A'],
-      ['3 Months', performanceData.performance['3M']?.toFixed(2) || 'N/A'],
-      ['6 Months', performanceData.performance['6M']?.toFixed(2) || 'N/A'],
-      ['Year to Date', performanceData.performance['YTD']?.toFixed(2) || 'N/A'],
-      ['1 Year', performanceData.performance['1Y']?.toFixed(2) || 'N/A'],
-      ['3 Years', performanceData.performance['3Y']?.toFixed(2) || 'N/A'],
-      ['5 Years', performanceData.performance['5Y']?.toFixed(2) || 'N/A'],
+      ['1 Day', performanceData.performance?.['1D']?.toFixed(2) || 'N/A'],
+      ['5 Days', performanceData.performance?.['5D']?.toFixed(2) || 'N/A'],
+      ['1 Week', performanceData.performance?.['1W']?.toFixed(2) || 'N/A'],
+      ['1 Month', performanceData.performance?.['1M']?.toFixed(2) || 'N/A'],
+      ['3 Months', performanceData.performance?.['3M']?.toFixed(2) || 'N/A'],
+      ['6 Months', performanceData.performance?.['6M']?.toFixed(2) || 'N/A'],
+      ['Year to Date', performanceData.performance?.['YTD']?.toFixed(2) || 'N/A'],
+      ['1 Year', performanceData.performance?.['1Y']?.toFixed(2) || 'N/A'],
+      ['3 Years', performanceData.performance?.['3Y']?.toFixed(2) || 'N/A'],
+      ['5 Years', performanceData.performance?.['5Y']?.toFixed(2) || 'N/A'],
       ['', ''],
       ['Current Price', `$${performanceData.currentPrice?.toFixed(2) || 'N/A'}`],
       ['52 Week High', `$${performanceData.yearHigh?.toFixed(2) || 'N/A'}`],
@@ -53,7 +53,7 @@ const PricePerformance: React.FC<PricePerformanceProps> = ({ ticker, onTickerCha
     window.URL.revokeObjectURL(url);
   };
 
-  if (isLoading || !performanceData) {
+  if (isLoading || !performanceData || !performanceData.performance) {
     return (
       <div className="bg-openbb-bg-widget rounded-lg border border-openbb-border p-4 h-full flex flex-col animate-pulse">
         <div className="h-5 bg-openbb-bg-hover rounded w-1/2 mb-4"></div>
@@ -65,16 +65,16 @@ const PricePerformance: React.FC<PricePerformanceProps> = ({ ticker, onTickerCha
   }
 
   const performanceRows = [
-    { label: '1 Day', value: performanceData.performance['1D'], key: '1D' },
-    { label: '5 Days', value: performanceData.performance['5D'], key: '5D' },
-    { label: '1 Week', value: performanceData.performance['1W'], key: '1W' },
-    { label: '1 Month', value: performanceData.performance['1M'], key: '1M' },
-    { label: '3 Months', value: performanceData.performance['3M'], key: '3M' },
-    { label: '6 Months', value: performanceData.performance['6M'], key: '6M' },
-    { label: 'YTD', value: performanceData.performance['YTD'], key: 'YTD' },
-    { label: '1 Year', value: performanceData.performance['1Y'], key: '1Y' },
-    { label: '3 Years', value: performanceData.performance['3Y'], key: '3Y' },
-    { label: '5 Years', value: performanceData.performance['5Y'], key: '5Y' },
+    { label: '1 Day', value: performanceData.performance?.['1D'], key: '1D' },
+    { label: '5 Days', value: performanceData.performance?.['5D'], key: '5D' },
+    { label: '1 Week', value: performanceData.performance?.['1W'], key: '1W' },
+    { label: '1 Month', value: performanceData.performance?.['1M'], key: '1M' },
+    { label: '3 Months', value: performanceData.performance?.['3M'], key: '3M' },
+    { label: '6 Months', value: performanceData.performance?.['6M'], key: '6M' },
+    { label: 'YTD', value: performanceData.performance?.['YTD'], key: 'YTD' },
+    { label: '1 Year', value: performanceData.performance?.['1Y'], key: '1Y' },
+    { label: '3 Years', value: performanceData.performance?.['3Y'], key: '3Y' },
+    { label: '5 Years', value: performanceData.performance?.['5Y'], key: '5Y' },
   ];
 
   const getColorClass = (value: number | undefined) => {

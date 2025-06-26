@@ -22,6 +22,8 @@ class ErrorBoundary extends Component<Props, State> {
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('Uncaught error:', error, errorInfo);
+    console.error('Error stack:', error.stack);
+    console.error('Component stack:', errorInfo.componentStack);
   }
 
   public render() {
@@ -33,6 +35,11 @@ class ErrorBoundary extends Component<Props, State> {
             <p className="text-gray-300 mb-4">
               {this.state.error?.message || 'An unexpected error occurred'}
             </p>
+            {process.env.NODE_ENV === 'development' && this.state.error?.stack && (
+              <pre className="text-xs text-gray-400 mb-4 p-2 bg-gray-800 rounded overflow-auto max-h-40">
+                {this.state.error.stack}
+              </pre>
+            )}
             <button
               className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
               onClick={() => window.location.reload()}

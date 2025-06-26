@@ -50,10 +50,32 @@ class OpenBBService:
                 )
                 if result:
                     df = result.to_dataframe()
+                    # Format dates properly
+                    data = []
+                    for idx, row in df.iterrows():
+                        record = row.to_dict()
+                        # Convert date to string format if it exists
+                        if 'date' in record and pd.notna(record['date']):
+                            if isinstance(record['date'], str):
+                                # Parse and reformat if it's already a string
+                                try:
+                                    date_obj = pd.to_datetime(record['date'])
+                                    record['date'] = date_obj.strftime('%Y-%m-%d')
+                                except:
+                                    # Keep original if parsing fails
+                                    pass
+                            else:
+                                # Format datetime objects
+                                try:
+                                    record['date'] = pd.to_datetime(record['date']).strftime('%Y-%m-%d')
+                                except:
+                                    record['date'] = str(record['date'])
+                        data.append(record)
+                    
                     return {
                         "symbol": symbol,
-                        "data": df.to_dict('records'),
-                        "count": len(df),
+                        "data": data,
+                        "count": len(data),
                         "provider": "openbb"
                     }
             except Exception as e:

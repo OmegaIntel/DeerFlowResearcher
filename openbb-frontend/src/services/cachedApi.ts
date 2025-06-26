@@ -89,7 +89,7 @@ class CachedApiService {
     const cacheKey = cacheService.generateKey('quote', { symbol });
     return this.cachedRequest(
       cacheKey,
-      () => api.request(`/equity/price/quote?symbol=${symbol}`),
+      () => api.get(`/equity/price/quote?symbol=${symbol}`),
       CACHE_TTLS.quote
     );
   }
@@ -98,7 +98,7 @@ class CachedApiService {
     const cacheKey = cacheService.generateKey('historical', { symbol, period, interval });
     return this.cachedRequest(
       cacheKey,
-      () => api.getHistoricalData(symbol, period, interval),
+      () => api.getHistoricalPrice(symbol, undefined, undefined, interval),
       CACHE_TTLS.historicalData
     );
   }
@@ -136,7 +136,7 @@ class CachedApiService {
     const cacheKey = cacheService.generateKey('key-metrics', { symbol, period, limit });
     return this.cachedRequest(
       cacheKey,
-      () => api.getKeyMetrics(symbol, period, limit),
+      () => api.getValuationMetrics(symbol, period, limit, true),
       CACHE_TTLS.keyMetrics
     );
   }
@@ -192,7 +192,7 @@ class CachedApiService {
     const cacheKey = cacheService.generateKey('company-news', { symbol, limit });
     return this.cachedRequest(
       cacheKey,
-      () => api.getCompanyNews(symbol, limit),
+      () => api.getCompanyNews(symbol, undefined, undefined, limit),
       CACHE_TTLS.news
     );
   }
@@ -211,7 +211,7 @@ class CachedApiService {
     const cacheKey = cacheService.generateKey('options-flow', { symbol: symbol || 'all' });
     return this.cachedRequest(
       cacheKey,
-      () => api.getOptionsFlow(symbol),
+      () => api.get(`/equity/options/flow${symbol ? `?symbol=${symbol}` : ''}`),
       CACHE_TTLS.optionsFlow
     );
   }
@@ -221,7 +221,7 @@ class CachedApiService {
     const cacheKey = cacheService.generateKey('institutional-ownership', { symbol });
     return this.cachedRequest(
       cacheKey,
-      () => api.getInstitutionalOwnership(symbol),
+      () => api.get(`/equity/ownership/institutional?symbol=${symbol}`),
       ONE_DAY_IN_SECONDS
     );
   }
@@ -230,7 +230,7 @@ class CachedApiService {
     const cacheKey = cacheService.generateKey('insider-trading', { symbol });
     return this.cachedRequest(
       cacheKey,
-      () => api.getInsiderTrading(symbol),
+      () => api.get(`/equity/ownership/insider-trading?symbol=${symbol}`),
       ONE_DAY_IN_SECONDS
     );
   }
@@ -240,7 +240,7 @@ class CachedApiService {
     const cacheKey = cacheService.generateKey('market-overview', {});
     return this.cachedRequest(
       cacheKey,
-      () => api.getMarketOverview(),
+      () => api.get('/equity/market/overview'),
       ONE_HOUR_IN_SECONDS
     );
   }
@@ -260,7 +260,7 @@ class CachedApiService {
     const cacheKey = cacheService.generateKey('company-filings', { symbol, limit });
     return this.cachedRequest(
       cacheKey,
-      () => api.getCompanyFilings(symbol, limit),
+      () => api.getCompanyFilings(symbol),
       ONE_DAY_IN_SECONDS
     );
   }
@@ -269,7 +269,7 @@ class CachedApiService {
     const cacheKey = cacheService.generateKey('earnings-transcripts', { symbol, year, quarter });
     return this.cachedRequest(
       cacheKey,
-      () => api.getEarningsTranscripts(symbol, year, quarter),
+      () => year && quarter ? api.getEarningsTranscript(symbol, year, quarter) : api.getEarningsTranscriptDates(symbol),
       ONE_WEEK_IN_SECONDS
     );
   }
@@ -281,14 +281,14 @@ class CachedApiService {
     
     return this.cachedRequest(
       cacheKey,
-      () => api.request<T>(`/${endpoint}`),
+      () => api.get<T>(endpoint),
       ttl
     );
   }
 
   // Cache Management
   clearCache() {
-    cacheService.clear();
+    cacheService.clearAll();
     console.log('Cache cleared');
   }
 

@@ -1,5 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { api } from '../services/api';
+import { safeDateCalc, safeDate, safeDateString } from '../utils/dateUtils';
 
 // Hook for Management Team
 export const useManagementTeamRealTime = (ticker: string) => {
@@ -161,12 +162,13 @@ export const useCompanyNewsExtended = (ticker: string, limit: number = 15) => {
     queryKey: ['company-news-extended', ticker, limit],
     queryFn: async () => {
       // Get news from the last 30 days
-      const endDate = new Date().toISOString().split('T')[0];
-      const startDate = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+      const endDate = safeDateCalc(0);
+      const startDate = safeDateCalc(30);
       
-      const newsData = await api.getCompanyNews(ticker, startDate, endDate, limit) as any[];
+      const response = await api.getCompanyNews(ticker, startDate, endDate, limit) as any;
+      const newsData = response?.articles || [];
       
-      if (!newsData || !Array.isArray(newsData)) {
+      if (!Array.isArray(newsData)) {
         return [];
       }
       
@@ -183,25 +185,18 @@ export const useCompanyNewsExtended = (ticker: string, limit: number = 15) => {
           return hasValidTitle;
         })
         .map((item, index) => {
-          const publishedDate = new Date(item.published || item.date || new Date());
+          const publishedDate = safeDate(item.publishedAt || item.published || item.date) || new Date();
           
           return {
             id: item.id || `news-${index}`,
             title: item.title.trim(),
             url: item.url || '#',
-            published: item.published || publishedDate.toISOString(),
-            date: publishedDate.toLocaleDateString('en-US', { 
-              month: 'short', 
-              day: 'numeric', 
-              year: 'numeric' 
-            }),
-            time: publishedDate.toLocaleTimeString('en-US', { 
-              hour: '2-digit', 
-              minute: '2-digit' 
-            }),
+            published: item.publishedAt || item.published || (publishedDate ? publishedDate.toISOString() : ''),
+            date: safeDateString(publishedDate, 'date'),
+            time: safeDateString(publishedDate, 'time'),
             source: item.source || 'Unknown Source',
             summary: item.summary || '',
-            provider: item.provider || 'N/A',
+            provider: item.provider || item.source || 'N/A',
             relatedTickers: item.tickers || item.stocks || [ticker],
           };
         });

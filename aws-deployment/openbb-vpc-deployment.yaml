@@ -1,0 +1,299 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'OpenBB VPC Deployment with ElastiCache Integration'
+
+Parameters:
+  KeyPairName:
+    Type: AWS::EC2::KeyPair::KeyName
+    Description: EC2 Key Pair for SSH access
+    ConstraintDescription: Must be an existing EC2 KeyPair
+  
+  InstanceType:
+    Type: String
+    Default: t3.medium
+    Description: EC2 instance type
+    AllowedValues:
+      - t3.small
+      - t3.medium
+      - t3.large
+      - t3.xlarge
+  
+  LatestAmiId:
+    Type: AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>
+    Default: /aws/service/ami-amazon-linux-latest/amzn2-ami-hvm-x86_64-gp2
+
+Resources:
+  # Security Group for EC2
+  EC2SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Security group for OpenBB EC2 instance
+      VpcId: vpc-0837fe0c8dda53d06  # Default VPC where ElastiCache is located
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+          Description: SSH access
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+          Description: HTTP for frontend
+        - IpProtocol: tcp
+          FromPort: 8000
+          ToPort: 8000
+          CidrIp: 0.0.0.0/0
+          Description: Backend API
+        - IpProtocol: tcp
+          FromPort: 47334
+          ToPort: 47335
+          CidrIp: 0.0.0.0/0
+          Description: MindsDB
+        - IpProtocol: tcp
+          FromPort: 9080
+          ToPort: 9080
+          CidrIp: 0.0.0.0/0
+          Description: OnlyOffice
+      SecurityGroupEgress:
+        - IpProtocol: -1
+          CidrIp: 0.0.0.0/0
+          Description: Allow all outbound traffic
+      Tags:
+        - Key: Name
+          Value: OpenBB-EC2-SG
+
+  # Update ElastiCache Security Group to allow EC2 access
+  ElastiCacheSecurityGroupIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      GroupId: sg-0cc67dbc1a403018c  # ElastiCache security group
+      IpProtocol: tcp
+      FromPort: 6379
+      ToPort: 6379
+      SourceSecurityGroupId: !Ref EC2SecurityGroup
+      Description: Allow Redis access from EC2
+
+  # EC2 Instance
+  OpenBBInstance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: !Ref LatestAmiId
+      InstanceType: !Ref InstanceType
+      KeyName: !Ref KeyPairName
+      SecurityGroupIds:
+        - !Ref EC2SecurityGroup
+      SubnetId: subnet-0c9deaf639e5a6bb9  # Same subnet as ElastiCache
+      IamInstanceProfile: !Ref EC2InstanceProfile
+      UserData:
+        Fn::Base64: !Sub |
+          #!/bin/bash
+          # Update system
+          yum update -y
+          
+          # Install Docker
+          yum install -y docker git aws-cli
+          service docker start
+          usermod -a -G docker ec2-user
+          
+          # Install Docker Compose
+          curl -L "https://github.com/docker/compose/releases/download/v2.20.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          chmod +x /usr/local/bin/docker-compose
+          
+          # Create app directory
+          mkdir -p /home/ec2-user/openbb
+          cd /home/ec2-user/openbb
+          
+          # Create environment file
+          cat > .env << 'EOF'
+          # AWS Services
+          REDIS_URL=redis://openbb-redis.lz05va.0001.use1.cache.amazonaws.com:6379
+          AWS_RDS_HOST=omega-intelligence.cfggauukayly.us-east-1.rds.amazonaws.com
+          AWS_RDS_PORT=3306
+          AWS_RDS_DATABASE=omni_ai
+          AWS_RDS_USERNAME=admin
+          AWS_RDS_PASSWORD=7atwj76e
+          
+          # API Keys
+          BENZINGA_API_KEY=bz.PG3WR7XJKES5P7TZ2LXT7RHE6PAHQXER
+          API_NINJAS_KEY=iYRHbEOeV8cc0T40ssPtAg==CcrRA2Z4aeTlndpj
+          OPENAI_API_KEY=${OPENAI_API_KEY}
+          ALPHA_VANTAGE_API_KEY=VZ2CMIJ69RQVHKZA
+          POLYGON_API_KEY=NJGhzP6EKVEg3kOJ6VKScKQT7fjWdpkD
+          FMP_API_KEY=N1bBgINdiUtb2j8Dy3KCdMCH9EKd7Qgv
+          EOF
+          
+          # Pull Docker images from ECR or build them
+          # For now, we'll use the public images and build on instance
+          
+          # Clone the repository (you'll need to replace with actual repo)
+          # git clone https://github.com/yourusername/openbb.git .
+          
+          # Create docker-compose.yml
+          cat > docker-compose.yml << 'EOF'
+          version: '3.8'
+          
+          services:
+            backend:
+              image: openbb-backend-complete:latest
+              build:
+                context: ./openbb-backend
+                dockerfile: Dockerfile.complete
+              ports:
+                - "8000:8000"
+              env_file:
+                - .env
+              environment:
+                - REDIS_URL=redis://openbb-redis.lz05va.0001.use1.cache.amazonaws.com:6379
+                - MINDSDB_URL=http://mindsdb:47334
+              restart: always
+              networks:
+                - openbb-network
+          
+            frontend:
+              image: openbb-frontend:latest
+              build:
+                context: ./openbb-frontend
+              ports:
+                - "80:3000"
+              environment:
+                - VITE_API_BASE_URL=http://localhost:8000
+              depends_on:
+                - backend
+              restart: always
+              networks:
+                - openbb-network
+          
+            mindsdb:
+              image: mindsdb/mindsdb:latest
+              ports:
+                - "47334:47334"
+                - "47335:47335"
+              environment:
+                - MINDSDB_STORAGE_DIR=/opt/mindsdb/storage
+              volumes:
+                - mindsdb_data:/opt/mindsdb/storage
+              restart: always
+              networks:
+                - openbb-network
+          
+            onlyoffice:
+              image: onlyoffice/documentserver:latest
+              ports:
+                - "9080:80"
+              environment:
+                - JWT_ENABLED=false
+              volumes:
+                - onlyoffice_data:/var/www/onlyoffice/Data
+              restart: always
+              networks:
+                - openbb-network
+          
+          networks:
+            openbb-network:
+              driver: bridge
+          
+          volumes:
+            mindsdb_data:
+            onlyoffice_data:
+          EOF
+          
+          # Set ownership
+          chown -R ec2-user:ec2-user /home/ec2-user/openbb
+          
+          # Create systemd service
+          cat > /etc/systemd/system/openbb.service << 'EOF'
+          [Unit]
+          Description=OpenBB Application
+          After=docker.service
+          Requires=docker.service
+          
+          [Service]
+          Type=simple
+          WorkingDirectory=/home/ec2-user/openbb
+          ExecStart=/usr/local/bin/docker-compose up
+          ExecStop=/usr/local/bin/docker-compose down
+          Restart=always
+          User=ec2-user
+          Group=ec2-user
+          
+          [Install]
+          WantedBy=multi-user.target
+          EOF
+          
+          # Enable service
+          systemctl daemon-reload
+          systemctl enable openbb.service
+          
+          # Signal CloudFormation that the instance is ready
+          /opt/aws/bin/cfn-signal -e $? --stack ${AWS::StackName} --resource OpenBBInstance --region ${AWS::Region}
+          
+      Tags:
+        - Key: Name
+          Value: OpenBB-VPC-Instance
+        - Key: Application
+          Value: OpenBB
+
+  # IAM Role for EC2
+  EC2Role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore
+      Policies:
+        - PolicyName: OpenBBEC2Policy
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - elasticache:DescribeCacheClusters
+                  - rds:DescribeDBInstances
+                  - ecr:GetAuthorizationToken
+                  - ecr:BatchCheckLayerAvailability
+                  - ecr:GetDownloadUrlForLayer
+                  - ecr:BatchGetImage
+                Resource: '*'
+
+  EC2InstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles:
+        - !Ref EC2Role
+
+  # Elastic IP for consistent access
+  ElasticIP:
+    Type: AWS::EC2::EIP
+    Properties:
+      Domain: vpc
+      InstanceId: !Ref OpenBBInstance
+      Tags:
+        - Key: Name
+          Value: OpenBB-EIP
+
+Outputs:
+  InstancePublicIP:
+    Description: Public IP address of the EC2 instance
+    Value: !Ref ElasticIP
+  
+  FrontendURL:
+    Description: URL to access the OpenBB frontend
+    Value: !Sub 'http://${ElasticIP}'
+  
+  BackendURL:
+    Description: URL to access the OpenBB API
+    Value: !Sub 'http://${ElasticIP}:8000'
+  
+  SSHCommand:
+    Description: SSH command to connect to the instance
+    Value: !Sub 'ssh -i ${KeyPairName}.pem ec2-user@${ElasticIP}'
+  
+  ElastiCacheEndpoint:
+    Description: ElastiCache Redis endpoint
+    Value: openbb-redis.lz05va.0001.use1.cache.amazonaws.com:6379

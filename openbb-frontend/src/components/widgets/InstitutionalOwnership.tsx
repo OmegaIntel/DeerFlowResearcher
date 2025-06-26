@@ -3,7 +3,7 @@ import { useInstitutionalOwnership } from '../../hooks/useOpenBBData';
 import WidgetHeaderWithTicker from '../common/WidgetHeaderWithTicker';
 import { Building2, TrendingUp, TrendingDown } from 'lucide-react';
 import { useCopilot } from '../../contexts/CopilotContext';
-import type { WidgetType } from '../../services/copilotService';
+import { WidgetType } from '../../services/copilotService';
 import { safeDateString } from '../../utils/dateUtils';
 
 interface InstitutionalOwnershipProps {

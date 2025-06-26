@@ -3,7 +3,8 @@ import { RefreshCw, Download, Settings, Maximize2 } from 'lucide-react';
 import { useAnalystRatingsRealTime } from '../../hooks/useRealTimeDataExtended';
 import WidgetHeaderWithTicker from '../common/WidgetHeaderWithTicker';
 import { useCopilot } from '../../contexts/CopilotContext';
-import type { WidgetType } from '../../services/copilotService';
+import { WidgetType } from '../../services/copilotService';
+import { safeDate } from '../../utils/dateUtils';
 
 interface PriceTargetProps {
   ticker: string;
@@ -18,8 +19,8 @@ const PriceTarget: React.FC<PriceTargetProps> = ({ ticker, onTickerChange, onSet
 
   // Format date to match screenshot
   const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toISOString().split('T')[0];
+    const date = safeDate(dateStr);
+    return date ? date.toISOString().split('T')[0] : 'N/A';
   };
 
   // Determine rating color based on value
@@ -45,7 +46,7 @@ const PriceTarget: React.FC<PriceTargetProps> = ({ ticker, onTickerChange, onSet
         <WidgetHeaderWithTicker
           title="Price Target By Analyst"
           ticker={ticker}
-          onTickerChange={onTickerChange}
+          onTickerChange={onTickerChange || (() => {})}
           onAdd={ratingsData.length > 0 ? () => addWidgetContext(
             WidgetType.CUSTOM,
             ratingsData,
@@ -70,7 +71,7 @@ const PriceTarget: React.FC<PriceTargetProps> = ({ ticker, onTickerChange, onSet
       <WidgetHeaderWithTicker
         title="Price Target By Analyst"
         ticker={ticker}
-        onTickerChange={onTickerChange}
+        onTickerChange={onTickerChange || (() => {})}
         onAdd={ratingsData.length > 0 ? () => addWidgetContext(
           WidgetType.CUSTOM,
           ratingsData,

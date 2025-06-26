@@ -3,7 +3,7 @@ import { TrendingUp, TrendingDown } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { openbbService } from '../../services/openbb-api';
 import { useCopilot } from '../../contexts/CopilotContext';
-import type { WidgetType } from '../../services/copilotService';
+import { WidgetType } from '../../services/copilotService';
 import WidgetHeader from '../common/WidgetHeader';
 
 interface MarketOverviewProps {

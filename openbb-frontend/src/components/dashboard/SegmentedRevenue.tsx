@@ -13,7 +13,7 @@ import type { ChartOptions } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import WidgetHeaderWithTicker from '../common/WidgetHeaderWithTicker';
 import { useCopilot } from '../../contexts/CopilotContext';
-import type { WidgetType } from '../../services/copilotService';
+import { WidgetType } from '../../services/copilotService';
 
 ChartJS.register(
   CategoryScale,
@@ -145,7 +145,10 @@ const SegmentedRevenue: React.FC<SegmentedRevenueProps> = ({ ticker, onTickerCha
             size: 10,
           },
           callback: function(value) {
-            return value.toLocaleString() + ' B';
+            if (typeof value === 'number' && !isNaN(value)) {
+              return value.toLocaleString() + ' B';
+            }
+            return '0 B';
           }
         },
       },
@@ -181,7 +184,11 @@ const SegmentedRevenue: React.FC<SegmentedRevenueProps> = ({ ticker, onTickerCha
         padding: 8,
         callbacks: {
           label: function(context) {
-            return context.dataset.label + ': $' + context.parsed.y.toLocaleString() + 'B';
+            const value = context.parsed?.y;
+            if (typeof value === 'number' && !isNaN(value)) {
+              return context.dataset.label + ': $' + value.toLocaleString() + 'B';
+            }
+            return context.dataset.label + ': N/A';
           },
         },
       },

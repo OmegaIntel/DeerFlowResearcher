@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TrendingUp, Calendar, DollarSign, BarChart3 } from 'lucide-react';
 import { useCopilot } from '../../contexts/CopilotContext';
-import type { WidgetType } from '../../services/copilotService';
+import { WidgetType } from '../../services/copilotService';
 import WidgetHeader from '../common/WidgetHeader';
 import { safeDateString } from '../../utils/dateUtils';
 

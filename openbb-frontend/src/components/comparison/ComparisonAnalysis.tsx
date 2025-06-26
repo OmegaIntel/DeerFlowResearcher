@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Plus, X, ChevronDown, RefreshCw, Download, Settings, Maximize2, Filter } from 'lucide-react';
 import classNames from 'classnames';
 import { useCopilot } from '../../contexts/CopilotContext';
-import type { WidgetType } from '../../services/copilotService';
+import { WidgetType } from '../../services/copilotService';
 import { api } from '../../services/api';
 
 interface ComparisonAnalysisProps {

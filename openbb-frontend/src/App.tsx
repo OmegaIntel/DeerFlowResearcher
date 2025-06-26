@@ -1,3 +1,4 @@
+import React from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WidgetProvider } from './contexts/WidgetContext';
@@ -21,6 +22,19 @@ const queryClient = new QueryClient({
 
 function App() {
   console.log('App component rendering...');
+  
+  // Add global error handler to catch date errors
+  React.useEffect(() => {
+    const handleError = (event: ErrorEvent) => {
+      console.error('Global error caught:', event.message, event.error);
+      if (event.message.toLowerCase().includes('invalid') && event.message.toLowerCase().includes('date')) {
+        console.error('Date error stack:', event.error?.stack);
+      }
+    };
+    
+    window.addEventListener('error', handleError);
+    return () => window.removeEventListener('error', handleError);
+  }, []);
   
   return (
     <ErrorBoundary>

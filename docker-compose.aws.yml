@@ -2,7 +2,9 @@ version: '3.8'
 
 services:
   backend:
-    build: ./openbb-backend
+    build: 
+      context: ./openbb-backend
+      dockerfile: Dockerfile.complete
     ports:
       - "8000:8000"
     environment:
@@ -31,11 +33,15 @@ services:
       - MINDSDB_USERNAME=mindsdb
       - MINDSDB_PASSWORD=mindsdb
       
+      # Override Redis URL to use local container
+      - REDIS_URL=redis://redis:6379
+      
     volumes:
       - ./openbb-backend:/app
       - ./cleaning_data:/data
     depends_on:
       - mindsdb
+      - redis
     networks:
       - openbb-network
 
@@ -87,6 +93,17 @@ services:
     networks:
       - openbb-network
 
+  # Local Redis for caching (ElastiCache requires VPC access)
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - openbb-network
+    command: redis-server --appendonly yes
+
 networks:
   openbb-network:
     driver: bridge
@@ -95,3 +112,4 @@ volumes:
   mindsdb_data:
   onlyoffice_data:
   onlyoffice_logs:
+  redis_data:
