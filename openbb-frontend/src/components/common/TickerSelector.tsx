@@ -34,7 +34,7 @@ const TickerSelector: React.FC<TickerSelectorProps> = ({
     <div ref={dropdownRef} className={`relative ${className}`}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 px-4 py-2 bg-openbb-bg-widget border border-openbb-border rounded-lg hover:bg-openbb-bg-hover transition-colors duration-200 font-mono text-sm"
+        className="flex items-center gap-2 px-4 py-2 bg-openbb-bg-widget border border-openbb-border rounded-lg hover:bg-openbb-bg-hover transition-colors duration-200  text-sm"
         data-testid="ticker-input"
       >
         <div className="flex flex-col items-start">
@@ -57,7 +57,7 @@ const TickerSelector: React.FC<TickerSelectorProps> = ({
                   onTickerChange(ticker.symbol);
                   setIsOpen(false);
                 }}
-                className={`w-full px-4 py-3 text-left hover:bg-openbb-bg-hover transition-colors duration-200 font-mono text-sm border-b border-openbb-border last:border-b-0 ${
+                className={`w-full px-4 py-3 text-left hover:bg-openbb-bg-hover transition-colors duration-200  text-sm border-b border-openbb-border last:border-b-0 ${
                   ticker.symbol === selectedTicker ? 'bg-openbb-bg-hover' : ''
                 }`}
               >

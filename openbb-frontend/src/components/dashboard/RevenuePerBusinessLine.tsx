@@ -4,19 +4,24 @@ import { useRevenueBusinessLineRealTime } from '../../hooks/useRealTimeDataExten
 import WidgetHeaderWithTicker from '../common/WidgetHeaderWithTicker';
 import classNames from 'classnames';
 import { BarChart3, Table } from 'lucide-react';
+import { useCopilot } from '../../contexts/CopilotContext';
+import type { WidgetType } from '../../services/copilotService';
 
 interface RevenuePerBusinessLineProps {
   ticker: string;
   onTickerChange?: (ticker: string) => void;
+  onSettings?: () => void;
+  onRemove?: () => void;
 }
 
 type ChartView = 'FY' | 'QTR';
 type DisplayMode = 'chart' | 'table';
 
-const RevenuePerBusinessLine: React.FC<RevenuePerBusinessLineProps> = ({ ticker, onTickerChange }) => {
+const RevenuePerBusinessLine: React.FC<RevenuePerBusinessLineProps> = ({ ticker, onTickerChange, onSettings, onRemove }) => {
   const [chartView, setChartView] = useState<ChartView>('FY');
   const [displayMode, setDisplayMode] = useState<DisplayMode>('chart');
   const { data: revenueData, isLoading, error } = useRevenueBusinessLineRealTime(ticker);
+  const { addWidgetContext } = useCopilot();
 
   // Process real-time data into chart format
   const processBusinessData = () => {
@@ -170,13 +175,12 @@ const RevenuePerBusinessLine: React.FC<RevenuePerBusinessLineProps> = ({ ticker,
           title="Revenue Per Business Line"
           ticker={ticker}
           onTickerChange={onTickerChange || (() => {})}
-          onRefresh={() => window.location.reload()}
-          onAdd={() => console.log('Add to dashboard')}
-          onExpand={() => console.log('Expand')}
-          onMore={() => console.log('More options')}
+          onAdd={() => addWidgetContext(WidgetType.REVENUE_SEGMENT, revenueData, ticker, 'Revenue Per Business Line')}
+          onSettings={onSettings}
+          onRemove={onRemove}
         />
         <div className="widget-content flex-1 overflow-hidden min-h-[200px] flex items-center justify-center">
-          <p className="text-xs font-mono text-openbb-text-muted">No business line revenue data available</p>
+          <p className="text-xs  text-openbb-text-muted">No business line revenue data available</p>
         </div>
       </div>
     );
@@ -199,10 +203,9 @@ const RevenuePerBusinessLine: React.FC<RevenuePerBusinessLineProps> = ({ ticker,
           title="Revenue Per Business Line"
           ticker={ticker}
           onTickerChange={onTickerChange || (() => {})}
-          onRefresh={() => console.log('Refresh')}
-          onAdd={() => console.log('Add to dashboard')}
-          onExpand={() => console.log('Expand')}
-          onMore={() => console.log('More options')}
+          onAdd={() => addWidgetContext(WidgetType.REVENUE_SEGMENT, revenueData, ticker, 'Revenue Per Business Line')}
+          onSettings={onSettings}
+          onRemove={onRemove}
         />
         
         <div className="flex items-center gap-2">
@@ -242,7 +245,7 @@ const RevenuePerBusinessLine: React.FC<RevenuePerBusinessLineProps> = ({ ticker,
                   key={view}
                   onClick={() => setChartView(view)}
                   className={classNames(
-                    'px-2 py-1 text-xs font-mono rounded transition-colors',
+                    'px-2 py-1 text-xs  rounded transition-colors',
                     chartView === view
                       ? 'bg-openbb-accent text-openbb-bg-primary'
                       : 'text-openbb-text-secondary hover:text-openbb-text-primary'
@@ -261,7 +264,7 @@ const RevenuePerBusinessLine: React.FC<RevenuePerBusinessLineProps> = ({ ticker,
           <Bar data={businessData} options={options} />
         ) : (
           <div className="h-full overflow-auto">
-            <table className="w-full text-xs font-mono">
+            <table className="w-full text-xs ">
               <thead className="sticky top-0 bg-openbb-bg-widget border-b border-openbb-border">
                 <tr>
                   <th className="text-left p-2 text-openbb-text-muted">Business Line</th>

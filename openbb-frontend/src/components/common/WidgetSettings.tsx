@@ -120,20 +120,7 @@ const WidgetSettings: React.FC<WidgetSettingsProps> = ({
   };
 
   return (
-    <>
-      {/* Settings Button */}
-      <button
-        onClick={() => setIsOpen(true)}
-        className="p-1.5 text-openbb-text-muted hover:text-openbb-text-primary transition-colors"
-        title="Widget Settings"
-        data-testid="widget-settings-button"
-      >
-        <Settings className="w-3.5 h-3.5" />
-      </button>
-
-      {/* Settings Modal */}
-      {isOpen && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" data-testid="widget-settings-modal">
+    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50" data-testid="widget-settings-modal">
           <div className="bg-openbb-bg-widget border border-openbb-border rounded-lg p-6 max-w-md w-full mx-4">
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
@@ -302,8 +289,6 @@ const WidgetSettings: React.FC<WidgetSettingsProps> = ({
             )}
           </div>
         </div>
-      )}
-    </>
   );
 };
 

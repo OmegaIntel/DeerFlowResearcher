@@ -3,16 +3,20 @@ import { RefreshCw, Download, Settings, Maximize2 } from 'lucide-react';
 import classNames from 'classnames';
 import { useFinancialStatementsRealTime } from '../../hooks/useRealTimeDataExtended';
 import WidgetHeaderWithTicker from '../common/WidgetHeaderWithTicker';
+import { useCopilot } from '../../contexts/CopilotContext';
+import type { WidgetType } from '../../services/copilotService';
 
 interface FinancialStatementsProps {
   ticker: string;
   onTickerChange?: (ticker: string) => void;
+  onSettings?: () => void;
+  onRemove?: () => void;
 }
 
 type StatementType = 'income' | 'balance' | 'cashflow';
 type ViewType = 'FY' | 'QTR';
 
-const FinancialStatements: React.FC<FinancialStatementsProps> = ({ ticker, onTickerChange }) => {
+const FinancialStatements: React.FC<FinancialStatementsProps> = ({ ticker, onTickerChange, onSettings, onRemove }) => {
   const [statementType, setStatementType] = useState<StatementType>('income');
   const [viewType, setViewType] = useState<ViewType>('FY');
 
@@ -30,6 +34,8 @@ const FinancialStatements: React.FC<FinancialStatementsProps> = ({ ticker, onTic
     statementType, 
     apiPeriod
   );
+
+  const { addWidgetContext } = useCopilot();
 
   // CIK mapping for common tickers (used when mock data is shown)
   const tickerToCIK: { [key: string]: string } = {
@@ -392,11 +398,22 @@ const FinancialStatements: React.FC<FinancialStatementsProps> = ({ ticker, onTic
           title="Financial Statements"
           ticker={ticker}
           onTickerChange={onTickerChange}
+          onAdd={() => {
+            const financialData = {
+              statementType,
+              viewType,
+              data: rawFinancialData || [],
+              transformedData: financialData
+            };
+            addWidgetContext(WidgetType.FINANCIAL_STATEMENTS, financialData, `Financial Statements - ${ticker}`);
+          }}
+          onSettings={onSettings}
+          onRemove={onRemove}
         />
         <div className="h-full bg-openbb-bg-widget border border-openbb-border flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-openbb-accent mx-auto mb-4"></div>
-            <p className="text-openbb-text-muted font-mono text-sm">Loading financial data...</p>
+            <p className="text-openbb-text-muted  text-sm">Loading financial data...</p>
           </div>
         </div>
       </div>
@@ -409,14 +426,25 @@ const FinancialStatements: React.FC<FinancialStatementsProps> = ({ ticker, onTic
         title="Financial Statements"
         ticker={ticker}
         onTickerChange={onTickerChange}
+        onAdd={() => {
+          const financialDataContext = {
+            statementType,
+            viewType,
+            data: rawFinancialData || [],
+            transformedData: financialData
+          };
+          addWidgetContext(WidgetType.FINANCIAL_STATEMENTS, financialDataContext, `Financial Statements - ${ticker}`);
+        }}
+        onSettings={onSettings}
+        onRemove={onRemove}
       />
       
       <div className="flex items-center justify-between p-3 border-b border-openbb-border bg-openbb-bg-secondary flex-shrink-0">
         <div className="flex items-center gap-3">
           {rawFinancialData && rawFinancialData.length > 0 ? (
-            <span className="text-xs text-openbb-accent font-mono bg-openbb-bg-hover px-2 py-1 rounded">LIVE</span>
+            <span className="text-xs text-openbb-accent  bg-openbb-bg-hover px-2 py-1 rounded">LIVE</span>
           ) : (
-            <span className="text-xs text-yellow-500 font-mono bg-openbb-bg-hover px-2 py-1 rounded">DEMO</span>
+            <span className="text-xs text-yellow-500  bg-openbb-bg-hover px-2 py-1 rounded">DEMO</span>
           )}
         </div>
         
@@ -428,7 +456,7 @@ const FinancialStatements: React.FC<FinancialStatementsProps> = ({ ticker, onTic
                 key={view}
                 onClick={() => setViewType(view)}
                 className={classNames(
-                  'px-3 py-1 text-xs font-mono rounded transition-colors',
+                  'px-3 py-1 text-xs  rounded transition-colors',
                   viewType === view
                     ? 'bg-openbb-accent text-openbb-bg-primary'
                     : 'text-openbb-text-secondary hover:text-openbb-text-primary'
@@ -446,7 +474,7 @@ const FinancialStatements: React.FC<FinancialStatementsProps> = ({ ticker, onTic
                 key={btn.id}
                 onClick={() => setStatementType(btn.id as StatementType)}
                 className={classNames(
-                  'px-3 py-1 text-xs font-mono rounded transition-colors',
+                  'px-3 py-1 text-xs  rounded transition-colors',
                   statementType === btn.id
                     ? 'bg-openbb-accent text-openbb-bg-primary'
                     : 'text-openbb-text-secondary hover:text-openbb-text-primary hover:bg-openbb-bg-hover'
@@ -477,7 +505,7 @@ const FinancialStatements: React.FC<FinancialStatementsProps> = ({ ticker, onTic
 
       {/* Statement Table */}
       <div className="overflow-auto flex-grow relative">
-        <table className="w-full text-xs font-mono">
+        <table className="w-full text-xs ">
           <thead className="sticky top-0 z-20">
             <tr className="border-b border-openbb-border bg-openbb-bg-secondary">
               <th className="text-left py-3 px-4 text-openbb-text-secondary font-medium sticky left-0 bg-openbb-bg-secondary z-30 border-r border-openbb-border">
@@ -519,7 +547,7 @@ const FinancialStatements: React.FC<FinancialStatementsProps> = ({ ticker, onTic
             
             {/* Source Row */}
             <tr className="border-t border-openbb-border bg-openbb-bg-secondary/50">
-              <td className="py-2.5 px-4 sticky left-0 bg-inherit z-10 border-r border-openbb-border text-openbb-text-secondary text-xs font-mono">
+              <td className="py-2.5 px-4 sticky left-0 bg-inherit z-10 border-r border-openbb-border text-openbb-text-secondary text-xs ">
                 Source
               </td>
               {years.map((year, idx) => {
@@ -547,12 +575,12 @@ const FinancialStatements: React.FC<FinancialStatementsProps> = ({ ticker, onTic
                         href={linkUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-xs text-openbb-accent hover:underline font-mono"
+                        className="text-xs text-openbb-accent hover:underline "
                       >
                         Link
                       </a>
                     ) : (
-                      <span className="text-xs text-openbb-text-muted font-mono">-</span>
+                      <span className="text-xs text-openbb-text-muted ">-</span>
                     )}
                   </td>
                 );
@@ -565,7 +593,7 @@ const FinancialStatements: React.FC<FinancialStatementsProps> = ({ ticker, onTic
       {/* Footer */}
       <div className="border-t border-openbb-border bg-openbb-bg-secondary flex-shrink-0">
         <div className="p-3">
-          <p className="text-xxs text-openbb-text-muted font-mono">
+          <p className="text-xxs text-openbb-text-muted ">
             Note: Millions of USD except Per Share Values
           </p>
         </div>

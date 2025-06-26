@@ -40,6 +40,12 @@ const defaultDashboards: Dashboard[] = [
     createdAt: new Date(),
   },
   {
+    id: 'tesla-test',
+    name: 'Tesla Data Test',
+    ticker: 'TSLA',
+    createdAt: new Date(),
+  },
+  {
     id: 'equity-analyst-template',
     name: 'Equity Analyst',
     ticker: 'AAPL',

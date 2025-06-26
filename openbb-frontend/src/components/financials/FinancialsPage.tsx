@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import { RefreshCw, Download, Settings, Maximize2 } from 'lucide-react';
+import { RefreshCw, Download, Settings, Maximize2, Plus } from 'lucide-react';
 import classNames from 'classnames';
 import { useFinancialStatementsRealTime } from '../../hooks/useRealTimeDataExtended';
+import { useCopilot } from '../../contexts/CopilotContext';
+import type { WidgetType } from '../../services/copilotService';
+import { FINANCIALS_TEST_VERSION } from '../../test-financials-changes';
 
 interface FinancialsPageProps {
   ticker: string;
@@ -14,11 +17,12 @@ type ViewType = 'FY' | 'QTR';
 const FinancialsPage: React.FC<FinancialsPageProps> = ({ ticker }) => {
   const [statementType, setStatementType] = useState<StatementType>('income');
   const [viewType, setViewType] = useState<ViewType>('FY');
+  const { addWidgetContext } = useCopilot();
 
   // Convert FY/QTR to API format
   const periodMapping = {
     'FY': 'annual',
-    'QTR': 'quarter'
+    'QTR': 'quarter'  // Note: API might also accept 'q' or 'Q'
   } as const;
 
   const apiPeriod = periodMapping[viewType];
@@ -29,18 +33,15 @@ const FinancialsPage: React.FC<FinancialsPageProps> = ({ ticker }) => {
     statementType, 
     apiPeriod
   );
+  
+  console.log('Financial data v2:', { ticker, statementType, apiPeriod, rawFinancialData, isLoading, error });
+  console.log('FINANCIALS VERSION:', FINANCIALS_TEST_VERSION);
 
   // Transform API data to match component format
   const transformFinancialData = (data: any[]) => {
     if (!data || !Array.isArray(data) || data.length === 0) {
       return {};
     }
-
-    // Get years from the data
-    const years = data.map(item => {
-      const date = new Date(item.date || item.calendarYear);
-      return date.getFullYear().toString();
-    }).slice(0, 10); // Limit to 10 years
 
     // Transform based on statement type
     const transformedData: { [key: string]: (string | number)[] } = {};
@@ -117,13 +118,45 @@ const FinancialsPage: React.FC<FinancialsPageProps> = ({ ticker }) => {
   };
 
   const financialData = transformFinancialData(rawFinancialData || []);
-  const years = rawFinancialData?.map(item => {
-    const date = new Date(item.date || item.calendarYear);
-    return date.getFullYear().toString();
-  }).slice(0, 10) || ['2024', '2023', '2022', '2021', '2020', '2019', '2018'];
+  
+  // Get column headers based on view type and data
+  const getColumnHeaders = () => {
+    if (!rawFinancialData || rawFinancialData.length === 0) {
+      // Default headers for mock data - DIFFERENT for FY vs QTR
+      return viewType === 'QTR' 
+        ? ['Q3 2024', 'Q2 2024', 'Q1 2024', 'Q4 2023', 'Q3 2023', 'Q2 2023', 'Q1 2023', 'Q4 2022']
+        : ['2024', '2023', '2022', '2021', '2020', '2019', '2018'];
+    }
+    
+    // For quarterly view, always show quarterly headers
+    if (viewType === 'QTR') {
+      return rawFinancialData.map(item => {
+        const date = new Date(item.date || item.calendarYear);
+        const year = date.getFullYear();
+        
+        // Check if period is provided (e.g., "Q1", "Q2")
+        if (item.period && item.period.startsWith('Q')) {
+          return `${item.period} ${year}`;
+        }
+        
+        // Otherwise calculate quarter from date
+        const month = date.getMonth();
+        const quarter = `Q${Math.ceil((month + 1) / 3)}`;
+        return `${quarter} ${year}`;
+      }).slice(0, 20); // Show more quarters
+    } else {
+      // For annual data, show years
+      return rawFinancialData.map(item => {
+        const date = new Date(item.date || item.calendarYear);
+        return date.getFullYear().toString();
+      }).slice(0, 10);
+    }
+  };
+  
+  const years = getColumnHeaders();
 
   // Fallback mock data structure
-  const mockFinancialData = {
+  const mockFinancialDataAnnual = {
     income: {
     'Revenue': [391035, 383285, 394328, 365817, 274515, 260174, 265595, 229234, 215639, 233715],
     'Cost Of Revenue': [210352, 214137, 223546, 212981, 169559, 161782, 163756, 141048, 131376, 140089],
@@ -164,6 +197,49 @@ const FinancialsPage: React.FC<FinancialsPageProps> = ({ ticker }) => {
       'Net Change In Cash': [410, -5771, -11338, -3941, -10435, 28530, -5195, 636, 7276, -1844],
     },
   };
+  
+  // Quarterly mock data (different values to show it's quarterly)
+  const mockFinancialDataQuarterly = {
+    income: {
+      'Revenue': [94372, 96773, 97278, 94836, 90753, 81797, 88293, 83360],
+      'Cost Of Revenue': [52628, 53534, 55886, 53245, 42392, 40454, 40939, 38267],
+      'Gross Profit': [41744, 43239, 41392, 41591, 48361, 41343, 47354, 45093],
+      'Gross Profit Margin': ['44.206 %', '44.689 %', '42.547 %', '43.872 %', '53.286 %', '50.544 %', '53.630 %', '54.108 %'],
+      'Research And Development Ex...': [7843, 7842, 7726, 7726, 7479, 7436, 6797, 6565],
+      'Selling General And Administra...': [6524, 6519, 6274, 6273, 5983, 4949, 5188, 5015],
+      'Operating Expenses': [14367, 14361, 14000, 13999, 13462, 12385, 11985, 11580],
+      'Cost And Expenses': [66995, 67895, 69886, 67244, 55854, 52839, 52924, 49847],
+      'Depreciation And Amortization': [2861, 2862, 2800, 2850, 2755, 2789, 2788, 2776],
+      'EBITDA': [30238, 31740, 29492, 30506, 37654, 31747, 37847, 37689],
+      'EBITDA Ratio': ['32.039 %', '32.795 %', '30.321 %', '32.175 %', '41.497 %', '38.800 %', '42.867 %', '45.213 %'],
+      'Operating Income': [27377, 28878, 27392, 27656, 34899, 28958, 35059, 34913],
+      'Operating Income Margin': ['29.020 %', '29.841 %', '28.162 %', '29.173 %', '38.461 %', '35.402 %', '39.715 %', '41.879 %'],
+      'Total Other Income Expenses ...': [67, -141, -134, 65, 200, 452, 500, 686],
+      'Income Before Tax': [27444, 28737, 27258, 27721, 35099, 29410, 35559, 35599],
+      'Income Before Tax Margin': ['29.091 %', '29.696 %', '28.024 %', '29.241 %', '38.682 %', '35.954 %', '40.281 %', '42.703 %'],
+      'Income Tax Expense': [4213, 4376, 4289, 4141, 5251, 4347, 4843, 5223],
+      'Net Income': [23231, 24361, 22969, 23580, 29848, 25063, 30716, 30376],
+      'Net Income Margin': ['24.621 %', '25.175 %', '23.617 %', '24.875 %', '32.892 %', '30.642 %', '34.800 %', '36.450 %'],
+      'Earnings Per Share': [1.530, 1.570, 1.520, 1.640, 1.880, 1.570, 1.950, 1.860],
+      'Earnings Per Share Diluted': [1.520, 1.560, 1.520, 1.630, 1.850, 1.550, 1.920, 1.840],
+    },
+    balance: {
+      'Total Assets': [353514, 352755, 351002, 349250, 346000, 344000, 342000, 340000],
+      'Total Current Assets': [128645, 127405, 126165, 124925, 143713, 142000, 140500, 139000],
+      'Cash And Cash Equivalents': [28995, 28408, 27821, 27234, 38016, 37500, 37000, 36500],
+      'Short Term Investments': [29880, 28565, 27250, 25935, 52927, 52000, 51000, 50000],
+      'Total Liabilities': [288427, 290437, 292083, 293912, 265549, 267000, 268500, 270000],
+      'Total Current Liabilities': [124689, 125973, 127256, 128540, 105392, 106500, 107600, 108700],
+      'Total Shareholder Equity': [65066, 62447, 59000, 55338, 80451, 77000, 73500, 70000],
+    },
+    cashflow: {
+      'Operating Cash Flow': [26350, 29320, 24567, 30326, 22168, 21800, 23200, 24506],
+      'Investing Cash Flow': [-958, -951, -945, -977, -1072, -1050, -1080, -1087],
+      'Financing Cash Flow': [-29250, -26325, -25475, -25500, -21705, -22000, -21800, -21471],
+      'Free Cash Flow': [24125, 26850, 22200, 28139, 19850, 19600, 21000, 22339],
+      'Net Change In Cash': [587, -580, -575, -642, -2609, -2500, -2400, -2326],
+    },
+  };
 
   const getData = () => {
     // Use real-time data if available, otherwise fallback to mock data
@@ -171,14 +247,16 @@ const FinancialsPage: React.FC<FinancialsPageProps> = ({ ticker }) => {
       return financialData;
     }
     
-    // Fallback to mock data
+    // IMPORTANT: Use different mock data based on view type to show the distinction
+    const mockData = viewType === 'QTR' ? mockFinancialDataQuarterly : mockFinancialDataAnnual;
+    
     switch (statementType) {
       case 'balance':
-        return mockFinancialData.balance;
+        return mockData.balance;
       case 'cashflow':
-        return mockFinancialData.cashflow;
+        return mockData.cashflow;
       default:
-        return mockFinancialData.income;
+        return mockData.income;
     }
   };
 
@@ -223,7 +301,7 @@ const FinancialsPage: React.FC<FinancialsPageProps> = ({ ticker }) => {
         <div className="h-full bg-openbb-bg-widget border border-openbb-border flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-openbb-accent mx-auto mb-4"></div>
-            <p className="text-openbb-text-muted font-mono text-sm">Loading financial data...</p>
+            <p className="text-openbb-text-muted  text-sm">Loading financial data...</p>
           </div>
         </div>
       </div>
@@ -235,11 +313,11 @@ const FinancialsPage: React.FC<FinancialsPageProps> = ({ ticker }) => {
       <div className="h-full bg-openbb-bg-widget border border-openbb-border">
         <div className="flex items-center justify-between p-3 border-b border-openbb-border bg-openbb-bg-secondary">
           <div className="flex items-center gap-3">
-            <h2 className="text-lg font-mono font-semibold text-openbb-text-primary">Financial Statements</h2>
+            <h2 className="text-lg  font-semibold text-openbb-text-primary">Financial Statements</h2>
             {rawFinancialData && rawFinancialData.length > 0 ? (
-              <span className="text-xs text-openbb-accent font-mono bg-openbb-bg-hover px-2 py-1 rounded">LIVE</span>
+              <span className="text-xs text-openbb-accent  bg-openbb-bg-hover px-2 py-1 rounded">LIVE</span>
             ) : (
-              <span className="text-xs text-yellow-500 font-mono bg-openbb-bg-hover px-2 py-1 rounded">DEMO</span>
+              <span className="text-xs text-yellow-500  bg-openbb-bg-hover px-2 py-1 rounded">DEMO</span>
             )}
           </div>
           
@@ -251,7 +329,7 @@ const FinancialsPage: React.FC<FinancialsPageProps> = ({ ticker }) => {
                   key={view}
                   onClick={() => setViewType(view)}
                   className={classNames(
-                    'px-3 py-1 text-xs font-mono rounded transition-colors',
+                    'px-3 py-1 text-xs  rounded transition-colors',
                     viewType === view
                       ? 'bg-openbb-accent text-openbb-bg-primary'
                       : 'text-openbb-text-secondary hover:text-openbb-text-primary'
@@ -269,7 +347,7 @@ const FinancialsPage: React.FC<FinancialsPageProps> = ({ ticker }) => {
                   key={btn.id}
                   onClick={() => setStatementType(btn.id as StatementType)}
                   className={classNames(
-                    'px-3 py-1 text-xs font-mono rounded transition-colors',
+                    'px-3 py-1 text-xs  rounded transition-colors',
                     statementType === btn.id
                       ? 'bg-openbb-accent text-openbb-bg-primary'
                       : 'text-openbb-text-secondary hover:text-openbb-text-primary hover:bg-openbb-bg-hover'
@@ -282,6 +360,24 @@ const FinancialsPage: React.FC<FinancialsPageProps> = ({ ticker }) => {
 
             {/* Action Buttons */}
             <div className="flex items-center gap-1 ml-4">
+              <button
+                onClick={() => addWidgetContext(
+                  WidgetType.FINANCIAL_STATEMENTS,
+                  {
+                    statementType,
+                    viewType,
+                    rawData: rawFinancialData,
+                    transformedData: getData(),
+                    years
+                  },
+                  ticker,
+                  'Financial Statements'
+                )}
+                className="p-1.5 text-openbb-text-muted hover:text-openbb-text-primary transition-colors"
+                title="Add financial data to Copilot"
+              >
+                <Plus size={14} />
+              </button>
               <button className="p-1.5 text-openbb-text-muted hover:text-openbb-text-primary transition-colors">
                 <RefreshCw size={14} />
               </button>
@@ -299,11 +395,11 @@ const FinancialsPage: React.FC<FinancialsPageProps> = ({ ticker }) => {
         </div>
 
         {/* Statement Table */}
-        <div className="overflow-auto" style={{ height: 'calc(100vh - 200px)' }}>
-          <table className="w-full text-xs font-mono">
+        <div className="overflow-auto relative" style={{ height: 'calc(100vh - 200px)' }}>
+          <table className="w-full text-xs relative">
             <thead>
               <tr className="border-b border-openbb-border bg-openbb-bg-secondary">
-                <th className="text-left py-3 px-4 text-openbb-text-secondary font-medium sticky left-0 bg-openbb-bg-secondary z-10 border-r border-openbb-border">
+                <th className="text-left py-3 px-4 text-openbb-text-secondary font-medium sticky left-0 bg-openbb-bg-secondary z-30 border-r border-openbb-border shadow-[4px_0_8px_-2px_rgba(0,0,0,0.1)] min-w-[200px] after:absolute after:right-0 after:top-0 after:h-full after:w-[1px] after:bg-openbb-border">
                   Index
                 </th>
                 {years.map((year) => (
@@ -323,8 +419,9 @@ const FinancialsPage: React.FC<FinancialsPageProps> = ({ ticker }) => {
                   )}
                 >
                   <td className={classNames(
-                    "py-2.5 px-4 sticky left-0 bg-inherit z-10 border-r border-openbb-border whitespace-nowrap",
-                    isHighlightedRow(key) ? "text-openbb-accent font-semibold" : "text-openbb-text-primary"
+                    "py-2.5 px-4 sticky left-0 z-20 border-r border-openbb-border whitespace-nowrap shadow-[4px_0_8px_-2px_rgba(0,0,0,0.1)] min-w-[200px] after:absolute after:right-0 after:top-0 after:h-full after:w-[1px] after:bg-openbb-border",
+                    isHighlightedRow(key) ? "text-openbb-accent font-semibold" : "text-openbb-text-primary",
+                    index % 2 === 0 ? "bg-openbb-bg-widget" : "bg-openbb-bg-secondary"
                   )}>
                     {key}
                   </td>
@@ -345,7 +442,7 @@ const FinancialsPage: React.FC<FinancialsPageProps> = ({ ticker }) => {
 
         {/* Footer */}
         <div className="p-3 border-t border-openbb-border bg-openbb-bg-secondary">
-          <p className="text-xxs text-openbb-text-muted font-mono">
+          <p className="text-xxs text-openbb-text-muted ">
             Note: Millions of USD except Per Share Values
           </p>
         </div>

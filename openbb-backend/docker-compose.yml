@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  onlyoffice-documentserver:
+    image: onlyoffice/documentserver:latest
+    container_name: onlyoffice-docs
+    ports:
+      - "9080:80"
+      - "9443:443"
+    environment:
+      - JWT_ENABLED=false  # Disable for development
+      - JWT_SECRET=your-jwt-secret-here
+    volumes:
+      - onlyoffice_data:/var/www/onlyoffice/Data
+      - onlyoffice_lib:/var/lib/onlyoffice
+      - onlyoffice_db:/var/lib/postgresql
+    restart: unless-stopped
+    
+  openbb-backend:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      - ONLYOFFICE_SERVER_URL=http://onlyoffice-documentserver:80
+    depends_on:
+      - onlyoffice-documentserver
+    volumes:
+      - ./:/app
+    restart: unless-stopped
+
+volumes:
+  onlyoffice_data:
+  onlyoffice_lib:
+  onlyoffice_db:

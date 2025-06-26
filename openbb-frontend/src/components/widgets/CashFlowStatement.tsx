@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { Banknote, Calendar, TrendingUp, BarChart3 } from 'lucide-react';
+import { useCopilot } from '../../contexts/CopilotContext';
+import type { WidgetType } from '../../services/copilotService';
+import WidgetHeader from '../common/WidgetHeader';
 
 interface CashFlowStatementProps {
   ticker: string;
   onTickerChange?: (ticker: string) => void;
   dataProvider?: string;
+  onSettings?: () => void;
+  onRemove?: () => void;
 }
 
 interface CashFlowData {
@@ -26,12 +31,15 @@ interface CashFlowData {
 const CashFlowStatement: React.FC<CashFlowStatementProps> = ({ 
   ticker, 
   onTickerChange, 
-  dataProvider = 'auto' 
+  dataProvider = 'auto',
+  onSettings,
+  onRemove 
 }) => {
   const [cashFlowData, setCashFlowData] = useState<CashFlowData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedPeriod, setSelectedPeriod] = useState<'annual' | 'quarterly'>('annual');
+  const { addWidgetContext } = useCopilot();
 
   const fetchCashFlowData = async () => {
     setIsLoading(true);
@@ -100,13 +108,12 @@ const CashFlowStatement: React.FC<CashFlowStatementProps> = ({
   if (error) {
     return (
       <div className="bg-openbb-bg-widget rounded-lg border border-openbb-border p-4">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <Banknote size={20} className="text-openbb-primary" />
-            <h3 className="text-lg font-mono font-semibold text-openbb-text-primary">Cash Flow Statement</h3>
-            <span className="text-sm font-mono text-openbb-text-muted">{ticker}</span>
-          </div>
-        </div>
+        <WidgetHeader
+          title={`Cash Flow Statement - ${ticker}`}
+          onRefresh={fetchCashFlowData}
+          onSettings={onSettings}
+          onRemove={onRemove}
+        />
         <div className="flex items-center gap-2 text-sm text-red-500">
           <span>{String(error)}</span>
         </div>
@@ -116,13 +123,20 @@ const CashFlowStatement: React.FC<CashFlowStatementProps> = ({
 
   return (
     <div className="bg-openbb-bg-widget rounded-lg border border-openbb-border p-4">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <Banknote size={20} className="text-openbb-primary" />
-          <h3 className="text-lg font-mono font-semibold text-openbb-text-primary">Cash Flow Statement</h3>
-          <span className="text-sm font-mono text-openbb-text-muted">{ticker}</span>
-        </div>
-        <div className="flex gap-2">
+      <div className="mb-4">
+        <WidgetHeader
+          title={`Cash Flow Statement - ${ticker}`}
+          onRefresh={fetchCashFlowData}
+          onAdd={() => addWidgetContext(
+            WidgetType.CASH_FLOW,
+            cashFlowData,
+            ticker,
+            `Cash Flow Statement (${selectedPeriod})`
+          )}
+          onSettings={onSettings}
+          onRemove={onRemove}
+        />
+        <div className="flex gap-2 mt-2">
           <button
             onClick={() => setSelectedPeriod('annual')}
             className={`px-3 py-1 text-xs rounded ${
@@ -152,7 +166,7 @@ const CashFlowStatement: React.FC<CashFlowStatementProps> = ({
         </div>
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full text-xs font-mono">
+          <table className="w-full text-xs ">
             <thead>
               <tr className="border-b border-openbb-border">
                 <th className="text-left py-2 text-openbb-text-secondary">Period</th>
@@ -276,8 +290,8 @@ const CashFlowStatement: React.FC<CashFlowStatementProps> = ({
           
           {/* Key Metrics */}
           <div className="mt-4 pt-4 border-t border-openbb-border">
-            <h4 className="text-sm font-mono font-semibold text-openbb-text-primary mb-2">Cash Flow Metrics</h4>
-            <div className="grid grid-cols-2 gap-4 text-xs font-mono">
+            <h4 className="text-sm  font-semibold text-openbb-text-primary mb-2">Cash Flow Metrics</h4>
+            <div className="grid grid-cols-2 gap-4 text-xs ">
               <div>
                 <span className="text-openbb-text-secondary">FCF Margin: </span>
                 <span className="text-green-500">

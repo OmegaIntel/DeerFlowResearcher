@@ -2,14 +2,19 @@ import React from 'react';
 import { useInsiderTrading } from '../../hooks/useOpenBBData';
 import WidgetHeaderWithTicker from '../common/WidgetHeaderWithTicker';
 import { TrendingUp, TrendingDown } from 'lucide-react';
+import { useCopilot } from '../../contexts/CopilotContext';
+import type { WidgetType } from '../../services/copilotService';
 
 interface InsiderTradingProps {
   ticker: string;
   onTickerChange?: (ticker: string) => void;
+  onSettings?: () => void;
+  onRemove?: () => void;
 }
 
-const InsiderTrading: React.FC<InsiderTradingProps> = ({ ticker, onTickerChange }) => {
+const InsiderTrading: React.FC<InsiderTradingProps> = ({ ticker, onTickerChange, onSettings, onRemove }) => {
   const { data: insiderData, isLoading, error } = useInsiderTrading(ticker);
+  const { addWidgetContext } = useCopilot();
 
   if (isLoading) {
     return (
@@ -31,12 +36,13 @@ const InsiderTrading: React.FC<InsiderTradingProps> = ({ ticker, onTickerChange 
           title="Insider Trading"
           ticker={ticker}
           onTickerChange={onTickerChange || (() => {})}
-          onRefresh={() => window.location.reload()}
-          onAdd={() => console.log('Add to dashboard')}
-          onExpand={() => console.log('Expand')}
-          onMore={() => console.log('More options')}
+          onAdd={() => {
+            addWidgetContext(WidgetType.INSIDER_TRADING, insiderData || [], ticker, 'Insider Trading');
+          }}
+          onSettings={onSettings}
+          onRemove={onRemove}
         />
-        <p className="text-xs font-mono text-openbb-text-muted">
+        <p className="text-xs  text-openbb-text-muted">
           No insider trading data available
         </p>
       </div>
@@ -54,10 +60,11 @@ const InsiderTrading: React.FC<InsiderTradingProps> = ({ ticker, onTickerChange 
         title="Insider Trading"
         ticker={ticker}
         onTickerChange={onTickerChange || (() => {})}
-        onRefresh={() => console.log('Refresh')}
-        onAdd={() => console.log('Add to dashboard')}
-        onExpand={() => console.log('Expand')}
-        onMore={() => console.log('More options')}
+        onAdd={() => {
+          addWidgetContext(WidgetType.INSIDER_TRADING, insiderData, ticker, 'Insider Trading');
+        }}
+        onSettings={onSettings}
+        onRemove={onRemove}
       />
 
       <div className="space-y-3 max-h-96 overflow-y-auto pr-2 scrollbar-thin scrollbar-thumb-openbb-border scrollbar-track-openbb-bg-primary">
@@ -72,22 +79,22 @@ const InsiderTrading: React.FC<InsiderTradingProps> = ({ ticker, onTickerChange 
             >
               <div className="flex justify-between items-start mb-2">
                 <div className="flex-1">
-                  <div className="text-xs font-mono font-semibold text-openbb-text-primary">
+                  <div className="text-xs  font-semibold text-openbb-text-primary">
                     {transaction.insider_name || 'Unknown'}
                   </div>
-                  <div className="text-xs font-mono text-openbb-text-secondary">
+                  <div className="text-xs  text-openbb-text-secondary">
                     {transaction.insider_title || 'N/A'}
                   </div>
                 </div>
                 <div className={`flex items-center gap-1 ${isBuy ? 'text-green-500' : 'text-red-500'}`}>
                   {isBuy ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
-                  <span className="text-xs font-mono font-semibold">
+                  <span className="text-xs  font-semibold">
                     {isBuy ? 'BUY' : 'SELL'}
                   </span>
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-2 text-xs font-mono">
+              <div className="grid grid-cols-2 gap-2 text-xs ">
                 <div>
                   <span className="text-openbb-text-secondary">Shares: </span>
                   <span className="text-openbb-text-primary">
@@ -115,7 +122,7 @@ const InsiderTrading: React.FC<InsiderTradingProps> = ({ ticker, onTickerChange 
               </div>
 
               {transaction.remarks && (
-                <div className="mt-2 text-xs font-mono text-openbb-text-muted">
+                <div className="mt-2 text-xs  text-openbb-text-muted">
                   {transaction.remarks}
                 </div>
               )}
@@ -126,7 +133,7 @@ const InsiderTrading: React.FC<InsiderTradingProps> = ({ ticker, onTickerChange 
 
       {/* Summary Stats */}
       <div className="mt-4 pt-4 border-t border-openbb-border">
-        <div className="grid grid-cols-2 gap-4 text-xs font-mono">
+        <div className="grid grid-cols-2 gap-4 text-xs ">
           <div>
             <span className="text-openbb-text-secondary">Total Transactions: </span>
             <span className="text-openbb-text-primary">{insiderData.length}</span>

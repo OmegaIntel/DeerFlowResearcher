@@ -94,6 +94,32 @@ async def get_fundamental_overview(symbol: str):
     except Exception as e:
         return schemas.BaseResponse(success=False, error=str(e))
 
+@router.get("/fundamental/key-metrics", response_model=schemas.BaseResponse)
+async def get_key_metrics(symbols: str):
+    """Get key metrics for multiple symbols (comma-separated)"""
+    try:
+        symbol_list = [s.strip().upper() for s in symbols.split(',')]
+        results = []
+        
+        for symbol in symbol_list:
+            # Check cache
+            cache_key = f"fundamental:key-metrics:{symbol}"
+            cached_data = cache_service.get(cache_key)
+            
+            if cached_data:
+                results.append(cached_data)
+            else:
+                # Fetch from multi-provider service
+                data = await multi_provider_service.get_key_metrics(symbol)
+                if data:
+                    # Cache the result
+                    cache_service.set(cache_key, data, ttl=3600)  # Cache for 1 hour
+                    results.append(data)
+        
+        return schemas.BaseResponse(success=True, data=results)
+    except Exception as e:
+        return schemas.BaseResponse(success=False, error=str(e))
+
 @router.get("/ownership/share-statistics", response_model=schemas.BaseResponse)
 async def get_share_statistics(symbol: str):
     """Get share statistics for a symbol"""
@@ -129,6 +155,26 @@ async def get_management_team(symbol: str):
         
         # Cache the result
         cache_service.set(cache_key, data, ttl=86400)  # Cache for 24 hours
+        
+        return schemas.BaseResponse(success=True, data=data)
+    except Exception as e:
+        return schemas.BaseResponse(success=False, error=str(e))
+
+@router.get("/price/performance", response_model=schemas.BaseResponse)
+async def get_price_performance(symbol: str):
+    """Get price performance data across multiple time periods"""
+    try:
+        # Check cache
+        cache_key = f"price:performance:{symbol}"
+        cached_data = cache_service.get(cache_key)
+        if cached_data:
+            return schemas.BaseResponse(success=True, data=cached_data)
+        
+        # Fetch from OpenBB
+        data = await openbb_service.get_price_performance(symbol)
+        
+        # Cache the result with shorter TTL for price data
+        cache_service.set(cache_key, data, ttl=300)  # Cache for 5 minutes
         
         return schemas.BaseResponse(success=True, data=data)
     except Exception as e:

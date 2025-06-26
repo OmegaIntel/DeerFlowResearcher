@@ -31,7 +31,7 @@ const getDefaultLayout = (widget: Widget): Layout => {
     'price-performance': { w: 6, h: 5, minW: 2, minH: 3 },  // 50% of original height (10 -> 5)
     
     // Second row - 2 widgets (6 cols each - half width)
-    'key-metrics': { w: 6, h: 9, minW: 2, minH: 4 },  // 85% of original height (10 -> 9)
+    'key-metrics': { w: 6, h: 6, minW: 2, minH: 4 },  // 70% of previous height (9 -> 6)
     'company-profile': { w: 6, h: 13, minW: 2, minH: 6 },  // 130% of original height (10 -> 13)
     
     // Third row - 2 widgets (6 cols each - half width)
@@ -44,7 +44,7 @@ const getDefaultLayout = (widget: Widget): Layout => {
     
     // Fifth row - 2 widgets (6 cols each - half width)
     'revenue-business': { w: 6, h: 12, minW: 2, minH: 6 },
-    'valuation-multiples': { w: 6, h: 12, minW: 2, minH: 6 },
+    'valuation-multiples': { w: 6, h: 7, minW: 2, minH: 4 },  // 60% of previous height (12 -> 7)
     
     // Other widgets not in default template
     'market-overview': { w: 12, h: 16, minW: 3, minH: 6 },
@@ -140,43 +140,43 @@ const ResizableGridLayout: React.FC<ResizableGridLayoutProps> = ({
         } else if (widget.type === 'company-news') {
           // Third row - left half
           defaultLayout.x = 0;
-          defaultLayout.y = 22;  // Adjusted for company-profile height change (9+13=22)
+          defaultLayout.y = 15;  // Adjusted for key-metrics height change (9+6=15)
         } else if (widget.type === 'management-team') {
           // Third row - right half
           defaultLayout.x = 6;
-          defaultLayout.y = 18;  // Adjusted for key-metrics height change (9+9=18)
+          defaultLayout.y = 22;  // Adjusted for company-profile height change (9+13=22)
         } else if (widget.type === 'share-statistics') {
           // Fourth row - left half
           defaultLayout.x = 0;
-          defaultLayout.y = 36;  // Adjusted for company-news height change (22+14=36)
+          defaultLayout.y = 29;  // Adjusted for company-news height change (15+14=29)
         } else if (widget.type === 'revenue-geography') {
           // Fourth row - right half
           defaultLayout.x = 6;
-          defaultLayout.y = 24;  // Adjusted for management-team height change (18+6=24)
+          defaultLayout.y = 28;  // Adjusted for management-team height change (22+6=28)
         } else if (widget.type === 'revenue-business') {
           // Fifth row - left half
           defaultLayout.x = 0;
-          defaultLayout.y = 43;  // Adjusted for share-statistics height change (36+7=43)
+          defaultLayout.y = 36;  // Adjusted for share-statistics height change (29+7=36)
         } else if (widget.type === 'valuation-multiples') {
           // Fifth row - right half
           defaultLayout.x = 6;
-          defaultLayout.y = 36;  // Adjusted for revenue-geography height change (24+12=36)
+          defaultLayout.y = 40;  // Adjusted for revenue-geography height change (28+12=40)
         } else if (widget.type === 'price-target') {
           // Sixth row - left half
           defaultLayout.x = 0;
-          defaultLayout.y = 55;  // Adjusted for revenue-business height change (43+12=55)
+          defaultLayout.y = 48;  // Adjusted for revenue-business height change (36+12=48)
         } else if (widget.type === 'company-filings') {
           // Sixth row - right half
           defaultLayout.x = 6;
-          defaultLayout.y = 48;  // Adjusted for valuation-multiples height change (36+12=48)
+          defaultLayout.y = 47;  // Adjusted for valuation-multiples height change (40+7=47)
         } else if (widget.type === 'earnings-transcripts') {
           // Seventh row - left half (now 50% width as requested)
           defaultLayout.x = 0;
-          defaultLayout.y = 69;  // Adjusted for price-target height change (55+14=69)
+          defaultLayout.y = 62;  // Adjusted for price-target height change (48+14=62)
         } else if (widget.type === 'price-chart') {
           // Additional widgets below
           defaultLayout.x = 0;
-          defaultLayout.y = 92;
+          defaultLayout.y = 82;
         } else {
           // Default positioning for other widgets
           defaultLayout.x = (index % 2) * 6;
@@ -200,13 +200,13 @@ const ResizableGridLayout: React.FC<ResizableGridLayoutProps> = ({
   if (widgets.length === 0) {
     return (
       <div className="p-8 text-center">
-        <p className="text-openbb-text-muted font-mono">No widgets added to this page yet</p>
+        <p className="text-openbb-text-muted ">No widgets added to this page yet</p>
       </div>
     );
   }
 
   return (
-    <div className="p-2 pb-8 w-full min-w-0" style={{ backgroundColor: 'var(--openbb-bg-primary)' }}>
+    <div className="p-2 pb-8 w-full min-w-0 bg-openbb-bg-primary">
       <ResponsiveGridLayout
         className="layout"
         layouts={layouts}

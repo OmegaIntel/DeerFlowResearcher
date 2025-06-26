@@ -1,6 +1,6 @@
 .openbb-widget-container {
-  background: var(--openbb-bg-widget);
-  border: 1px solid var(--openbb-border);
+  background: var(--bg-widget);
+  border: 1px solid var(--border);
   border-radius: 8px;
   overflow: hidden;
   height: 100%;
@@ -30,16 +30,16 @@
 }
 
 .widget-content-wrapper::-webkit-scrollbar-track {
-  background: var(--openbb-bg-primary);
+  background: var(--bg-primary);
 }
 
 .widget-content-wrapper::-webkit-scrollbar-thumb {
-  background: var(--openbb-border);
+  background: var(--border);
   border-radius: 3px;
 }
 
 .widget-content-wrapper::-webkit-scrollbar-thumb:hover {
-  background: var(--openbb-text-muted);
+  background: var(--text-muted);
 }
 
 .react-grid-item {
@@ -148,7 +148,7 @@
   right: 4px;
   width: 4px;
   height: 4px;
-  background-color: var(--openbb-text-muted);
+  background-color: var(--text-muted);
   border-radius: 50%;
   opacity: 0;
   transition: opacity 0.2s ease;

@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { api } from '../services/api';
+import { cachedApi } from '../services/cachedApi';
 import type { KeyMetric } from '../types';
 
 // Hook for Company Profile (Ticker Profile)
@@ -7,7 +7,7 @@ export const useCompanyProfileRealTime = (ticker: string) => {
   return useQuery({
     queryKey: ['company-profile-rt', ticker],
     queryFn: async () => {
-      const data: any = await api.getFundamentalOverview(ticker);
+      const data: any = await cachedApi.getFundamentalOverview(ticker);
       // Transform API data to match CompanyProfile interface
       return {
         symbol: data.symbol,
@@ -42,7 +42,7 @@ export const useKeyMetricsRealTime = (ticker: string) => {
   return useQuery({
     queryKey: ['key-metrics-rt', ticker],
     queryFn: async () => {
-      const metricsData: any = await api.getValuationMetrics(ticker, 'annual', 1, true);
+      const metricsData: any = await cachedApi.getValuationMetrics(ticker, 'annual', 1, true);
       
       if (!metricsData || !Array.isArray(metricsData) || metricsData.length === 0) {
         return [];
@@ -112,7 +112,7 @@ export const useShareStatisticsRealTime = (ticker: string) => {
   return useQuery({
     queryKey: ['share-stats-rt', ticker],
     queryFn: async () => {
-      const data: any = await api.getShareStatistics(ticker);
+      const data: any = await cachedApi.getShareStatistics(ticker);
       
       // Format the numbers
       const formatNumber = (num: number) => {

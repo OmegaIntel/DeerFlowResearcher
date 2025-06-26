@@ -1,0 +1,1001 @@
+company_id,company_name,website_url,industry_primary,description,city,state,employees,founded_year,website_domain,cleaned_name,data_source,confidence,enriched_data,original_company_name
+59d926de-0129-4ebf-9d1c-7b4fd7f5f835,Stone Store,,,,,,,,,Stone Store,original,1.0,{},Stone Store
+59d931d3-fddc-4624-8d99-356360bbcad3,1BC Consulting,http://1st2ndmortgage.com/,,,,,,,,1BC Consulting,original,1.0,{},1BC Consulting
+59d94d76-8112-47e5-9da5-429d8ef3a363,Vessel,http://www.vessel.dev,Software Development Applications,Privately Held (backing),,,,,vessel.dev,Vessel,web_search,0.8,"{'found': True, 'company_name': 'Vessel', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Avery Yip
+59d9811d-c1dd-414b-9c50-18aa113e061f,North Amityville Fire Company,,,,,,,,,North Amityville Fire Company,original,1.0,{},North Amityville Fire Company
+59d98d75-ffd6-4cf3-a542-595ec6bbac87,Mock & Associates,,,,,,,,,Mock & Associates,original,1.0,{},Mock & Associates
+59d9af20-08a0-4475-8375-a30336933ade,HRI Properties (Nissen Building Apartments in Winston-Salem),,,,,,,,,HRI Properties (Nissen Building Apartments in Winston-Salem),original,1.0,{},HRI Properties (Nissen Building Apartments in Winston-Salem)
+59d9af74-4d30-488b-a089-f2f9a321ac2a,St. Gabriel Organics,,,,,,,,,St. Gabriel Organics,original,1.0,{},St. Gabriel Organics
+59d9ecbe-08b5-4a9d-a102-37db35158b0f,A Group Consulting,,,,,,,,,A Group Consulting,original,1.0,{},A Group Consulting
+59da1140-8cd1-428b-8f12-d192452ec5d5,G&m Global Ventures,,,,,,,,,G&m Global Ventures,original,1.0,{},G&m Global Ventures
+59da2e9c-9d16-4b92-9544-705c4938408d,Luminart,,,,,,,,,Luminart,original,1.0,{},Luminart
+59da3774-f102-488f-a5d3-e8f904bdbccb,Strong 1st Fitness,http://strong1stfitness.com,,,,,,,,Strong 1st Fitness,original,1.0,{},Strong 1st Fitness
+59da3b1c-be69-44e9-8efb-0321b66a6267,Maddux Publishing (Two Magazines),,,,,,,,,Maddux Publishing (Two Magazines),original,1.0,{},Maddux Publishing (Two Magazines)
+59da48ba-484e-4122-a6bd-84101ef5334f,Frameplay,,,,,,,,,Frameplay,original,1.0,{},Frameplay
+59da6099-f2c9-4aca-953a-c3d755518efa,M.B.A. Manufacturing,,,,,,,,,M.B.A. Manufacturing,original,1.0,{},M.B.A. Manufacturing
+59da634f-b487-44c8-8f12-a34ed899f87f,Hutcherson Construction Inc,,,,,,,,,Hutcherson Construction Inc,extracted,0.9,{},"Hutcherson Construction Inc is a construction company that offers a range of services including pre-construction, design-build, general contracting, and construction manager at risk (CMAR). Their typical customers span various industries, including healthcare, mission critical facilities, commercial real estate, non-profit organizations, industrial sector, and education institutions. They differentiate themselves by emphasizing their extensive experience, unyielding eagerness to go above and beyond, and their commitment to building better for their clients"
+59da68f1-9038-4ffe-99eb-92cfbd954035,Northstar Equipment and Supply II,,,,,,,,,Northstar Equipment and Supply II,original,1.0,{},Northstar Equipment and Supply II
+59da7635-e0f0-4df3-bd1e-8606939875cc,Engineeredefficiency,,,,,,,,,Engineeredefficiency,original,1.0,{},Engineeredefficiency
+59da7895-ab16-4e7b-90fa-8c5f77f5ff3a,Koman Group,,,,,,,,,Koman Group,original,1.0,{},Koman Group
+59da8316-ed59-48c5-8e4a-b14984fee804,La Quinta Resort & Club,,,,,,,,,La Quinta Resort & Club,original,1.0,{},La Quinta Resort & Club
+59da8ea9-697f-4c6e-b5b4-32269038d948,pmi top florida properties,,,,,,,,,pmi top florida properties,original,1.0,{},pmi top florida properties
+59da9981-0ffc-48e5-877f-bb66adbc4da6,Clinicai,,,,,,,,,Clinicai,original,1.0,{},Clinicai
+59daa850-6e54-4b92-b1c1-8e4a85bdb1f3,los altos hills county fire district,,,,,,,,,los altos hills county fire district,original,1.0,{},los altos hills county fire district
+59dab696-3d73-4c62-aa96-893c8cd841c2,Doyle 1,,,,,,,,,Doyle 1,original,1.0,{},Doyle 1
+59dad2d7-408f-4e51-b436-695717c2ce1f,Jls Landscape and Sprinkler,,,,,,,,,Jls Landscape and Sprinkler,original,1.0,{},Jls Landscape and Sprinkler
+59dae811-6a55-4c55-b5ae-f689405cb20e,Leonhardt Company,,,,,,,,,Leonhardt Company,original,1.0,{},Leonhardt Company
+59daf42e-7b0b-4c43-86dd-185563588bb8,Mars Supply,,,,,,,,,Mars Supply,original,1.0,{},Mars Supply
+59daf5e2-e368-4c42-a581-6afb4b2911e7,Profit-On-Hold,,,,,,,,,Profit-On-Hold,original,1.0,{},Profit-On-Hold
+59daf81a-1949-4630-a85a-a536444e16a5,Drain Busters,,,,,,,,,Drain Busters,original,1.0,{},Drain Busters
+59db26f3-32cd-46b5-b88e-0b7f723e47aa,Orobi,,,,,,,,,Orobi,original,1.0,{},Orobi
+59db3c7c-0afe-4b03-8c8f-40abb3da9cdb,Sugarcreekbrewing,https://sugarcreekbrewing.com/,,,,,,,,Sugarcreekbrewing,web_search,0.9,"{'found': True, 'company_name': 'Sugarcreekbrewing', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}","Sugar Creek Brewing Company is a craft brewery that specializes in crafting Belgian-inspired ales. Their typical customers are craft beer enthusiasts who appreciate the complexity and unique flavors of Belgian-style beers. The company positions itself as dedicated to the craftsmanship of fresh, high-quality beer in the style of Belgian Trappist monks. They differentiate themselves by embracing the philosophy of #BreakTheRules, which signifies their commitment to breaking tradition and creating complex and magical experiences for craft beer drinkers"
+59db4753-6284-4347-98b1-e71ebef69ae2,Health Care Managers,,,,,,,,,Health Care Managers,original,1.0,{},Health Care Managers
+59db7161-5ae9-4c77-a918-6d9222267179,Garlinghouse Brothers,,,,,,,,,Garlinghouse Brothers,original,1.0,{},Garlinghouse Brothers
+59db87de-902b-496a-80b7-1aaec03d9197,Impact Principals,,,,,,,,,Impact Principals,original,1.0,{},Impact Principals
+59db8e42-10c7-4cef-89a4-ea0af2654af8,Sonitrol Tri-county,,,,,,,,,Sonitrol Tri-county,original,1.0,{},Sonitrol Tri-county
+59db95c9-eb8f-45b6-ae83-35147afe4214,Kellsie's Hope,,,,,,,,,Kellsie's Hope,original,1.0,{},Kellsie's Hope
+59dba5d9-b298-4816-9ba7-21a5b9988a7f,Originpc Corporation,http://OriginPC Corporation,Information Technology,"Manufacturer of desktops and laptops for hardware enthusiasts, professionals, and gamers. The company offers a wide range of high-performance configurable PCs, ranging from gaming PCs and workstations to gaming laptops, building systems focused on customization, service, gaming and technology intended to deliver a complete gaming experience.",,,,,OriginPC Corporation,Originpc Corporation,web_search,0.8,"{'found': True, 'company_name': 'Originpc Corporation', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Kevin Wasielewski
+59dbaa2b-84a0-4306-98b2-10a67dd488e4,"Harrison Hydra-Gen, Ltd",http://harrisonhydragen.com,,,,,,,,"Harrison Hydra-Gen, Ltd",original,1.0,{},"Harrison Hydra-Gen, Ltd"
+59dbb4af-6933-460c-b69a-f2aeef83397d,Sales Tax Associates,,,,,,,,,Sales Tax Associates,original,1.0,{},Sales Tax Associates
+59dbb724-f7fd-40c9-ab80-eac8bb7ffd23,Smith Fab Custom Steel Buildin,,,,,,,,,Smith Fab Custom Steel Buildin,original,1.0,{},Smith Fab Custom Steel Buildin
+59dbc8e6-b1eb-4d3d-879b-5eebff84a4c8,2 South Brunch House,http://2020visualmedia.com/,,,,,,,,2 South Brunch House,original,1.0,{},2 South Brunch House
+59dbce55-24a2-48ff-a7a7-9fd7d51363d1,Hires Parts Service,,,,,,,,,Hires Parts Service,original,1.0,{},Hires Parts Service
+59dbd0da-1ab9-4a49-b913-fa90a80ba7de,Magnum Steel Services,,,,,,,,,Magnum Steel Services,original,1.0,{},Magnum Steel Services
+59dbef03-5149-4a69-9551-c8a847671624,Northwest Plumbing Services Inc,,,,,,,,,Northwest Plumbing Services Inc,extracted,0.9,{},"Northwest Plumbing Services Inc is a full-service company specializing in all aspects of plumbing for residential and commercial buildings. They offer a range of services including new construction and remodels, plumbing repairs, and ADA accessible showers. Their typical customers are homeowners, general contractors, and commercial property owners in Columbia County. Northwest Plumbing Services Inc differentiates itself by being family-owned and operated, with a focus on professionalism, integrity, honesty, and dedication to workmanship"
+59dbefc7-3463-4a72-ab15-7454b0e3361a,Minnesota Screens,,,,,,,,,Minnesota Screens,original,1.0,{},Minnesota Screens
+59dbf21e-4434-4c54-9fc5-24719a50e18c,Heuristic Actions,,,,,,,,,Heuristic Actions,original,1.0,{},Heuristic Actions
+59dbfc91-36e8-4041-96c0-3b1a25662250,"Presberg PC, Law Offices of Andrew",,,,,,,,,"Presberg PC, Law Offices of Andrew",original,1.0,{},"Presberg PC, Law Offices of Andrew"
+59dbfd36-82f4-4ea0-a0b7-97bada2a7258,A.P. Swiss,,,,,,,,,A.P. Swiss,original,1.0,{},A.P. Swiss
+59dc05aa-33bc-4a67-add5-52996ba0834a,Indiana Precision Plastics,,,,,,,,,Indiana Precision Plastics,original,1.0,{},Indiana Precision Plastics
+59dc130b-3fa7-4732-911e-f21ea85bda84,nexgoal,,,,,,,,,nexgoal,original,1.0,{},nexgoal
+59dc1854-4a76-4571-a5bc-40a07ef5b0d0,Homer's Towing,,,,,,,,,Homer's Towing,original,1.0,{},Homer's Towing
+59dc238e-a4e4-46b1-881c-d96212d73b77,Omni U.S.A,,,,,,,,,Omni U.S.A,original,1.0,{},Omni U.S.A
+59dc26bf-08e6-4108-868d-9548f65498bd,Reliable Plant Service,,,,,,,,,Reliable Plant Service,original,1.0,{},Reliable Plant Service
+59dc33b7-f091-43dd-9b99-f6cc1dd6937e,Timely Telehealth,,,,,,,,,Timely Telehealth,original,1.0,{},Timely Telehealth
+59dc5385-1838-441e-8be9-b3250c42e64c,Jackson County Department of Transportation,,,,,,,,,Jackson County Department of Transportation,original,1.0,{},Jackson County Department of Transportation
+59dc55cb-78cc-4c77-b42e-e75eacb20501,Kwant,,,,,,,,,Kwant,original,1.0,{},Kwant
+59dc78b0-5a46-4513-9270-bcf7fea5d65d,Waynelumberco,https://www.waynelumberco.com/,,,,,,,,Waynelumberco,web_search,0.9,"{'found': True, 'company_name': 'Waynelumberco', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}","Wayne Lumber specializes in producing the finest quality Appalachian hardwoods. Their typical customers include construction companies, furniture manufacturers, flooring companies, and woodworking shops. Wayne Lumber differentiates itself by offering excellent customer service, quality products, competitive pricing, and immediate payment to suppliers, which sets them apart in the industry"
+59dc89b6-9278-45dd-9551-183bb6daf4dd,"Grandview Landscaping Services, Inc.",,,,,,,,,"Grandview Landscaping Services, Inc.",extracted,0.9,{},"Grandview Landscaping Services, Inc. offers a range of landscaping and sod services, including landscape installation, irrigation and drainage systems, landscape maintenance, lawn maintenance, hardscapes, pavers, and porter service. Their typical customers include commercial, industrial, and high-end residential clients in Marion County and the greater North Central Florida area. The company differentiates itself through its commitment to quality workmanship and service, as well as its ability to meet the diverse needs of its customers from Jacksonville to Tampa"
+59dca2f9-ec66-453a-841c-f7cf816ce743,Southeastern Wire Fabricators,,,,,,,,,Southeastern Wire Fabricators,original,1.0,{},Southeastern Wire Fabricators
+59dce319-88e0-40b2-bd6f-a24405b29914,Seven Languages Translating Services,,,,,,,,,Seven Languages Translating Services,original,1.0,{},Seven Languages Translating Services
+59dce5e7-0021-467a-aa79-334d16475306,Teamkdd,http://teamkdd.com/,Consumer Products and Services (B2C),,,,,,,Teamkdd,web_search,0.8,"{'found': True, 'company_name': 'Teamkdd', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Katy Dwyer
+59dcebb1-f95f-46d1-866f-e5d35a47ac8e,Exitfirstre,,,,,,,,,Exitfirstre,original,1.0,{},Exitfirstre
+59dcfd64-4426-4678-a563-6470bce61931,Dorman+breen Architects,,,,,,,,,Dorman+breen Architects,original,1.0,{},Dorman+breen Architects
+59dd046a-37f8-446a-8fcd-003a1fd3c382,Spar Hrvatska,,,,,,,,,Spar Hrvatska,original,1.0,{},Spar Hrvatska
+59dd05ed-7cdf-4be5-8afa-7f75c6109c4e,MD Contracting,,,,,,,,,MD Contracting,original,1.0,{},MD Contracting
+59dd0c0b-fdbc-48eb-b4a1-07bc3998d3a4,Hammerfour,,,,,,,,,Hammerfour,original,1.0,{},Hammerfour
+59dd2785-0f8f-4fc4-8187-c8d2f1b60cb2,Integrated Care Solutions,,,,,,,,,Integrated Care Solutions,original,1.0,{},Integrated Care Solutions
+59dd3001-187c-48c4-a66e-eaee8adf82a3,Scott's Lock & Key,,,,,,,,,Scott's Lock & Key,original,1.0,{},Scott's Lock & Key
+59dd320d-f992-4768-94ad-99686845a0b0,Front Street Millwork and Lumber,,,,,,,,,Front Street Millwork and Lumber,original,1.0,{},Front Street Millwork and Lumber
+59dd32a0-10d5-4c89-b11e-25bdbcb12057,Essex Construction,,,,,,,,,Essex Construction,original,1.0,{},Essex Construction
+59dd4487-106f-403b-88b4-9a339c360028,security today,,,,,,,,,security today,original,1.0,{},security today
+59dd45e3-007c-404e-a972-8e50b45d6fa1,Nu-Tec Roofing Contractors,,,,,,,,,Nu-Tec Roofing Contractors,original,1.0,{},Nu-Tec Roofing Contractors
+59dd61ea-fe8b-4f91-b715-46cea974f59d,H I,,,,,,,,,H I,original,1.0,{},H I
+59dd79ec-ba24-43f0-913f-de15caed5e72,Janssen Law Center,,,,,,,,,Janssen Law Center,original,1.0,{},Janssen Law Center
+59dd8d6c-168a-40cc-9062-0e48a7cfd326,"Turner, Mason & Company",,,,,,,,,"Turner, Mason & Company",extracted,0.9,{},"Turner, Mason & Company provides technical, commercial, and strategic consulting services to clients globally in the crude oil, midstream, refining, refined products, and biofuels industries. Their core offerings include market analysis, industry studies, M&A support, transaction due diligence, and economic and feasibility analyses. Their typical customers include upstream companies, integrated oil companies, downstream refiners, midstream companies, private equity and venture firms, investment banks, financial institutions, law firms, national oil companies, government agencies, biofuels producers, industry trade associations, natural gas, NGL, and LNG companies, and energy trading companies. Turner, Mason & Company differentiates themselves by providing trusted advice and solutions to the global energy industry through rigorous independent analysis, critical judgment, and a thorough understanding of market fundamentals and drivers"
+59dd9a3d-16b6-4fc2-8723-1b841ac87024,Pinnacle Ozone Solutions,,,,,,,,,Pinnacle Ozone Solutions,original,1.0,{},Pinnacle Ozone Solutions
+59ddc39a-28c7-40de-8606-93caa467ab5b,Institute for Collaborative Leadership,,,,,,,,,Institute for Collaborative Leadership,original,1.0,{},Institute for Collaborative Leadership
+59dde07a-214b-44bc-a00d-a0023a17520d,Fiske Law Group,,,,,,,,,Fiske Law Group,original,1.0,{},Fiske Law Group
+59de3e80-d1fc-4530-8386-0157ea8b227e,Good's Glass Service,,,,,,,,,Good's Glass Service,original,1.0,{},Good's Glass Service
+59de690e-5eee-4b02-87c9-aaaec8e2427d,Pallet Chief Manufacturing,,,,,,,,,Pallet Chief Manufacturing,original,1.0,{},Pallet Chief Manufacturing
+59de7f70-d2cd-41b4-926b-db191aec7e5c,Inview Virtual Tours,,,,,,,,,Inview Virtual Tours,original,1.0,{},Inview Virtual Tours
+59de8a54-31b7-4deb-97f4-479387180a10,Lake Random Fire Department,,,,,,,,,Lake Random Fire Department,original,1.0,{},Lake Random Fire Department
+59deb210-592b-4fdd-8473-01fdc681f375,"Korte Bros., Inc",,,,,,,,,"Korte Bros., Inc",original,1.0,{},"Korte Bros., Inc"
+59dec47c-7275-4cfa-8a59-646d1636bd52,Allied Dies Inc,http://allied-dies.com,,,,,,,,Allied Dies Inc,original,1.0,{},Allied Dies Inc
+59ded2c6-5e65-48e7-b2a8-1c5b486ecbd6,Dayton Custom Wheels,http://daytoncustomwheels.com,,,,,,,,Dayton Custom Wheels,original,1.0,{},Dayton Custom Wheels
+59dee66e-dc50-4fcb-b31b-4b982650947c,Confex,http://www.confex.com,Business/Productivity Software,Acquired/Merged (Operating Subsidiary),,,,,confex.com,Confex,web_search,0.8,"{'found': True, 'company_name': 'Confex', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Cathy Dillon
+59deed0d-51d8-4fb0-80ab-a70dc38f22ae,Sydrogen Energy,,,,,,,,,Sydrogen Energy,original,1.0,{},Sydrogen Energy
+59deefba-199a-4d63-9413-dabccb4a2261,power edge,,,,,,,,,power edge,original,1.0,{},power edge
+59df0206-1fc4-4746-a360-2f6a0f2b5d40,"Integrated Water Systems, LLC",http://integratedwatersystemsfl.com,,,,,,,,"Integrated Water Systems, LLC",original,1.0,{},"Integrated Water Systems, LLC"
+59df0a72-1461-44cd-917f-755083f3d1c3,Vulcan Drying Systems,,,,,,,,,Vulcan Drying Systems,extracted,0.9,{},"Vulcan Drying Systems provides thermal systems for industrial applications, offering drying, calcining, incineration, and thermal desorption systems for a wide variety of processes. Their typical customers come from industries such as oil and gas, municipal solid waste and effluent, agriculture feed and manure, and mining and chemical processing. They claim to differentiate themselves by providing quality recycling and drying equipment, personalized service options tailored for each client, and a focus on reducing operating, storage, and transportation costs while meeting environmental regulations"
+59dfc362-75b3-4461-a9b2-bce6f2d08c78,Dynamic Consulting Engineers,,,,,,,,,Dynamic Consulting Engineers,original,1.0,{},Dynamic Consulting Engineers
+59dfc581-03cf-4e35-991d-8ebcd9d8fae9,Sebastian Enterprises,,,,,,,,,Sebastian Enterprises,original,1.0,{},Sebastian Enterprises
+59dfd858-678f-4fe8-89c4-1cada1963217,Golden Minerals (Celaya Project Interests),,,,,,,,,Golden Minerals (Celaya Project Interests),original,1.0,{},Golden Minerals (Celaya Project Interests)
+59dff8f6-44dc-48be-a4a1-0e20c776b200,Ralph Andersen & Associates,,,,,,,,,Ralph Andersen & Associates,original,1.0,{},Ralph Andersen & Associates
+59e0071f-9e61-41ec-af8e-21a7e12bfeef,Suncore Industries,,,,,,,,,Suncore Industries,original,1.0,{},Suncore Industries
+59e01f75-a351-46d3-920e-b5bfa64eecbc,Tarpinnovators,http://tarpinnovators.com,,,,,,,,Tarpinnovators,web_search,0.8,"{'found': True, 'company_name': 'Tarpinnovators', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Tarp Innovator
+59e049bf-4f91-4ebd-8fa7-4dff6cdbc8a5,Omni Bulk Services,,,,,,,,,Omni Bulk Services,original,1.0,{},Omni Bulk Services
+59e07c6f-f148-4840-9da7-824fb1094b65,Florida Circuit,,,,,,,,,Florida Circuit,original,1.0,{},Florida Circuit
+59e08c81-02ab-468f-87d0-8a4372d9abe6,"BROADLINX TELECOM, INC",,,,,,,,,"BROADLINX TELECOM, INC",extracted,0.9,{},"BROADLINX TELECOM, INC is a telecommunications construction company based out of 6405 OLD CONCORD RD, Salisbury, North Carolina, United States"
+59e08e47-fd4b-484a-87b6-5ebf21cc1aa7,Sabin Meyer,,,,,,,,,Sabin Meyer,original,1.0,{},Sabin Meyer
+59e093af-5fc6-4d6f-ac5b-e8f0ecfb02b1,Seaway Painting,,,,,,,,,Seaway Painting,original,1.0,{},Seaway Painting
+59e09fa9-0864-4a08-8489-32f4bda31dd5,Intexure,,,,,,,,,Intexure,original,1.0,{},Intexure
+59e0ed6e-0f29-4892-83bb-b1410fe073f5,IBC Coating Technologies,,,,,,,,,IBC Coating Technologies,original,1.0,{},IBC Coating Technologies
+59e0fa8b-19f7-4498-86fa-03e6f3923a38,Logistics Management Services,,,,,,,,,Logistics Management Services,original,1.0,{},Logistics Management Services
+59e107b0-3adf-4582-b9c1-c3b51565d9de,Jims Carpet,,,,,,,,,Jims Carpet,original,1.0,{},Jims Carpet
+59e120fa-3e4a-4c92-9b1e-9601834f3afa,Old World Spices & Seasonings,,,,,,,,,Old World Spices & Seasonings,original,1.0,{},Old World Spices & Seasonings
+59e13868-8e88-4aa3-b044-9abc7cb78505,Function Feedback,,,,,,,,,Function Feedback,original,1.0,{},Function Feedback
+59e14e10-c6cd-431a-ac28-b629a74090ea,Thomas Mechanical & Fire Protection,,,,,,,,,Thomas Mechanical & Fire Protection,extracted,0.9,{},"Thomas Mechanical & Fire Protection specializes in providing mechanical contracting and fire protection services to a diverse range of industries including advanced manufacturing, healthcare, higher education, distribution, automotive, pharmaceutical, food and beverage, mission critical, and commercial clients. Their offerings include design-build, HVAC, process piping, and fire protection installation, service, maintenance, and repair. They position themselves as a solution-oriented company focused on delivering results that meet their clients' expectations, while also emphasizing their proven workmanship, diverse capabilities, and commitment to safety in the workplace"
+59e15001-9104-4684-ac80-aa9e3a75f976,Mastertek,,,,,,,,,Mastertek,original,1.0,{},Mastertek
+59e159b6-c556-4033-a157-2e8a2de09b38,Heco-Pacific Manufacturing,,,,,,,,,Heco-Pacific Manufacturing,original,1.0,{},Heco-Pacific Manufacturing
+59e17784-b7a0-4f4f-929c-8ad5799841fe,Realestateinlakecounty,,,,,,,,,Realestateinlakecounty,original,1.0,{},Realestateinlakecounty
+59e1a571-31d3-4b82-a248-d2c13f1d918a,Fab Masters Company Inc,,,,,,,,,Fab Masters Company Inc,original,1.0,{},Fab Masters Company Inc
+59e1a718-ec6d-4245-8ef5-88465c788128,Mavcon,,,,,,,,,Mavcon,original,1.0,{},Mavcon
+59e1aab4-3981-4c64-b14c-671c1fea7537,Endeavor Therapeutics,,,,,,,,,Endeavor Therapeutics,original,1.0,{},Endeavor Therapeutics
+59e1aafe-28d9-473d-b13c-c18838e5a632,Precision Glass and Shower,,,,,,,,,Precision Glass and Shower,extracted,0.9,{},"Precision Glass and Shower specializes in providing a wide range of glass products and services, including custom glass showers, residential and commercial glass replacements, glass shelving, mirrors, and more. Their typical customers include homeowners, builders, contractors, and businesses in need of high-quality glass products and installations. Precision Glass and Shower differentiates themselves by emphasizing their exceptional product quality, professional installation services, and commitment to customer satisfaction"
+59e1b339-1e9e-438c-88af-7033a2fcd1af,Kravasequipment,,,,,,,,,Kravasequipment,original,1.0,{},Kravasequipment
+59e1bd41-e7f3-4de1-b12d-66110cee0c55,Eldon James & Associates,,,,,,,,,Eldon James & Associates,original,1.0,{},Eldon James & Associates
+59e1c0b5-f2ff-4f0e-959b-745f4111c36e,Advantage Hoist,,,,,,,,,Advantage Hoist,original,1.0,{},Advantage Hoist
+59e1dc93-b399-40fd-ac90-f3afcba4a732,Easternsigntech,,,,,,,,,Easternsigntech,original,1.0,{},Easternsigntech
+59e1dd96-7d1f-46e3-b3d5-2282ee3c00e8,Fence City,,,,,,,,,Fence City,original,1.0,{},Fence City
+59e1e502-8487-4343-b5e5-faceffc6a77e,Industrial Graphics Corporation,,,,,,,,,Industrial Graphics Corporation,original,1.0,{},Industrial Graphics Corporation
+59e1eaae-e2c7-454a-b634-faf50f69d8ec,Santa Tresa,,,,,,,,,Santa Tresa,original,1.0,{},Santa Tresa
+59e1f525-c808-45fb-80ff-083045a2d463,Milanos Gourmet Deli And Catrg,,,,,,,,,Milanos Gourmet Deli And Catrg,original,1.0,{},Milanos Gourmet Deli And Catrg
+59e203c3-5021-4967-b8f2-8f82dc5d1812,G.S. Dunham,,,,,,,,,G.S. Dunham,original,1.0,{},G.S. Dunham
+59e212ec-42ba-4620-92f9-1955ba989f4c,Newspaceglobal,,,,,,,,,Newspaceglobal,original,1.0,{},Newspaceglobal
+59e244bd-8ff0-47b9-8fb2-714050965e4f,Miti Manufacturing Company,,,,,,,,,Miti Manufacturing Company,original,1.0,{},Miti Manufacturing Company
+59e24c47-2649-46e1-833a-5a1dd3134d92,Protaxchicago,,,,,,,,,Protaxchicago,original,1.0,{},Protaxchicago
+59e26de6-47fe-40c6-8cec-ee49882c9779,Dunnandrice,,,,,,,,,Dunnandrice,original,1.0,{},Dunnandrice
+59e27c93-2ceb-470d-a14b-fdfd704bce99,Iqbanker,http://www.iqbanker.com/,Information Technology,"Provider of corporate finance, valuation and financial modelling services and developer of digital products intended to offer capital markets intelligence capabilities in the global supply chain. The company specializes in big data and analytics, influencer relationship analytics, linkages and real-time news sentiment intelligence along with also provides platform development services, thereby helping the financial service industry with digital innovative products and services.",,,,,,Iqbanker,web_search,0.8,"{'found': True, 'company_name': 'Iqbanker', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Nathan Sapsin
+59e2a2f8-d268-46cc-afcf-ca1c2a39bf70,servpro of clear lake,,,,,,,,,servpro of clear lake,original,1.0,{},servpro of clear lake
+59e2c7b3-be4d-4d87-b530-9c64389e90c9,Johnson Machine Inc,,,,,,,,,Johnson Machine Inc,original,1.0,{},Johnson Machine Inc
+59e2d58d-aee4-426f-b44b-a7c4ac6df52e,Greytrout Software,,,,,,,,,Greytrout Software,original,1.0,{},Greytrout Software
+59e2ed11-454f-4007-b272-8114cd80f2dc,Homewood Suites by Hilton Washington,,,,,,,,,Homewood Suites by Hilton Washington,original,1.0,{},Homewood Suites by Hilton Washington
+59e2f83b-99e3-45f8-864b-ef553451e33f,"Bethlehem, PA",,,,,,,,,"Bethlehem, PA",original,1.0,{},"Bethlehem, PA"
+59e2f90d-b5ec-43b3-8604-bc1c379f75a2,Electronic Discovery Institute,,,,,,,,,Electronic Discovery Institute,original,1.0,{},Electronic Discovery Institute
+59e31de9-d133-418f-a11f-aa897b1ca703,G L Automation,,,,,,,,,G L Automation,original,1.0,{},G L Automation
+59e31e14-1cb8-4e2d-9358-a078eeaf53ab,Steeltech Industries LLC,http://steeltechindustries.com,,,,,,,,Steeltech Industries LLC,original,1.0,{},Steeltech Industries LLC
+59e32584-b8ab-4748-9204-375e0f70fb98,Mw Design,,,,,,,,,Mw Design,original,1.0,{},Mw Design
+59e356f5-9f18-4ada-9f5e-a92d06d2913d,Skylark,,,,,,,,,Skylark,original,1.0,{},Skylark
+59e35df2-1c94-4dcd-a79f-04f2ff373898,KyotoCooling,,,,,,,,,KyotoCooling,original,1.0,{},KyotoCooling
+59e36a27-65d4-4183-a7f4-b40d3ce47ef0,Johnson Block & Company Inc,,,,,,,,,Johnson Block & Company Inc,original,1.0,{},Johnson Block & Company Inc
+59e36d25-f9b3-4fb7-b7a6-eccca485cc4b,professional edge staffing,,,,,,,,,professional edge staffing,original,1.0,{},professional edge staffing
+59e36d35-d824-47d4-a582-24217a2153ba,Scenicland Machine And Fabricating Company Inc,,,,,,,,,Scenicland Machine And Fabricating Company Inc,original,1.0,{},Scenicland Machine And Fabricating Company Inc
+59e36eb4-7c8b-46b2-b252-7121bb33dfe3,Scott Polk,,,,,,,,,Scott Polk,original,1.0,{},Scott Polk
+59e3824d-811f-4b4d-91b8-4f580be6d60c,Intercounty Paving Company,,,,,,,,,Intercounty Paving Company,original,1.0,{},Intercounty Paving Company
+59e39b69-2a11-4776-9e5d-3e7dd5cd36f6,Apm Inc,,,,,,,,,Apm Inc,original,1.0,{},Apm Inc
+59e39d32-5a86-43b8-92d4-7cbb5b2116f6,Mark Snyder Electric,,,,,,,,,Mark Snyder Electric,original,1.0,{},Mark Snyder Electric
+59e3a9c6-423d-4c97-97d8-19e549062950,Eikon Planning and Design Corp,,,,,,,,,Eikon Planning and Design Corp,original,1.0,{},Eikon Planning and Design Corp
+59e3ba92-766c-4d08-98ee-40af1ac4b605,Mountaineer Cleaning and Maintenance,,,,,,,,,Mountaineer Cleaning and Maintenance,original,1.0,{},Mountaineer Cleaning and Maintenance
+59e3c029-163c-4e62-8332-4b497c85b45e,nazarian law firm,,,,,,,,,nazarian law firm,original,1.0,{},nazarian law firm
+59e3c551-9e1a-4527-9115-ac07a1bb9099,Pestana Roofing,,,,,,,,,Pestana Roofing,original,1.0,{},Pestana Roofing
+59e3dc53-b68b-4633-8927-641de203394b,Bay Area Contracting,,,,,,,,,Bay Area Contracting,extracted,0.9,{},"Bay Area Contracting provides custom home building services in the Traverse City area. Their typical customers are individuals or families looking to build their dream home or remodel an existing property. The company positions itself as a family-owned business that prioritizes the client's needs and desires. They differentiate themselves by emphasizing their dedication to customer satisfaction, professionalism, and quality in their work"
+59e41f0a-59e6-4075-94d0-815d06115260,Evergreen Care,,,,,,,,,Evergreen Care,original,1.0,{},Evergreen Care
+59e4245c-725d-4284-a312-ab1af6ebb6c8,Field Associates,,,,,,,,,Field Associates,original,1.0,{},Field Associates
+59e43bb6-46fa-4f8e-ad86-7a294cc3a37e,"Landman and Beatty, Lawyers",,,,,,,,,"Landman and Beatty, Lawyers",original,1.0,{},"Landman and Beatty, Lawyers"
+59e45018-f07c-4510-9658-93ae6c849aa0,Docksiderentalsatlakeanna,,,,,,,,,Docksiderentalsatlakeanna,original,1.0,{},Docksiderentalsatlakeanna
+59e4764d-b6a8-40d6-a7dd-a69fc34decd2,Pet And Playground Products,,,,,,,,,Pet And Playground Products,original,1.0,{},Pet And Playground Products
+59e49a7b-e0cc-4b09-8276-998a42fb1d5d,Prehire Solutions,,,,,,,,,Prehire Solutions,original,1.0,{},Prehire Solutions
+59e4c64a-d6d4-4c32-852f-d7940e33baab,Peruto Properties,,,,,,,,,Peruto Properties,original,1.0,{},Peruto Properties
+59e4d8f4-f596-425a-962a-9eba91efbb9c,"Gahr Truck & Equipment, Inc",http://gahrtruck.com,,,,,,,,"Gahr Truck & Equipment, Inc",original,1.0,{},"Gahr Truck & Equipment, Inc"
+59e4e4e5-432b-4ed9-b885-23008bce653f,mark reed hospital,,,,,,,,,mark reed hospital,original,1.0,{},mark reed hospital
+59e520ef-1137-4ea2-b76d-b1df8628833f,IDenticard Systems,,,,,,,,,IDenticard Systems,original,1.0,{},IDenticard Systems
+59e55e31-b235-49c7-89f9-f8c16b3d100b,Rp Trucking,,,,,,,,,Rp Trucking,original,1.0,{},Rp Trucking
+59e565db-4a38-42e2-89ba-83ad48c3f4b8,Lumelite Plastics,,,,,,,,,Lumelite Plastics,original,1.0,{},Lumelite Plastics
+59e5741d-d17b-42e1-a0ce-57b0f3761f0c,The Inde Studio,http://theindestudio.com,,,,,,,,The Inde Studio,original,1.0,{},The Inde Studio
+59e58096-6dd3-478d-abc0-4f57bfd86ed2,Fido Alliance Inc,http://FIDO Alliance Inc.,Information Technology,"Promoter of open authentication standards for secure identity verification. The FIDO Alliance offers specifications, resources, and certification programs for businesses and developers to implement FIDO authentication. They also host events and news updates related to passwordless authentication and have a membership program with benefits and a code of conduct.",,,,,FIDO Alliance Inc.,Fido Alliance Inc,web_search,0.8,"{'found': True, 'company_name': 'Fido Alliance Inc', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Andrew Shikiar
+59e5ec6d-19d8-4b3f-872f-b83fbbc88a95,Rapid Precision Manufacturing,,,,,,,,,Rapid Precision Manufacturing,extracted,0.9,{},"Rapid Precision Manufacturing specializes in providing precision machining services to a wide range of industries, including agricultural, archery, automotive, firearm components, filtration, fuel systems, hydraulic, industrial components, cylinder components, motion control, welding, and ATVs/UTVs. Their typical customers are companies in need of high-quality, precision-machined parts with tight tolerances and adherence to strict drawing specifications. They differentiate themselves by emphasizing their expertise in achieving tight tolerances, their track record of low return rates, and their ability to deliver prompt turnaround on all orders"
+59e5ed25-da22-4732-8e93-cbcef0aeba1e,Sun City Car Wash,,,,,,,,,Sun City Car Wash,original,1.0,{},Sun City Car Wash
+59e5f0af-46e0-4503-a39d-e4f4a0948e39,Spineart,,,,,,,,,Spineart,original,1.0,{},Spineart
+59e5ffcc-a817-438b-8504-7fe933b9666d,hunter interiors,,,,,,,,,hunter interiors,original,1.0,{},hunter interiors
+59e60d72-ca13-470e-92eb-ed658495f751,DULU Consulting,,,,,,,,,DULU Consulting,original,1.0,{},DULU Consulting
+59e618a6-1ecf-4ea7-b90f-9e037e52dee8,Queen City Pest Control I,,,,,,,,,Queen City Pest Control I,original,1.0,{},Queen City Pest Control I
+59e62314-6647-4316-adee-732511c1c22f,La Crosse Brush,,,,,,,,,La Crosse Brush,original,1.0,{},La Crosse Brush
+59e64899-cecc-46a7-b405-47a8fc547423,Downtown Morganton,,,,,,,,,Downtown Morganton,original,1.0,{},Downtown Morganton
+59e67374-1fa1-4045-99b7-4ee0f6ac683a,McKenzie Global Marketing,,,,,,,,,McKenzie Global Marketing,original,1.0,{},McKenzie Global Marketing
+59e6781b-e845-4066-82c1-e8f1fba46776,Small Business Associates,,,,,,,,,Small Business Associates,original,1.0,{},Small Business Associates
+59e68229-fbf2-4213-9c3e-7fb6a9f0b996,MyCIMA,,,,,,,,,MyCIMA,original,1.0,{},MyCIMA
+59e6a8e0-9530-4050-bb8f-9c8b8f7ac8fd,Lean Concepts,,,,,,,,,Lean Concepts,original,1.0,{},Lean Concepts
+59e6ad76-a069-41f4-ad6b-9b08781d3a04,ABH Labs,,,,,,,,,ABH Labs,original,1.0,{},ABH Labs
+59e6b799-f3b3-40be-9ce5-cc0917b46db3,Pepetools,,,,,,,,,Pepetools,original,1.0,{},Pepetools
+59e6d455-d052-4ede-97ef-cc1b394db1e5,NutriScience Innovations,,,,,,,,,NutriScience Innovations,original,1.0,{},NutriScience Innovations
+59e6d8e2-c4a4-4479-a433-46c200aeb947,PAVOY,,,,,,,,,PAVOY,original,1.0,{},PAVOY
+59e6f2a1-7b73-401b-8de3-d594e5d5e358,Fontana Village,,,,,,,,,Fontana Village,original,1.0,{},Fontana Village
+59e7181f-50f4-4342-969c-c222a24d4fb9,"The Construction Zone, ltd",http://czphx.com,,,,,,,,"The Construction Zone, ltd",original,1.0,{},"The Construction Zone, ltd"
+59e71cd3-3e31-4b1a-820f-1e38d8155967,"Norwich, CT",https://www.epicurebrewing.com/,,,,,,,,"Norwich, CT",original,1.0,{},"Norwich, CT"
+59e72202-74e4-412b-a3f3-c2f434bf53e3,Conveyor Application Systems (CAS),,,,,,,,,Conveyor Application Systems (CAS),extracted,0.9,{},"Conveyor Application Systems (CAS) manufactures and sells a range of material placing and handling equipment, including stone slinger trucks and off-road slingers such as the AT7 and Drag'n. Their typical customers are likely to be construction companies, landscaping firms, and other businesses involved in the transportation and placement of materials on job sites. CAS claims to differentiate themselves through their focus on precision placement, speed and efficiency, and accessibility, which allows them to reach areas that may be difficult for traditional dump trucks to access"
+59e74416-d0ff-4ef7-9672-4fe18447452d,Howard-Atnip Technologies,,,,,,,,,Howard-Atnip Technologies,original,1.0,{},Howard-Atnip Technologies
+59e75eae-82a9-4185-886e-73f6ed8a193d,Copient,http://www.copient.ai,"Developer of an AI sales training platform designed to simulate realistic, unscripted customer interactions for agile sales practice in a safe environment. The company's software offers a wide range of features like configurable sales methodology, realistic AI simulations, around-the-clock availability, customizable scenarios, muscle memory development, immediate feedback, and many more.",Educational Software,,,,,copient.ai,Copient,web_search,0.8,"{'found': True, 'company_name': 'Copient', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Michael Burke
+59e77aaf-75c6-47e1-a44f-ada1c7e7099b,Ming's Resource Corporation,,,,,,,,,Ming's Resource Corporation,original,1.0,{},Ming's Resource Corporation
+59e7a0a5-4282-440e-87d4-cc23af8fc2cf,DLA (New Jersey),,,,,,,,,DLA (New Jersey),original,1.0,{},DLA (New Jersey)
+59e7bb44-beea-473d-94e3-621ffe1a20c4,Consumers Builders Supply Company,http://consumersbuilderssupply.com,,,,,,,,Consumers Builders Supply Company,original,1.0,{},Consumers Builders Supply Company
+59e7d907-5a8a-4e04-868f-66ea8421c285,Robinson Thayer,,,,,,,,,Robinson Thayer,original,1.0,{},Robinson Thayer
+59e7f54f-b009-4350-b5b5-0116bf07a020,Howe-Lewis International,,,,,,,,,Howe-Lewis International,original,1.0,{},Howe-Lewis International
+59e80a3d-7110-4523-8623-97867ce7003f,Seal-Rite Asphalt Maintenance,http://sealritemokena.com,,,,,,,,Seal-Rite Asphalt Maintenance,original,1.0,{},Seal-Rite Asphalt Maintenance
+59e80abc-7924-4d1a-aa1e-29690f941378,Pakmailleebranch,,,,,,,,,Pakmailleebranch,original,1.0,{},Pakmailleebranch
+59e81853-b5d1-49ac-9394-d3d49822fa52,First Vision Financial,,,,,,,,,First Vision Financial,original,1.0,{},First Vision Financial
+59e8279a-6466-4e9e-b4ab-4748a27f5fe0,Southland Floors Inc,,,,,,,,,Southland Floors Inc,extracted,0.9,{},"Southland Floors Inc is a family-owned and operated floor covering distributor that provides an extensive selection of residential and commercial flooring products. Their offerings include residential and commercial carpet, laminate flooring, sheet vinyl, rubber flooring, solid vinyl ""wood"" planking, bamboo flooring, wood flooring, ceramic, solid vinyl tile, safety flooring, anti-static flooring, and specialty products such as entry mat systems. They also carry cushion, adhesives, and floor preparation materials. Their typical customers include residential and commercial property owners, contractors, architects, interior designers, and flooring retailers. Southland Floors Inc differentiates itself by offering a large inventory of floor coverings available for immediate delivery, providing technical expertise and field support, and being a resource for specialty flooring such as antistatic, conductive, ""clean"" room, and safety flooring"
+59e8445a-67dc-48be-ab69-84614364fb3a,M C E Development,,,,,,,,,M C E Development,original,1.0,{},M C E Development
+59e8493d-1f01-4ba9-b50b-48833d0ae45c,North American Real Estate Partners,,,,,,,,,North American Real Estate Partners,original,1.0,{},North American Real Estate Partners
+59e8581c-e6e5-4b6b-ace8-c101be1ab7da,Planet Futbol Events Management,,,,,,,,,Planet Futbol Events Management,original,1.0,{},Planet Futbol Events Management
+59e88978-97fc-451e-9b8e-ac1af9e35bc8,Customs Connect,,,,,,,,,Customs Connect,original,1.0,{},Customs Connect
+59e8f637-0652-43df-b98f-b47a27af428d,Hawkeye Crates,,,,,,,,,Hawkeye Crates,original,1.0,{},Hawkeye Crates
+59e900f5-ca18-44d7-87c5-944728f292be,Kreunen Construction And Restoration,,,,,,,,,Kreunen Construction And Restoration,original,1.0,{},Kreunen Construction And Restoration
+59e90118-5fb4-408c-be92-c0cc34319067,Raceplanner,,,,,,,,,Raceplanner,original,1.0,{},Raceplanner
+59e90e4e-7028-422e-8297-2965094f543e,Media Tradecraft,,,,,,,,,Media Tradecraft,original,1.0,{},Media Tradecraft
+59e91737-6485-4f8f-bae5-c74be4de7198,Cell Phone Ninja,http://cellphoneninja.com,,,,,,,,Cell Phone Ninja,original,1.0,{},Cell Phone Ninja
+59e92b17-d039-4a6e-8b0b-67143a891481,Exchangemall.com,,,,,,,,,Exchangemall.com,original,1.0,{},Exchangemall.com
+59e931aa-0f9c-4d7c-ac4d-3ed7637502e5,Power Source Electrical Services,,,,,,,,,Power Source Electrical Services,original,1.0,{},Power Source Electrical Services
+59e93674-282a-44f0-af9c-ac229b17f6b4,ezcpa.co,,,,,,,,,ezcpa.co,original,1.0,{},ezcpa.co
+59e94af9-a05d-4e6c-9ead-2d6e856a845b,Crile Consolidated Industries,,,,,,,,,Crile Consolidated Industries,extracted,0.9,{},"Crile Consolidated Industries provides a range of services including maintenance, repair, manufacturing, and distribution for hydraulic and mechanical equipment. Their typical customers are those in heavy industry, mobile equipment, and the oil & gas industry who require reliable and efficient maintenance and repair solutions. They differentiate themselves through their modern facility, 40 years of industry experience, and unparalleled devotion to customer service, positioning themselves as a one-stop solution provider for their customers' equipment needs"
+59e957ae-86a1-4d04-b5ab-c4daa4e3cd54,abbas law pllc,,,,,,,,,abbas law pllc,original,1.0,{},abbas law pllc
+59e97ca3-a0f6-4f94-bed0-ba8d6e472abd,Absolute Electrical Heating and Air,http://absolutefix.com,,,,,,,,Absolute Electrical Heating and Air,original,1.0,{},Absolute Electrical Heating and Air
+59e98808-a374-41bd-b101-1daa74a34149,MacintoshConsultants,,,,,,,,,MacintoshConsultants,original,1.0,{},MacintoshConsultants
+59e98b9f-ff6a-47ac-88c4-90cf70f373db,Dynasol Web Design,,,,,,,,,Dynasol Web Design,original,1.0,{},Dynasol Web Design
+59e99455-cb51-4572-98f4-6453bd9f4c0b,Intercontinental Packaging,,,,,,,,,Intercontinental Packaging,original,1.0,{},Intercontinental Packaging
+59e9a203-5ea2-4471-a993-567c6525a5b4,Friction Coating Corporation,http://frictioncoating.com,,,,,,,,Friction Coating Corporation,original,1.0,{},Friction Coating Corporation
+59e9aab2-7015-4577-b6a4-4476cde9e35d,Hebb & Company,,,,,,,,,Hebb & Company,original,1.0,{},Hebb & Company
+59e9add8-817f-4009-9e29-828f09962078,Relevize,,,,,,,,,Relevize,original,1.0,{},Relevize
+59e9f2a2-ce43-4435-9c58-1f4a714e3975,"Flowlie Technologies, Inc","http://Flowlie Technologies, Inc.",Information Technology,"Developer of a data management and data infrastructure platform designed to allow the easy transfer of startup data between founders and investors. The company's platform offers a way to share and manage data, track deals, and accelerate venture fundraising with collaborative, inclusive, privacy-focused, accessible, transparent, secure, and trackable tools, enabling founders, VCs, angels, syndicators, family offices, and scouts, making venture capital process simple and collaborative.",,,,,"Flowlie Technologies, Inc.","Flowlie Technologies, Inc",web_search,0.8,"{'found': True, 'company_name': 'Flowlie Technologies, Inc', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Vlad Cazacu
+59ea01b7-6db8-4a57-a902-8bf9aa3299ba,Tycon Excavating Contractors,http://tyconexcavating.com,,,,,,,,Tycon Excavating Contractors,original,1.0,{},Tycon Excavating Contractors
+59ea0488-783f-42dc-a067-5e1fc1cca02b,Ron's Automotive & Collision,http://ronsautomotive.com,,,,,,,,Ron's Automotive & Collision,original,1.0,{},Ron's Automotive & Collision
+59ea24f1-1296-457d-86ae-f7f059b46a38,KS Group (Commercial Products),,,,,,,,,KS Group (Commercial Products),original,1.0,{},KS Group (Commercial Products)
+59ea6440-b4cc-4613-96fd-f15d9085b752,Estimate Rocket,,,,,,,,,Estimate Rocket,original,1.0,{},Estimate Rocket
+59ea8da7-2068-4167-a178-ea527de8a628,Proactive M+B,http://proactiverva.com,,,,,,,,Proactive M+B,original,1.0,{},Proactive M+B
+59ea8e55-0a7f-4661-9243-4db3d09bcfa2,Garage Innovations,,,,,,,,,Garage Innovations,original,1.0,{},Garage Innovations
+59ea9a2a-15aa-45d0-a326-5e963fc4583d,5 String Solutions,http://www.linkedin.com/company/5w-public-relations,,,,,,,,5 String Solutions,original,1.0,{},5 String Solutions
+59ea9d8e-2f92-49a8-8cf0-45ba2cc2a1f4,Pizzahomechef,,,,,,,,,Pizzahomechef,original,1.0,{},Pizzahomechef
+59eaa937-9461-4886-8ab7-0c817aa08ccf,Don Parker Sales,http://donparkersales.com,,,,,,,,Don Parker Sales,original,1.0,{},Don Parker Sales
+59eac32d-ecae-46c0-a365-7a57e3c14c9c,Dtselectric,http://dtselectric.com,,,,,,,,Dtselectric,web_search,0.8,"{'found': True, 'company_name': 'Dtselectric', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Dts Electric
+59ead15c-8c2b-45ea-966b-0991a303a1f7,Happy Healing,,,,,,,,,Happy Healing,original,1.0,{},Happy Healing
+59eadfc0-abfe-4d51-87e0-543e162d1df4,Digital River,,,,,,,,,Digital River,original,1.0,{},Digital River
+59eaf502-94bf-4f61-b983-e0e2229eb568,"S and P USA Ventilation Systems, Llc",,,,,,,,,"S and P USA Ventilation Systems, Llc",original,1.0,{},"S and P USA Ventilation Systems, Llc"
+59eb16cb-0f1a-4efa-b871-04cc326e672b,Sherrispykermaninteriors,,,,,,,,,Sherrispykermaninteriors,original,1.0,{},Sherrispykermaninteriors
+59eb191e-242a-4f0d-9487-66cbc8a48fbb,setld,,,,,,,,,setld,original,1.0,{},setld
+59eb5625-013c-4da2-8250-c623272452ff,National Council For Theraputic Recreation Certification,,,,,,,,,National Council For Theraputic Recreation Certification,original,1.0,{},National Council For Theraputic Recreation Certification
+59eb6ce0-76d9-42ef-aaa9-82df628bee4b,Sonoma Photonics,,,,,,,,,Sonoma Photonics,original,1.0,{},Sonoma Photonics
+59eb6d23-8aa4-409e-b26f-8cc7f6dad00c,Hilton Homewood Suites Manhattan,,,,,,,,,Hilton Homewood Suites Manhattan,original,1.0,{},Hilton Homewood Suites Manhattan
+59eb95c0-8314-48e8-b512-e270a4d1fa6e,Suntech Consulting and Roofing,,,,,,,,,Suntech Consulting and Roofing,original,1.0,{},Suntech Consulting and Roofing
+59ebe241-9392-4b59-b6a2-6b0af02bbc1f,Academic Approach,,,,,,,,,Academic Approach,original,1.0,{},Academic Approach
+59ebed69-07cd-4f2a-84d7-55916c5768b5,Prestige Restoration And Painting,,,,,,,,,Prestige Restoration And Painting,original,1.0,{},Prestige Restoration And Painting
+59ebee85-d925-4130-a6a0-dede00c24eac,Valutrust,http://www.valutrust.com,Other Financial Services,Acquired/Merged (Operating Subsidiary),,,,,valutrust.com,Valutrust,web_search,0.8,"{'found': True, 'company_name': 'Valutrust', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Lance Melber
+59ebf691-92bb-4e60-9257-1bf44605da1a,Peridot Technologies,,,,,,,,,Peridot Technologies,original,1.0,{},Peridot Technologies
+59ec0ee0-dbd3-4852-b25a-43b19e920858,Sterneck Capital,,,,,,,,,Sterneck Capital,original,1.0,{},Sterneck Capital
+59ec605d-4119-4158-9390-a7fc984451aa,"Flimp Media, Inc","http://Flimp Media, Inc.",Information Technology,"Developer of digital communication platform designed for employee benefits communications firms including content communications, benefits decision support, benefits guide, and workforce texting for mid-sized and enterprise employer clients. The company's platform offers cloud software communications services where one can quickly create, distribute and track engaging video and multimedia content, it helps users to quickly create, distribute and track engaging video and multimedia content, enabling large employers, human resource consultants, benefits brokers, en-rollers, insurance carriers, and health care providers to engage, educate and empower employees to make better benefits choices.",,,,,"Flimp Media, Inc.","Flimp Media, Inc",web_search,0.8,"{'found': True, 'company_name': 'Flimp Media, Inc', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Wayne Wall
+59ec6803-ea72-41ea-9305-b390dc1b68f3,Premier Victorian Homes,,,,,,,,,Premier Victorian Homes,original,1.0,{},Premier Victorian Homes
+59ec7049-ba61-4084-864d-05c05e1236d1,McDermid Transportation,,,,,,,,,McDermid Transportation,original,1.0,{},McDermid Transportation
+59ec705c-5e5b-4379-82c6-7c92a49122c4,Taskpartners,http://www.taskpartners.net,Logistics,Privately Held (no backing),,,,,taskpartners.net,Taskpartners,web_search,0.8,"{'found': True, 'company_name': 'Taskpartners', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Sudz Khawaja
+59ec927f-f479-4511-909d-78abf907852f,Burtonconstruction,http://burtonconstruction.com,,,,,,,,Burtonconstruction,web_search,0.8,"{'found': True, 'company_name': 'Burtonconstruction', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Burton Construction
+59eca593-f9cf-40bb-81b8-3e483fffcdba,Patriottowers,,,,,,,,,Patriottowers,original,1.0,{},Patriottowers
+59ecbccd-7a0b-4d70-ad8a-d8069dcf2565,J. and P. Investments,,,,,,,,,J. and P. Investments,original,1.0,{},J. and P. Investments
+59ecf5d0-6629-42e1-bf49-c2be52d96944,Primeau Law,,,,,,,,,Primeau Law,original,1.0,{},Primeau Law
+59ecfdc4-1922-4c48-8ffd-d19dab668420,Frank Webb Construction,,,,,,,,,Frank Webb Construction,original,1.0,{},Frank Webb Construction
+59ed01e0-ca16-41c3-93ef-4652c1e1d5bb,A and Y Asphalt Contractors,,,,,,,,,A and Y Asphalt Contractors,original,1.0,{},A and Y Asphalt Contractors
+59ed0b29-7350-46a2-bf7d-bed3a90cb341,Boulcott Hospital,,,,,,,,,Boulcott Hospital,original,1.0,{},Boulcott Hospital
+59ed29d4-0634-46b7-85ae-e9bad077d802,J. K. Wong,,,,,,,,,J. K. Wong,original,1.0,{},J. K. Wong
+59ed6609-e84c-4a4d-80b8-00ec9c494802,heritage real estate group,,,,,,,,,heritage real estate group,original,1.0,{},heritage real estate group
+59ed8bb6-8d8f-4bd6-bc42-0a838081845d,Aetna Bearing,,,,,,,,,Aetna Bearing,original,1.0,{},Aetna Bearing
+59ed9538-8d3e-416d-a44f-952b077fbb16,Signature Property Group,,,,,,,,,Signature Property Group,original,1.0,{},Signature Property Group
+59edabc1-913f-4495-a009-d5937eaef6d6,Lyons O'Keefe and LLC Hynes,,,,,,,,,Lyons O'Keefe and LLC Hynes,original,1.0,{},Lyons O'Keefe and LLC Hynes
+59edc60d-d160-42cd-b708-993f0ebb1a0c,Dynamic Solutions for the Aging,,,,,,,,,Dynamic Solutions for the Aging,original,1.0,{},Dynamic Solutions for the Aging
+59edcf3b-2495-439d-b55e-461dca147f2f,nexus construction inc,,,,,,,,,nexus construction inc,original,1.0,{},nexus construction inc
+59ee1130-230c-496f-82fc-3320ea09bffe,Spazio La,,,,,,,,,Spazio La,original,1.0,{},Spazio La
+59ee1927-5397-4c87-afd3-5819123016c8,Newmart Builders,,,,,,,,,Newmart Builders,original,1.0,{},Newmart Builders
+59ee2d13-64a7-4eea-aa47-5f41a0e11e3f,Sweet Water Pool & Spa,,,,,,,,,Sweet Water Pool & Spa,original,1.0,{},Sweet Water Pool & Spa
+59ee41a7-95e5-483c-b338-74a5fcf93b88,Phluid Media Company,,,,,,,,,Phluid Media Company,original,1.0,{},Phluid Media Company
+59ee4261-4057-422a-9d07-61fc72e335e5,Garrison Disposal,,,,,,,,,Garrison Disposal,original,1.0,{},Garrison Disposal
+59ee44d6-8898-4154-8c4d-6ccb072842a8,Manning Brothers Food Equipment,,,,,,,,,Manning Brothers Food Equipment,original,1.0,{},Manning Brothers Food Equipment
+59ee4973-b878-4c6d-900b-c260ce5a3f6c,"Southern Tier Assn., Div. Of Visually Impaired",,,,,,,,,"Southern Tier Assn., Div. Of Visually Impaired",original,1.0,{},"Southern Tier Assn., Div. Of Visually Impaired"
+59ee58fa-7b8a-4465-9a05-afec46f4560d,Samanthasprings,http://samanthasprings.com,,,,,,,,Samanthasprings,web_search,0.8,"{'found': True, 'company_name': 'Samanthasprings', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Samantha Springs
+59ee6541-ec4a-4cdc-b2af-52f7531624bf,"ARC Design & Consulting, LLC",,,,,,,,,"ARC Design & Consulting, LLC",extracted,0.9,{},"ARC Design & Consulting, LLC provides support and consulting services in the renewable energy market, with a focus on solar projects. Their offerings include drafting packages, site evaluation, interconnection application services, construction documents, plan review services, project inspections, and consulting. Their typical customers range from residential clients to 10-MW utility clients, and they position themselves as providing timely, efficient, and economical solutions for the renewable energy market, saving their clients time and money in moving projects forward through the development and permitting process"
+59ee8621-b928-48e0-9e74-823b281d5812,Sun Energy Solar,,,,,,,,,Sun Energy Solar,original,1.0,{},Sun Energy Solar
+59eeaa65-35c8-4cd1-9286-2b320617dec2,Go See The City,,,,,,,,,Go See The City,original,1.0,{},Go See The City
+59eeade0-2f84-4f3b-b7cf-bb1fc39e770e,Restoration Specialty Services,,,,,,,,,Restoration Specialty Services,original,1.0,{},Restoration Specialty Services
+59eeae02-8a8a-4d3a-a00e-2c6a07d675b3,Ampel Inc.,,,,,,,,,Ampel Inc.,extracted,0.9,{},"Ampel Inc. is a full-service PCB (printed circuit board) manufacturer, offering leading edge printed circuit board technology and innovative, profitable value-added services. Their typical customers include electronic manufacturing companies in Chicago and nationwide, who require rapid prototyping services and production deliveries of all types of printed circuit boards, from single side to multi-layer up to 16 layers. Ampel Inc. differentiates themselves by providing a commitment to quality, reliable service, and customer satisfaction, as well as by continuously investing in capital equipment and facility improvements to achieve exceptional product delivery"
+59eeb331-7e89-42eb-9644-042222a5bc4b,FPM Tooling & Automation,,,,,,,,,FPM Tooling & Automation,original,1.0,{},FPM Tooling & Automation
+59eeb34b-631d-412e-8ec0-a4d6ed63d15a,Pixelz,,,,,,,,,Pixelz,original,1.0,{},Pixelz
+59eec944-8436-4903-a544-db3c66c60c8f,Method360,,,,,,,,,Method360,original,1.0,{},Method360
+59eed8c8-45f2-43f7-8855-a8f3854380a8,Mediation & Diversion Services,,,,,,,,,Mediation & Diversion Services,original,1.0,{},Mediation & Diversion Services
+59eee4ca-2a37-4605-9c98-906540ce2e4a,Sullivangroupre,,,,,,,,,Sullivangroupre,original,1.0,{},Sullivangroupre
+59ef0692-c81c-4f6c-9cd0-a2cad697c00d,Hertz Supply Company,,,,,,,,,Hertz Supply Company,original,1.0,{},Hertz Supply Company
+59ef2a33-f823-4c85-bcfd-5d7a45720e42,Nbcunicareers,,,,,,,,,Nbcunicareers,original,1.0,{},Nbcunicareers
+59ef34dd-4b4f-4333-9bf3-b56d26c87b4c,Rockymountaintwist,,,,,,,,,Rockymountaintwist,original,1.0,{},Rockymountaintwist
+59ef3b55-abe6-4b91-9ea6-9f31293008fe,"Iprint Technologies, Inc","http://iPrint Technologies, Inc.",Information Technology,"Provider of printing supplies and services based in Larkspur, California. The company provides printers, inks and toners, technology products, office supplies and managed print solutions and also provides print management and printer maintenance services.",,,,,"iPrint Technologies, Inc.","Iprint Technologies, Inc",web_search,0.8,"{'found': True, 'company_name': 'Iprint Technologies, Inc', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Chad Solter
+59ef48f1-ad84-422e-a134-cf6be8542df8,Exhibit Design & Management,,,,,,,,,Exhibit Design & Management,original,1.0,{},Exhibit Design & Management
+59ef50d6-2bdb-40c3-808f-31f10041f6f3,Novoplm Inc,http://NovoPLM Inc,Information Technology,"The company primarily operates in the Software industry. NovoPLM was founded in 2015 and is headquartered in Frisco, TX.",,,,,NovoPLM Inc,Novoplm Inc,web_search,0.8,"{'found': True, 'company_name': 'Novoplm Inc', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Vern Heyer
+59ef5390-fbf9-40ee-ad3f-941de30b683c,Franco Builders,,,,,,,,,Franco Builders,original,1.0,{},Franco Builders
+59ef737d-3cd8-4d31-be51-0d66ae9c99b7,Riverside Health Advisors,,,,,,,,,Riverside Health Advisors,original,1.0,{},Riverside Health Advisors
+59ef88e8-4739-448c-8d7c-520906f11f4e,Startup Virginia,,,,,,,,,Startup Virginia,original,1.0,{},Startup Virginia
+59ef8991-09c1-4240-b131-56b82399bc88,Studio Lilica,,,,,,,,,Studio Lilica,original,1.0,{},Studio Lilica
+59ef94b0-927d-40e5-b96a-425e4beb179a,BoliOptics,,,,,,,,,BoliOptics,original,1.0,{},BoliOptics
+59ef96e0-9fd3-4816-90a9-e442206b323f,shelf studio,,,,,,,,,shelf studio,original,1.0,{},shelf studio
+59ef9989-d092-411a-a8c8-33bf7b6ff549,Skeeter Enterprises,,,,,,,,,Skeeter Enterprises,original,1.0,{},Skeeter Enterprises
+59efb1d6-bcef-48c7-8e56-9e907cf7a0cf,Apoyo Integral Inversiones,,,,,,,,,Apoyo Integral Inversiones,original,1.0,{},Apoyo Integral Inversiones
+59efb41c-dd68-43ca-94fd-4ce7190cc8aa,Heights Printing,,,,,,,,,Heights Printing,original,1.0,{},Heights Printing
+59efed7e-d5a6-4636-ba44-888e5fa8ee77,Paragon Sight & Sound,,,,,,,,,Paragon Sight & Sound,original,1.0,{},Paragon Sight & Sound
+59effef9-fb88-4c3b-8b80-f744fffc1a86,Francis Creek Fire Department,,,,,,,,,Francis Creek Fire Department,original,1.0,{},Francis Creek Fire Department
+59f002a5-433d-48e9-ac9b-33853f34b4fd,Ron Allen's Construction,,,,,,,,,Ron Allen's Construction,original,1.0,{},Ron Allen's Construction
+59f0345c-69b2-4537-8ca2-42c8d2b3adee,Sentry Steel Service,,,,,,,,,Sentry Steel Service,original,1.0,{},Sentry Steel Service
+59f05aee-460a-489e-9fd8-f7229fc1af2d,Rayco Electric Inc,,,,,,,,,Rayco Electric Inc,extracted,0.9,{},"Rayco Electric Inc provides quality electrical installations, repairs, and maintenance services to residential and commercial customers in the west coast of Florida. Their typical customers include homeowners, businesses, and construction companies in Manatee and surrounding areas. They differentiate themselves by offering a comprehensive range of electrical services, emphasizing experience, knowledge, attention to safety, and detail in their work, and positioning themselves as the professionals that can get the job done right and under budget"
+59f05d11-507d-46ef-860e-361f3ef89e98,Richard D. Kimball Co,,,,,,,,,Richard D. Kimball Co,original,1.0,{},Richard D. Kimball Co
+59f092cf-8302-4279-96b2-57f420c24976,Kermit Vol Fire Dept,,,,,,,,,Kermit Vol Fire Dept,original,1.0,{},Kermit Vol Fire Dept
+59f09f1e-0aaf-4689-988a-f8e4cadd26a5,Dunstanwines,,,,,,,,,Dunstanwines,original,1.0,{},Dunstanwines
+59f0befb-24aa-423a-a0ae-10ab978ff38c,Great Walton Railroad Co,,,,,,,,,Great Walton Railroad Co,original,1.0,{},Great Walton Railroad Co
+59f0db7f-9e47-4c89-9b91-7057c6d48028,Excalibur Extrusions,,,,,,,,,Excalibur Extrusions,original,1.0,{},Excalibur Extrusions
+59f0e0a8-8c17-40ce-aeb5-b2f419f5710b,"Morcom, N.V",,,,,,,,,"Morcom, N.V",original,1.0,{},"Morcom, N.V"
+59f0e81d-9187-425e-8f0a-360307b97760,Frontier Swings,,,,,,,,,Frontier Swings,original,1.0,{},Frontier Swings
+59f0efc2-a4fa-42e1-bcf2-ef6e8557c6d6,Ground Zero Pharmaceuticals (GZP),,,,,,,,,Ground Zero Pharmaceuticals (GZP),extracted,0.9,{},"Ground Zero Pharmaceuticals (GZP) specializes in providing integrated consultation in regulatory affairs, toxicology, pharmacology, clinical development, biostatistics, CMC, medical writing, electronic submissions, and project management for pharmaceutical, biologic, medical device, and combination product programs. Their typical customers include pharmaceutical, biotech, and medical device companies seeking strategic and tactical guidance in navigating the FDA regulatory process. GZP positions itself as a company that offers tailored, practical advice to clients in product development, marketing approvals, and postmarketing activities, with a focus on maximizing efficiency in therapeutic development and reducing duplicative work"
+59f0f764-6b6a-42d1-b2b5-3939d11cbac9,Federal Corporation,,,,,,,,,Federal Corporation,original,1.0,{},Federal Corporation
+59f1005e-4b90-475b-b641-e3009e4267fa,leadership center east,,,,,,,,,leadership center east,original,1.0,{},leadership center east
+59f113cd-c4a4-4a12-853f-ebca17eb3f56,Peppercorn.ai,,,,,,,,,Peppercorn.ai,original,1.0,{},Peppercorn.ai
+59f11e12-42fc-4217-99a7-78d375e90b97,Menlo Park Dental Excellence,,,,,,,,,Menlo Park Dental Excellence,original,1.0,{},Menlo Park Dental Excellence
+59f12412-19bc-4692-a5fa-fa76e9b0f7ec,Industrial Manufacturing Inc.,,,,,,,,,Industrial Manufacturing Inc.,extracted,0.9,{},"Industrial Manufacturing Inc. specializes in providing industrial and engineering quality solutions, including machining fabricated parts, manufacturing capabilities, and engineering and design services. Their typical customers are businesses in the industrial sector, including those in the food and beverage, wood, pulp & paper, and general industrial industries. Industrial Manufacturing Inc. differentiates themselves by offering full, vertically integrated services dedicated to keeping installed equipment running efficiently, with a focus on quality first and service always"
+59f15da7-1cea-4bba-993a-f179071d853c,Faceless Marketing - Your Full Service Marketing Firm,,,,,,,,,Faceless Marketing - Your Full Service Marketing Firm,original,1.0,{},Faceless Marketing - Your Full Service Marketing Firm
+59f16cc6-e751-47f8-ab37-4cddbf6c6d1b,Floyd Wild,,,,,,,,,Floyd Wild,original,1.0,{},Floyd Wild
+59f17764-3996-48bb-bb3d-d58a0b6166df,Freebairn,,,,,,,,,Freebairn,original,1.0,{},Freebairn
+59f18c65-e9ef-4c31-8583-3bdc7df8ce11,Time for Wax,,,,,,,,,Time for Wax,original,1.0,{},Time for Wax
+59f198c5-64b7-4ba6-8d73-f451b440adb1,REsimplifi,,,,,,,,,REsimplifi,original,1.0,{},REsimplifi
+59f19b37-0d20-4b72-af9c-184e9ea467a8,Pladoogle,,,,,,,,,Pladoogle,original,1.0,{},Pladoogle
+59f1c5c7-c55e-4efc-a841-a8283d9a5c8c,Absolute Mail Logistics,,,,,,,,,Absolute Mail Logistics,original,1.0,{},Absolute Mail Logistics
+59f1dae5-2ff1-44d3-ad9b-ff3c2c7f25b2,Real Time Janitorial,,,,,,,,,Real Time Janitorial,original,1.0,{},Real Time Janitorial
+59f1e06c-411c-42aa-b9b8-3c3ba4118054,Pmfmetal,,,,,,,,,Pmfmetal,original,1.0,{},Pmfmetal
+59f1e178-941e-4fe7-8e6b-7192079db2ca,Fukuda Us,,,,,,,,,Fukuda Us,original,1.0,{},Fukuda Us
+59f1ed2b-8a5c-496d-bde2-3b495e7160d2,Northwest Alabama Regional Airport Authority,,,,,,,,,Northwest Alabama Regional Airport Authority,original,1.0,{},Northwest Alabama Regional Airport Authority
+59f213a6-70ee-49b8-8ed8-7cd93b5f439b,Sun Control Specialists,,,,,,,,,Sun Control Specialists,original,1.0,{},Sun Control Specialists
+59f214fe-8a1a-427e-9316-7615b315489c,A-van Electrical Supply,,,,,,,,,A-van Electrical Supply,original,1.0,{},A-van Electrical Supply
+59f217e3-572f-4d35-b95f-7507c5773492,Midwest Truck & Auto Parts,,,,,,,,,Midwest Truck & Auto Parts,original,1.0,{},Midwest Truck & Auto Parts
+59f234fb-bf0c-4f66-8b44-2a7e09259116,Interaction Research Corp,,,,,,,,,Interaction Research Corp,original,1.0,{},Interaction Research Corp
+59f2426d-371f-4df2-a14c-59e65c91cbed,Northwood Office,,,,,,,,,Northwood Office,original,1.0,{},Northwood Office
+59f25d12-3b8f-47ad-abe7-9c674fbe133c,Platsky Company,,,,,,,,,Platsky Company,original,1.0,{},Platsky Company
+59f2619b-06dd-4d27-886c-8cd0f5df4ace,Springboard Social Enterprises,,,,,,,,,Springboard Social Enterprises,original,1.0,{},Springboard Social Enterprises
+59f27d74-9d48-43d0-bd9c-525d219960d3,Riverside Screw Machine Products,,,,,,,,,Riverside Screw Machine Products,original,1.0,{},Riverside Screw Machine Products
+59f287d5-0e61-4a99-85f6-82fb3656822e,Steves Equipment,,,,,,,,,Steves Equipment,original,1.0,{},Steves Equipment
+59f28f1b-ecdb-496a-a985-72764c2be865,Hills Pension Associates,,,,,,,,,Hills Pension Associates,original,1.0,{},Hills Pension Associates
+59f2c620-c5bd-48b1-b68d-d6d664af5b2c,Linster Mahx F,,,,,,,,,Linster Mahx F,original,1.0,{},Linster Mahx F
+59f2c8ee-dc44-465a-aee6-c061fe37de31,"Law Office Of Christopher G Walter, Pc",,,,,,,,,"Law Office Of Christopher G Walter, Pc",original,1.0,{},"Law Office Of Christopher G Walter, Pc"
+59f2cf60-6118-4145-8b65-64f495cd6bea,Images Galore Signs,,,,,,,,,Images Galore Signs,original,1.0,{},Images Galore Signs
+59f2d74f-de31-4fce-bee0-0f8496434cf7,Kristymastrandonas,,,,,,,,,Kristymastrandonas,original,1.0,{},Kristymastrandonas
+59f2dd4b-b0f4-4af1-b1f0-7b1e4756efaf,"Bycap, Inc.",,,,,,,,,"Bycap, Inc.",extracted,0.9,{},"Bycap, Inc. is a manufacturer of custom designed high voltage capacitors, specializing in oil-filled capacitors. Their typical customers include those in industrial, government, and research sectors who have specific needs for high quality, high voltage capacitors. Bycap, Inc. differentiates itself by offering custom designed and manufactured capacitors to meet their customers' specific needs, as well as providing standard lines for general use applications. They position themselves as a company with over 51 years of experience, focusing on achieving the highest level of customer satisfaction while offering quality products at competitive prices"
+59f30317-aac0-4845-b62c-bff3ce8514fc,Heritage Die Casting Company,,,,,,,,,Heritage Die Casting Company,original,1.0,{},Heritage Die Casting Company
+59f304da-bed7-41e8-bb89-5b3074fa37a9,Fast Feldman,,,,,,,,,Fast Feldman,original,1.0,{},Fast Feldman
+59f3066f-9ad5-4f81-bb1d-a66da7012707,RF Microwave Specialties,,,,,,,,,RF Microwave Specialties,original,1.0,{},RF Microwave Specialties
+59f34ec9-2325-49ee-8ba7-d3faec344cde,Flywheel Group,,,,,,,,,Flywheel Group,original,1.0,{},Flywheel Group
+59f358b5-0c0e-4377-9619-f488996027a0,Reliant Sourcing Solutions,,,,,,,,,Reliant Sourcing Solutions,original,1.0,{},Reliant Sourcing Solutions
+59f35d85-9f0b-44d8-aba2-c9ef05c5d3ff,Schmid and Son Packaging,,,,,,,,,Schmid and Son Packaging,original,1.0,{},Schmid and Son Packaging
+59f37c99-9e6f-41f4-bc59-e5d410987f31,Northport Flooring America,,,,,,,,,Northport Flooring America,extracted,0.9,{},"Northport Flooring America is a locally owned and operated store that specializes in providing a wide range of flooring products and services. Their offerings include carpet, hardwood, laminate, luxury vinyl, and tile flooring, along with additional products such as countertop fabrication, custom area rugs, and interior design services. The company positions itself as a local expert in flooring sales and design, emphasizing personalized service, expert measurement, worry-free professional installation, and industry-leading warranties. Their typical customers are homeowners and businesses in Akron, Ohio, and the surrounding communities looking for high-quality flooring solutions and personalized service from a locally owned and operated store"
+59f38456-2e0f-424a-9fc2-b0a2219d02ad,"Global Green Solutions, LLC",,,,,,,,,"Global Green Solutions, LLC",extracted,0.9,{},"Global Green Solutions, LLC provides renewable energy products and modular construction solutions. Their typical customers include individuals and organizations seeking sustainable living resources and socially responsible manufactured products and services. They position themselves as integrators of green and renewable energy products, aiming to empower people with technology and training to create self-sufficiency and improve quality of life"
+59f38c87-28ea-45e9-a6ce-31ff372d05f6,KryoTech,,,,,,,,,KryoTech,original,1.0,{},KryoTech
+59f3a6ce-b3ec-45b2-a65b-ded1bc626301,Hansen Ip Law,,,,,,,,,Hansen Ip Law,original,1.0,{},Hansen Ip Law
+59f3a82f-01de-424e-8bf3-19e6a75a4469,global bookkeeping & tax,,,,,,,,,global bookkeeping & tax,original,1.0,{},global bookkeeping & tax
+59f3a8be-bd82-4fe5-8a83-4bedc97730be,Inphysics,,,,,,,,,Inphysics,original,1.0,{},Inphysics
+59f3b271-f914-4ffb-9d49-66114f366597,Intelligente Peripherien fur Robotor,,,,,,,,,Intelligente Peripherien fur Robotor,original,1.0,{},Intelligente Peripherien fur Robotor
+59f3cb71-58bc-4a4b-8354-373d9da70f24,Teamrealtalk,http://www.teamrealtalk.com,Education and Training Services (B2B),Privately Held (backing),,,,,teamrealtalk.com,Teamrealtalk,web_search,0.8,"{'found': True, 'company_name': 'Teamrealtalk', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Malkijah Griffiths
+59f3cfda-0ca7-4b13-aa84-80ee841ed88e,R. Lee Pennington,,,,,,,,,R. Lee Pennington,original,1.0,{},R. Lee Pennington
+59f3d327-0655-49e7-9c63-6415331b41a0,International Love Scout,,,,,,,,,International Love Scout,original,1.0,{},International Love Scout
+59f3d862-df54-4151-b72e-750d8601abbb,Lake City Industries,,,,,,,,,Lake City Industries,extracted,0.9,{},"Lake City Industries is a family-owned and operated building materials supply company that offers a wide range of lumber and building products to suit the needs of both professional contractors and do-it-yourselfers. Their offerings include lumber, plywood, drywall, roofing shingles, metal, brick, fireplaces, windows, doors, insulation, moulding, pneumatic and power tools/fasteners, and repair services. They position themselves as a one-stop shop for all building material needs, with a focus on personalized customer service and a commitment to serving the local community"
+59f3eeba-ba26-4496-a1d8-8627e87bf6b1,GPC Bio USA,,,,,,,,,GPC Bio USA,original,1.0,{},GPC Bio USA
+59f3f93f-1cd3-4d0e-9da3-59b7cbc39f39,Ozaukee County Transit Services,,,,,,,,,Ozaukee County Transit Services,original,1.0,{},Ozaukee County Transit Services
+59f3fb25-76d9-4128-8249-41fa96a05092,Ragsdale Home Furnishings,,,,,,,,,Ragsdale Home Furnishings,original,1.0,{},Ragsdale Home Furnishings
+59f40c5e-9cb9-46ee-b023-3edeb13b6a1d,EMC Creative,,,,,,,,,EMC Creative,original,1.0,{},EMC Creative
+59f4206d-650c-485c-aa86-ac835060c93b,E. F. Bavis and Associates,,,,,,,,,E. F. Bavis and Associates,original,1.0,{},E. F. Bavis and Associates
+59f44dd9-e778-4e20-a569-8f3c112a39f7,275 West Merrick,http://2ndcents.com/,,,,,,,,275 West Merrick,original,1.0,{},275 West Merrick
+59f4538f-5618-4981-a590-f1de10ab6214,Ies Electric Inc,http://ieselectricinc.com,,,,,,,,Ies Electric Inc,original,1.0,{},Ies Electric Inc
+59f45d11-20e6-4955-85eb-374e6d491678,"Mitchell Graphics, Inc.",,,,,,,,,"Mitchell Graphics, Inc.",extracted,0.9,{},"Mitchell Graphics, Inc. offers a wide range of products and services including design, print, direct mail, and online expertise. They cater to customers in various industries including non-profits, colleges and universities, political organizations, manufacturing companies, and the tourism sector. Mitchell Graphics differentiates themselves by offering tailor-made solutions that enhance their clients' brands, as opposed to the ""one-size-fits-all"" approach. They also emphasize their commitment to superior customer service, expert advice, and a fun and enjoyable experience when working with them"
+59f46e51-0e73-4882-9915-dca88262ea30,RealMailers,,,,,,,,,RealMailers,original,1.0,{},RealMailers
+59f46e75-3bf9-42d1-8260-925b0f199fd1,Exelon (Arizona solar energy assets),,,,,,,,,Exelon (Arizona solar energy assets),original,1.0,{},Exelon (Arizona solar energy assets)
+59f46eae-c450-43fb-8a82-cb36fba48a20,LinkEdge Technologies,,,,,,,,,LinkEdge Technologies,original,1.0,{},LinkEdge Technologies
+59f47286-d79e-420c-b3c8-7a4b9cde0c6a,Gergs Construction,,,,,,,,,Gergs Construction,original,1.0,{},Gergs Construction
+59f480c9-a72c-42c1-9a60-c090b342575e,"Foster, Carpenter, Black and Co",,,,,,,,,"Foster, Carpenter, Black and Co",original,1.0,{},"Foster, Carpenter, Black and Co"
+59f4b520-5fa1-44d6-befa-89e3cf82b79e,Structus,,,,,,,,,Structus,original,1.0,{},Structus
+59f4cd11-dddc-4125-94f7-8f52e9fc3bcb,Vogt Concrete Construction,http://vogtconcrete.com,,,,,,,,Vogt Concrete Construction,original,1.0,{},Vogt Concrete Construction
+59f4e0a1-f5a3-4b5a-876e-db9543c15bb3,Hypergraphics Studio,,,,,,,,,Hypergraphics Studio,original,1.0,{},Hypergraphics Studio
+59f4ef38-6ccd-4db8-b468-e1b301ac2ff5,Accel-Rf Instruments Corporation,,,,,,,,,Accel-Rf Instruments Corporation,original,1.0,{},Accel-Rf Instruments Corporation
+59f4f127-1e1e-4ab3-beb5-afd6b452580a,Napp-Grecco,,,,,,,,,Napp-Grecco,original,1.0,{},Napp-Grecco
+59f53dca-10ad-412d-ab5b-70d1faf810d8,Elul Technologies,,,,,,,,,Elul Technologies,original,1.0,{},Elul Technologies
+59f55c38-63e3-465e-8924-d36c59544f06,Empowering Learning,,,,,,,,,Empowering Learning,original,1.0,{},Empowering Learning
+59f563a4-a484-48a8-a6ba-2a26a3d1a001,3r Building Sustainability,,,,,,,,,3r Building Sustainability,original,1.0,{},3r Building Sustainability
+59f56ad6-1343-49b2-b0ed-71adefa974b4,Moore Law Group A,,,,,,,,,Moore Law Group A,original,1.0,{},Moore Law Group A
+59f56b92-2a01-415c-8e9c-a472dd8321a6,Mills Construction Co,,,,,,,,,Mills Construction Co,original,1.0,{},Mills Construction Co
+59f57c28-2e38-4b58-a242-9bb521cacc38,Leykam Buchverlagsgesellschaft,,,,,,,,,Leykam Buchverlagsgesellschaft,original,1.0,{},Leykam Buchverlagsgesellschaft
+59f5826d-435a-45cd-bbc0-df2c3e61e708,Presidion Corporation,,,,,,,,,Presidion Corporation,original,1.0,{},Presidion Corporation
+59f59baf-3b62-488d-8c77-63e0a57de103,Coach Meyer's Buckeye Football Spring Kick-off,,,,,,,,,Coach Meyer's Buckeye Football Spring Kick-off,original,1.0,{},Coach Meyer's Buckeye Football Spring Kick-off
+59f5a03e-09af-48bb-8ba3-3e2bddd3dbf3,Nortex Construction,,,,,,,,,Nortex Construction,original,1.0,{},Nortex Construction
+59f5b007-6760-43ca-b886-d65979ce051e,Powerplant Maintenance Specialists,,,,,,,,,Powerplant Maintenance Specialists,original,1.0,{},Powerplant Maintenance Specialists
+59f5c61d-1519-4d8e-bd9d-8e0ec18d256e,Mei Lei,,,,,,,,,Mei Lei,original,1.0,{},Mei Lei
+59f5d047-82ad-46bb-82f1-77b083e49d65,Llamawerx,,,,,,,,,Llamawerx,original,1.0,{},Llamawerx
+59f607c7-5881-4a87-96a4-44ced4889e3c,Southern Pine Timber Products,,,,,,,,,Southern Pine Timber Products,original,1.0,{},Southern Pine Timber Products
+59f6081e-530b-461a-b940-87ff0d5656d0,Kl Energy,,,,,,,,,Kl Energy,original,1.0,{},Kl Energy
+59f61bfa-d476-4bf5-b216-f89e30349237,Ready Mixed Concrete,,,,,,,,,Ready Mixed Concrete,original,1.0,{},Ready Mixed Concrete
+59f6375d-fa1e-4383-991d-5bdcee4c9e6b,Excel Carpet and Janitorial Service,,,,,,,,,Excel Carpet and Janitorial Service,original,1.0,{},Excel Carpet and Janitorial Service
+59f64c38-f909-41a8-aa31-b59076785a4a,Terrance Electric and Technology Co.,,,,,,,,,Terrance Electric and Technology Co.,extracted,0.9,{},"Terrance Electric and Technology Co. specializes in providing construction and maintenance services, with a focus on electrical power, lighting, communication, and technology systems. Their typical customers include corporate and institutional clients, developers, construction managers, and healthcare partners. They differentiate themselves by offering unmatched expertise in electrical, energy, and technology solutions, as well as a commitment to providing the highest standards of excellence, on time and on budget"
+59f657fc-e165-44fa-985c-845b7710d24c,RE/MAX Elite Mission,,,,,,,,,RE/MAX Elite Mission,extracted,0.9,{},"RE/MAX Elite Mission is a real estate company that helps clients buy and sell homes in the South Texas market, particularly in the Rio Grande Valley. Their typical customers are individuals and families looking to purchase or sell residential properties in this area. They position themselves as a unique and experienced office with agents who have answers to all real estate-related questions. They emphasize the growth and economic development in the South Texas market, as well as the region's slow-paced lifestyle with big city conveniences"
+59f67968-a302-42d1-8154-42a34d51eecc,McDonalds' Design & Build,,,,,,,,,McDonalds' Design & Build,original,1.0,{},McDonalds' Design & Build
+59f689de-c91e-48ea-9581-cae2ff1518a0,Redollar,,,,,,,,,Redollar,original,1.0,{},Redollar
+59f68ed6-b3c8-418b-ae66-f7178ff5fe97,Kandiyohi County Family Services,,,,,,,,,Kandiyohi County Family Services,original,1.0,{},Kandiyohi County Family Services
+59f68fd0-320d-4d02-82c7-91776e111225,Essexconcrete,http://essexconcrete.com,,,,,,,,Essexconcrete,web_search,0.8,"{'found': True, 'company_name': 'Essexconcrete', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Essex Concrete
+59f693cb-e94d-4ae2-a147-f833512ad22a,Penn Home Medical Supply Company,,,,,,,,,Penn Home Medical Supply Company,original,1.0,{},Penn Home Medical Supply Company
+59f69565-1d06-40f5-ae32-338bfc82b75d,Tensleyconsulting,http://www.tensleyconsulting.com,Other Commercial Services,Privately Held (no backing),,,,,tensleyconsulting.com,Tensleyconsulting,web_search,0.8,"{'found': True, 'company_name': 'Tensleyconsulting', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Michael Hantke
+59f6989e-9418-4fa9-b8a3-4783801b124b,ROVA,,,,,,,,,ROVA,original,1.0,{},ROVA
+59f6c16a-d0a6-4bde-965b-b902ff83156a,Rithm Solutions Group,,,,,,,,,Rithm Solutions Group,original,1.0,{},Rithm Solutions Group
+59f6cc7d-a3bf-425e-9e8e-f574c7fc670a,Pixlee TurnTo,,,,,,,,,Pixlee TurnTo,original,1.0,{},Pixlee TurnTo
+59f6ce7e-9155-487e-b52a-9cc0020dcfff,Orlandorelocationexpert,,,,,,,,,Orlandorelocationexpert,original,1.0,{},Orlandorelocationexpert
+59f6dca9-49b3-4e91-aa76-c67a60576a3c,"Jenny L. Womack, P.c. - Attorney & Mediator",,,,,,,,,"Jenny L. Womack, P.c. - Attorney & Mediator",original,1.0,{},"Jenny L. Womack, P.c. - Attorney & Mediator"
+59f6f955-5455-4dfa-b7f1-0f242f3856ac,Kino Technologies,http://www.kino-technologies.com/,Information Technology,"Operator of a mobile technology intended to build the future of mobile TV. The company's technology is a storytelling medium that is designed to be watched and talked about on phones, enabling storytellers to create, distribute, and monetize mobile TV shows.",,,,,,Kino Technologies,web_search,0.8,"{'found': True, 'company_name': 'Kino Technologies', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Henry Soong
+59f7109c-151e-462e-8b4e-5dcc14777a6e,"Michael D. Horn, Esq., Attorney at Law",,,,,,,,,"Michael D. Horn, Esq., Attorney at Law",original,1.0,{},"Michael D. Horn, Esq., Attorney at Law"
+59f7524f-a13b-406a-a0ab-89af4c937fe5,Michaelscleaners,,,,,,,,,Michaelscleaners,original,1.0,{},Michaelscleaners
+59f759bc-80e1-49fc-a676-7c87a961f93f,Capragroup,http://capragroup.com,,,,,,,,Capragroup,web_search,0.8,"{'found': True, 'company_name': 'Capragroup', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Capra Group
+59f760b1-1e37-4603-8331-ccd8073ca057,PSI Personnel,,,,,,,,,PSI Personnel,original,1.0,{},PSI Personnel
+59f79049-7d92-494d-8bcb-c8e22be9f681,Point Source (Electrical Equipment),,,,,,,,,Point Source (Electrical Equipment),original,1.0,{},Point Source (Electrical Equipment)
+59f7b4b7-2bbe-4607-9743-ebfa28f29724,Quickcomm,,,,,,,,,Quickcomm,original,1.0,{},Quickcomm
+59f7bc25-158a-4fde-b2ba-e8f16c79b45c,Spradling Construction,,,,,,,,,Spradling Construction,original,1.0,{},Spradling Construction
+59f7c94e-6ef3-4dc1-b5ff-5869d6e2f3d4,"Strong Tempering Glass Industry, LLC",,,,,,,,,"Strong Tempering Glass Industry, LLC",original,1.0,{},"Strong Tempering Glass Industry, LLC"
+59f7f9cb-5862-4009-b64b-a5782168160d,Lubrexx Specialty Products,,,,,,,,,Lubrexx Specialty Products,original,1.0,{},Lubrexx Specialty Products
+59f82431-04f0-4d90-83f3-dd2c39acc5b0,Blakeautomotive,http://blakeautomotive.com,,,,,,,,Blakeautomotive,web_search,0.8,"{'found': True, 'company_name': 'Blakeautomotive', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Blake Automotive
+59f82ef9-95b8-4aa7-be6e-a363818103bd,"Roberts Automatic Products, Inc",http://robertsautomatic.com,,,,,,,,"Roberts Automatic Products, Inc",original,1.0,{},"Roberts Automatic Products, Inc"
+59f85b0e-c9a3-49a3-8c87-157d91161416,Klein Plating Works,,,,,,,,,Klein Plating Works,original,1.0,{},Klein Plating Works
+59f87166-ee71-4811-ad5d-ba9b610efcf9,Joint Venture (AustriaEnergy / Ökowind / Copenhagen Infrastructure Partners),,,,,,,,,Joint Venture (AustriaEnergy / Ökowind / Copenhagen Infrastructure Partners),original,1.0,{},Joint Venture (AustriaEnergy / Ökowind / Copenhagen Infrastructure Partners)
+59f8835c-862e-486a-aba0-3539b7475724,Legal Aid Society of San Mateo County,,,,,,,,,Legal Aid Society of San Mateo County,original,1.0,{},Legal Aid Society of San Mateo County
+59f8a52d-ebbc-4eaf-96c8-846da92e9dbb,Firstech Network Services Group,,,,,,,,,Firstech Network Services Group,original,1.0,{},Firstech Network Services Group
+59f8c2f7-306c-47d8-82be-92b3b9565740,Konik,,,,,,,,,Konik,original,1.0,{},Konik
+59f8c897-9b32-42ca-8ee4-438b272ca043,Proworx,,,,,,,,,Proworx,original,1.0,{},Proworx
+59f8cea2-71b6-41c5-9d28-0bd458328a5f,Greenstreetpa,,,,,,,,,Greenstreetpa,original,1.0,{},Greenstreetpa
+59f8de55-58ce-4d72-b1d5-77f22623c74b,Abba Roll Forming,,,,,,,,,Abba Roll Forming,original,1.0,{},Abba Roll Forming
+59f931a7-90d9-402c-90bb-24ea0a9ea19d,Magmotor Technologies,,,,,,,,,Magmotor Technologies,original,1.0,{},Magmotor Technologies
+59f95655-5062-4b38-8c90-4dec249589af,Broadwing Bio,,,,,,,,,Broadwing Bio,original,1.0,{},Broadwing Bio
+59f963f6-e34b-4078-9110-b28cec23e9c7,servicemaster crs,,,,,,,,,servicemaster crs,original,1.0,{},servicemaster crs
+59f96ec2-277c-4c66-8c42-a0001373bd34,patient care association of california,,,,,,,,,patient care association of california,original,1.0,{},patient care association of california
+59f97ef3-a9fc-4b11-bbe5-ef273220f354,International Carbonic,,,,,,,,,International Carbonic,original,1.0,{},International Carbonic
+59f9aaf0-e2e3-4bdb-896c-6723de2ec4d3,McCaleb Tool Supply,,,,,,,,,McCaleb Tool Supply,original,1.0,{},McCaleb Tool Supply
+59f9b6fc-a5c8-4416-ba73-050f7fcc2a97,Rodyn Vibration,,,,,,,,,Rodyn Vibration,original,1.0,{},Rodyn Vibration
+59f9c832-0096-461d-8f1f-5358c4608ab2,Pontus Group,,,,,,,,,Pontus Group,original,1.0,{},Pontus Group
+59f9da7f-b405-4513-ac21-149d8af3482b,Sr Carpet Care,,,,,,,,,Sr Carpet Care,original,1.0,{},Sr Carpet Care
+59f9e9d0-3941-4023-a1e2-617f523afbce,Fram Renewable Fuels,,,,,,,,,Fram Renewable Fuels,original,1.0,{},Fram Renewable Fuels
+59fa00f6-f220-4d5d-b23f-28ea3ae5ebf2,Fredric C Divine Associates,,,,,,,,,Fredric C Divine Associates,original,1.0,{},Fredric C Divine Associates
+59fa0a4e-df86-48e1-b833-3e8a68f0fa2f,Roadrunner Moving,,,,,,,,,Roadrunner Moving,original,1.0,{},Roadrunner Moving
+59fa35ea-7e84-4185-818f-6c67710a898c,Valley Public Service Authority,http://valleypublic.org,,,,,,,,Valley Public Service Authority,original,1.0,{},Valley Public Service Authority
+59fa3987-33d8-4bc2-815f-c49597b3ab1c,Precision Mirror & Glass,,,,,,,,,Precision Mirror & Glass,original,1.0,{},Precision Mirror & Glass
+59fa39b4-79bc-402c-b05a-d1d45cddc8e7,D & D Machinery Movers,http://ddmachinerymovers.com,,,,,,,,D & D Machinery Movers,original,1.0,{},D & D Machinery Movers
+59fa419f-0d39-4c58-8d88-3dd4dd802285,Prestige Garage Floor Coating,,,,,,,,,Prestige Garage Floor Coating,original,1.0,{},Prestige Garage Floor Coating
+59fa49c3-b393-4142-a6e2-34aedba65a4c,"Worldwide Gas Turbine Products, Inc",,,,,,,,,"Worldwide Gas Turbine Products, Inc",original,1.0,{},"Worldwide Gas Turbine Products, Inc"
+59fa6151-bd8a-441a-919e-ba2f4ffc4b40,Kadama Llc,http://Kadama LLC,Information Technology,"Developer of an education social media platform intended to help parents and students connect with expert tutors. The company's platform links an individual with local service providers at the click of a button and requests tutoring, housework, errands, and pet care, enabling users to select from a wide variety of tutors and courses and also schedule online or in-person tutoring sessions.",,,,,Kadama LLC,Kadama Llc,web_search,0.8,"{'found': True, 'company_name': 'Kadama Llc', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Amin Shaykho
+59fa640c-4f44-489e-9ce2-c21144fa2d94,H. Cegielski-Poznań,,,,,,,,,H. Cegielski-Poznań,original,1.0,{},H. Cegielski-Poznań
+59fa68ec-bb8f-4e75-aa6a-028c0ce902e9,Plastic Revolutions,,,,,,,,,Plastic Revolutions,original,1.0,{},Plastic Revolutions
+59fa6a04-d1ac-4207-92f3-99c34c9e35ae,Grandel Petroleum Products,,,,,,,,,Grandel Petroleum Products,original,1.0,{},Grandel Petroleum Products
+59fa7e9c-1a3c-4d3d-b310-c85bd3aeb13d,Neubauer Electric,,,,,,,,,Neubauer Electric,extracted,0.9,{},"Neubauer Electric provides quality, efficient, and reliable electrical services to clients in Southern California. Their typical customers range from residential to commercial and industrial clients, including homeowners, property managers, and businesses in various industries. Neubauer Electric differentiates itself by emphasizing its commitment to the highest ethical and code standards, attention to detail in every job, and the ability to handle projects of all sizes. They position themselves as a family-owned and operated business with highly skilled and experienced electricians"
+59faa798-785a-4fc1-9bca-2c1af947736e,Mycc-rdu,,,,,,,,,Mycc-rdu,original,1.0,{},Mycc-rdu
+59fac1f7-7c17-48b2-93f7-596764f2450e,New Directions B and S,,,,,,,,,New Directions B and S,original,1.0,{},New Directions B and S
+59facd1c-ce77-462f-a907-a7e482e611a3,CleanMax,,,,,,,,,CleanMax,original,1.0,{},CleanMax
+59fad774-3f69-442e-8489-74d61995e180,Hogan's Racing Manifolds,,,,,,,,,Hogan's Racing Manifolds,original,1.0,{},Hogan's Racing Manifolds
+59fb0a47-81f0-43a8-8846-ae02f94f9301,Grayslake Advisors,,,,,,,,,Grayslake Advisors,original,1.0,{},Grayslake Advisors
+59fb101a-47e1-49f8-8664-8a3e7805b731,Environmental Marine Service,,,,,,,,,Environmental Marine Service,original,1.0,{},Environmental Marine Service
+59fb1e98-e975-4843-a913-02f56b6f43b5,Qpcinc,,,,,,,,,Qpcinc,original,1.0,{},Qpcinc
+59fb2b84-b6af-42b4-940e-14c83f786efa,juniors tire services,,,,,,,,,juniors tire services,original,1.0,{},juniors tire services
+59fb3f78-723a-4429-a219-1226dab3a7c2,"PMP Metal Finishing, Inc",,,,,,,,,"PMP Metal Finishing, Inc",original,1.0,{},"PMP Metal Finishing, Inc"
+59fb528d-c856-4516-b7af-a9332d85fb94,Cinqsmile,,,,,,,,,Cinqsmile,original,1.0,{},Cinqsmile
+59fb7602-ee48-4058-a950-96c9fff5f4eb,Moose Direct Marketing,,,,,,,,,Moose Direct Marketing,original,1.0,{},Moose Direct Marketing
+59fb8e6d-7bb1-4f67-b559-e78bec7ddd42,Vancery,http://www.vancery.com,Business/Productivity Software,Privately Held (backing),,,,,vancery.com,Vancery,web_search,0.8,"{'found': True, 'company_name': 'Vancery', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Gunnar Gregory
+59fbdae9-0f5f-44fc-b4aa-bd6688c2fd3f,Pacific Mediation,,,,,,,,,Pacific Mediation,original,1.0,{},Pacific Mediation
+59fbf1ef-9859-4d4b-af59-8e4cd436174a,Strategic Threat Management,,,,,,,,,Strategic Threat Management,original,1.0,{},Strategic Threat Management
+59fc00c6-5b84-4ab0-a000-620402c6f5e4,Spektor Diamonds,,,,,,,,,Spektor Diamonds,original,1.0,{},Spektor Diamonds
+59fc0d95-3125-47ac-8b51-65f5ba6260cd,Latham Industries,,,,,,,,,Latham Industries,original,1.0,{},Latham Industries
+59fc1786-4196-4c55-8823-da29c3c972ce,thinQ (Raleigh),,,,,,,,,thinQ (Raleigh),original,1.0,{},thinQ (Raleigh)
+59fc2acb-5caf-4753-bb5d-b41ddf9523c3,Repp Industries,,,,,,,,,Repp Industries,original,1.0,{},Repp Industries
+59fc483c-e6d9-4c64-9f8c-2333634e59f5,Lynch Associates Architects,,,,,,,,,Lynch Associates Architects,original,1.0,{},Lynch Associates Architects
+59fc4b70-7846-40a9-b0ee-37b0e0039aae,IA-Robotics,,,,,,,,,IA-Robotics,original,1.0,{},IA-Robotics
+59fc4be2-78f3-4795-92be-401a9b28d377,Ashe Glass & Mirror Inc,http://asheglassmirror.com,,,,,,,,Ashe Glass & Mirror Inc,original,1.0,{},Ashe Glass & Mirror Inc
+59fc7a8f-e4b5-4422-9f9b-dbbf2946f005,ElitAire,,,,,,,,,ElitAire,original,1.0,{},ElitAire
+59fc8c4d-5463-486f-b1c5-efb1280b5b93,"Dt Read Steel Co., Inc",,,,,,,,,"Dt Read Steel Co., Inc",original,1.0,{},"Dt Read Steel Co., Inc"
+59fcc932-2452-42b4-b36f-e40e8bf0c2c2,MPMG Hospitals/Inpatient Services,,,,,,,,,MPMG Hospitals/Inpatient Services,original,1.0,{},MPMG Hospitals/Inpatient Services
+59fccc7d-31ee-4f97-8eee-2a6dcad73c8d,Rayskillmanshadelandkia,,,,,,,,,Rayskillmanshadelandkia,original,1.0,{},Rayskillmanshadelandkia
+59fcd06c-a4bf-42f7-8359-e4fcf1425817,Morgan & Leahy,,,,,,,,,Morgan & Leahy,original,1.0,{},Morgan & Leahy
+59fcd6b7-e155-4457-8782-7d608ab98f1b,Local Surge Media,,,,,,,,,Local Surge Media,original,1.0,{},Local Surge Media
+59fcefc2-fedc-4b4a-b6df-a2d71690b788,"Hoot, Baker and Wiley",,,,,,,,,"Hoot, Baker and Wiley",original,1.0,{},"Hoot, Baker and Wiley"
+59fd0ec1-1fc9-4c88-bcdb-58979a05124b,"Smith, Maurras, Cohen, Redd and Horan",,,,,,,,,"Smith, Maurras, Cohen, Redd and Horan",original,1.0,{},"Smith, Maurras, Cohen, Redd and Horan"
+59fd1688-18aa-4c10-86bf-1152bc5a9470,Lone Star Beverages,,,,,,,,,Lone Star Beverages,original,1.0,{},Lone Star Beverages
+59fd1d74-563c-4935-93b4-934983b069fd,Fences By Dipasquale,,,,,,,,,Fences By Dipasquale,original,1.0,{},Fences By Dipasquale
+59fd20a3-5c2b-4678-b834-7f4c8e58f745,Aspen Power Partners,,,,,,,,,Aspen Power Partners,original,1.0,{},Aspen Power Partners
+59fd2611-633b-4777-85d9-15e9e996cf10,Select Environmental Systems,http://selectenv.com,,,,,,,,Select Environmental Systems,original,1.0,{},Select Environmental Systems
+59fd32b0-9ac3-42c9-936c-aa63c37d8265,Madden Contracting Company,,,,,,,,,Madden Contracting Company,original,1.0,{},Madden Contracting Company
+59fd57d3-38a3-4e99-9cbb-2b821def371d,Hillsidesymo,,,,,,,,,Hillsidesymo,original,1.0,{},Hillsidesymo
+59fd5901-0825-4f45-86ed-25e62906f7ef,Karenlinderinteriordesigns,,,,,,,,,Karenlinderinteriordesigns,original,1.0,{},Karenlinderinteriordesigns
+59fdc43a-6dc0-4f61-9da3-6a54a92a7580,Destinytool,http://destinytool.com,,,,,,,,Destinytool,web_search,0.8,"{'found': True, 'company_name': 'Destinytool', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Destiny Tool
+59fdf133-2692-44c0-a312-a850a2fdb8a0,PredictiveOps,,,,,,,,,PredictiveOps,original,1.0,{},PredictiveOps
+59fdfdc3-df16-4f50-bcdc-294f4fab6861,Retailcontrolsystems,,,,,,,,,Retailcontrolsystems,original,1.0,{},Retailcontrolsystems
+59fdfe16-aa4a-4e14-9068-78b6b71b71fb,Interntional Promotional Ideas,,,,,,,,,Interntional Promotional Ideas,original,1.0,{},Interntional Promotional Ideas
+59fe0029-89ea-4214-b71e-830dc3cb0e3c,Nolenwalker,,,,,,,,,Nolenwalker,original,1.0,{},Nolenwalker
+59fe0433-49c7-46a6-b975-eec1abcc6d3c,Flatirons PC Consulting,,,,,,,,,Flatirons PC Consulting,original,1.0,{},Flatirons PC Consulting
+59fe419d-4dbf-47db-82bc-96c712a7533d,Convergent Genomics,,,,,,,,,Convergent Genomics,original,1.0,{},Convergent Genomics
+59fe53de-1049-4d82-94fb-90951ee4292a,Procommltd,,,,,,,,,Procommltd,original,1.0,{},Procommltd
+59fe5422-a9ed-4bcd-8dfb-11ddc10d9809,"Midwest Manufacturing & Mechanical, Inc",http://midwestmanufacturingmechanical.com,,,,,,,,"Midwest Manufacturing & Mechanical, Inc",original,1.0,{},"Midwest Manufacturing & Mechanical, Inc"
+59fe55fa-c57a-443d-a420-a627b506745a,"Columbia Roofing, Inc.",,,,,,,,,"Columbia Roofing, Inc.",extracted,0.9,{},"Columbia Roofing, Inc. provides a range of services, including roofing, siding, gutter installation, storm damage restoration, window installation, and solar panel installation. Their typical customers are homeowners, builders, and commercial property owners in the Columbia, Maryland area, as well as in nearby areas such as Annapolis, Highland, Laurel, and Savage. They position themselves as a family-owned and locally operated company with a dedicated and experienced staff, offering reliable service, factory-trained crews, and no high-pressure sales tactics. They also emphasize their 24-hour emergency services and their commitment to customer satisfaction"
+59fe665d-4b72-4d13-939c-bccdb4d2749a,Gracious Gourmet,,,,,,,,,Gracious Gourmet,original,1.0,{},Gracious Gourmet
+59fe66aa-fa35-436c-a738-338bf70982e5,E. J. Mullins Co,,,,,,,,,E. J. Mullins Co,original,1.0,{},E. J. Mullins Co
+59fe6c54-50d7-44eb-bed2-57d893a70490,Ifilteremail,,,,,,,,,Ifilteremail,original,1.0,{},Ifilteremail
+59fe7ec3-6405-4005-a59c-517fce1a2068,Janus Health Solutions,,,,,,,,,Janus Health Solutions,original,1.0,{},Janus Health Solutions
+59fe811a-8de7-4604-959c-bc0b250fefa3,Pepperdines Marking Products,,,,,,,,,Pepperdines Marking Products,original,1.0,{},Pepperdines Marking Products
+59feb654-efbc-48e3-97ab-ab7e6613d8f9,EG Software,,,,,,,,,EG Software,original,1.0,{},EG Software
+59fec1c9-acf7-40a8-ba92-77be8a90e89b,Gralan Enterprises,,,,,,,,,Gralan Enterprises,extracted,0.9,{},"Gralan Enterprises specializes in providing turnkey concrete packages, concrete formwork, and concrete placement for commercial and industrial structures. Their typical customers include general contractors, construction managers, and developers working on projects in various sectors such as education, healthcare, hospitality, and government. Gralan Enterprises differentiates itself by emphasizing its over 100 years of combined experience, its certifications as a M/WBE, SBE, DBE, and HUB company, as well as its ability to deliver high-quality, safe, and professional workmanship"
+59fedf08-cdd7-4984-8bf6-d9978e7f353f,OnePuhunan,,,,,,,,,OnePuhunan,original,1.0,{},OnePuhunan
+59ff1f35-63fb-4844-a1ec-9e4a250826ea,Lares Research,,,,,,,,,Lares Research,original,1.0,{},Lares Research
+59ff2b70-b68b-4ffa-af33-e5af55c6e474,Knockout Carpet,,,,,,,,,Knockout Carpet,original,1.0,{},Knockout Carpet
+59ff531f-a8e5-43f1-9473-ae0f3835fa14,Scientific Search,,,,,,,,,Scientific Search,original,1.0,{},Scientific Search
+59ff58ec-9171-43c6-aa5f-6b9a60ad57d1,Peter Corvallis Productions,,,,,,,,,Peter Corvallis Productions,original,1.0,{},Peter Corvallis Productions
+59ff7cf1-061c-418c-992b-cf9f73ed796c,Self Storages,,,,,,,,,Self Storages,original,1.0,{},Self Storages
+59ffb09e-2044-4db1-b460-c2410b4b205e,Duwamish Cohousing Association,,,,,,,,,Duwamish Cohousing Association,original,1.0,{},Duwamish Cohousing Association
+59ffc19c-f4e2-4637-9e72-ec8552eee78a,Global B2b Marketplace Twaynet,,,,,,,,,Global B2b Marketplace Twaynet,original,1.0,{},Global B2b Marketplace Twaynet
+59ffd46c-0193-464e-bb68-cafc7dacdeab,Leopardi Valuation,,,,,,,,,Leopardi Valuation,original,1.0,{},Leopardi Valuation
+59ffd7c7-777a-497e-84a9-b72d46a2e663,Rocmar,,,,,,,,,Rocmar,original,1.0,{},Rocmar
+59ffead7-5c12-4874-afd8-0a53eee4d277,Durham Jones & Pinegar,,,,,,,,,Durham Jones & Pinegar,original,1.0,{},Durham Jones & Pinegar
+59fff1d9-0475-4ae3-b0ad-f38dc8cd1158,Excel Laundry Equipment,,,,,,,,,Excel Laundry Equipment,original,1.0,{},Excel Laundry Equipment
+5a000e0d-2ffb-4c8c-a38d-bd629de8b2de,Qpjoplin,,,,,,,,,Qpjoplin,original,1.0,{},Qpjoplin
+5a0016a8-5d35-4d21-9780-fde0fd682830,Dynatest North America,,,,,,,,,Dynatest North America,original,1.0,{},Dynatest North America
+5a001da1-a4e4-434e-96a1-c2d081c9daae,EpiVax,,,,,,,,,EpiVax,original,1.0,{},EpiVax
+5a00269f-53dd-456c-b6cf-51043da9f967,PRQ Exteriors,http://prqexteriors.com,,,,,,,,PRQ Exteriors,original,1.0,{},PRQ Exteriors
+5a0048d2-5c2a-4dc4-ac67-a6646f2ca7b0,Qua Salon,,,,,,,,,Qua Salon,original,1.0,{},Qua Salon
+5a00727d-1b9f-44b9-9c91-036a27454bda,Incredible Threads,,,,,,,,,Incredible Threads,original,1.0,{},Incredible Threads
+5a0083a2-b37b-4d80-b758-8464098feb20,Landtamers Landscaping,,,,,,,,,Landtamers Landscaping,original,1.0,{},Landtamers Landscaping
+5a008966-2cca-48fe-b831-7bb30bc0e1a6,Fulmer Logistics,,,,,,,,,Fulmer Logistics,original,1.0,{},Fulmer Logistics
+5a008dcc-4472-4258-aa6d-e63e89b84734,Tile in Style Store,http://tileinstylestore.com,,,,,,,,Tile in Style Store,original,1.0,{},Tile in Style Store
+5a008ee6-3208-494e-b177-a486a021453a,Hillsview Farms,,,,,,,,,Hillsview Farms,original,1.0,{},Hillsview Farms
+5a009c0c-2cd6-4da9-8e93-f0951d5627ee,Paradise Cruise Line Operator,,,,,,,,,Paradise Cruise Line Operator,original,1.0,{},Paradise Cruise Line Operator
+5a00a9a7-776f-4563-bcc6-5a62bfb859a0,New Concept Auto Service,,,,,,,,,New Concept Auto Service,extracted,0.9,{},"New Concept Auto Service offers a wide range of auto repair and maintenance services, including AC and heat repair, wheel alignment, brake repair, diagnostics, electrical system repair, engine repair, oil changes, and suspension repair. Their typical customers are vehicle owners in the Johnson County, KS area seeking dependable and credible auto repair services. New Concept Auto Service differentiates itself by positioning as an independent repair shop with dealership qualities, offering top-notch service at affordable rates, and prioritizing the needs of their customers"
+5a00b91a-3b55-4909-a541-95fa78fbd848,Sommerville-Wilson,,,,,,,,,Sommerville-Wilson,original,1.0,{},Sommerville-Wilson
+5a00ce06-e3d4-4325-9cad-897a9445dff4,PayTech (Denver),,,,,,,,,PayTech (Denver),original,1.0,{},PayTech (Denver)
+5a00f89c-bebb-4c2c-b4fc-55d963367e04,Spacebot,,,,,,,,,Spacebot,original,1.0,{},Spacebot
+5a012f13-71be-40d4-960b-a479211d69b9,J.B.M. General Contractors,,,,,,,,,J.B.M. General Contractors,original,1.0,{},J.B.M. General Contractors
+5a014443-ae61-4ade-9ed3-b0e4f1d12ed8,Layke Tool and Manufacturing Co,,,,,,,,,Layke Tool and Manufacturing Co,original,1.0,{},Layke Tool and Manufacturing Co
+5a014ed7-d9eb-478c-8f78-186e86e66b84,HALL'S ROOFING & SHEET METAL,,,,,,,,,HALL'S ROOFING & SHEET METAL,original,1.0,{},HALL'S ROOFING & SHEET METAL
+5a0184c4-d9d2-427f-ad89-2f549ed1a587,INETICO,,,,,,,,,INETICO,original,1.0,{},INETICO
+5a019e49-fa71-44c9-9c34-7002351bba19,Oak Tree Property Management,,,,,,,,,Oak Tree Property Management,original,1.0,{},Oak Tree Property Management
+5a019f46-35c1-46d2-a631-0e079584bec8,Octopos,,,,,,,,,Octopos,original,1.0,{},Octopos
+5a01a7a2-9687-42b6-b7e3-776d8a1cc01b,Munson,,,,,,,,,Munson,original,1.0,{},Munson
+5a01d401-13c2-493d-a4c7-32070360f304,item Southeast,,,,,,,,,item Southeast,original,1.0,{},item Southeast
+5a01de8e-6445-4d63-9a82-c34d4625fa26,Starcall Broadcasting,,,,,,,,,Starcall Broadcasting,original,1.0,{},Starcall Broadcasting
+5a01ff4d-6086-4888-ba94-1e9ee290780a,Radian Generation,,,,,,,,,Radian Generation,original,1.0,{},Radian Generation
+5a02205e-c672-437b-800b-bcbe9a5a58f2,Holdridge Farm Nursery,,,,,,,,,Holdridge Farm Nursery,original,1.0,{},Holdridge Farm Nursery
+5a0234e5-f897-450f-a954-87d6a5184072,Golden State Elevator Service,,,,,,,,,Golden State Elevator Service,original,1.0,{},Golden State Elevator Service
+5a02401d-4c23-4a9a-b22c-ed648fe63a8a,Homeprocolumbus,,,,,,,,,Homeprocolumbus,original,1.0,{},Homeprocolumbus
+5a0248aa-45bd-4da2-aa78-e719bbb9b761,Red Door Atlanta,,,,,,,,,Red Door Atlanta,original,1.0,{},Red Door Atlanta
+5a025e8b-e96b-4c18-8790-ad66b6c72768,Cybersonics,,,,,,,,,Cybersonics,original,1.0,{},Cybersonics
+5a027055-c871-42e1-9e5c-a95e94290f0f,Redwoodperiodontics,,,,,,,,,Redwoodperiodontics,original,1.0,{},Redwoodperiodontics
+5a027ded-b371-4d1d-880d-222cc30d7192,RANA CONSTRUCTION,,,,,,,,,RANA CONSTRUCTION,original,1.0,{},RANA CONSTRUCTION
+5a028609-2237-4b6f-8faa-f38694ef7206,Iconglobal,,,,,,,,,Iconglobal,original,1.0,{},Iconglobal
+5a02ad33-1d3c-4d70-b558-122eb9732d91,Bellavista Building Group,,,,,,,,,Bellavista Building Group,extracted,0.9,{},"Bellavista Building Group is a Maitland-based real estate developer and general contractor that provides residential and commercial construction services, as well as land acquisition and development. Their typical customers are individuals and businesses in need of real estate development and construction services. Bellavista Building Group differentiates themselves by emphasizing exceptional results, unmatched integrity, and a focus on client satisfaction throughout the construction process"
+5a02ec6d-5745-4e32-8907-f230b4991d05,Savearound,,,,,,,,,Savearound,original,1.0,{},Savearound
+5a02ed78-d774-4f1f-b79e-ecc2da2f3cd4,Republic Die and Tool Co,,,,,,,,,Republic Die and Tool Co,original,1.0,{},Republic Die and Tool Co
+5a0313f9-49cf-4b12-9a80-d07fd90be202,Excim Trading Corporation,,,,,,,,,Excim Trading Corporation,original,1.0,{},Excim Trading Corporation
+5a033ad3-748b-452c-9f4e-34aadc24cd53,R K Tables,,,,,,,,,R K Tables,original,1.0,{},R K Tables
+5a036b6a-189a-4842-9ccb-2d830deb7ec3,Founders Entertainment,,,,,,,,,Founders Entertainment,original,1.0,{},Founders Entertainment
+5a037930-29ba-4d5d-a18f-b3decd401260,Microcomputer Services,,,,,,,,,Microcomputer Services,original,1.0,{},Microcomputer Services
+5a0393de-a641-473c-a52b-1670cfe6b254,Mazzara Construction,,,,,,,,,Mazzara Construction,original,1.0,{},Mazzara Construction
+5a03aadd-7425-48e3-940b-5029ff76d715,Rosenberg Construction,,,,,,,,,Rosenberg Construction,original,1.0,{},Rosenberg Construction
+5a03b767-7dd0-4d4a-9129-28a5b15e89d1,Norman - William Company,,,,,,,,,Norman - William Company,original,1.0,{},Norman - William Company
+5a03b90d-bc06-46c4-b190-c5f99c7e923f,EnergyPowerLab,,,,,,,,,EnergyPowerLab,original,1.0,{},EnergyPowerLab
+5a03bc1a-7506-4a0b-a3fc-a35f5dd0ffd0,"Harleysville National Bank and Trust Company (Honesdale, Pennsylvania Branch)",,,,,,,,,"Harleysville National Bank and Trust Company (Honesdale, Pennsylvania Branch)",original,1.0,{},"Harleysville National Bank and Trust Company (Honesdale, Pennsylvania Branch)"
+5a03d132-63dc-469c-ae2a-849e41ab59b5,Records Requests,,,,,,,,,Records Requests,original,1.0,{},Records Requests
+5a03df7e-3287-42f7-8e14-332245b78836,Rich Arlington and Associated,,,,,,,,,Rich Arlington and Associated,original,1.0,{},Rich Arlington and Associated
+5a03df82-e4f4-439d-8ab6-682b6c83e008,Pioneer Farm Business Farm Management Association,,,,,,,,,Pioneer Farm Business Farm Management Association,original,1.0,{},Pioneer Farm Business Farm Management Association
+5a042b3c-aa2b-48c8-8996-a618606f6bf7,Multiple Benefit Services,,,,,,,,,Multiple Benefit Services,original,1.0,{},Multiple Benefit Services
+5a043418-06ac-47f9-ac4f-6ea6bb642feb,Prescottrentals,,,,,,,,,Prescottrentals,original,1.0,{},Prescottrentals
+5a0435cc-f676-4b7a-8870-16aa4b9b3ef5,Griffiths Law,,,,,,,,,Griffiths Law,original,1.0,{},Griffiths Law
+5a046161-4f2a-481d-8ed6-f217a8d6d3b8,Abba Home Health Care,,,,,,,,,Abba Home Health Care,original,1.0,{},Abba Home Health Care
+5a046723-68ef-4c51-a245-3ddb9bf62c65,Flooring America of Jacksonville,http://fajaxusa.com,,,,,,,,Flooring America of Jacksonville,original,1.0,{},Flooring America of Jacksonville
+5a047291-5ad4-459a-b855-a86fd519ba5b,Freedom & Acquatics Center,,,,,,,,,Freedom & Acquatics Center,original,1.0,{},Freedom & Acquatics Center
+5a0476de-e8a5-485a-85e2-ed6b614cc7bb,Crystal Caseworks LLC,http://crystalcaseworks.com,,,,,,,,Crystal Caseworks LLC,original,1.0,{},Crystal Caseworks LLC
+5a048d8a-813e-463c-8f40-b5134e5a8569,Insuroratlas,,,,,,,,,Insuroratlas,original,1.0,{},Insuroratlas
+5a04995e-d272-44ff-b5c9-72d4e651b5da,Grandeur Management,,,,,,,,,Grandeur Management,original,1.0,{},Grandeur Management
+5a04a976-a56f-4a3a-a009-7582e1138e9e,Duck Water Boats,,,,,,,,,Duck Water Boats,original,1.0,{},Duck Water Boats
+5a04ac6c-066a-4f29-8d25-f2480d1e9a90,Red Luxury,,,,,,,,,Red Luxury,original,1.0,{},Red Luxury
+5a04c92a-dfa2-446c-8d0a-5ab51aae7ac8,Mid-West Wholesale Ltg,,,,,,,,,Mid-West Wholesale Ltg,original,1.0,{},Mid-West Wholesale Ltg
+5a04ce48-3b6e-412e-ae7e-7c3415b512f5,Facility Programming,,,,,,,,,Facility Programming,original,1.0,{},Facility Programming
+5a04d798-03c1-4f0b-b633-d51f2a5fe59f,Reynolds Purified Water,http://reynoldspurifiedwater.com,,,,,,,,Reynolds Purified Water,original,1.0,{},Reynolds Purified Water
+5a04f4e9-c38c-4795-af26-eebabffd6e90,Aesthetic Finishers,,,,,,,,,Aesthetic Finishers,extracted,0.9,{},"Aesthetic Finishers specializes in providing powder and ceramic coating services for a range of industries, including automotive, appliances, and fitness equipment. They offer professional services such as metal fabrication, powder coating, and Cerakote® finishing. Their typical customers include OEM manufacturers, conveyor and product handling companies, and businesses in the automotive and appliance industries. Aesthetic Finishers differentiates themselves by emphasizing their commitment to innovation, quality, and efficiency, ensuring that products are manufactured to the highest standards with controlled processes and on-time deliveries"
+5a0512dd-e533-4a4e-b9b0-1201fd1308ef,James River Mechanical,http://jrmech.com,,,,,,,,James River Mechanical,original,1.0,{},James River Mechanical
+5a051574-a4a5-49ee-92e1-656ee34b0236,Greeno Products,,,,,,,,,Greeno Products,original,1.0,{},Greeno Products
+5a052971-b7b1-4ba4-9c82-c00dc08ab07e,Carlson & Stewart Refrigeration Inc,http://carlsonstewart.com,,,,,,,,Carlson & Stewart Refrigeration Inc,original,1.0,{},Carlson & Stewart Refrigeration Inc
+5a05369e-d9ba-4329-a0d1-8bfd8f2d76fa,Sedonafinehome,,,,,,,,,Sedonafinehome,original,1.0,{},Sedonafinehome
+5a053bef-043d-49e1-94e6-c6ee5e058bcc,"Las Campanas, Santa Fe, NM",http://lascampanas.com,,,,,,,,"Las Campanas, Santa Fe, NM",original,1.0,{},"Las Campanas, Santa Fe, NM"
+5a05543e-e6c8-4a6e-b045-17e5967afa1d,"Hansen Logging, LLC",,,,,,,,,"Hansen Logging, LLC",original,1.0,{},"Hansen Logging, LLC"
+5a056704-edbb-4512-8d28-dba77dbd1804,Perfect Patch Drywall Repair,,,,,,,,,Perfect Patch Drywall Repair,original,1.0,{},Perfect Patch Drywall Repair
+5a0593ec-ca87-45ff-b7e8-73ea96d65c51,harmonious living ltd,,,,,,,,,harmonious living ltd,original,1.0,{},harmonious living ltd
+5a05a447-d09b-4df6-a7fd-c58409114674,Product Evaluation,,,,,,,,,Product Evaluation,original,1.0,{},Product Evaluation
+5a05d71a-9afc-4d31-b544-a9ac027878e9,Humbert Asphalt,,,,,,,,,Humbert Asphalt,original,1.0,{},Humbert Asphalt
+5a05e005-e4a5-4204-be40-8b4167bd0ded,Sparkle Uniform & Linen Service,http://sparklerental.com,,,,,,,,Sparkle Uniform & Linen Service,original,1.0,{},Sparkle Uniform & Linen Service
+5a05e824-564d-4489-82c1-ffb257e03c5e,Freestatebrewing,https://www.freestatebrewing.com/,,,,,,,,Freestatebrewing,web_search,0.9,"{'found': True, 'company_name': 'Freestatebrewing', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}","Free State Brewing Co is a craft brewery that offers a variety of beers, including their signature Alley-oop Dunkel, as well as other seasonal and specialty brews. Their typical customers are beer enthusiasts, connoisseurs, and individuals who enjoy exploring different craft beer options. The company differentiates itself by being Kansas' Original Craft Brewery, emphasizing its history and tradition in the local craft beer industry. They also position themselves as a provider of high-quality, unique, and flavorful beers that cater to a diverse range of tastes and preferences"
+5a05ee20-014f-4a79-aa77-0b1f1f41779a,Lamptech,,,,,,,,,Lamptech,original,1.0,{},Lamptech
+5a060803-4e05-42e6-bb13-04b8d919fd55,Keena S,,,,,,,,,Keena S,original,1.0,{},Keena S
+5a060933-f758-4dd0-9b73-22d521046f76,Marquettemichiganadvertising,,,,,,,,,Marquettemichiganadvertising,original,1.0,{},Marquettemichiganadvertising
+5a062963-c8a4-45aa-b678-8579b90890ad,"Founder, EcoSikh",,,,,,,,,"Founder, EcoSikh",original,1.0,{},"Founder, EcoSikh"
+5a062a28-5506-439d-9be2-cd4320e27601,SILLOET,,,,,,,,,SILLOET,original,1.0,{},SILLOET
+5a0635ed-3882-4898-a5fe-77380bc9221c,Watson Land Company,,,,,,,,,Watson Land Company,extracted,0.9,{},"Watson Land Company is a developer, owner, and manager of industrial properties, offering high quality buildings within masterplanned centers. Their typical customers include businesses in need of industrial distribution space, such as manufacturing companies, logistics and transportation companies, and other businesses requiring warehousing and distribution facilities. What differentiates Watson Land Company is their focus on delivering functional, high quality buildings within masterplanned centers, backed by unmatched customer service. They also highlight their commitment to sustainability, as evidenced by their LEED® certified designs and sustainable development practices"
+5a06367e-4502-4d28-80cf-ba99a1b8cf4f,Engrail Therapeutics,,,,,,,,,Engrail Therapeutics,original,1.0,{},Engrail Therapeutics
+5a06400e-51e7-4b88-ac95-0af3da75016a,Marcou Transportation,,,,,,,,,Marcou Transportation,original,1.0,{},Marcou Transportation
+5a0654ad-0815-4e37-9b6d-e03bd0694e78,"Excelon Development, Llc","http://Excelon Development, LLC",Information Technology,"Provider of IT consulting services intended to improve the software delivery process while decreasing risk. The company offers services such as web development, mobile (ios and Android) development, cloud infrastructure development, continuous delivery or deployment pipeline work, systems integration, real-time embedded system development, and more, helping companies deliver better software with less friction while improving the work experience of the technical contributors.",,,,,"Excelon Development, LLC","Excelon Development, Llc",web_search,0.8,"{'found': True, 'company_name': 'Excelon Development, Llc', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Matthew Heusser
+5a068a32-9f8c-4c15-aa4f-268bf580657c,Freightmate.com,,,,,,,,,Freightmate.com,original,1.0,{},Freightmate.com
+5a06a379-a4c6-464d-878d-f7cca683f550,Mermade Hair,,,,,,,,,Mermade Hair,original,1.0,{},Mermade Hair
+5a06a6c8-c225-4282-8b08-f8bd512a4ce9,"Dakit Software, Llc","http://Dakit Software, LLC",Information Technology,"Operator of an online platform designed to create and develop mobile apps. The company's SaaS-based platform allows users to create apps with drag and drop features and choose from a wide variety of themes, enabling clients and customers to develop mobile applications without any coding.",,,,,"Dakit Software, LLC","Dakit Software, Llc",web_search,0.8,"{'found': True, 'company_name': 'Dakit Software, Llc', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Dmitri Lisita
+5a06b582-657c-4256-a24e-7c0956eb015b,"Golden Eagle Group, Inc.",,,,,,,,,"Golden Eagle Group, Inc.",extracted,0.9,{},"Golden Eagle Group, Inc. specializes in real estate investment solutions, with a major emphasis on investments in commercial and residential real estate. Their typical customers are Investment Partners seeking high returns on their real estate investments. They differentiate themselves by using key metrics and proven tactics to acquire prime properties at below market value, and replacement costs. They also emphasize their knowledge across the commercial, retail, industrial, and residential real estate markets, providing a diverse, sound, and structured investment portfolio"
+5a06b71a-a10e-4074-85fa-2e7470480d61,Lightning Launch,,,,,,,,,Lightning Launch,original,1.0,{},Lightning Launch
+5a06c273-ef88-4900-8545-43df8ab4fb49,Emerson Ecologics,,,,,,,,,Emerson Ecologics,original,1.0,{},Emerson Ecologics
+5a06cf70-fb57-4737-8872-2e5b48428e02,Mishra Consulting,,,,,,,,,Mishra Consulting,original,1.0,{},Mishra Consulting
+5a070c06-8c2c-4a19-a757-c01c3938e4f1,Metal Flow Corporation,,,,,,,,,Metal Flow Corporation,original,1.0,{},Metal Flow Corporation
+5a070f24-43f0-42c1-b596-9d435f6a689c,Elite Dental Products,,,,,,,,,Elite Dental Products,original,1.0,{},Elite Dental Products
+5a073f4d-1652-4058-aa44-d787f236bb1e,FocusPoint Solutions,,,,,,,,,FocusPoint Solutions,original,1.0,{},FocusPoint Solutions
+5a075958-9813-4a22-95a7-a74eee333369,OccuCare Systems and Solutions,,,,,,,,,OccuCare Systems and Solutions,original,1.0,{},OccuCare Systems and Solutions
+5a077975-0d43-4136-b897-50936fe38ea7,Sage Commercial Ventures,,,,,,,,,Sage Commercial Ventures,original,1.0,{},Sage Commercial Ventures
+5a077c7c-64e0-43df-be45-85fe4736ac36,Fayette County Union,,,,,,,,,Fayette County Union,original,1.0,{},Fayette County Union
+5a079bcf-bce2-477f-8994-ba541ce050fa,Aseptic Manufacturing Services,,,,,,,,,Aseptic Manufacturing Services,original,1.0,{},Aseptic Manufacturing Services
+5a07c3ad-57d2-4e10-8ffc-e0d2619b4236,Thierry Duguet Engraver Inc,http://engraver.net,,,,,,,,Thierry Duguet Engraver Inc,original,1.0,{},Thierry Duguet Engraver Inc
+5a07c514-b001-4468-976c-281b7d9ec5c5,Twin City Glass,,,,,,,,,Twin City Glass,extracted,0.9,{},"Twin City Glass specializes in providing custom glass and mirror solutions for both residential and commercial customers in the Buffalo Niagara region. Their typical customers include homeowners looking to elevate the elegance of their kitchens or bathrooms, as well as businesses seeking distinctive glass and mirror solutions for their offices or corporate locations. They position themselves as an industry leader with over five decades of experience and emphasize their commitment to professionalism, customer satisfaction, and offering a wide array of high-quality products from esteemed manufacturers"
+5a0802a8-ee46-44ff-804b-c13bf1e671cf,Schuster S Playtime Farm,,,,,,,,,Schuster S Playtime Farm,original,1.0,{},Schuster S Playtime Farm
+5a080c4a-fbc2-4a64-81c3-f52920645857,hansen distribution agency,,,,,,,,,hansen distribution agency,original,1.0,{},hansen distribution agency
+5a0812d5-1f53-4460-ade8-f953d73cfd8d,Alabama Dynamics Inc,,,,,,,,,Alabama Dynamics Inc,original,1.0,{},Alabama Dynamics Inc
+5a081d6d-3f7a-4166-b63c-804f0eca2960,Hunter Appliance Sales and Service,,,,,,,,,Hunter Appliance Sales and Service,original,1.0,{},Hunter Appliance Sales and Service
+5a081dd1-8d74-4762-bf9b-ab412555f6cd,Rug Goddess Tampa,,,,,,,,,Rug Goddess Tampa,original,1.0,{},Rug Goddess Tampa
+5a084206-b5a8-4356-92db-081a7e3deda6,Nordmeyer Smag Mining & Drilling Technologies,,,,,,,,,Nordmeyer Smag Mining & Drilling Technologies,original,1.0,{},Nordmeyer Smag Mining & Drilling Technologies
+5a084fe1-5e7b-4dc2-89b7-a2e70f4631f7,Rdcisterns,http://rdcisterns.com,,,,,,,,Rdcisterns,web_search,0.8,"{'found': True, 'company_name': 'Rdcisterns', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Raindrops Cisterns
+5a085223-a986-45e3-8362-af63eb14e635,"Induction Systems, Inc",,,,,,,,,"Induction Systems, Inc",original,1.0,{},"Induction Systems, Inc"
+5a08586c-2187-46ed-b10a-aa97dd143dc4,Karaki WS,http://karakiws.com,,,,,,,,Karaki WS,original,1.0,{},Karaki WS
+5a086aeb-ea11-4a04-b866-056432c81da8,SemiTorr Group,,,,,,,,,SemiTorr Group,original,1.0,{},SemiTorr Group
+5a0882d2-ec10-4ca4-b0ce-0b10dd78dbb6,Mid Michigan Fiber Glass,,,,,,,,,Mid Michigan Fiber Glass,original,1.0,{},Mid Michigan Fiber Glass
+5a089d37-318a-43ad-9335-76dbd91dca7c,HART PRINTING & LITHOGRAPHING,,,,,,,,,HART PRINTING & LITHOGRAPHING,original,1.0,{},HART PRINTING & LITHOGRAPHING
+5a08a043-9f3f-4a3c-8e85-b5cc20665016,Morchem Industries,,,,,,,,,Morchem Industries,original,1.0,{},Morchem Industries
+5a08a2b7-a7c6-4328-af83-5707706f90f5,Radix Solar,,,,,,,,,Radix Solar,original,1.0,{},Radix Solar
+5a08ab1b-5481-40bf-8278-f381b05f4ebc,Fdc Machine Repair Inc,,,,,,,,,Fdc Machine Repair Inc,original,1.0,{},Fdc Machine Repair Inc
+5a08c152-eff0-44b1-b93a-f8721d1e16cc,Greg Orick Ii Marine Const. Inc,http://orickmarine.com,,,,,,,,Greg Orick Ii Marine Const. Inc,original,1.0,{},Greg Orick Ii Marine Const. Inc
+5a0901b9-bfa6-451b-9fad-9e78643c67cd,H.everson Designs,,,,,,,,,H.everson Designs,original,1.0,{},H.everson Designs
+5a090a05-baec-4d9b-8eff-08eb500acf8f,REM-tronics,,,,,,,,,REM-tronics,original,1.0,{},REM-tronics
+5a092fc0-280c-4fef-8ec2-db09bfc6cb00,"CBM Enterprises, Inc.",,,,,,,,,"CBM Enterprises, Inc.",extracted,0.9,{},"CBM Enterprises, Inc. offers a range of services including site work, real estate services, and DOT projects. Their typical customers are likely to be companies or organizations in need of site development, real estate brokerage, and construction services, as well as government entities requiring DOT projects. They claim to differentiate themselves through their extensive experience in completing multi-million dollar projects, their comprehensive range of services, and their commitment to being a leader in the community, which may appeal to customers looking for a reputable and reliable partner for their projects"
+5a096f34-d70a-4a96-a106-d3e883f72300,Lodeso,,,,,,,,,Lodeso,original,1.0,{},Lodeso
+5a097c3e-0184-4765-a0bc-878c436f2df1,Historicalconcepts,,,,,,,,,Historicalconcepts,original,1.0,{},Historicalconcepts
+5a098ebc-8880-4407-bb2e-789b08a37336,Fox and Sons Excavating,,,,,,,,,Fox and Sons Excavating,original,1.0,{},Fox and Sons Excavating
+5a099300-d391-4e14-aa40-ea5e4699a259,Spider Logistics,,,,,,,,,Spider Logistics,original,1.0,{},Spider Logistics
+5a09a618-5d34-4d87-856c-3d64adf79126,P and H Manufacturing Co (inc),,,,,,,,,P and H Manufacturing Co (inc),original,1.0,{},P and H Manufacturing Co (inc)
+5a09aba9-1df9-4663-9a46-60271e723687,Fleetpins,http://fleetpins.com,,,,,,,,Fleetpins,web_search,0.8,"{'found': True, 'company_name': 'Fleetpins', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Fleet Pins
+5a09b19e-c8dc-4592-b85a-a7d47ef4332a,Feline Holidays,,,,,,,,,Feline Holidays,original,1.0,{},Feline Holidays
+5a09b96f-942a-4c29-a46a-0a3208939e67,Jae Enterprises,,,,,,,,,Jae Enterprises,original,1.0,{},Jae Enterprises
+5a09bdc4-1ae3-4caf-830d-d329b2f3d86e,SealteQ,,,,,,,,,SealteQ,original,1.0,{},SealteQ
+5a09c5d7-1ded-4620-b9e9-814503a53cbd,Elite Floor & Furniture Cleaning,,,,,,,,,Elite Floor & Furniture Cleaning,original,1.0,{},Elite Floor & Furniture Cleaning
+5a09cfca-1b6f-4ddc-b0fc-60d4a0092c68,Social Opt,,,,,,,,,Social Opt,original,1.0,{},Social Opt
+5a09e199-7921-4043-a52d-bcca95408053,Espyr,,,,,,,,,Espyr,original,1.0,{},Espyr
+5a09e499-2c30-47e5-b2a9-b5109ffe4640,Magnolia Management Services,,,,,,,,,Magnolia Management Services,original,1.0,{},Magnolia Management Services
+5a09e7ff-7e70-4121-8f2e-3da9a0615430,Highpoint Village,,,,,,,,,Highpoint Village,original,1.0,{},Highpoint Village
+5a09ea3a-8348-48fc-880f-8eabff6bd3ac,LanguaMetrics,,,,,,,,,LanguaMetrics,original,1.0,{},LanguaMetrics
+5a09eccf-3922-423d-b24c-7ac68073eb89,Empovia,,,,,,,,,Empovia,original,1.0,{},Empovia
+5a09ee0b-8e45-45b2-97d5-e0b6a589a1c6,"Jarvis Manufacturing, Inc.",,,,,,,,,"Jarvis Manufacturing, Inc.",extracted,0.9,{},"Jarvis Manufacturing, Inc. offers high-quality precision machining solutions in California, specializing in CNC milling, CNC turning, assembly, and kitting. Their typical customers are high-tech, medical, and oilfield companies, with whom they have built long-term relationships. Jarvis Manufacturing differentiates themselves by consistently delivering products that meet or exceed customer requirements and expectations, on time and at reasonable prices. They also prioritize working closely with their customers during the design phase to provide feedback on manufacturability and cost reduction strategies, as well as offering value-added services of assembly and kitting"
+5a0a0dbc-93cc-4205-b220-7ff694e16b0f,pine2pink foundation,,,,,,,,,pine2pink foundation,original,1.0,{},pine2pink foundation
+5a0a0e05-f6ba-421f-9a0e-86141989104f,"Crown Coverings, Inc",http://crowncoverings.com,,,,,,,,"Crown Coverings, Inc",original,1.0,{},"Crown Coverings, Inc"
+5a0a1138-01ae-4cee-b6c5-4a9c3fa689a5,Environmental Land Services of Flagler County,,,,,,,,,Environmental Land Services of Flagler County,original,1.0,{},Environmental Land Services of Flagler County
+5a0a1e47-cd67-4a43-bab5-05e5a5547053,One Stop Marketing,,,,,,,,,One Stop Marketing,original,1.0,{},One Stop Marketing
+5a0a2a43-44a1-448c-9af0-223b3289707f,MEGAPIXALL,,,,,,,,,MEGAPIXALL,original,1.0,{},MEGAPIXALL
+5a0a313f-65d5-4138-8451-54a6123cea3f,Prism Advisors,,,,,,,,,Prism Advisors,original,1.0,{},Prism Advisors
+5a0a416d-daa8-4fbf-85cc-f45d480e9a73,Jobboj Job Usa,,,,,,,,,Jobboj Job Usa,original,1.0,{},Jobboj Job Usa
+5a0a59ea-bb48-4074-b301-6e82bddb560c,Douglas County Chamber of Commerce,,,,,,,,,Douglas County Chamber of Commerce,original,1.0,{},Douglas County Chamber of Commerce
+5a0a8659-1c89-4947-b0bf-fa9ee6926a8d,Janssenwaterproofinginc,,,,,,,,,Janssenwaterproofinginc,original,1.0,{},Janssenwaterproofinginc
+5a0aa9d8-abf6-40b9-8756-c167c35c3044,Shurgard Storage Centers,,,,,,,,,Shurgard Storage Centers,original,1.0,{},Shurgard Storage Centers
+5a0aaf66-2cb7-4d00-ba63-c3464425292f,Quality Recovery Service,,,,,,,,,Quality Recovery Service,original,1.0,{},Quality Recovery Service
+5a0ad5a5-8ffe-455d-bf93-89a3333648d9,Deutsche Funkturm,,,,,,,,,Deutsche Funkturm,original,1.0,{},Deutsche Funkturm
+5a0ad63e-be75-43cd-bd1d-2c3b52d1fd53,Scalar Magnetics,,,,,,,,,Scalar Magnetics,original,1.0,{},Scalar Magnetics
+5a0aeb8c-bc0f-41f6-a379-795dbe94309d,Kruger Landscape & Maintenance,,,,,,,,,Kruger Landscape & Maintenance,original,1.0,{},Kruger Landscape & Maintenance
+5a0af07f-887e-4188-a643-b0adb25de618,Market Synergy Group,,,,,,,,,Market Synergy Group,original,1.0,{},Market Synergy Group
+5a0b03a2-ff75-4300-a226-9edaeebcf301,Seconphx,,,,,,,,,Seconphx,original,1.0,{},Seconphx
+5a0b102c-b5af-4bc4-8dc0-5fb67c9012b4,Engaging Nutrition,,,,,,,,,Engaging Nutrition,original,1.0,{},Engaging Nutrition
+5a0b1c14-c2b3-43e6-a994-05b8d4bbc98c,Maryland Sbdc,,,,,,,,,Maryland Sbdc,original,1.0,{},Maryland Sbdc
+5a0b2663-bda6-4851-9ebe-0b67805ac5f4,Soltair,,,,,,,,,Soltair,original,1.0,{},Soltair
+5a0b2745-a552-4fd7-832d-140a2872d005,Northwinds of Wyoming,,,,,,,,,Northwinds of Wyoming,original,1.0,{},Northwinds of Wyoming
+5a0b2db0-10cb-4d7b-8333-4f6f68d52faf,Hjelmeland Excavating And Farm Drainage,,,,,,,,,Hjelmeland Excavating And Farm Drainage,original,1.0,{},Hjelmeland Excavating And Farm Drainage
+5a0b3040-a0cc-4ff2-8a84-c07c51e2f4e7,Keystone Trailer Services,,,,,,,,,Keystone Trailer Services,extracted,0.9,{},"Keystone Trailer Services provides a range of services for trailers, including repair and refurbishment, parts supply, state and FHWA inspections, clutch and transmission replacements, suspension repairs, and emergency roadside and local jockey services. Their typical customers are likely to be companies or individuals who own and operate trailers in the South Central Pennsylvania area. They differentiate themselves by emphasizing their experience, expertise, and commitment to highway safety, as well as their large facility, quick parts supply, and full-service offerings"
+5a0b33ef-2fe9-4afc-a20d-fbf2c1fb080f,Shattuck Specialty Advertising,,,,,,,,,Shattuck Specialty Advertising,original,1.0,{},Shattuck Specialty Advertising
+5a0b3d2f-70dc-4c9d-868e-ad21b022230e,Invenger Technologies Inc,http://Invenger Technologies Inc.,Information Technology,"Provider of a comprehensive payments platform intended to help insurers replace checks that makes electronic payments easier. The company's comprehensive payments platform offers a range of payment services include auto claims payments that allows clients to easily process and complete payments from any device using smartphone apps, portal or API, home claims payments that provides an electronic alternative to paper checks and filing and many others, enabling insurance companies replace checks for outbound payments.",,,,,Invenger Technologies Inc.,Invenger Technologies Inc,web_search,0.8,"{'found': True, 'company_name': 'Invenger Technologies Inc', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Chandra Mariyal
+5a0b3ddb-7eef-4369-a908-004f5f9b59b1,Tomás Achaval,http://www.wilab.io,Business/Productivity Software,Privately Held (backing),,,,,wilab.io,Tomás Achaval,original,1.0,{},Tomás Achaval
+5a0b512f-315a-44ea-bd19-4429d5401e11,3E Biotech,http://3ti.com/,,,,,,,,3E Biotech,original,1.0,{},3E Biotech
+5a0b5400-e7dc-44e9-a553-4b7b3cf51465,MVP Payroll,,,,,,,,,MVP Payroll,original,1.0,{},MVP Payroll
+5a0b6719-8974-4a21-bfcd-f1aea7ebb9fd,New York Times Building (commercial condominium unit),,,,,,,,,New York Times Building (commercial condominium unit),original,1.0,{},New York Times Building (commercial condominium unit)
+5a0b703d-1758-44d5-a157-a4267e182a19,Ideal Stone,,,,,,,,,Ideal Stone,original,1.0,{},Ideal Stone
+5a0b7222-577a-4990-8652-f71e9a554bbb,Ephrataagway,,,,,,,,,Ephrataagway,original,1.0,{},Ephrataagway
+5a0b9fe2-2f29-4ebb-982c-dc5ff2447970,INTERNAFTIKI SA,,,,,,,,,INTERNAFTIKI SA,original,1.0,{},INTERNAFTIKI SA
+5a0baf64-d716-425a-8f3f-e4a23774b9c3,Eley Associates Archictects PA,,,,,,,,,Eley Associates Archictects PA,original,1.0,{},Eley Associates Archictects PA
+5a0bcd60-d01f-41d3-93bd-4503207b937f,Fd Concrete Llc,http://fdconcrete.com,,,,,,,,Fd Concrete Llc,original,1.0,{},Fd Concrete Llc
+5a0c075e-b759-4f25-8695-de66f2f1c155,HORIZON A/C & REFRIGERATION,,,,,,,,,HORIZON A/C & REFRIGERATION,original,1.0,{},HORIZON A/C & REFRIGERATION
+5a0c10f5-8dc0-44a5-a3e7-2cf75148ea2a,Northville Lumber Company,,,,,,,,,Northville Lumber Company,original,1.0,{},Northville Lumber Company
+5a0c33af-3633-4eee-a894-a133d5b28ee7,Sometech Corporation,,,,,,,,,Sometech Corporation,original,1.0,{},Sometech Corporation
+5a0c3593-fe6b-4064-8f37-6431b424a959,Indomira,,,,,,,,,Indomira,original,1.0,{},Indomira
+5a0c3e82-ecef-47f0-bd6d-0488e7e22419,Fidel Pro Paint LLC,http://fidelpropaint.com,,,,,,,,Fidel Pro Paint LLC,original,1.0,{},Fidel Pro Paint LLC
+5a0c5bba-88e3-412a-aec5-2dd77f4f9af5,Finard Properties LLC,http://finardproperties.com,,,,,,,,Finard Properties LLC,original,1.0,{},Finard Properties LLC
+5a0c9eb0-9029-473a-885d-f175aacaa966,Savannah River Logistics,,,,,,,,,Savannah River Logistics,original,1.0,{},Savannah River Logistics
+5a0ca3df-4ee2-4313-9201-8e4ec7a20564,Pleasant Valley Redi-Mix,,,,,,,,,Pleasant Valley Redi-Mix,original,1.0,{},Pleasant Valley Redi-Mix
+5a0cacc0-da7f-41dd-ac93-5e43b10e0bce,Tectonixsteel,http://tectonixsteel.com,,,,,,,,Tectonixsteel,web_search,0.8,"{'found': True, 'company_name': 'Tectonixsteel', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Tectonix Steel
+5a0caf14-ab54-4790-a3ef-30f9099fd2dd,Nations Home Remodelers,,,,,,,,,Nations Home Remodelers,original,1.0,{},Nations Home Remodelers
+5a0ccfc1-c270-4a1b-9114-cc3feb598049,Roofing Intelligence,,,,,,,,,Roofing Intelligence,original,1.0,{},Roofing Intelligence
+5a0d026c-c666-4939-85b0-25d1a0db1b4e,MBRAUN,,,,,,,,,MBRAUN,original,1.0,{},MBRAUN
+5a0d09e3-d3fc-4015-b435-34fd90142ba1,Rollin S Express,,,,,,,,,Rollin S Express,original,1.0,{},Rollin S Express
+5a0d3733-c52f-4999-8c4a-caca920fa34a,Sears Holdings (10 Store Properties),,,,,,,,,Sears Holdings (10 Store Properties),original,1.0,{},Sears Holdings (10 Store Properties)
+5a0d4724-3fda-4731-a25f-9ab4950c9e53,Vaaigroup,http://www.vaaigroup.com,Consulting Services (B2B),Privately Held (no backing),,,,,vaaigroup.com,Vaaigroup,web_search,0.8,"{'found': True, 'company_name': 'Vaaigroup', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Anthony Rogers
+5a0d561b-8ab5-4d42-91f9-17ce89c80eec,Hull Door LLC,http://hulldoor.com,,,,,,,,Hull Door LLC,original,1.0,{},Hull Door LLC
+5a0d690b-9938-46e5-8420-21099868a274,Pcw Microsystems,,,,,,,,,Pcw Microsystems,original,1.0,{},Pcw Microsystems
+5a0d7dfb-e435-4bdc-8413-701d2241c1e2,Michael De Loach Brands,,,,,,,,,Michael De Loach Brands,original,1.0,{},Michael De Loach Brands
+5a0d82bc-d0fe-4968-8e29-d671787501f4,Eagle Mountain HR,,,,,,,,,Eagle Mountain HR,original,1.0,{},Eagle Mountain HR
+5a0d8a74-fbe5-4098-8b99-3972f3dd3d2a,Dolton Park District,,,,,,,,,Dolton Park District,original,1.0,{},Dolton Park District
+5a0d8af9-9b07-48dd-9ce7-98b8770df4a1,Staats Service Today,,,,,,,,,Staats Service Today,original,1.0,{},Staats Service Today
+5a0d8d62-956e-4fac-8780-b5ce9f4ebe44,Reapsun,,,,,,,,,Reapsun,original,1.0,{},Reapsun
+5a0d9044-5350-410b-8719-b2a2d6935525,Masbe Graha International California,,,,,,,,,Masbe Graha International California,original,1.0,{},Masbe Graha International California
+5a0dad99-23e1-4ad7-a278-07b32ddc3b45,Snic Solutions,,,,,,,,,Snic Solutions,original,1.0,{},Snic Solutions
+5a0dbbac-c2f0-43c4-b8a5-f55b5c725c1e,Midwest Time Recorder,,,,,,,,,Midwest Time Recorder,original,1.0,{},Midwest Time Recorder
+5a0dc6e4-12d9-485d-876d-5b4c04fa2b3f,Hermes Biomaterials,,,,,,,,,Hermes Biomaterials,original,1.0,{},Hermes Biomaterials
+5a0dcbbd-1469-4240-a0f5-7f881910e2ff,Ryanroad1,,,,,,,,,Ryanroad1,original,1.0,{},Ryanroad1
+5a0dd27e-6256-4451-8d86-bf6296b1ef3a,PayWhat,,,,,,,,,PayWhat,original,1.0,{},PayWhat
+5a0e0761-0400-4e7c-b4de-6338b8c1125e,Lawyers' Video Studio,,,,,,,,,Lawyers' Video Studio,original,1.0,{},Lawyers' Video Studio
+5a0e2dbd-b37e-4196-bf8e-980ae2020d91,OLIVER / HATCHER CONSTRUCTION,,,,,,,,,OLIVER / HATCHER CONSTRUCTION,original,1.0,{},OLIVER / HATCHER CONSTRUCTION
+5a0e6ec1-0c16-4985-8bd6-679023ae11c1,FocusInk,,,,,,,,,FocusInk,original,1.0,{},FocusInk
+5a0e72f2-09ee-4d62-89c2-d86a8b1b9645,Postillion Wealth Management,,,,,,,,,Postillion Wealth Management,original,1.0,{},Postillion Wealth Management
+5a0e8caa-3715-42d7-af16-1f8d63eed8a0,Parish Volunteer Fire Co,,,,,,,,,Parish Volunteer Fire Co,original,1.0,{},Parish Volunteer Fire Co
+5a0e9615-7816-4800-82fc-47ba4fdd7a25,Eagle Advantage Solutions,,,,,,,,,Eagle Advantage Solutions,original,1.0,{},Eagle Advantage Solutions
+5a0ea9db-3205-4272-b1dc-b3b84e2ad19e,BioImmune,,,,,,,,,BioImmune,original,1.0,{},BioImmune
+5a0eacfb-e5ad-4d37-8dae-8afbdf3872c6,Jfg Nc,,,,,,,,,Jfg Nc,original,1.0,{},Jfg Nc
+5a0ebae9-a765-4d3d-9303-855aaeaea5b6,Ken Goodwin,,,,,,,,,Ken Goodwin,original,1.0,{},Ken Goodwin
+5a0ec0ee-dc00-494d-aae2-6ffe4e963dd6,"SERVPRO of Cumberland, Morgan & White Counties",,,,,,,,,"SERVPRO of Cumberland, Morgan & White Counties",original,1.0,{},"SERVPRO of Cumberland, Morgan & White Counties"
+5a0ef704-b469-42fe-9149-a851e5d8d98b,RIGUPATL,,,,,,,,,RIGUPATL,original,1.0,{},RIGUPATL
+5a0ef82e-fc0f-47c4-aac9-edb1a62359a1,Southards Recycling,,,,,,,,,Southards Recycling,original,1.0,{},Southards Recycling
+5a0efd9b-7bf1-4153-8909-ebcad9ed9feb,Motor On,,,,,,,,,Motor On,original,1.0,{},Motor On
+5a0f0731-363e-4846-b687-bdd705f22d0b,Kiamalu Consulting & Investigations,,,,,,,,,Kiamalu Consulting & Investigations,original,1.0,{},Kiamalu Consulting & Investigations
+5a0f113e-cc7e-4806-ba1b-5bdb2f0d3a73,H and L Auto Parts and Service,,,,,,,,,H and L Auto Parts and Service,original,1.0,{},H and L Auto Parts and Service
+5a0f3e6a-6ba3-48e1-9810-2acf6d15d9e1,Highland Engineering,,,,,,,,,Highland Engineering,original,1.0,{},Highland Engineering
+5a0f3ed0-3e67-49ad-a10d-8fd619cc0520,HealthCoin Exchange,,,,,,,,,HealthCoin Exchange,original,1.0,{},HealthCoin Exchange
+5a0f5119-4ac0-4680-9497-c90ce22afd14,project takeoff worldwide,,,,,,,,,project takeoff worldwide,original,1.0,{},project takeoff worldwide
+5a0f5f6d-f9bd-461b-a012-23001a2ee698,Rodef Shalom Congregation,,,,,,,,,Rodef Shalom Congregation,original,1.0,{},Rodef Shalom Congregation
+5a0f6399-af35-4647-8bbd-cc289d7cf719,TCE Denim,,,,,,,,,TCE Denim,original,1.0,{},TCE Denim
+5a0f712a-5cf6-4f51-97c9-dbc6593ae983,Ovard Construction,,,,,,,,,Ovard Construction,original,1.0,{},Ovard Construction
+5a0fb67d-5495-422d-9460-8b2451e21e2d,Natural Enclosures Fence CO,http://naturalenclosures.com,,,,,,,,Natural Enclosures Fence CO,original,1.0,{},Natural Enclosures Fence CO
+5a0fbecf-df0b-40ce-8ed1-72f54a3cafea,Mirage Trailers,,,,,,,,,Mirage Trailers,original,1.0,{},Mirage Trailers
+5a0fdb4d-5d65-4550-b398-c15b47334bfb,StreamYard,,,,,,,,,StreamYard,original,1.0,{},StreamYard
+5a0fe179-7f6a-4467-9ac9-7772c280986f,Service Tool and Die Two,,,,,,,,,Service Tool and Die Two,original,1.0,{},Service Tool and Die Two
+5a0fe3db-d765-4595-bdf6-89014b85fa13,Optimum Sorting,,,,,,,,,Optimum Sorting,original,1.0,{},Optimum Sorting
+5a0ff730-e2c8-43ef-9169-a5c9b80b73ca,Donna Pascoe Salon,http://donnapascoesalon.com,,,,,,,,Donna Pascoe Salon,original,1.0,{},Donna Pascoe Salon
+5a10143f-eede-4d2e-a9c4-0c13ec105df8,Hion Digital,,,,,,,,,Hion Digital,original,1.0,{},Hion Digital
+5a103236-6a73-48d8-8425-d17f86cbe8d4,Fountain City Family Chiropractic,,,,,,,,,Fountain City Family Chiropractic,original,1.0,{},Fountain City Family Chiropractic
+5a103363-e41c-41c6-a8d6-e035fb2fc2b4,Gutknecht Construction,,,,,,,,,Gutknecht Construction,original,1.0,{},Gutknecht Construction
+5a105986-5758-4b88-9635-c986e7f657cc,Olde Fort Restoration,,,,,,,,,Olde Fort Restoration,original,1.0,{},Olde Fort Restoration
+5a105a43-1b52-44a8-ab7f-79e091d88851,Hmfusion Marketing,,,,,,,,,Hmfusion Marketing,original,1.0,{},Hmfusion Marketing
+5a1067e4-e6d0-4aed-ab6c-ab35754d5192,Southcoastshortload,http://southcoastshortload.com,,,,,,,,Southcoastshortload,web_search,0.8,"{'found': True, 'company_name': 'Southcoastshortload', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Southcoast Shortload
+5a10b8f7-689f-4af3-9a8e-c7d4d0fe3adf,Central Valley Engineering,http://cenvalley.com,,,,,,,,Central Valley Engineering,original,1.0,{},Central Valley Engineering
+5a10bdde-d2d1-4812-b8d7-feac882cd1d8,Microcom Worldwide Data Recovery Service,,,,,,,,,Microcom Worldwide Data Recovery Service,original,1.0,{},Microcom Worldwide Data Recovery Service
+5a10c264-f332-46d5-b21e-73c4e2451c18,Lcc Enterprises,,,,,,,,,Lcc Enterprises,original,1.0,{},Lcc Enterprises
+5a10d527-21b3-4db0-bb9a-97fc1105fcb4,Dynamite Paving & Sealcoat,,,,,,,,,Dynamite Paving & Sealcoat,original,1.0,{},Dynamite Paving & Sealcoat
+5a111301-4607-46ac-a773-87ad6be90f42,A&a Bus Service,,,,,,,,,A&a Bus Service,original,1.0,{},A&a Bus Service
+5a111566-48cb-4653-85fc-3429b14f6d8d,Gearmakers,,,,,,,,,Gearmakers,original,1.0,{},Gearmakers
+5a112889-bbab-4649-81de-be6f2252d28d,Opus Automazione,,,,,,,,,Opus Automazione,original,1.0,{},Opus Automazione
+5a112fff-6827-4739-b7ec-563d68842509,Heritage On The Garden Trust,,,,,,,,,Heritage On The Garden Trust,original,1.0,{},Heritage On The Garden Trust
+5a11883d-196f-468e-b092-30292951caf7,Lavidamassagemariettaga,,,,,,,,,Lavidamassagemariettaga,original,1.0,{},Lavidamassagemariettaga
+5a118f3a-1660-49af-b2eb-f52e87099b28,Herrmannsolar,https://herrmannsolar.de/,,,,,,,,Herrmannsolar,web_search,0.8,"{'found': True, 'company_name': 'Herrmannsolar', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Herrmann Solar
+5a11924c-da8d-4138-a8c9-d7329fcd2b2d,Escrow Specialists,,,,,,,,,Escrow Specialists,original,1.0,{},Escrow Specialists
+5a11951b-e410-4d0c-ae51-bbbc19b2499b,Gandee and Associates,,,,,,,,,Gandee and Associates,original,1.0,{},Gandee and Associates
+5a11c01e-ed95-47d3-ba40-52d897fabaad,Solarcentx Incorporated,,,,,,,,,Solarcentx Incorporated,original,1.0,{},Solarcentx Incorporated
+5a11c437-156b-4e56-9823-4e487def09ac,eHawk,,,,,,,,,eHawk,original,1.0,{},eHawk
+5a11cefa-ceaa-48d7-8dda-deb4883f8a1c,Gotham Painting Company Inc,,,,,,,,,Gotham Painting Company Inc,extracted,0.9,{},"Gotham Painting Company Inc provides high-end residential painting and paper-hanging services. Their typical customers are homeowners, property managers, and businesses seeking upscale painting and decorating services. They claim to differentiate themselves through their extensive experience, having been in the industry for over thirty years, as well as their team of skilled painters and paper-hangers. They position themselves as a top choice for premium-quality painting and decorating services in the residential market"
+5a11db07-320e-454c-b124-17ba81c1ae68,prosperity path financial and insurance solutions,,,,,,,,,prosperity path financial and insurance solutions,original,1.0,{},prosperity path financial and insurance solutions
+5a11e8f1-036f-4cde-842f-17c11c8aea2e,Midwest Industries (Consumer Non-Durables),,,,,,,,,Midwest Industries (Consumer Non-Durables),original,1.0,{},Midwest Industries (Consumer Non-Durables)
+5a11eb70-5976-4de8-b330-e45e2536b393,Everzinc International,,,,,,,,,Everzinc International,original,1.0,{},Everzinc International
+5a120d09-c889-43b1-8cab-5ef707bfdd09,Local Garage Door Repair Dania Beach,,,,,,,,,Local Garage Door Repair Dania Beach,original,1.0,{},Local Garage Door Repair Dania Beach
+5a1216a1-1d2d-40f6-92d8-826280a21852,Bennett and Cole Water Solutions,http://bennettandcole.com,,,,,,,,Bennett and Cole Water Solutions,original,1.0,{},Bennett and Cole Water Solutions
+5a122ada-6891-4b19-a046-35f7f53643b3,Kenneth Fake Agency,,,,,,,,,Kenneth Fake Agency,original,1.0,{},Kenneth Fake Agency
+5a1237a1-08c8-463b-b8a1-87f61e634d33,New York Printing Solutions,,,,,,,,,New York Printing Solutions,original,1.0,{},New York Printing Solutions
+5a12431f-3392-48a4-b0fb-32598423ac08,Fair Industries,,,,,,,,,Fair Industries,original,1.0,{},Fair Industries
+5a124716-3283-49e8-a79d-507979cc75b7,MediaEncounter,,,,,,,,,MediaEncounter,original,1.0,{},MediaEncounter
+5a124e67-d21a-46d6-ba90-3d5e822c1b78,Dotworkz,,,,,,,,,Dotworkz,original,1.0,{},Dotworkz
+5a1265e1-a1f1-49e1-88c4-c2bcb4ecbbf1,Mcwil Sports Surfaces Inc.,,,,,,,,,Mcwil Sports Surfaces Inc.,extracted,0.9,{},"Mcwil Sports Surfaces Inc. specializes in the installation and maintenance of sports athletic surfaces, including wood athletic flooring, rubber athletic flooring, outdoor sport surfaces, and turf. Their typical customers range from NBA courts, college gymnasiums, high school weight rooms, middle school MPR’s, and special projects such as outdoor rooftop basketball courts. Mcwil Sports Surfaces differentiates itself through its commitment to excellence, integrity, professional installations, and superior services, as well as its partnerships with leading companies to offer the best products in the industry"
+5a128960-fbd8-417a-b1e1-b536bceee4b7,Kocher Schirra Goharizi Consulting Engineers,,,,,,,,,Kocher Schirra Goharizi Consulting Engineers,original,1.0,{},Kocher Schirra Goharizi Consulting Engineers
+5a12a683-c744-46cb-b2ba-8591913bfb5b,Green Mountain Rd,,,,,,,,,Green Mountain Rd,original,1.0,{},Green Mountain Rd
+5a12ac59-aa9c-465a-ad47-60438795e80d,Electric Gates & Access Controls,,,,,,,,,Electric Gates & Access Controls,original,1.0,{},Electric Gates & Access Controls
+5a12ac98-4dfe-4489-bf89-f32d9cc812e5,Ngr,http://www.ngr.ai/,Information Technology,"Developer of an optimization solution designed for fleets of mobile warehouse robots. The company connects the WMS system to all the mobile robots, even if they're from more than one manufacturer, and orchestrates warehouse operations to be intelligent, safe, and efficient. thus enabling smooth supply chain logistics.",,,,,,Ngr,web_search,0.8,"{'found': True, 'company_name': 'Ngr', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",David Pepper
+5a12af52-3576-4459-b241-1a8343c7a94e,LatTrelle's Managment,,,,,,,,,LatTrelle's Managment,original,1.0,{},LatTrelle's Managment
+5a12afac-6680-4dc6-a281-433e568ba4f1,"Swbr Architecture, Engineering and Landscape Architecture, D.P.C",,,,,,,,,"Swbr Architecture, Engineering and Landscape Architecture, D.P.C",original,1.0,{},"Swbr Architecture, Engineering and Landscape Architecture, D.P.C"
+5a12c312-18ec-4d6d-951b-ee462f910d92,Webstarted,http://www.webstarted.com,Business/Productivity Software,Privately Held (no backing),,,,,webstarted.com,Webstarted,web_search,0.8,"{'found': True, 'company_name': 'Webstarted', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Javier Caruso
+5a12ceff-1524-400f-a4f7-47ef79032163,Corvette Speedway in Miami,http://corvettespeedway.com,,,,,,,,Corvette Speedway in Miami,original,1.0,{},Corvette Speedway in Miami
+5a12cf93-cd69-4c1d-8aa7-8b2b86c382e1,Mrivision,,,,,,,,,Mrivision,original,1.0,{},Mrivision
+5a12d97b-8e2e-484f-9863-9f16ac0a2ac0,Gray Design Group,,,,,,,,,Gray Design Group,original,1.0,{},Gray Design Group
+5a12f62c-bee5-48b4-bf00-c08d87e7a6ed,M. J. Boyle General Contractor,,,,,,,,,M. J. Boyle General Contractor,original,1.0,{},M. J. Boyle General Contractor
+5a12f789-67ab-44e2-bff7-fb1d96e0c270,Neighborlypest,,,,,,,,,Neighborlypest,original,1.0,{},Neighborlypest
+5a1358b5-2ad9-45d5-b690-f322e2addbd0,Digibeat,,,,,,,,,Digibeat,original,1.0,{},Digibeat
+5a137ac8-d4a2-4dcc-a1a1-bed0d0824d55,Lang Bar-B-Q Grills,,,,,,,,,Lang Bar-B-Q Grills,original,1.0,{},Lang Bar-B-Q Grills
+5a13ba1d-cdbc-4ee2-a50a-1a7a5b465485,"Investopedia, Llc","http://Investopedia, LLC",Information Technology,"Operator of an online investor education portal based in New York. The company provides consumers with a comprehensive library of financial terms, articles, tutorials and investing education tools, such as virtual trading simulators and exam preparation materials, thereby simplifying financial decisions and information to give readers the confidence to manage every aspect of their financial life.",,,,,"Investopedia, LLC","Investopedia, Llc",web_search,0.8,"{'found': True, 'company_name': 'Investopedia, Llc', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Katherine Divney
+5a13cc4c-df57-4820-92b1-2251649eb23f,metal roofs of texas,,,,,,,,,metal roofs of texas,original,1.0,{},metal roofs of texas
+5a13dc87-8015-4f3b-b84b-1f820874eff7,Southeastern Insulation,,,,,,,,,Southeastern Insulation,original,1.0,{},Southeastern Insulation
+5a13f8ff-e815-4983-85eb-edd79e3b4c2d,Crosbyhealth,http://www.crosbyhealth.com,"Developer of a medical documentation correction software designed to automate tasks and ensure accurate reimbursement for healthcare providers. The company's software uses clinical artificial intelligence, natural language processing, expert appeal writers and a submission engine to automate the creation of clinical appeal letters and streamline revenue cycle management, enabling healthcare providers to streamline healthcare processes, improve appeal outcomes and focus on patient care.",Business/Productivity Software,,,,,crosbyhealth.com,Crosbyhealth,web_search,0.8,"{'found': True, 'company_name': 'Crosbyhealth', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Rishi Gowda
+5a1411d8-578e-478f-989f-04c998359b0b,Showtec,,,,,,,,,Showtec,original,1.0,{},Showtec
+5a142264-ce13-4ba7-a4af-11ace595cab2,Cxera,http://cxera.com,"The company primarily operates in the Software Development Applications industry. CXera was founded in 2021 and is headquartered in Edina, MN.",Software Development Applications,,,,,cxera.com,Cxera,web_search,0.8,"{'found': True, 'company_name': 'Cxera', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Hon Wong
+5a143f7f-6c28-4f43-8d88-3b14919dff1e,"Water-Flo, Inc",,,,,,,,,"Water-Flo, Inc",original,1.0,{},"Water-Flo, Inc"
+5a1448de-2a9c-468a-abbd-ad85a4cf7157,Kager Industries,,,,,,,,,Kager Industries,original,1.0,{},Kager Industries
+5a147043-aabb-4a62-9c19-e71fe1dc6a74,Duracote Corporation,,,,,,,,,Duracote Corporation,original,1.0,{},Duracote Corporation
+5a1481d3-3822-4630-8f82-9cdc168ce3b2,Oxbow River & Stream Restoration,,,,,,,,,Oxbow River & Stream Restoration,original,1.0,{},Oxbow River & Stream Restoration
+5a149473-e695-4a0a-9ae4-e3d1bf6bf37e,HGI Healthcare,,,,,,,,,HGI Healthcare,original,1.0,{},HGI Healthcare
+5a149f27-b798-419a-9315-3852593d31ef,Teamable,http://www.teamable.com,Human Capital Services,Privately Held (backing),,,,,teamable.com,Teamable,web_search,0.8,"{'found': True, 'company_name': 'Teamable', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Justin Palmer
+5a14cc28-f45a-4195-9df5-473de6601d00,Sales & Engineering,http://sales-eng.com,,,,,,,,Sales & Engineering,original,1.0,{},Sales & Engineering
+5a14d25e-cbd8-4044-9cee-3f7eec243742,Johnson Marble Machinery,,,,,,,,,Johnson Marble Machinery,original,1.0,{},Johnson Marble Machinery
+5a14ee27-d178-44e2-a3c3-4b5116bad7bf,"Figstack, Inc","http://Figstack, Inc.",Information Technology,"Developer of an online coding technology tool designed to read and write software codes across languages. The company's cloud-based SaaS technology platform allows users to interpret the coding details and explain users in natural language and also measure the efficiency of their code, enabling clients to better understand and write code fast.",,,,,"Figstack, Inc.","Figstack, Inc",web_search,0.8,"{'found': True, 'company_name': 'Figstack, Inc', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Han Wang
+5a14f70c-1d05-4c3b-95dc-84823a9dd4b7,R.C. Technical Welding & Fabrication,,,,,,,,,R.C. Technical Welding & Fabrication,original,1.0,{},R.C. Technical Welding & Fabrication
+5a14f92a-5722-48d2-8d39-14962e521f49,Agfabrication,http://agfabrication.com,,,,,,,,Agfabrication,web_search,0.8,"{'found': True, 'company_name': 'Agfabrication', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Ag Fabrication
+5a14fb3e-8908-468e-bddb-d1785955b774,iGrafx,,,,,,,,,iGrafx,original,1.0,{},iGrafx
+5a1501d5-a7c5-432c-8506-841523406e71,Polaris Building Maintenance,,,,,,,,,Polaris Building Maintenance,original,1.0,{},Polaris Building Maintenance
+5a15329b-af00-4ea7-a23c-cde46807f293,Cerenetex,,,,,,,,,Cerenetex,original,1.0,{},Cerenetex
+5a1549e9-0f7e-4fa8-962b-ab0c5db14999,Im3,,,,,,,,,Im3,original,1.0,{},Im3
+5a1553bc-feb0-44a8-9fee-90e82cdbdafe,Garage Door Repair Fort Lupton,,,,,,,,,Garage Door Repair Fort Lupton,original,1.0,{},Garage Door Repair Fort Lupton
+5a15658d-fa33-47a7-a8e7-c2bf880ce748,Fivewows,,,,,,,,,Fivewows,original,1.0,{},Fivewows
+5a156a3e-3711-459c-9e15-997dd5b73b99,MIN-AD,,,,,,,,,MIN-AD,original,1.0,{},MIN-AD
+5a157208-0ef4-47bb-9710-8dec6c6f27dd,Bits In Glass,,,,,,,,,Bits In Glass,original,1.0,{},Bits In Glass
+5a157430-da29-468d-94db-c7561bc43158,Premier Fabricating & Stamping,,,,,,,,,Premier Fabricating & Stamping,original,1.0,{},Premier Fabricating & Stamping
+5a15771e-bac3-4b17-8c9c-3cb161739916,Newport Beach Vacation Properties,,,,,,,,,Newport Beach Vacation Properties,original,1.0,{},Newport Beach Vacation Properties
+5a158bb0-2e82-48f4-ac4b-5338bf739380,Pellini Gold Cordes,,,,,,,,,Pellini Gold Cordes,original,1.0,{},Pellini Gold Cordes
+5a1598aa-871e-406d-82de-d8debcb9084e,SafeNet (Government Solutions Business),,,,,,,,,SafeNet (Government Solutions Business),original,1.0,{},SafeNet (Government Solutions Business)
+5a15c778-fa09-4966-9699-3e416f4492fc,SpeckledFish,,,,,,,,,SpeckledFish,original,1.0,{},SpeckledFish
+5a15ca14-37d2-4085-9e53-1c2749d0a2bc,Gold Seal,,,,,,,,,Gold Seal,original,1.0,{},Gold Seal
+5a15d064-0ae5-4760-9f17-9b0e4f2e50e4,Larry Stinson Plumbing,http://larrystinsonplumbing.com,,,,,,,,Larry Stinson Plumbing,original,1.0,{},Larry Stinson Plumbing
+5a15e924-3252-4c0b-a149-b5b204a53487,Southland Landscape Management,,,,,,,,,Southland Landscape Management,original,1.0,{},Southland Landscape Management
+5a15eb7a-8149-4fb7-9d28-0715d865eb6d,Housing Authority of Grays Harbor County,,,,,,,,,Housing Authority of Grays Harbor County,original,1.0,{},Housing Authority of Grays Harbor County
+5a15ff0e-49cb-4f8d-a04a-2d1bf7d96cd2,Henard Metal Fabricators Inc,,,,,,,,,Henard Metal Fabricators Inc,extracted,0.9,{},"Henard Metal Fabricators Inc is a family-owned structural and miscellaneous steel fabricator. They have been in business since 1979, serving the needs of contractors and projects across the United States. They specialize in fabricating handrails, staircases, and other steel structures. They position themselves as a company dedicated to hard work, high-quality products, and meeting the needs of their customers' schedules. Their typical customers are contractors and project owners who require steel fabrication services for their construction projects"
+5a16004e-49ed-413e-9d06-641df2116535,BTIG,,,,,,,,,BTIG,original,1.0,{},BTIG
+5a1601ab-5a92-48a1-a1d1-3c57cb420a14,flash restore,,,,,,,,,flash restore,original,1.0,{},flash restore
+5a1613eb-805e-4471-a90e-f63a2dbeff9c,Leisure Time Pool Service & Repair,http://leisuretimepool.com,,,,,,,,Leisure Time Pool Service & Repair,original,1.0,{},Leisure Time Pool Service & Repair
+5a161d16-e9d4-4611-9987-2c627d20dd71,SB Cyclery,http://sbcyclery.com,,,,,,,,SB Cyclery,original,1.0,{},SB Cyclery
+5a1621d7-239f-47fd-a94a-b82f2c5a3568,George L. Wilson,,,,,,,,,George L. Wilson,original,1.0,{},George L. Wilson
+5a16268a-e2a3-4ca8-9f1b-b3d71ec13a01,InterCool,,,,,,,,,InterCool,original,1.0,{},InterCool
+5a1629e5-4ea0-4939-b398-bf102954294c,Ashton Granite Design,http://ashtongranitetulsa.com,,,,,,,,Ashton Granite Design,original,1.0,{},Ashton Granite Design
+5a164c6f-5f20-40c5-b9ca-5ce9a73060d3,"Red Oak Apartment Homes, Inc",,,,,,,,,"Red Oak Apartment Homes, Inc",original,1.0,{},"Red Oak Apartment Homes, Inc"
+5a1654e1-9946-48df-95cd-ceae67c4d685,Sovereign Tool & Engineering,,,,,,,,,Sovereign Tool & Engineering,original,1.0,{},Sovereign Tool & Engineering
+5a167f8e-44e4-49d2-9907-690879bb9198,Exteriorsbychadrobert,,,,,,,,,Exteriorsbychadrobert,original,1.0,{},Exteriorsbychadrobert
+5a16a4c7-003b-4f44-afe7-1ef42fd80f94,Hegedan,,,,,,,,,Hegedan,original,1.0,{},Hegedan
+5a16c429-203b-40d6-94df-5777a8f17f55,Marlin Business Services (Loan portfolio),,,,,,,,,Marlin Business Services (Loan portfolio),original,1.0,{},Marlin Business Services (Loan portfolio)
+5a16c9b0-58c6-4df8-b818-718603362228,El Sol Contracting and Construction Corporation,,,,,,,,,El Sol Contracting and Construction Corporation,original,1.0,{},El Sol Contracting and Construction Corporation
+5a16cb5d-f61f-4719-b358-8924e7070e75,Office Pride of North Alabama,,,,,,,,,Office Pride of North Alabama,original,1.0,{},Office Pride of North Alabama
+5a16d9bd-5f17-4251-8d93-48570a3f2ab1,Capital Paving Inc.,,,,,,,,,Capital Paving Inc.,extracted,0.9,{},"Capital Paving Inc. is a family-owned company that offers paving services, primarily serving the Treasure Valley since 1969. Their typical customers include commercial and residential property owners, developers, municipalities, and other entities in need of paving services. They differentiate themselves by emphasizing their dedication, integrity, and experience in delivering quality and timely projects, as well as their commitment to establishing lasting relationships with their customers"
+5a16defd-c8ec-4a8e-8d3a-905dc08ca0d3,ONCALL Group Australia,,,,,,,,,ONCALL Group Australia,original,1.0,{},ONCALL Group Australia
+5a16f263-0923-4380-ad04-3a8b1dbad030,Flyleaf Windows,,,,,,,,,Flyleaf Windows,original,1.0,{},Flyleaf Windows
+5a16f4de-8e60-483d-9210-a8a5cf8b914b,Denker Culligan Water,http://culligandenkerwaterconditioning.com,,,,,,,,Denker Culligan Water,original,1.0,{},Denker Culligan Water
+5a16fd92-39dd-47ff-82f7-c947c0ed08c9,Rch Group,,,,,,,,,Rch Group,original,1.0,{},Rch Group
+5a1714e1-c829-4eff-856a-55bf9dec7294,DTA Community Management Services,,,,,,,,,DTA Community Management Services,original,1.0,{},DTA Community Management Services
+5a171aff-6fc4-4bc8-a62e-27f6d23a1ef1,D2Iq,http://www.d2iq.com,"Developer of a data center operating system intended to simplify operational efforts for maximum impact. The company empowers organizations to navigate and accelerate the success of cloud deployment with enterprise-grade technologies on shared resources that span the data center, enabling enterprises to embrace open-source and cloud-native innovations in a hassle-free manner.",Systems and Information Management,,,,,d2iq.com,D2Iq,web_search,0.8,"{'found': True, 'company_name': 'D2Iq', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Florian Leibert
+5a1724df-a61b-4e39-b5be-cc929c264c1b,Mar Dat,,,,,,,,,Mar Dat,original,1.0,{},Mar Dat
+5a172770-383b-4cb3-bfd0-29272d6590aa,Elementmetals,,,,,,,,,Elementmetals,original,1.0,{},Elementmetals
+5a172b9d-fa96-46f6-bc62-66a611c0c00a,Intune Engineering,,,,,,,,,Intune Engineering,original,1.0,{},Intune Engineering
+5a173985-dcd1-4e83-9fb0-b1ec726f68e6,Drive Customers,,,,,,,,,Drive Customers,original,1.0,{},Drive Customers
+5a175d5b-9c9f-46f2-bbc3-c768becf0ecd,H. H. Howard and Sons,,,,,,,,,H. H. Howard and Sons,original,1.0,{},H. H. Howard and Sons
+5a177ed2-acf3-4c47-b426-ba50d2efb991,Associated Masonry Products (AMP),,,,,,,,,Associated Masonry Products (AMP),extracted,0.9,{},"Associated Masonry Products (AMP) is a Tennessee-based supplier and residential installer of quality masonry products, including brick, stone, pavers, and fireplace materials. Their typical customers are homeowners, builders, contractors, and commercial developers who are in need of masonry products for residential or commercial construction projects. AMP differentiates themselves through their reputation for quality, innovation, and customer service, positioning themselves as the top turnkey masonry supplier in Middle Tennessee"
+5a179ad6-a02e-4fa0-a896-805e0060cb6b,Metro World Properties,,,,,,,,,Metro World Properties,original,1.0,{},Metro World Properties
+5a17a82b-8141-41c5-8adb-bfb74ad91d4d,Grantetile,,,,,,,,,Grantetile,original,1.0,{},Grantetile
+5a17b884-765c-4f26-af64-6c6bd0271566,Mission Vista,,,,,,,,,Mission Vista,original,1.0,{},Mission Vista
+5a17d8aa-ee1c-4aed-b97a-2f98c718e37e,"Pioneer Plumbing, Heating & Cooling",,,,,,,,,"Pioneer Plumbing, Heating & Cooling",original,1.0,{},"Pioneer Plumbing, Heating & Cooling"
+5a17ff32-bfac-4b34-858f-574f36e0f6ac,Kerwin Construction Co,,,,,,,,,Kerwin Construction Co,original,1.0,{},Kerwin Construction Co
+5a183043-eda6-4545-9dd4-f55c3e73ab04,Superior Fence Of Georgia,,,,,,,,,Superior Fence Of Georgia,original,1.0,{},Superior Fence Of Georgia
+5a183300-c677-4bd7-aae6-e564fe69e28c,Schenker's Auto Radiator,,,,,,,,,Schenker's Auto Radiator,original,1.0,{},Schenker's Auto Radiator
+5a187aef-0157-410c-b13d-4d4d5efe4872,Energizing Habits by GabriellaOM,,,,,,,,,Energizing Habits by GabriellaOM,original,1.0,{},Energizing Habits by GabriellaOM
+5a189313-1d76-4358-8acc-80b380e6e1e8,Graham Auto Sales,,,,,,,,,Graham Auto Sales,original,1.0,{},Graham Auto Sales
+5a18ac6d-1edd-44d3-99fc-331e374faa0d,Smith Cabinet Shop,,,,,,,,,Smith Cabinet Shop,original,1.0,{},Smith Cabinet Shop
+5a19165e-44f1-4685-ad96-799b140dc9d8,Simi Enterprises (10 Former Dairy Barn Properties In New York),,,,,,,,,Simi Enterprises (10 Former Dairy Barn Properties In New York),original,1.0,{},Simi Enterprises (10 Former Dairy Barn Properties In New York)
+5a19288e-ddf0-4049-8d93-1cfd1a9db02d,Duggan,,,,,,,,,Duggan,extracted,0.9,{},"Duggan & Duggan General Contractor, Inc. provides design/build construction solutions, general contracting, and construction management services. Their typical customers include commercial, industrial, academic, healthcare, hospitality, and institutional clients within a two-hour radius of Allegany, New York. They differentiate themselves through their personal approach and professional expertise, aiming to build lasting relationships with their clients"
+5a192895-c13d-4efa-8d4d-a0ca6cf59a13,"Pro Vinyl, Inc",http://provinylinc.com,,,,,,,,"Pro Vinyl, Inc",original,1.0,{},"Pro Vinyl, Inc"
+5a19485c-72c1-41ff-a1d8-64eb149d8847,AAAgent Services,,,,,,,,,AAAgent Services,original,1.0,{},AAAgent Services
+5a1962d1-9a62-484e-8f0b-3469d4f75460,M&R Construction Group,,,,,,,,,M&R Construction Group,original,1.0,{},M&R Construction Group
+5a19721f-6071-45a5-bf72-01895c4bd3d8,John Prosock Machine,,,,,,,,,John Prosock Machine,original,1.0,{},John Prosock Machine
+5a1978a4-407c-4f29-a062-486b179c05b6,Setfords Solicitors,,,,,,,,,Setfords Solicitors,original,1.0,{},Setfords Solicitors
+5a198b78-69d0-412a-91a1-b2fb5decbdcb,LINKTHE2,,,,,,,,,LINKTHE2,original,1.0,{},LINKTHE2
+5a199aed-bd27-4334-8e3a-e16ed95bbba3,Shred All,,,,,,,,,Shred All,original,1.0,{},Shred All
+5a199c38-43e9-42bc-840d-1d1feb8bf170,Prophetic Image Expressions,,,,,,,,,Prophetic Image Expressions,original,1.0,{},Prophetic Image Expressions
+5a199c49-75bb-46dd-8398-7af79f71d5ae,popper metrics,,,,,,,,,popper metrics,original,1.0,{},popper metrics
+5a199c9f-a01f-403b-a7b7-53530055fd35,Paul Finch and Associates,,,,,,,,,Paul Finch and Associates,original,1.0,{},Paul Finch and Associates
+5a19b9cf-8e42-4690-8043-2aed3d3e0989,Korea Laundry Industry,,,,,,,,,Korea Laundry Industry,original,1.0,{},Korea Laundry Industry
+5a19be76-7e32-4fa3-83b6-d4c72921a479,Swyft Connect,,,,,,,,,Swyft Connect,original,1.0,{},Swyft Connect
+5a19e672-0c17-4771-9b0a-243d47a63ad7,Sign Industries,,,,,,,,,Sign Industries,original,1.0,{},Sign Industries
+5a19efe8-569d-417a-98fb-1a937e232bc4,Cook's Air Conditioning & Heating Specialists,http://cooksair.com,,,,,,,,Cook's Air Conditioning & Heating Specialists,original,1.0,{},Cook's Air Conditioning & Heating Specialists
+5a19fd7b-f852-4f84-a7fb-dfbd5d30ca3f,powerserg data systems,,,,,,,,,powerserg data systems,original,1.0,{},powerserg data systems
+5a1a080f-a1ee-429d-a1ef-a4bff8e60e9e,PROFESSIONAL FIRE FIGHTERS OF NEVADA,,,,,,,,,PROFESSIONAL FIRE FIGHTERS OF NEVADA,original,1.0,{},PROFESSIONAL FIRE FIGHTERS OF NEVADA
+5a1a46fc-ccc8-487c-a05f-f6bfecec8172,Interior Design Center of St. Louis - IDC,,,,,,,,,Interior Design Center of St. Louis - IDC,original,1.0,{},Interior Design Center of St. Louis - IDC
+5a1a480f-d445-4f60-8c92-4c46da609f78,C-Con Inc,,,,,,,,,C-Con Inc,extracted,0.9,{},"C-Con Inc is a metrology service and supply company that provides quality products and services for coordinate measuring machines and machine tools. Their typical customers are companies in the manufacturing industry who require metrology equipment, calibration, emergency repair, replacement parts, retrofits, and training services. C-Con Inc differentiates themselves by offering dependable, honest, and fair service with a commitment to exceeding customer expectations through experience and dedication"
+5a1a7c83-4425-4a96-ae61-043a320e4b45,Elontec,,,,,,,,,Elontec,original,1.0,{},Elontec
+5a1a8728-ddce-4277-b214-97254529ca87,Us Machine & Tool LLC,,,,,,,,,Us Machine & Tool LLC,original,1.0,{},Us Machine & Tool LLC
+5a1a8d1c-4c97-4821-9878-76708ca97193,Extovate Llc,http://Extovate LLC,Business Products and Services (B2B),"Provider of mapping services intended to understand new markets and startup ecosystems. The company's services accelerate external innovation efforts, enabling clients to assess startup and corporate activity in their space.",,,,,Extovate LLC,Extovate Llc,web_search,0.8,"{'found': True, 'company_name': 'Extovate Llc', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Sean Ammirati
+5a1a91fc-29c7-426e-9534-b2ebe094dba4,R C Molding,,,,,,,,,R C Molding,original,1.0,{},R C Molding
+5a1ab2e3-bcdb-4e2a-901d-9de6dcc8b2ac,Leiser Construction,,,,,,,,,Leiser Construction,original,1.0,{},Leiser Construction
+5a1aca54-e77f-4b0d-812a-b0d8481ccc6e,Rehbeinenterprises,http://rehbeinenterprises.com,,,,,,,,Rehbeinenterprises,web_search,0.8,"{'found': True, 'company_name': 'Rehbeinenterprises', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Rehbein Enterprises
+5a1b015e-7d27-4dff-9fc0-ede6c0208196,"Silton, Seifert, Carlson, and Gamble, SC",,,,,,,,,"Silton, Seifert, Carlson, and Gamble, SC",original,1.0,{},"Silton, Seifert, Carlson, and Gamble, SC"
+5a1b018a-b06c-4ebe-a92c-392c14d2c83f,Next Level Partners (US),,,,,,,,,Next Level Partners (US),original,1.0,{},Next Level Partners (US)
+5a1b0f66-3970-4b3f-80dd-fcba75ed3ab5,Flash Oilfield Services,,,,,,,,,Flash Oilfield Services,original,1.0,{},Flash Oilfield Services
+5a1b1b11-5ff4-4691-b5d8-1aea0fdd6bff,Robarge Collision,,,,,,,,,Robarge Collision,original,1.0,{},Robarge Collision
+5a1b25f0-33a6-4b4b-927e-379d49717c5b,SecurePipe,,,,,,,,,SecurePipe,original,1.0,{},SecurePipe
+5a1b3e04-3718-451e-9bf6-322877b0d1e8,Nationwide Construction Labor,,,,,,,,,Nationwide Construction Labor,original,1.0,{},Nationwide Construction Labor
+5a1b9094-fdd3-495d-bdfe-4a1c5055b067,Janareyes,,,,,,,,,Janareyes,original,1.0,{},Janareyes
+5a1b9256-061c-4138-958c-73c9f5359f0e,Qsa,,,,,,,,,Qsa,original,1.0,{},Qsa
+5a1ba4c6-5478-4618-bf1a-5bdd94d3586f,Sam J Fogerty,,,,,,,,,Sam J Fogerty,original,1.0,{},Sam J Fogerty
+5a1be3be-2f46-4f6c-b323-3ff2a8369965,"Oswego Village Retail Center at Lake Oswego, Oregon",,,,,,,,,"Oswego Village Retail Center at Lake Oswego, Oregon",original,1.0,{},"Oswego Village Retail Center at Lake Oswego, Oregon"
+5a1c0cdd-c6fa-4b31-b34c-1bedff8e15af,Magma Copper,,,,,,,,,Magma Copper,original,1.0,{},Magma Copper
+5a1c1faf-a92d-4864-aed9-2bc10315b482,New Venture Telecommunication Services,,,,,,,,,New Venture Telecommunication Services,original,1.0,{},New Venture Telecommunication Services
+5a1c311d-7bcd-4be8-bd6c-716a7f4cb54b,Tricon Inc,,,,,,,,,Tricon Inc,extracted,0.9,{},"Tricon Inc is a general contractor specializing in commercial, industrial, hotel, school, retail, church, healthcare, and restaurant construction. Their typical customers include businesses, organizations, and institutions that require construction services for various types of facilities. Tricon Inc claims to differentiate itself through its commitment to quality deliverables, integrity in construction management, and design-build work. They position themselves as an established general contractor with a reputation for stability, exceptional service, and a family-owned, debt-free business"
+5a1c3971-d84a-49eb-997f-e8042a4ab11a,Redlich Talent Advisors,,,,,,,,,Redlich Talent Advisors,original,1.0,{},Redlich Talent Advisors
+5a1c4487-661c-460f-84c6-6bb063f78a63,Lh Creative Concept,,,,,,,,,Lh Creative Concept,original,1.0,{},Lh Creative Concept
+5a1c5ec3-c5d0-4339-9a3c-6f93cacd4287,Eco-Techno,,,,,,,,,Eco-Techno,original,1.0,{},Eco-Techno
+5a1c73aa-010e-4430-81a9-666f03ceb2d9,New York City School Construction Authority,,,,,,,,,New York City School Construction Authority,original,1.0,{},New York City School Construction Authority
+5a1c8cba-a0bd-419f-834c-31063ee635b3,Fire Call,,,,,,,,,Fire Call,original,1.0,{},Fire Call
+5a1c95ed-1066-4c72-a045-09992a76b046,Harvey Building Products (Distribution Business),,,,,,,,,Harvey Building Products (Distribution Business),original,1.0,{},Harvey Building Products (Distribution Business)
+5a1ca1b4-bd9e-4ccc-bd05-0b347072e47e,sterett heavy hauling & rggng,,,,,,,,,sterett heavy hauling & rggng,original,1.0,{},sterett heavy hauling & rggng
+5a1cbd9a-43ff-497c-8ace-e523a96484f9,SetWest Leasing and Rental,,,,,,,,,SetWest Leasing and Rental,original,1.0,{},SetWest Leasing and Rental
+5a1cd69d-f6a8-421a-a1a9-9a4296d5a1a2,New England Sheet Metal Works,,,,,,,,,New England Sheet Metal Works,original,1.0,{},New England Sheet Metal Works
+5a1d1690-da2f-4ba7-b362-22e29f987abf,Jvl Laboratories,,,,,,,,,Jvl Laboratories,original,1.0,{},Jvl Laboratories
+5a1db4ca-79fe-4789-bbf6-040c06a531f9,Grit-Gitter,,,,,,,,,Grit-Gitter,original,1.0,{},Grit-Gitter
+5a1dc70d-bea3-4431-b178-9440fc7f4cc9,Atlantic Ventilating,,,,,,,,,Atlantic Ventilating,extracted,0.9,{},"Atlantic Ventilating & Equipment Co Inc specializes in providing functional and economical solutions in sheet metal, ventilation, and air pollution control. Their typical customers are companies in need of dust/mist collection systems, general ventilation, and custom fabricated metal products such as OSHA-approved guarding. They position themselves as experts in design, fabrication, and installation, offering a comprehensive range of solutions for their customers' needs"
+5a1dd70f-0172-4d46-b9da-9a6aaf3675d8,"Southers Concrete, Inc",,,,,,,,,"Southers Concrete, Inc",extracted,0.9,{},"Southers Concrete, Inc specializes in providing concrete construction services, including storm drainage, paved ditches, drop inlets/manholes, pond boxes/culverts, retaining walls, entrance ways, and various other civil concrete work. Their typical customers include construction companies in the local area as well as larger outfits that are coastal and international. Southers Concrete, Inc differentiates itself by being a family-owned and operated business with a reputation for quality, reliability, and safety in the construction industry"
+5a1de58a-f463-4f5d-8183-fc1bc3bca702,MedImmune (Brazikumab Global Rights),,,,,,,,,MedImmune (Brazikumab Global Rights),original,1.0,{},MedImmune (Brazikumab Global Rights)
+5a1dfa12-670c-4e73-9ae2-312734258ad3,Mysticallandscapes,,,,,,,,,Mysticallandscapes,original,1.0,{},Mysticallandscapes
+5a1dfd16-cd17-4131-be5c-b83b5760884e,C & M Rubber Co,http://cmrubber.com,,,,,,,,C & M Rubber Co,original,1.0,{},C & M Rubber Co
+5a1e0098-b692-492b-b216-a4e722206242,Economy Air Hvac,,,,,,,,,Economy Air Hvac,extracted,0.9,{},"Economy Air Hvac offers a range of services related to facility and building needs, including design, installation, controls, and maintenance. Their typical customers are likely to be commercial and industrial building owners and managers in the Denver Metro area. Economy Air Hvac differentiates itself by emphasizing its dedication to providing high-quality work, fair pricing, and customer loyalty, as well as its focus on technical expertise, creativity, and responsiveness from their contractors"
+5a1e1e25-f9f1-41c1-a556-8d250241c3da,Mertes Contracting Corporation,,,,,,,,,Mertes Contracting Corporation,original,1.0,{},Mertes Contracting Corporation
+5a1e20c0-976c-4727-9a06-da895b0390e9,FireGuardia,,,,,,,,,FireGuardia,original,1.0,{},FireGuardia
+5a1e22a8-a031-41f2-9152-595659ec702b,Children's Surgical Foundation,,,,,,,,,Children's Surgical Foundation,original,1.0,{},Children's Surgical Foundation
+5a1e230d-8a2c-4516-a8ec-90179b8416a4,"Scott's Electric, Inc.",,,,,,,,,"Scott's Electric, Inc.",extracted,0.9,{},"Scott's Electric, Inc. provides a range of electrical services including commercial, residential, utility, and agricultural work. Their typical customers include businesses, homeowners, apartment complexes, and agricultural operations in the tri-state area. They claim to differentiate themselves by offering competitive rates, professional services, and the ability to handle projects in both small towns and larger cities. They also highlight their licensed electricians and specialized equipment for services such as ground thawing"
+5a1e27bc-8345-4024-ace3-2e5bc7de27d6,Masismusclecargarage,,,,,,,,,Masismusclecargarage,original,1.0,{},Masismusclecargarage
+5a1e3135-b456-4a4f-bb3d-851b266a7557,Independent Fabrication,,,,,,,,,Independent Fabrication,original,1.0,{},Independent Fabrication
+5a1e3227-5326-4916-8295-55bdd0947ddd,"Nurego, Inc","http://Nurego, Inc.",Information Technology,"Developer of a monetization and business operations tool designed to create a metrics driven business and helps the way modern businesses operate. The company's Digital BizOps technology manages all aspects of subscription business operations, while avoiding isolated systems and processes that run separately from existing opportunity-to-cash processes enabling businesses to easily build measure, adapt and scale dynamic and opportunistic business models, keeping pace with rapid market disruption without the need for developer resources.",,,,,"Nurego, Inc.","Nurego, Inc",web_search,0.8,"{'found': True, 'company_name': 'Nurego, Inc', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Anat Birnboim
+5a1e7dd8-3200-41b6-ad56-2a5c66d97797,"South Beach Hostel (8,933 Square Feet,Miami Beach, Florida)",,,,,,,,,"South Beach Hostel (8,933 Square Feet,Miami Beach, Florida)",original,1.0,{},"South Beach Hostel (8,933 Square Feet,Miami Beach, Florida)"
+5a1e887f-0f77-4402-b5d6-1dfbd866dca1,Fire Control Equipment,,,,,,,,,Fire Control Equipment,original,1.0,{},Fire Control Equipment
+5a1e9379-ada9-42b8-8fea-9e89dcf0087c,Spartan-Gimaex Innovations,,,,,,,,,Spartan-Gimaex Innovations,original,1.0,{},Spartan-Gimaex Innovations
+5a1e9684-f62e-4fc1-8b5d-0947f02ac1d4,Emedtoday,,,,,,,,,Emedtoday,original,1.0,{},Emedtoday
+5a1eacaa-fa77-4307-a444-9ad9e75470d2,"Quality Property Management, Inc. Medford, Oregon",,,,,,,,,"Quality Property Management, Inc. Medford, Oregon",original,1.0,{},"Quality Property Management, Inc. Medford, Oregon"
+5a1eb41f-8f20-4a15-8adf-7d3f25fa4ae1,"Stanley, Hunt, Dupree and Rhine",,,,,,,,,"Stanley, Hunt, Dupree and Rhine",original,1.0,{},"Stanley, Hunt, Dupree and Rhine"
+5a1ed2c9-9eab-4788-8f66-e75a3dd0e6c3,mary kenealy events,,,,,,,,,mary kenealy events,original,1.0,{},mary kenealy events
+5a1edcce-0ffa-4e3f-b699-aef330db05d0,Park Row Art Gallery,,,,,,,,,Park Row Art Gallery,original,1.0,{},Park Row Art Gallery
+5a1edd18-0c7a-43b9-ae24-70fa9a80e767,SVN International,,,,,,,,,SVN International,original,1.0,{},SVN International
+5a1eed9a-eb36-4001-83e1-e048fc5d8f5a,KT Micro,,,,,,,,,KT Micro,original,1.0,{},KT Micro
+5a1f073f-c331-4683-aa66-2f1380a9e5a9,"Famethemes, Inc","http://FameThemes, Inc.",Information Technology,"Provider of website development themes intended to help companies create online presence by designing digital website. The company's website development themes offer customized themes with parallax effects and focus on content, display and colors, enabling website development companies to browse, select and use personalized themes to create attractive websites.",,,,,"FameThemes, Inc.","Famethemes, Inc",web_search,0.8,"{'found': True, 'company_name': 'Famethemes, Inc', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Alexander Rios
+5a1f1179-f7a0-48f6-ab8c-a7fa65794e87,Reliable Water Treatment,,,,,,,,,Reliable Water Treatment,extracted,0.9,{},"Reliable Water Treatment offers a variety of water treatment products and services, including filtration systems, softeners, commercial systems, conditioners, drinking water solutions, and specialty solutions such as chlorine generators and ozone generators. They cater to both residential and commercial customers in Florida and other states, positioning themselves as a provider of quality water solutions using the latest technology and training. They differentiate themselves by emphasizing their association with the Evolve Series family, which is known for providing efficient and innovative water treatment solutions"
+5a1f184e-451d-448a-aaff-8994042778ec,National Service Committee,,,,,,,,,National Service Committee,original,1.0,{},National Service Committee
+5a1f3fbe-3fe2-4eb6-9d72-a6f61b70f3fa,EZ Portable Buildings,,,,,,,,,EZ Portable Buildings,original,1.0,{},EZ Portable Buildings
+5a1f4417-620b-4b5a-9d03-666bcb5a87fd,We are the trusted experts in planning the future for you and your business,,,,,,,,,We are the trusted experts in planning the future for you and your business,original,1.0,{},We are the trusted experts in planning the future for you and your business
+5a1f4837-0c9b-4670-97e0-ee1b0dfc6e56,pacific state appraisal,,,,,,,,,pacific state appraisal,original,1.0,{},pacific state appraisal
+5a1f4848-e70f-442a-82ba-980b0e36a753,3rd Lair SkatePark and SkateShop,http://401kpensacola.com/,,,,,,,,3rd Lair SkatePark and SkateShop,original,1.0,{},3rd Lair SkatePark and SkateShop
+5a1f5097-140b-4105-b195-1bdad789604f,EnVest (Environmental Services (B2B)),,,,,,,,,EnVest (Environmental Services (B2B)),original,1.0,{},EnVest (Environmental Services (B2B))
+5a1f5207-4f6f-405b-a930-4031845677f9,Just Rewards,,,,,,,,,Just Rewards,original,1.0,{},Just Rewards
+5a1f7e79-757a-4fa9-9b7b-071f647be86a,MatchBOX Coworking Studio,,,,,,,,,MatchBOX Coworking Studio,original,1.0,{},MatchBOX Coworking Studio
+5a1f8298-e0f3-42dd-b3d1-3e33a05d4708,Messmer Mechanical,,,,,,,,,Messmer Mechanical,extracted,0.9,{},"Messmer Mechanical is a company that offers plumbing, heating, cooling, and water filtration services in Southern Indiana. Their typical customers are homeowners and businesses in need of HVAC and plumbing services. They claim to differentiate themselves by offering 100% customer satisfaction guarantee, one-year parts warranty, and added value through proactive maintenance and protection for home comfort equipment. They position themselves as a company deeply rooted in the community, emphasizing their commitment to serving friends, family, neighbors, and those in need"
+5a1fa8cd-28a5-4328-b37b-c62e18033287,Aspen,,,,,,,,,Aspen,original,1.0,{},Aspen
+5a1fa917-7ab6-4ebc-a10f-a546757782a9,Katomed,,,,,,,,,Katomed,original,1.0,{},Katomed
+5a1fd5ee-6871-4396-ac8b-dce1786f6bdb,Ruby Builders,,,,,,,,,Ruby Builders,original,1.0,{},Ruby Builders
+5a1fdd9d-3fbd-433b-81f9-763d282ff2db,Estabrooktoyota,,,,,,,,,Estabrooktoyota,original,1.0,{},Estabrooktoyota
+5a201465-3cb9-4d32-bb4a-966e4474b22f,High Brix Gardens,,,,,,,,,High Brix Gardens,original,1.0,{},High Brix Gardens
+5a20559a-b7e7-403b-b749-64c2c836cb56,Samuel Stothoff CO Inc,http://stothoffwellwater.com,,,,,,,,Samuel Stothoff CO Inc,original,1.0,{},Samuel Stothoff CO Inc
+5a207a32-d0d7-4ed2-a7f2-e2172978af9b,Advanced Water Products,,,,,,,,,Advanced Water Products,extracted,0.9,{},"Advanced Water Products sells high quality water treatment systems for use in South Florida homes and businesses. Their products and services include water filtration and conditioning, drinking water systems, whole house filtration systems, and water pumps and pressure tanks. Their typical customers are homeowners and businesses in South Florida who are looking for reliable and effective water treatment solutions. The company claims to differentiate itself by not only providing top-notch water treatment and filtration systems but also by offering prompt and honest service to their customers in order to extend the life of their water treatment systems"
+5a20d117-4601-4ee6-bec8-913a45fe235e,Peters Advisors,,,,,,,,,Peters Advisors,original,1.0,{},Peters Advisors
+5a20dff1-f198-4a11-a3f4-8592c244ce93,Rose Steel Inc,,,,,,,,,Rose Steel Inc,extracted,0.9,{},"Rose Steel Inc specializes in structural steel erection, including fabricating and erecting steel buildings up to 500,000 sq. ft. They also provide miscellaneous steel installation services such as railings, stairs, ladders, and bollards. Their typical customers include construction firms, developers, and general contractors who require steel erection and installation services for low rise buildings, medical facilities, schools, retail buildings, churches, industrial, and commercial facilities. The company differentiates itself by being a certified Woman Owned Business Enterprise (WBE) and by emphasizing their expertise in low rise buildings and their ability to exceed the unique needs of their customers in a complex industry"
+5a210ac4-05f4-47d5-a55e-996bf70bc579,high performance composites ltd,,,,,,,,,high performance composites ltd,original,1.0,{},high performance composites ltd
+5a210fef-07b6-42fb-86ee-d548883fc1f7,Industrial Service Partners,,,,,,,,,Industrial Service Partners,extracted,0.9,{},"Industrial Service Partners offers a full range of industrial solutions and services, including manufacturing, maintenance, and delivery of top-quality products. Their typical customers are businesses looking for high-quality, sustainable, and cost-efficient products that promote safety and efficiency in the workplace. The company positions itself as a provider of high-quality products that meet the specific needs of their customers, while also differentiating themselves through the standards they follow, setting them apart from the competition and adding the most value to their customers' businesses"
+5a2125ff-b880-4c50-b608-d18ec6cc31af,Funtastic Factory,,,,,,,,,Funtastic Factory,original,1.0,{},Funtastic Factory
+5a214173-dea0-4fa6-8397-77eecf643b68,Renaissance West,,,,,,,,,Renaissance West,original,1.0,{},Renaissance West
+5a2141e4-2de7-49f1-9c55-5a7db5acfd1c,Doug's Construction and Repair,,,,,,,,,Doug's Construction and Repair,original,1.0,{},Doug's Construction and Repair
+5a216685-c335-4895-be21-9fda7be78377,LineOne (Telecommunications Service Providers),,,,,,,,,LineOne (Telecommunications Service Providers),original,1.0,{},LineOne (Telecommunications Service Providers)
+5a216720-5a5f-45b8-88e1-a06fb92f1852,"Tamura Ha Machinery, Inc",,,,,,,,,"Tamura Ha Machinery, Inc",original,1.0,{},"Tamura Ha Machinery, Inc"
+5a216d37-e00f-4565-bd22-e9fae6c18190,Piper Trucking,,,,,,,,,Piper Trucking,original,1.0,{},Piper Trucking
+5a2177cd-3686-4de6-b415-b72245effdfe,Intsel Steel East,,,,,,,,,Intsel Steel East,original,1.0,{},Intsel Steel East
+5a217de7-5925-4e06-ac7c-df8825dffc23,Fehr Bros. Industries,,,,,,,,,Fehr Bros. Industries,original,1.0,{},Fehr Bros. Industries
+5a217ee8-93a2-4f1d-8aea-0a7c9dfcc020,Roi Development Group,,,,,,,,,Roi Development Group,original,1.0,{},Roi Development Group
+5a219d1c-946e-49ec-9632-28af48a32256,DigitalOptometrics,,,,,,,,,DigitalOptometrics,original,1.0,{},DigitalOptometrics
+5a21b6f0-dc8b-48e7-8e1a-cbbc0d65af54,St. Columba Catholic Church,,,,,,,,,St. Columba Catholic Church,original,1.0,{},St. Columba Catholic Church
+5a220100-ef7b-46f2-bde5-075d9f2d46ab,Sol Vista Roofing,,,,,,,,,Sol Vista Roofing,original,1.0,{},Sol Vista Roofing
+5a22334f-ced4-41e8-910e-00fa8842984d,J&M Tank Lines,,,,,,,,,J&M Tank Lines,original,1.0,{},J&M Tank Lines
+5a2241d6-258e-475e-a0df-03a765880736,Pinnacle Contracting Corporation,,,,,,,,,Pinnacle Contracting Corporation,original,1.0,{},Pinnacle Contracting Corporation
+5a224e36-1644-41a2-a07e-0768a4e4299a,Innovation Properties Group,,,,,,,,,Innovation Properties Group,original,1.0,{},Innovation Properties Group
+5a2261dd-045b-4347-8e87-3cb19cd94b5f,"Espresa, Inc","http://Espresa, Inc.",Information Technology,"Developer of an employee experience and engagement platform intended to take the administrative burden off and provide flexible, inclusive global benefits to employees. The company's platform delivers an immersive employee experience with lifestyle spending accounts, well-being, recognition and community, enabling clients to improve wellbeing and engagement and increase the productivity of their employees.",,,,,"Espresa, Inc.","Espresa, Inc",web_search,0.8,"{'found': True, 'company_name': 'Espresa, Inc', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Alex Shubat
+5a227305-1ddf-411b-99de-054c9a0d48dd,EKL Machine,,,,,,,,,EKL Machine,original,1.0,{},EKL Machine
+5a228b83-4e92-48aa-8cf8-1a6541a5638e,Pure CallerID,,,,,,,,,Pure CallerID,original,1.0,{},Pure CallerID
+5a22a6f8-168d-4d09-a846-42cd673cc5d0,"Altmann Construction Company, Inc.",,,,,,,,,"Altmann Construction Company, Inc.",extracted,0.9,{},"Altmann Construction Company, Inc. offers general contracting, design-build, construction management, concrete and masonry work, carpentry and metal studs, and site work services. Their typical customers include commercial and retail businesses, municipal government entities, health care facilities, educational and religious institutions, and industrial, manufacturing, and agricultural businesses. They position themselves as a company committed to exceeding customer expectations and achieving the highest quality construction through craftsmanship, communication, and professional teamwork. They also emphasize their flexibility in using local employees to self-perform various construction tasks"
+5a22adcf-b174-4ed9-ac5b-987ec66cb649,RFP Commercial,,,,,,,,,RFP Commercial,original,1.0,{},RFP Commercial
+5a22b7d8-0cbb-4bfe-9aa5-9820c592bda6,Strohm Construction,,,,,,,,,Strohm Construction,original,1.0,{},Strohm Construction
+5a22c0e9-2415-4301-8052-6a6377ce34e5,"Pritt & Pritt, Pllc",,,,,,,,,"Pritt & Pritt, Pllc",original,1.0,{},"Pritt & Pritt, Pllc"
+5a22cedf-d2b3-48ae-a466-793a34dab6bc,Millennium Space Systems,http://millennium-space.com,,,,,,,,Millennium Space Systems,original,1.0,{},Millennium Space Systems
+5a22dbc7-99f6-42c3-b2aa-870b84b85001,Greenleaf Lawn & Landscape,,,,,,,,,Greenleaf Lawn & Landscape,original,1.0,{},Greenleaf Lawn & Landscape
+5a22e70e-e557-4dee-917f-d5366b439863,Greenville Technical College,,,,,,,,,Greenville Technical College,original,1.0,{},Greenville Technical College
+5a230822-4a0f-494d-931b-e51b1997e76c,Broadstrokeinc,http://broadstrokeinc.com,,,,,,,,Broadstrokeinc,web_search,0.8,"{'found': True, 'company_name': 'Broadstrokeinc', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Broadstroke Inc
+5a231b57-0d8d-4c30-8a55-6ef41e2a67e0,Emporia Home Services,,,,,,,,,Emporia Home Services,original,1.0,{},Emporia Home Services
+5a23244c-f436-4b2c-9801-a1ca5b102ff2,Bergstromwines,https://bergstromwines.com/,,,,,,,,Bergstromwines,web_search,0.9,"{'found': True, 'company_name': 'Bergstromwines', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}","Bergström Wines is a winery that offers a range of wines, including Pinot Noirs, Chardonnays, and Syrahs, all crafted from naturally and responsibly farmed, estate vineyard terroirs in the Willamette Valley. Their typical customers are wine enthusiasts who appreciate high-quality, handcrafted wines with a focus on representing the diverse appellations of the region. They position themselves as being dedicated to meticulous attention and labor, taking 1,000 days to craft their wines, and emphasizing their stewardship of naturally farmed vineyard terroirs"
+5a2331eb-191a-4c2c-a76b-046a2959b50e,MHC Software,,,,,,,,,MHC Software,original,1.0,{},MHC Software
+5a236849-a96e-43d0-a2d3-1e100803d3a4,Pro-Chem,,,,,,,,,Pro-Chem,original,1.0,{},Pro-Chem
+5a237e97-59ec-484f-9cf0-ba962d605b35,Greyrock Window & Door,,,,,,,,,Greyrock Window & Door,original,1.0,{},Greyrock Window & Door
+5a23afd3-850f-44ed-b995-cb99a383cc96,Jackson and Tucker,,,,,,,,,Jackson and Tucker,original,1.0,{},Jackson and Tucker
+5a23ba73-fcaf-49b8-bf6e-f1ef5fa7dae0,SKR,,,,,,,,,SKR,original,1.0,{},SKR
+5a23c638-81ac-45a2-af87-771ca3c3a649,Scholarly (Automation/Workflow Software),,,,,,,,,Scholarly (Automation/Workflow Software),original,1.0,{},Scholarly (Automation/Workflow Software)
+5a23c6cc-61e2-4dd6-81f8-a924542f4781,Loaded (Media and Information Services (B2B)),,,,,,,,,Loaded (Media and Information Services (B2B)),original,1.0,{},Loaded (Media and Information Services (B2B))
+5a23f138-51a8-4ee6-b03c-e90aa2208098,Lavillitaapts,,,,,,,,,Lavillitaapts,original,1.0,{},Lavillitaapts
+5a23ffbb-7906-4485-8f2e-109fc5592714,App,http://www.app.demiplane.com,"Developer of a gaming platform intended to help friends connect tabletop roleplayers with video, voice chat, shared journaling, and matchmaking. The company's platform offers a variety of services like video experience, screen sharing, voice chat, and text chat that players can use in between sessions, enabling players to easily interact and communicate with other players from all over the world.",Entertainment Software,,,,,demiplane.com,App,web_search,0.8,"{'found': True, 'company_name': 'App', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Jacob Parma
+5a241ad0-bd3a-4bc0-a82a-b40db771c152,Romance Cruise Lines,,,,,,,,,Romance Cruise Lines,original,1.0,{},Romance Cruise Lines
+5a242bca-7fe6-4336-87da-25b3c5044391,Schulman Associates Irb,,,,,,,,,Schulman Associates Irb,original,1.0,{},Schulman Associates Irb
+5a24359f-7a38-4c72-b7fc-0d069fa885f6,Reliable Diamond Tool,,,,,,,,,Reliable Diamond Tool,original,1.0,{},Reliable Diamond Tool
+5a245c6f-93d3-42d7-a145-bc1293992824,Live Elements,,,,,,,,,Live Elements,original,1.0,{},Live Elements
+5a245d3e-380c-40c9-8144-c983dbf4fd38,GelSight,,,,,,,,,GelSight,original,1.0,{},GelSight
+5a2462ef-eedf-4307-a771-67f00f9e0afb,Beep insights,,,,,,,,,Beep insights,original,1.0,{},Beep insights
+5a24641a-f2c0-4c4c-a9f5-05b9e81754f3,Kintetsu Global I.T,,,,,,,,,Kintetsu Global I.T,original,1.0,{},Kintetsu Global I.T
+5a248895-fab0-4a15-8778-0f1fab287362,The Bank of London,,,,,,,,,The Bank of London,original,1.0,{},The Bank of London
+5a2491ac-826c-4b81-9e18-c6e67a697aaa,RapidIT-Cloudbera,,,,,,,,,RapidIT-Cloudbera,original,1.0,{},RapidIT-Cloudbera
+5a24b784-1abb-4d5d-9f9a-a8d930b81c5c,Stonerestorela,http://stonerestorela.com,,,,,,,,Stonerestorela,web_search,0.8,"{'found': True, 'company_name': 'Stonerestorela', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Stone Restoration
+5a24d67a-b5aa-47b3-bf06-c05a33be6629,MRB Group,,,,,,,,,MRB Group,original,1.0,{},MRB Group
+5a250670-aaf9-44d9-94f9-51ed29ba4e8e,Axoom GmbH,,,,,,,,,Axoom GmbH,original,1.0,{},Axoom GmbH
+5a251964-d469-40f6-be6f-d3301e6d1fe8,southern athena,,,,,,,,,southern athena,original,1.0,{},southern athena
+5a25418b-ca19-4bb9-934b-68c8d8f407b8,Just Call,,,,,,,,,Just Call,original,1.0,{},Just Call
+5a254926-001b-41e2-97b7-3ce98bcfce8c,EdgarAgents,,,,,,,,,EdgarAgents,extracted,0.9,{},"EdgarAgents provides a range of services and solutions focused on SEC filing and financial printing, catering to registered investment management companies, public and private companies, corporate compliance teams, private equity firms, and investment banking partners. They claim to differentiate themselves through their expertise, a full suite of services and solutions, a focus on efficiency, and a commitment to maximizing return on assets. They position themselves as a trusted services partner dedicated to simplifying and expediting the SEC filing and financial printing process"
+5a255075-47b7-4665-ac7d-445db7159b8d,Foresight Analytics (Alameda),,,,,,,,,Foresight Analytics (Alameda),original,1.0,{},Foresight Analytics (Alameda)
+5a2551ed-c065-4408-8b14-b1b506ce8cf8,Thnb,http://www.thnb.bank,National Banks,Privately Held (backing),,,,,thnb.bank,Thnb,web_search,0.8,"{'found': True, 'company_name': 'Thnb', 'description': None, 'industry': None, 'location': None, 'data_source': 'domain_extraction'}",Dwyatt Bell
+5a2556ef-7ee2-4218-8eac-9ac831fb4b6d,Miss Mary,,,,,,,,,Miss Mary,original,1.0,{},Miss Mary

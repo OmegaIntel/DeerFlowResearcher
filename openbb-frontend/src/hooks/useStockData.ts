@@ -55,3 +55,11 @@ export const useShareStatistics = (ticker: string) => {
     enabled: !!ticker,
   });
 };
+
+export const useHistoricalData = (ticker: string) => {
+  return useQuery({
+    queryKey: ['historical', ticker],
+    queryFn: () => fetchStockData(ticker), // Using stock data as historical for now
+    enabled: !!ticker,
+  });
+};

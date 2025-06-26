@@ -17,6 +17,26 @@ yfinance>=0.2.28
 alpha-vantage>=2.3.1
 requests>=2.31.0
 
+# Excel processing
+openpyxl>=3.1.0
+python-multipart>=0.0.6
+
+# MySQL for AWS RDS
+pymysql>=1.1.0
+DBUtils>=3.0.0
+
+# OpenAI for copilot and semantic search
+openai>=0.28.1
+
+# Pinecone for vector search
+pinecone-client==3.0.0
+
+# MindsDB integration - using HTTP API to avoid dependency conflicts
+requests>=2.31.0
+
+# AWS SDK for S3 storage
+boto3>=1.26.0
+
 # OpenBB Platform - using custom API keys instead of PAT
 openbb>=4.0.0
 # Additional community providers

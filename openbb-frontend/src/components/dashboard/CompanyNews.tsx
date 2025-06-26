@@ -2,14 +2,19 @@ import React, { useMemo } from 'react';
 import { Calendar, ExternalLink } from 'lucide-react';
 import { useCompanyNewsExtended } from '../../hooks/useRealTimeDataExtended';
 import WidgetHeaderWithTicker from '../common/WidgetHeaderWithTicker';
+import { useCopilot } from '../../contexts/CopilotContext';
+import type { WidgetType } from '../../services/copilotService';
 
 interface CompanyNewsProps {
   ticker: string;
   onTickerChange?: (ticker: string) => void;
+  onSettings?: () => void;
+  onRemove?: () => void;
 }
 
-const CompanyNews: React.FC<CompanyNewsProps> = ({ ticker, onTickerChange }) => {
+const CompanyNews: React.FC<CompanyNewsProps> = ({ ticker, onTickerChange, onSettings, onRemove }) => {
   const { data: newsData, isLoading, error } = useCompanyNewsExtended(ticker, 15);
+  const { addWidgetContext } = useCopilot();
   
   const news = useMemo(() => {
     if (!newsData || !Array.isArray(newsData)) return [];
@@ -39,12 +44,16 @@ const CompanyNews: React.FC<CompanyNewsProps> = ({ ticker, onTickerChange }) => 
           title="Company News"
           ticker={ticker}
           onTickerChange={onTickerChange || (() => {})}
-          onRefresh={() => window.location.reload()}
-          onAdd={() => console.log('Add to dashboard')}
-          onExpand={() => console.log('Expand')}
-          onMore={() => console.log('More options')}
+          onAdd={() => addWidgetContext(
+            WidgetType.COMPANY_NEWS,
+            news,
+            ticker,
+            'Company News'
+          )}
+          onSettings={onSettings}
+          onRemove={onRemove}
         />
-        <p className="text-xs font-mono text-openbb-text-muted">No news available for {ticker}</p>
+        <p className="text-xs  text-openbb-text-muted">No news available for {ticker}</p>
       </div>
     );
   }
@@ -55,13 +64,17 @@ const CompanyNews: React.FC<CompanyNewsProps> = ({ ticker, onTickerChange }) => 
         title="Company News"
         ticker={ticker}
         onTickerChange={onTickerChange || (() => {})}
-        onRefresh={() => console.log('Refresh')}
-        onAdd={() => console.log('Add to dashboard')}
-        onExpand={() => console.log('Expand')}
-        onMore={() => console.log('More options')}
+        onAdd={() => addWidgetContext(
+          WidgetType.COMPANY_NEWS,
+          news,
+          ticker,
+          'Company News'
+        )}
+        onSettings={onSettings}
+        onRemove={onRemove}
       />
       
-      <div className="flex items-center gap-1 text-xs font-mono text-openbb-text-muted mb-3">
+      <div className="flex items-center gap-1 text-xs  text-openbb-text-muted mb-3">
         <Calendar size={14} />
         <span>Last 30 days • {news.length} articles</span>
       </div>
@@ -74,7 +87,7 @@ const CompanyNews: React.FC<CompanyNewsProps> = ({ ticker, onTickerChange }) => 
                 href={item.url || '#'}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-mono text-xs font-medium text-openbb-text-primary hover:text-openbb-accent cursor-pointer transition-colors duration-200 flex-1 pr-2 line-clamp-2"
+                className=" text-xs font-medium text-openbb-text-primary hover:text-openbb-accent cursor-pointer transition-colors duration-200 flex-1 pr-2 line-clamp-2"
               >
                 {item.title}
               </a>
@@ -91,7 +104,7 @@ const CompanyNews: React.FC<CompanyNewsProps> = ({ ticker, onTickerChange }) => 
               )}
             </div>
             <div className="flex items-center justify-between">
-              <div className="text-xs font-mono text-openbb-text-muted">
+              <div className="text-xs  text-openbb-text-muted">
                 {item.date}, {item.time}
                 {item.source && <span className="ml-2">• {item.source}</span>}
               </div>
@@ -99,7 +112,7 @@ const CompanyNews: React.FC<CompanyNewsProps> = ({ ticker, onTickerChange }) => 
                 {item.relatedTickers.slice(0, 3).map((relatedTicker: string) => (
                   <span
                     key={relatedTicker}
-                    className="text-xs font-mono px-1.5 py-0.5 rounded bg-openbb-bg-secondary text-openbb-text-secondary"
+                    className="text-xs  px-1.5 py-0.5 rounded bg-openbb-bg-secondary text-openbb-text-secondary"
                   >
                     {relatedTicker}
                   </span>

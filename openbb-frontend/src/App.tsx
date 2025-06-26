@@ -2,8 +2,11 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { WidgetProvider } from './contexts/WidgetContext';
 import { DashboardProvider } from './contexts/DashboardContext';
+import { CopilotProvider } from './contexts/CopilotContext';
+import { ThemeProvider } from './contexts/ThemeContext';
 import Layout from './components/layout/Layout';
 import ErrorBoundary from './components/common/ErrorBoundary';
+// import DebugInfo from './components/debug/DebugInfo'; // Removed for production
 import './utils/chartConfig'; // Register Chart.js components
 import './App.css';
 
@@ -22,13 +25,17 @@ function App() {
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        <WidgetProvider>
-          <DashboardProvider>
-            <Router>
-              <Layout />
-            </Router>
-          </DashboardProvider>
-        </WidgetProvider>
+        <ThemeProvider>
+          <WidgetProvider>
+            <DashboardProvider>
+              <CopilotProvider>
+                <Router>
+                  <Layout />
+                </Router>
+              </CopilotProvider>
+            </DashboardProvider>
+          </WidgetProvider>
+        </ThemeProvider>
       </QueryClientProvider>
     </ErrorBoundary>
   );

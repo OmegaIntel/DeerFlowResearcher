@@ -73,7 +73,7 @@ const PageCustomizationDialog: React.FC<PageCustomizationDialogProps> = ({
         <div className="flex items-center justify-between p-4 border-b border-openbb-border">
           <div className="flex items-center gap-2">
             <Settings size={20} className="text-openbb-accent" />
-            <h2 className="text-lg font-mono font-semibold text-openbb-text-primary">Customize Pages</h2>
+            <h2 className="text-lg  font-semibold text-openbb-text-primary">Customize Pages</h2>
           </div>
           <button
             onClick={onClose}
@@ -94,12 +94,12 @@ const PageCustomizationDialog: React.FC<PageCustomizationDialogProps> = ({
                 <GripVertical size={16} className="text-openbb-text-muted cursor-move" />
                 
                 <div className="flex-1">
-                  <span className="text-sm font-mono text-openbb-text-primary">{page.label}</span>
+                  <span className="text-sm  text-openbb-text-primary">{page.label}</span>
                   {page.isDefault && (
-                    <span className="ml-2 text-xs font-mono text-openbb-text-muted">(Default)</span>
+                    <span className="ml-2 text-xs  text-openbb-text-muted">(Default)</span>
                   )}
                   {page.isCustom && (
-                    <span className="ml-2 text-xs font-mono text-openbb-accent">(Custom)</span>
+                    <span className="ml-2 text-xs  text-openbb-accent">(Custom)</span>
                   )}
                 </div>
 
@@ -108,7 +108,7 @@ const PageCustomizationDialog: React.FC<PageCustomizationDialogProps> = ({
                     onClick={() => movePageUp(index)}
                     disabled={index === 0}
                     className={classNames(
-                      'p-1 rounded text-xs font-mono transition-colors',
+                      'p-1 rounded text-xs  transition-colors',
                       index === 0
                         ? 'text-openbb-text-muted cursor-not-allowed'
                         : 'text-openbb-text-secondary hover:text-openbb-text-primary hover:bg-openbb-bg-hover'
@@ -121,7 +121,7 @@ const PageCustomizationDialog: React.FC<PageCustomizationDialogProps> = ({
                     onClick={() => movePageDown(index)}
                     disabled={index === localPages.length - 1}
                     className={classNames(
-                      'p-1 rounded text-xs font-mono transition-colors',
+                      'p-1 rounded text-xs  transition-colors',
                       index === localPages.length - 1
                         ? 'text-openbb-text-muted cursor-not-allowed'
                         : 'text-openbb-text-secondary hover:text-openbb-text-primary hover:bg-openbb-bg-hover'
@@ -153,11 +153,11 @@ const PageCustomizationDialog: React.FC<PageCustomizationDialogProps> = ({
                   onKeyDown={(e) => e.key === 'Enter' && handleAddPage()}
                   placeholder="Page name..."
                   autoFocus
-                  className="flex-1 bg-transparent border-none outline-none text-sm font-mono text-openbb-text-primary placeholder-openbb-text-muted"
+                  className="flex-1 bg-transparent border-none outline-none text-sm  text-openbb-text-primary placeholder-openbb-text-muted"
                 />
                 <button
                   onClick={handleAddPage}
-                  className="px-2 py-1 text-xs font-mono bg-openbb-accent text-openbb-bg-primary rounded hover:bg-openbb-accent-hover transition-colors"
+                  className="px-2 py-1 text-xs  bg-openbb-accent text-openbb-bg-primary rounded hover:bg-openbb-accent-hover transition-colors"
                 >
                   Add
                 </button>
@@ -166,7 +166,7 @@ const PageCustomizationDialog: React.FC<PageCustomizationDialogProps> = ({
                     setIsAddingPage(false);
                     setNewPageName('');
                   }}
-                  className="px-2 py-1 text-xs font-mono text-openbb-text-secondary hover:text-openbb-text-primary transition-colors"
+                  className="px-2 py-1 text-xs  text-openbb-text-secondary hover:text-openbb-text-primary transition-colors"
                 >
                   Cancel
                 </button>
@@ -177,7 +177,7 @@ const PageCustomizationDialog: React.FC<PageCustomizationDialogProps> = ({
                 className="w-full flex items-center justify-center gap-2 p-3 border border-dashed border-openbb-border rounded text-openbb-text-muted hover:text-openbb-text-primary hover:border-openbb-accent transition-colors"
               >
                 <Plus size={16} />
-                <span className="text-sm font-mono">Add Custom Page</span>
+                <span className="text-sm ">Add Custom Page</span>
               </button>
             )}
           </div>
@@ -185,19 +185,19 @@ const PageCustomizationDialog: React.FC<PageCustomizationDialogProps> = ({
 
         {/* Footer */}
         <div className="flex items-center justify-between p-4 border-t border-openbb-border">
-          <div className="text-sm font-mono text-openbb-text-muted">
+          <div className="text-sm  text-openbb-text-muted">
             {localPages.length} page{localPages.length !== 1 ? 's' : ''}
           </div>
           <div className="flex gap-2">
             <button
               onClick={onClose}
-              className="px-4 py-2 text-sm font-mono text-openbb-text-secondary hover:text-openbb-text-primary transition-colors"
+              className="px-4 py-2 text-sm  text-openbb-text-secondary hover:text-openbb-text-primary transition-colors"
             >
               Cancel
             </button>
             <button
               onClick={handleSave}
-              className="px-4 py-2 text-sm font-mono bg-openbb-accent text-openbb-bg-primary rounded hover:bg-openbb-accent-hover transition-colors"
+              className="px-4 py-2 text-sm  bg-openbb-accent text-openbb-bg-primary rounded hover:bg-openbb-accent-hover transition-colors"
             >
               Save Changes
             </button>

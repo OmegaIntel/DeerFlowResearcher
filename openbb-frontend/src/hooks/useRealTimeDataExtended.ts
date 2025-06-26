@@ -15,8 +15,8 @@ export const useManagementTeamRealTime = (ticker: string) => {
       // Transform to match the expected format
       return data.map(exec => ({
         name: exec.name || 'N/A',
-        title: exec.title || 'N/A',
-        compensation: exec.pay || exec.compensation || 0,
+        title: exec.title || exec.position || 'N/A',
+        compensation: exec.pay || exec.totalPay || exec.compensation || 0,
         currency: exec.currencyPay || exec.currency || 'USD',
         yearBorn: exec.yearBorn,
         titleSince: exec.titleSince,

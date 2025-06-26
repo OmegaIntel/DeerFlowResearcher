@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { TrendingUp, Calendar, DollarSign, BarChart3 } from 'lucide-react';
+import { useCopilot } from '../../contexts/CopilotContext';
+import type { WidgetType } from '../../services/copilotService';
+import WidgetHeader from '../common/WidgetHeader';
 
 interface IncomeStatementProps {
   ticker: string;
   onTickerChange?: (ticker: string) => void;
   dataProvider?: string;
+  onSettings?: () => void;
+  onRemove?: () => void;
 }
 
 interface IncomeStatementData {
@@ -25,12 +30,15 @@ interface IncomeStatementData {
 const IncomeStatement: React.FC<IncomeStatementProps> = ({ 
   ticker, 
   onTickerChange, 
-  dataProvider = 'auto' 
+  dataProvider = 'auto',
+  onSettings,
+  onRemove 
 }) => {
   const [incomeData, setIncomeData] = useState<IncomeStatementData[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedPeriod, setSelectedPeriod] = useState<'annual' | 'quarterly'>('annual');
+  const { addWidgetContext } = useCopilot();
 
   const fetchIncomeStatementData = async () => {
     setIsLoading(true);
@@ -98,14 +106,13 @@ const IncomeStatement: React.FC<IncomeStatementProps> = ({
   if (error) {
     return (
       <div className="bg-openbb-bg-widget rounded-lg border border-openbb-border p-4">
-        <div className="flex items-center justify-between mb-4">
-          <div className="flex items-center gap-2">
-            <TrendingUp size={20} className="text-openbb-primary" />
-            <h3 className="text-lg font-mono font-semibold text-openbb-text-primary">Income Statement</h3>
-            <span className="text-sm font-mono text-openbb-text-muted">{ticker}</span>
-          </div>
-        </div>
-        <div className="flex items-center gap-2 text-sm text-red-500">
+        <WidgetHeader
+          title={`Income Statement - ${ticker}`}
+          onRefresh={fetchIncomeStatementData}
+          onSettings={onSettings}
+          onRemove={onRemove}
+        />
+        <div className="flex items-center gap-2 text-sm text-red-500 mt-4">
           <span>{String(error)}</span>
         </div>
       </div>
@@ -114,13 +121,20 @@ const IncomeStatement: React.FC<IncomeStatementProps> = ({
 
   return (
     <div className="bg-openbb-bg-widget rounded-lg border border-openbb-border p-4">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <TrendingUp size={20} className="text-openbb-primary" />
-          <h3 className="text-lg font-mono font-semibold text-openbb-text-primary">Income Statement</h3>
-          <span className="text-sm font-mono text-openbb-text-muted">{ticker}</span>
-        </div>
-        <div className="flex gap-2">
+      <div className="mb-4">
+        <WidgetHeader
+          title={`Income Statement - ${ticker}`}
+          onRefresh={fetchIncomeStatementData}
+          onAdd={() => addWidgetContext(
+            WidgetType.INCOME_STATEMENT,
+            incomeData,
+            ticker,
+            `Income Statement (${selectedPeriod})`
+          )}
+          onSettings={onSettings}
+          onRemove={onRemove}
+        />
+        <div className="flex gap-2 mt-2">
           <button
             onClick={() => setSelectedPeriod('annual')}
             className={`px-3 py-1 text-xs rounded ${
@@ -150,7 +164,7 @@ const IncomeStatement: React.FC<IncomeStatementProps> = ({
         </div>
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full text-xs font-mono">
+          <table className="w-full text-xs ">
             <thead>
               <tr className="border-b border-openbb-border">
                 <th className="text-left py-2 text-openbb-text-secondary">Period</th>
@@ -247,8 +261,8 @@ const IncomeStatement: React.FC<IncomeStatementProps> = ({
           
           {/* Key Metrics */}
           <div className="mt-4 pt-4 border-t border-openbb-border">
-            <h4 className="text-sm font-mono font-semibold text-openbb-text-primary mb-2">Key Margins</h4>
-            <div className="grid grid-cols-3 gap-4 text-xs font-mono">
+            <h4 className="text-sm  font-semibold text-openbb-text-primary mb-2">Key Margins</h4>
+            <div className="grid grid-cols-3 gap-4 text-xs ">
               <div>
                 <span className="text-openbb-text-secondary">Gross Margin: </span>
                 <span className="text-openbb-text-primary">
@@ -277,8 +291,8 @@ const IncomeStatement: React.FC<IncomeStatementProps> = ({
             
             {incomeData.length > 1 && (
               <div className="mt-3">
-                <h4 className="text-sm font-mono font-semibold text-openbb-text-primary mb-2">Growth Rates (YoY)</h4>
-                <div className="grid grid-cols-3 gap-4 text-xs font-mono">
+                <h4 className="text-sm  font-semibold text-openbb-text-primary mb-2">Growth Rates (YoY)</h4>
+                <div className="grid grid-cols-3 gap-4 text-xs ">
                   <div>
                     <span className="text-openbb-text-secondary">Revenue: </span>
                     <span className={`${calculateGrowthRate(incomeData[0].revenue, incomeData[1].revenue) >= 0 ? 'text-green-500' : 'text-red-500'}`}>

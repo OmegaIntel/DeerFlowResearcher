@@ -27,9 +27,12 @@
   }
   
   body {
-    @apply bg-openbb-bg-primary text-openbb-text-primary font-mono text-sm;
+    @apply bg-openbb-bg-primary text-openbb-text-primary text-sm;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    font-weight: 400;
+    letter-spacing: -0.01em;
   }
 
   /* Custom scrollbar for dark theme */
@@ -83,16 +86,16 @@
   }
   
   .widget-title {
-    @apply text-sm font-mono font-semibold text-openbb-text-primary;
+    @apply text-sm font-medium text-openbb-text-primary;
   }
   
   .widget-badge {
-    @apply bg-openbb-blue text-white px-2 py-0.5 rounded text-xs font-mono;
+    @apply bg-openbb-blue text-white px-2 py-0.5 rounded text-xs;
   }
   
   /* Form elements */
   .input-dark {
-    @apply bg-openbb-bg-widget border border-openbb-border rounded text-sm text-openbb-text-primary placeholder-openbb-text-muted focus:outline-none focus:border-openbb-accent font-mono;
+    @apply bg-openbb-bg-widget border border-openbb-border rounded text-sm text-openbb-text-primary placeholder-openbb-text-muted focus:outline-none focus:border-openbb-accent;
   }
   
   /* Buttons */
@@ -102,5 +105,44 @@
   
   .btn-secondary {
     @apply bg-openbb-bg-secondary text-openbb-text-secondary px-3 py-1.5 rounded text-sm hover:text-openbb-text-primary transition-colors;
+  }
+  
+  /* Financial table sticky column styles */
+  .financial-table-sticky {
+    position: sticky;
+    left: 0;
+    z-index: 20;
+  }
+  
+  .financial-table-sticky::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: -1px;
+    bottom: 0;
+    width: 1px;
+    background-color: var(--openbb-border);
+    box-shadow: 2px 0 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Table resize cursor */
+  .cursor-col-resize {
+    cursor: col-resize !important;
+  }
+  
+  /* Fixed height table rows */
+  .table-fixed-height td {
+    height: 40px;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    vertical-align: middle;
+  }
+  
+  /* Prevent text selection during column resize */
+  .resize-active {
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
   }
 }

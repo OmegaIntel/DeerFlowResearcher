@@ -7,12 +7,19 @@ from config import settings
 class CacheService:
     def __init__(self):
         self.redis_client = None
+        
+        # Use AWS ElastiCache if configured, otherwise fall back to local Redis
+        redis_url = settings.REDIS_URL
+        if settings.AWS_REDIS_HOST:
+            redis_url = f"redis://{settings.AWS_REDIS_HOST}:{settings.AWS_REDIS_PORT}"
+        
         try:
             self.redis_client = redis.from_url(
-                settings.REDIS_URL,
+                redis_url,
                 decode_responses=True
             )
             self.redis_client.ping()
+            print(f"Connected to Redis at: {redis_url}")
         except Exception as e:
             print(f"Redis connection failed: {e}. Caching disabled.")
     

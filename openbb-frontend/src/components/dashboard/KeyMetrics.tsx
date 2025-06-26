@@ -1,14 +1,20 @@
 import React from 'react';
 import { useKeyMetricsRealTime } from '../../hooks/useRealTimeData';
 import WidgetHeaderWithTicker from '../common/WidgetHeaderWithTicker';
+import { useCopilot } from '../../contexts/CopilotContext';
+import type { WidgetType } from '../../services/copilotService';
+import { downloadTableAsCSV } from '../../utils/csvExport';
 
 interface KeyMetricsProps {
   ticker: string;
   onTickerChange?: (ticker: string) => void;
+  onSettings?: () => void;
+  onRemove?: () => void;
 }
 
-const KeyMetrics: React.FC<KeyMetricsProps> = ({ ticker, onTickerChange }) => {
+const KeyMetrics: React.FC<KeyMetricsProps> = ({ ticker, onTickerChange, onSettings, onRemove }) => {
   const { data: metrics, isLoading, error } = useKeyMetricsRealTime(ticker);
+  const { addWidgetContext } = useCopilot();
 
   if (isLoading) {
     return (
@@ -35,13 +41,25 @@ const KeyMetrics: React.FC<KeyMetricsProps> = ({ ticker, onTickerChange }) => {
           title="Key Metrics"
           ticker={ticker}
           onTickerChange={onTickerChange || (() => {})}
-          onRefresh={() => window.location.reload()}
-          onAdd={() => console.log('Add to dashboard')}
-          onExpand={() => console.log('Expand')}
-          onMore={() => console.log('More options')}
+          onAdd={() => addWidgetContext(
+            WidgetType.KEY_METRICS,
+            metrics,
+            ticker,
+            'Key Metrics'
+          )}
+          onDownload={() => downloadTableAsCSV(
+            metrics,
+            [
+              { label: 'Metric', value: 'label' },
+              { label: 'Value', value: 'value' }
+            ],
+            `${ticker}_key_metrics.csv`
+          )}
+          onSettings={onSettings}
+          onRemove={onRemove}
         />
         <div className="widget-content flex-1 overflow-auto">
-          <p className="text-xs font-mono text-openbb-text-muted">No metrics data available</p>
+          <p className="text-xs  text-openbb-text-muted">No metrics data available</p>
         </div>
       </div>
     );
@@ -53,24 +71,37 @@ const KeyMetrics: React.FC<KeyMetricsProps> = ({ ticker, onTickerChange }) => {
         title="Key Metrics"
         ticker={ticker}
         onTickerChange={onTickerChange || (() => {})}
-        onRefresh={() => console.log('Refresh')}
-        onAdd={() => console.log('Add to dashboard')}
-        onExpand={() => console.log('Expand')}
-        onMore={() => console.log('More options')}
+        onAdd={() => addWidgetContext(
+          WidgetType.KEY_METRICS,
+          metrics,
+          ticker,
+          'Key Metrics'
+        )}
+        onDownload={() => downloadTableAsCSV(
+          metrics,
+          [
+            { label: 'Metric', value: 'label' },
+            { label: 'Value', value: 'value' }
+          ],
+          `${ticker}_key_metrics.csv`
+        )}
+        onSettings={onSettings}
+        onRemove={onRemove}
       />
 
       <div className="widget-content flex-1 overflow-y-auto overflow-x-hidden">
+
         <div className="space-y-2">
           {metrics.map((metric, index) => (
             <div key={index} className="flex justify-between items-center py-1.5 border-b border-openbb-border last:border-b-0">
-              <span className="text-xs font-mono text-openbb-text-muted">{metric.label}</span>
-              <span className="text-xs font-mono font-semibold text-openbb-text-primary">{metric.value}</span>
+              <span className="text-xs  text-openbb-text-muted">{metric.label}</span>
+              <span className="text-xs  font-semibold text-openbb-text-primary">{metric.value}</span>
             </div>
           ))}
         </div>
 
         <div className="mt-3 text-left">
-          <span className="text-xs font-mono text-openbb-text-muted">Current Currency: USD</span>
+          <span className="text-xs  text-openbb-text-muted">Current Currency: USD</span>
         </div>
       </div>
     </div>

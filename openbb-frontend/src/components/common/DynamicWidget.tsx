@@ -1,5 +1,5 @@
 import React from 'react';
-import { X } from 'lucide-react';
+import { X, Plus } from 'lucide-react';
 import { useWidgets } from '../../contexts/WidgetContext';
 import WidgetSettings from './WidgetSettings';
 import TickerInfo from '../dashboard/TickerInfo';
@@ -19,6 +19,7 @@ import InsiderTrading from '../widgets/InsiderTrading';
 import InstitutionalOwnership from '../widgets/InstitutionalOwnership';
 import FinancialStatements from '../widgets/FinancialStatements';
 import PriceTarget from '../widgets/PriceTarget';
+import PriceTargetSimple from '../widgets/PriceTargetSimple';
 import CompanyFilings from '../widgets/CompanyFilings';
 import ValuationMultiples from '../widgets/ValuationMultiples';
 import EarningsTranscripts from '../widgets/EarningsTranscripts';
@@ -33,6 +34,7 @@ interface DynamicWidgetProps {
   onRemove: (widgetId: string) => void;
   onTickerChange?: (ticker: string) => void;
   isRemovable?: boolean;
+  onAdd?: () => void;
 }
 
 const widgetComponents: { [key: string]: React.ComponentType<any> } = {
@@ -54,7 +56,8 @@ const widgetComponents: { [key: string]: React.ComponentType<any> } = {
   'insider-trading': InsiderTrading,
   'institutional-ownership': InstitutionalOwnership,
   'financial-statements': FinancialStatements,
-  'price-target': PriceTarget,
+  'price-target': PriceTargetSimple,
+  'price-target-analyst': PriceTarget,
   'company-filings': CompanyFilings,
   'earnings-transcripts': EarningsTranscripts,
   'balance-sheet': BalanceSheet,
@@ -69,55 +72,57 @@ const DynamicWidget: React.FC<DynamicWidgetProps> = ({
   onRemove,
   onTickerChange,
   isRemovable = true,
+  onAdd,
 }) => {
   const { widgets } = useWidgets();
   const widget = widgets.find(w => w.id === widgetId);
   const WidgetComponent = widgetComponents[widgetType];
+  const [widgetInstance, setWidgetInstance] = React.useState<any>(null);
 
   if (!WidgetComponent) {
     return (
       <div className="bg-openbb-bg-widget rounded-lg border border-openbb-border p-4">
-        <p className="text-openbb-text-muted font-mono text-sm">
+        <p className="text-openbb-text-muted  text-sm">
           Widget type "{widgetType}" not found
         </p>
       </div>
     );
   }
 
+  const [showSettings, setShowSettings] = React.useState(false);
+
+  const handleSettings = () => {
+    setShowSettings(true);
+  };
+
+  const handleRemove = () => {
+    onRemove(widgetId);
+  };
+
   return (
-    <div className="relative group h-full" data-testid={`widget-${widgetId}`}>
-      <div data-testid={`${widgetType}-widget`}>
-        <WidgetComponent 
-          ticker={ticker} 
-          onTickerChange={onTickerChange}
-          dataProvider={widget?.dataProvider}
-        />
-      </div>
-      
-      {/* Widget Controls - visible on hover */}
-      <div className="absolute top-2 right-2 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200 z-20">
-        {/* Settings Button */}
-        <div className="bg-openbb-bg-widget border border-openbb-border rounded">
-          <WidgetSettings
-            widgetId={widgetId}
-            widgetType={widgetType}
-            currentProvider={widget?.dataProvider}
+    <>
+      <div className="h-full" data-testid={`widget-${widgetId}`}>
+        <div data-testid={`${widgetType}-widget`}>
+          <WidgetComponent 
+            ticker={ticker} 
+            onTickerChange={onTickerChange}
+            dataProvider={widget?.dataProvider}
+            onSettings={handleSettings}
+            onRemove={isRemovable ? handleRemove : undefined}
           />
         </div>
-        
-        {/* Remove Button */}
-        {isRemovable && (
-          <button
-            onClick={() => onRemove(widgetId)}
-            className="p-1.5 bg-openbb-bg-widget border border-openbb-border rounded hover:bg-openbb-danger hover:border-openbb-danger hover:text-white"
-            title="Remove Widget"
-            data-testid="remove-widget-button"
-          >
-            <X size={14} />
-          </button>
-        )}
       </div>
-    </div>
+      
+      {/* Settings Modal */}
+      {showSettings && (
+        <WidgetSettings
+          widgetId={widgetId}
+          widgetType={widgetType}
+          currentProvider={widget?.dataProvider}
+          onSave={() => setShowSettings(false)}
+        />
+      )}
+    </>
   );
 };
 

@@ -7,7 +7,7 @@
 
 import axios from 'axios';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || '';
 
 const openbbApi = axios.create({
   baseURL: `${API_BASE_URL}/api/v1/openbb`,
@@ -169,9 +169,9 @@ export const enhancedApi = {
         console.warn('OpenBB profile failed, falling back to existing API');
       }
     }
-    // Fallback to existing API
-    const { api } = await import('./api');
-    return api.getFundamentalOverview(symbol);
+    // Fallback to cached API
+    const { cachedApi } = await import('./cachedApi');
+    return cachedApi.getFundamentalOverview(symbol);
   },
 
   async getQuote(symbol: string) {
@@ -182,34 +182,10 @@ export const enhancedApi = {
         console.warn('OpenBB quote failed, falling back to existing API');
       }
     }
-    // Fallback to existing API - get latest price from historical data
-    const { api } = await import('./api');
-    const endDate = new Date().toISOString().split('T')[0];
-    const startDate = new Date(Date.now() - 2 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
-    const historicalData = await api.getHistoricalPrice(symbol, startDate, endDate, '1d');
-    
-    // Transform historical data to quote format
-    // Check if historicalData is an array or has a data property
-    const dataArray = Array.isArray(historicalData) ? historicalData : (historicalData as any)?.data;
-    
-    if (dataArray && dataArray.length > 0) {
-      const latest = dataArray[dataArray.length - 1];
-      const previous = dataArray.length > 1 ? dataArray[dataArray.length - 2] : latest;
-      
-      return {
-        symbol,
-        price: latest.close,
-        change: latest.close - previous.close,
-        changePercent: ((latest.close - previous.close) / previous.close) * 100,
-        volume: latest.volume,
-        high: latest.high,
-        low: latest.low,
-        open: latest.open,
-        previousClose: previous.close,
-      };
-    }
-    
-    throw new Error('No price data available');
+    // Fallback to cached API
+    const { cachedApi } = await import('./cachedApi');
+    const quote = await cachedApi.getQuote(symbol);
+    return quote;
   },
 
   async getCompanyNews(symbol: string, startDate?: string, endDate?: string, limit?: number) {

@@ -2,14 +2,12 @@ from typing import Optional, Dict, Any, List
 from datetime import date, datetime
 import pandas as pd
 from config import settings
-from .mock_service import MockDataService
 from .multi_provider_service import MultiProviderService
 
 class OpenBBService:
     def __init__(self):
         # Try multi-provider service first
         self.multi_provider = MultiProviderService()
-        self.mock_service = MockDataService()
         
         # Check if we should try OpenBB SDK
         self.use_openbb = False
@@ -61,8 +59,8 @@ class OpenBBService:
             except Exception as e:
                 print(f"OpenBB SDK error: {e}")
         
-        # Final fallback to mock data
-        return await self.mock_service.get_price_historical(symbol, start_date, end_date, interval)
+        # Return empty data instead of mock
+        return {'data': []}
     
     async def get_fundamental_overview(self, symbol: str) -> Dict[str, Any]:
         """Get fundamental overview for a symbol"""
@@ -74,8 +72,8 @@ class OpenBBService:
         except Exception as e:
             print(f"Multi-provider error: {e}")
         
-        # Fallback to mock data
-        return await self.mock_service.get_fundamental_overview(symbol)
+        # Return empty data instead of mock
+        return {}
     
     async def get_company_news(
         self,
@@ -94,8 +92,8 @@ class OpenBBService:
         except Exception as e:
             print(f"Multi-provider error: {e}")
         
-        # Fallback to mock data
-        return await self.mock_service.get_company_news(symbol, start_date, end_date, limit, channels)
+        # Return empty data instead of mock
+        return []
     
     async def get_share_statistics(self, symbol: str) -> Dict[str, Any]:
         """Get share statistics"""
@@ -107,8 +105,8 @@ class OpenBBService:
         except Exception as e:
             print(f"Multi-provider error: {e}")
         
-        # Fallback to mock data
-        return await self.mock_service.get_share_statistics(symbol)
+        # Return empty dict instead of mock data
+        return {}
     
     async def get_management_team(self, symbol: str) -> List[Dict[str, Any]]:
         """Get management team information"""
@@ -120,8 +118,19 @@ class OpenBBService:
         except Exception as e:
             print(f"Multi-provider management team error: {e}")
         
-        # Fallback to mock data
-        return await self.mock_service.get_management_team(symbol)
+        # Return empty array instead of mock data
+        return []
+    
+    async def get_price_performance(self, symbol: str) -> Dict[str, Any]:
+        """Get price performance data"""
+        try:
+            result = await self.multi_provider.get_price_performance(symbol)
+            if result:
+                return result
+        except Exception as e:
+            print(f"Multi-provider price performance error: {e}")
+        
+        return {}
     
     async def get_revenue_geography(
         self, 
@@ -137,8 +146,8 @@ class OpenBBService:
         except Exception as e:
             print(f"Multi-provider revenue geography error: {e}")
         
-        # Fallback to mock data
-        return await self.mock_service.get_revenue_geography(symbol, period)
+        # Return empty data instead of mock
+        return []
     
     async def get_revenue_segment(
         self, 
@@ -154,8 +163,8 @@ class OpenBBService:
         except Exception as e:
             print(f"Multi-provider revenue segment error: {e}")
         
-        # Fallback to mock data
-        return await self.mock_service.get_revenue_segment(symbol, period)
+        # Return empty data instead of mock
+        return []
     
     async def get_valuation_metrics(
         self,
@@ -173,14 +182,13 @@ class OpenBBService:
         except Exception as e:
             print(f"Multi-provider error: {e}")
         
-        # Fallback to mock data
-        return await self.mock_service.get_valuation_metrics(symbol, period, limit, with_ttm)
+        # Return empty data instead of mock
+        return []
     
     async def get_company_filings(self, symbol: str) -> List[Dict[str, Any]]:
         """Get company filings"""
-        # Would use SEC EDGAR
-        # For now use mock data
-        return await self.mock_service.get_company_filings(symbol)
+        # Return empty data instead of mock
+        return []
     
     async def get_price_target(self, symbol: str) -> Dict[str, Any]:
         """Get analyst price targets"""
@@ -192,13 +200,13 @@ class OpenBBService:
         except Exception as e:
             print(f"Multi-provider error: {e}")
         
-        # Fallback to mock data
-        return await self.mock_service.get_price_target(symbol)
+        # Return empty data instead of mock
+        return []
     
     async def get_etf_info(self, symbol: str) -> Dict[str, Any]:
         """Get ETF information if applicable"""
-        # Most free providers don't have good ETF data
-        return await self.mock_service.get_etf_info(symbol)
+        # Return empty data instead of mock
+        return {}
     
     async def get_income_statement(
         self,
@@ -215,8 +223,8 @@ class OpenBBService:
         except Exception as e:
             print(f"Multi-provider income statement error: {e}")
         
-        # Fallback to mock data
-        return await self.mock_service.get_income_statement(symbol, period, limit)
+        # Return empty data instead of mock
+        return []
     
     async def get_balance_sheet(
         self,
@@ -233,8 +241,8 @@ class OpenBBService:
         except Exception as e:
             print(f"Multi-provider balance sheet error: {e}")
         
-        # Fallback to mock data
-        return await self.mock_service.get_balance_sheet(symbol, period, limit)
+        # Return empty data instead of mock
+        return []
     
     async def get_cash_flow_statement(
         self,
@@ -251,8 +259,8 @@ class OpenBBService:
         except Exception as e:
             print(f"Multi-provider cash flow statement error: {e}")
         
-        # Fallback to mock data
-        return await self.mock_service.get_cash_flow_statement(symbol, period, limit)
+        # Return empty data instead of mock
+        return []
     
     async def get_analyst_ratings(self, symbol: str, limit: int = 20) -> List[Dict[str, Any]]:
         """Get analyst ratings and price targets"""
@@ -264,8 +272,8 @@ class OpenBBService:
         except Exception as e:
             print(f"Multi-provider analyst ratings error: {e}")
         
-        # Fallback to mock data
-        return await self.mock_service.get_analyst_ratings(symbol, limit)
+        # Return empty data instead of mock
+        return []
     
     async def get_sec_filings(self, symbol: str, limit: int = 100) -> List[Dict[str, Any]]:
         """Get SEC filings"""
@@ -277,8 +285,8 @@ class OpenBBService:
         except Exception as e:
             print(f"Multi-provider SEC filings error: {e}")
         
-        # Fallback to mock data
-        return await self.mock_service.get_company_filings(symbol)
+        # Return empty data instead of mock
+        return []
     
     async def get_earnings_transcript(self, symbol: str, year: int, quarter: int) -> Dict[str, Any]:
         """Get earnings call transcript"""
@@ -290,8 +298,8 @@ class OpenBBService:
         except Exception as e:
             print(f"Multi-provider earnings transcript error: {e}")
         
-        # Fallback to mock data
-        return await self.mock_service.get_earnings_transcript(symbol, year, quarter)
+        # Return empty data instead of mock
+        return {}
     
     async def get_earnings_transcript_dates(self, symbol: str) -> List[Dict[str, Any]]:
         """Get available earnings transcript dates"""
@@ -303,5 +311,5 @@ class OpenBBService:
         except Exception as e:
             print(f"Multi-provider transcript dates error: {e}")
         
-        # Fallback to mock data
-        return await self.mock_service.get_earnings_transcript_dates(symbol)
+        # Return empty data instead of mock
+        return []

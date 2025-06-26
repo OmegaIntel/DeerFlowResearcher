@@ -2,14 +2,19 @@ import React from 'react';
 import { Globe, Phone, MapPin, DollarSign, TrendingUp, Users } from 'lucide-react';
 import { useCompanyProfileRealTime } from '../../hooks/useRealTimeData';
 import WidgetHeaderWithTicker from '../common/WidgetHeaderWithTicker';
+import { useCopilot } from '../../contexts/CopilotContext';
+import type { WidgetType } from '../../services/copilotService';
 
 interface CompanyProfileProps {
   ticker: string;
   onTickerChange?: (ticker: string) => void;
+  onSettings?: () => void;
+  onRemove?: () => void;
 }
 
-const CompanyProfile: React.FC<CompanyProfileProps> = ({ ticker, onTickerChange }) => {
+const CompanyProfile: React.FC<CompanyProfileProps> = ({ ticker, onTickerChange, onSettings, onRemove }) => {
   const { data: profile, isLoading, error } = useCompanyProfileRealTime(ticker);
+  const { addWidgetContext } = useCopilot();
 
   if (isLoading) {
     return (
@@ -39,19 +44,23 @@ const CompanyProfile: React.FC<CompanyProfileProps> = ({ ticker, onTickerChange 
         title="Ticker Profile"
         ticker={ticker}
         onTickerChange={onTickerChange || (() => {})}
-        onRefresh={() => console.log('Refresh')}
-        onAdd={() => console.log('Add to dashboard')}
-        onExpand={() => console.log('Expand')}
-        onMore={() => console.log('More options')}
+        onAdd={() => addWidgetContext(
+          WidgetType.COMPANY_PROFILE,
+          profile,
+          ticker,
+          'Company Profile'
+        )}
+        onSettings={onSettings}
+        onRemove={onRemove}
       />
 
       <div className="widget-content flex-1 overflow-y-auto overflow-x-hidden">
         <div className="space-y-4">
         <div>
-          <h4 className="text-lg font-mono font-bold mb-2 text-openbb-text-primary">{profile.name}</h4>
+          <h4 className="text-lg  font-bold mb-2 text-openbb-text-primary">{profile.name}</h4>
           
           {/* CEO and Market Info */}
-          <div className="grid grid-cols-2 gap-2 text-xs mb-3 font-mono">
+          <div className="grid grid-cols-2 gap-2 text-xs mb-3 ">
             {profile.ceo && (
               <div className="col-span-2">
                 <span className="text-openbb-text-muted">CEO:</span>
@@ -74,12 +83,12 @@ const CompanyProfile: React.FC<CompanyProfileProps> = ({ ticker, onTickerChange 
             )}
           </div>
           
-          <div className="flex items-start gap-2 text-xs text-openbb-text-secondary mb-2 font-mono">
+          <div className="flex items-start gap-2 text-xs text-openbb-text-secondary mb-2 ">
             <MapPin size={14} className="mt-0.5 flex-shrink-0 text-openbb-accent" />
             <span>{profile.address || profile.country}</span>
           </div>
 
-          <div className="flex flex-wrap gap-4 text-xs text-openbb-text-secondary mb-3 font-mono">
+          <div className="flex flex-wrap gap-4 text-xs text-openbb-text-secondary mb-3 ">
             {profile.phone && (
               <a href={`tel:${profile.phone}`} className="flex items-center gap-1 hover:text-openbb-accent transition-colors">
                 <Phone size={14} />
@@ -94,7 +103,7 @@ const CompanyProfile: React.FC<CompanyProfileProps> = ({ ticker, onTickerChange 
             )}
           </div>
 
-          <div className="grid grid-cols-2 gap-2 text-xs mb-3 font-mono">
+          <div className="grid grid-cols-2 gap-2 text-xs mb-3 ">
             <div>
               <span className="text-openbb-text-muted">Sector:</span>
               <span className="ml-2 text-openbb-text-secondary">{profile.sector}</span>
@@ -114,7 +123,7 @@ const CompanyProfile: React.FC<CompanyProfileProps> = ({ ticker, onTickerChange 
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-2 text-xs mb-3 font-mono">
+          <div className="grid grid-cols-3 gap-2 text-xs mb-3 ">
             <div>
               <span className="text-openbb-text-muted">CIK:</span>
               <span className="ml-1 text-openbb-text-secondary">{profile.cik}</span>
@@ -130,8 +139,8 @@ const CompanyProfile: React.FC<CompanyProfileProps> = ({ ticker, onTickerChange 
           </div>
 
           <div className="border-t border-openbb-border pt-3">
-            <h5 className="font-mono font-semibold mb-2 text-sm text-openbb-text-primary">Description</h5>
-            <p className="text-xs text-openbb-text-secondary leading-relaxed font-mono">{profile.description}</p>
+            <h5 className=" font-semibold mb-2 text-sm text-openbb-text-primary">Description</h5>
+            <p className="text-xs text-openbb-text-secondary leading-relaxed ">{profile.description}</p>
           </div>
         </div>
       </div>

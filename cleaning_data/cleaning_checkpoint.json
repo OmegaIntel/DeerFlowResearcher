@@ -1,0 +1,1711 @@
+{
+  "status": "in_progress",
+  "total_companies": 843671,
+  "processed_count": 437000,
+  "cleaned_count": 45499,
+  "error_count": 0,
+  "last_company_id": "8492cf86-924f-4a71-97a4-b8a550b0e810",
+  "batch_size": 1000,
+  "start_time": "2025-06-24T20:21:14.781475",
+  "session_id": "20250624_202114",
+  "batches_completed": 424,
+  "files_created": [
+    {
+      "filename": "cleaned_batch_1_20250624_202114.csv",
+      "created_at": "2025-06-24T20:22:59.589525"
+    },
+    {
+      "filename": "cleaned_batch_2_20250624_202114.csv",
+      "created_at": "2025-06-24T20:28:09.413996"
+    },
+    {
+      "filename": "cleaned_batch_3_20250624_202114.csv",
+      "created_at": "2025-06-24T21:19:39.415623"
+    },
+    {
+      "filename": "cleaned_batch_4_20250624_202114.csv",
+      "created_at": "2025-06-24T21:28:05.393515"
+    },
+    {
+      "filename": "cleaned_batch_5_20250624_202114.csv",
+      "created_at": "2025-06-24T21:29:50.142244"
+    },
+    {
+      "filename": "cleaned_batch_6_20250624_202114.csv",
+      "created_at": "2025-06-24T21:40:27.870083"
+    },
+    {
+      "filename": "cleaned_batch_7_20250624_202114.csv",
+      "created_at": "2025-06-24T21:43:44.378719"
+    },
+    {
+      "filename": "cleaned_batch_8_20250624_202114.csv",
+      "created_at": "2025-06-24T22:05:51.249458"
+    },
+    {
+      "filename": "cleaned_batch_9_20250624_202114.csv",
+      "created_at": "2025-06-24T22:10:37.584615"
+    },
+    {
+      "filename": "cleaned_batch_10_20250624_202114.csv",
+      "created_at": "2025-06-24T22:13:34.471083"
+    },
+    {
+      "filename": "cleaned_batch_11_20250624_202114.csv",
+      "created_at": "2025-06-24T22:19:07.879307"
+    },
+    {
+      "filename": "cleaned_batch_12_20250624_202114.csv",
+      "created_at": "2025-06-24T22:26:12.614191"
+    },
+    {
+      "filename": "cleaned_batch_13_20250624_202114.csv",
+      "created_at": "2025-06-24T23:26:05.580086"
+    },
+    {
+      "filename": "cleaned_batch_14_20250624_202114.csv",
+      "created_at": "2025-06-24T23:52:49.222355"
+    },
+    {
+      "filename": "cleaned_batch_15_20250624_202114.csv",
+      "created_at": "2025-06-25T00:58:25.111860"
+    },
+    {
+      "filename": "cleaned_batch_16_20250624_202114.csv",
+      "created_at": "2025-06-25T01:04:14.381878"
+    },
+    {
+      "filename": "cleaned_batch_17_20250624_202114.csv",
+      "created_at": "2025-06-25T01:09:30.950864"
+    },
+    {
+      "filename": "cleaned_batch_18_20250624_202114.csv",
+      "created_at": "2025-06-25T01:11:43.408182"
+    },
+    {
+      "filename": "cleaned_batch_19_20250624_202114.csv",
+      "created_at": "2025-06-25T01:14:17.646538"
+    },
+    {
+      "filename": "cleaned_batch_20_20250624_202114.csv",
+      "created_at": "2025-06-25T01:16:59.228320"
+    },
+    {
+      "filename": "cleaned_batch_21_20250624_202114.csv",
+      "created_at": "2025-06-25T01:22:49.308078"
+    },
+    {
+      "filename": "cleaned_batch_22_20250624_202114.csv",
+      "created_at": "2025-06-25T01:24:36.546845"
+    },
+    {
+      "filename": "cleaned_batch_23_20250624_202114.csv",
+      "created_at": "2025-06-25T01:26:23.419326"
+    },
+    {
+      "filename": "cleaned_batch_24_20250624_202114.csv",
+      "created_at": "2025-06-25T01:28:10.199449"
+    },
+    {
+      "filename": "cleaned_batch_25_20250624_202114.csv",
+      "created_at": "2025-06-25T01:29:57.073816"
+    },
+    {
+      "filename": "cleaned_batch_26_20250624_202114.csv",
+      "created_at": "2025-06-25T01:31:43.873317"
+    },
+    {
+      "filename": "cleaned_batch_27_20250624_202114.csv",
+      "created_at": "2025-06-25T01:33:30.678105"
+    },
+    {
+      "filename": "cleaned_batch_28_20250624_202114.csv",
+      "created_at": "2025-06-25T01:35:17.451064"
+    },
+    {
+      "filename": "cleaned_batch_29_20250624_202114.csv",
+      "created_at": "2025-06-25T01:37:04.296301"
+    },
+    {
+      "filename": "cleaned_batch_30_20250624_202114.csv",
+      "created_at": "2025-06-25T01:38:51.097871"
+    },
+    {
+      "filename": "cleaned_batch_31_20250624_202114.csv",
+      "created_at": "2025-06-25T01:40:37.945933"
+    },
+    {
+      "filename": "cleaned_batch_32_20250624_202114.csv",
+      "created_at": "2025-06-25T01:42:24.744342"
+    },
+    {
+      "filename": "cleaned_batch_33_20250624_202114.csv",
+      "created_at": "2025-06-25T01:44:11.539848"
+    },
+    {
+      "filename": "cleaned_batch_34_20250624_202114.csv",
+      "created_at": "2025-06-25T01:45:58.340175"
+    },
+    {
+      "filename": "cleaned_batch_35_20250624_202114.csv",
+      "created_at": "2025-06-25T01:47:45.110151"
+    },
+    {
+      "filename": "cleaned_batch_36_20250624_202114.csv",
+      "created_at": "2025-06-25T01:49:31.845125"
+    },
+    {
+      "filename": "cleaned_batch_37_20250624_202114.csv",
+      "created_at": "2025-06-25T01:51:18.621080"
+    },
+    {
+      "filename": "cleaned_batch_38_20250624_202114.csv",
+      "created_at": "2025-06-25T01:53:05.346435"
+    },
+    {
+      "filename": "cleaned_batch_39_20250624_202114.csv",
+      "created_at": "2025-06-25T01:54:52.130137"
+    },
+    {
+      "filename": "cleaned_batch_40_20250624_202114.csv",
+      "created_at": "2025-06-25T01:56:38.908419"
+    },
+    {
+      "filename": "cleaned_batch_41_20250624_202114.csv",
+      "created_at": "2025-06-25T01:58:25.695229"
+    },
+    {
+      "filename": "cleaned_batch_42_20250624_202114.csv",
+      "created_at": "2025-06-25T02:00:12.487392"
+    },
+    {
+      "filename": "cleaned_batch_43_20250624_202114.csv",
+      "created_at": "2025-06-25T02:01:59.308637"
+    },
+    {
+      "filename": "cleaned_batch_44_20250624_202114.csv",
+      "created_at": "2025-06-25T02:03:46.560837"
+    },
+    {
+      "filename": "cleaned_batch_45_20250624_202114.csv",
+      "created_at": "2025-06-25T02:05:33.354498"
+    },
+    {
+      "filename": "cleaned_batch_46_20250624_202114.csv",
+      "created_at": "2025-06-25T02:07:20.149551"
+    },
+    {
+      "filename": "cleaned_batch_47_20250624_202114.csv",
+      "created_at": "2025-06-25T02:09:07.013051"
+    },
+    {
+      "filename": "cleaned_batch_48_20250624_202114.csv",
+      "created_at": "2025-06-25T02:10:53.788803"
+    },
+    {
+      "filename": "cleaned_batch_49_20250624_202114.csv",
+      "created_at": "2025-06-25T02:12:40.587852"
+    },
+    {
+      "filename": "cleaned_batch_50_20250624_202114.csv",
+      "created_at": "2025-06-25T02:14:27.369389"
+    },
+    {
+      "filename": "cleaned_batch_51_20250624_202114.csv",
+      "created_at": "2025-06-25T02:16:14.186915"
+    },
+    {
+      "filename": "cleaned_batch_52_20250624_202114.csv",
+      "created_at": "2025-06-25T02:18:00.923122"
+    },
+    {
+      "filename": "cleaned_batch_53_20250624_202114.csv",
+      "created_at": "2025-06-25T02:19:47.691241"
+    },
+    {
+      "filename": "cleaned_batch_54_20250624_202114.csv",
+      "created_at": "2025-06-25T02:21:34.479380"
+    },
+    {
+      "filename": "cleaned_batch_55_20250624_202114.csv",
+      "created_at": "2025-06-25T02:23:21.254848"
+    },
+    {
+      "filename": "cleaned_batch_56_20250624_202114.csv",
+      "created_at": "2025-06-25T02:25:08.022643"
+    },
+    {
+      "filename": "cleaned_batch_57_20250624_202114.csv",
+      "created_at": "2025-06-25T02:26:54.849266"
+    },
+    {
+      "filename": "cleaned_batch_58_20250624_202114.csv",
+      "created_at": "2025-06-25T02:28:41.622323"
+    },
+    {
+      "filename": "cleaned_batch_59_20250624_202114.csv",
+      "created_at": "2025-06-25T02:30:28.376388"
+    },
+    {
+      "filename": "cleaned_batch_60_20250624_202114.csv",
+      "created_at": "2025-06-25T02:32:15.148539"
+    },
+    {
+      "filename": "cleaned_batch_61_20250624_202114.csv",
+      "created_at": "2025-06-25T02:34:01.896251"
+    },
+    {
+      "filename": "cleaned_batch_62_20250624_202114.csv",
+      "created_at": "2025-06-25T02:35:48.656262"
+    },
+    {
+      "filename": "cleaned_batch_63_20250624_202114.csv",
+      "created_at": "2025-06-25T02:37:35.474393"
+    },
+    {
+      "filename": "cleaned_batch_64_20250624_202114.csv",
+      "created_at": "2025-06-25T02:39:22.352514"
+    },
+    {
+      "filename": "cleaned_batch_65_20250624_202114.csv",
+      "created_at": "2025-06-25T02:41:09.151256"
+    },
+    {
+      "filename": "cleaned_batch_66_20250624_202114.csv",
+      "created_at": "2025-06-25T02:42:55.905072"
+    },
+    {
+      "filename": "cleaned_batch_67_20250624_202114.csv",
+      "created_at": "2025-06-25T02:44:42.712341"
+    },
+    {
+      "filename": "cleaned_batch_68_20250624_202114.csv",
+      "created_at": "2025-06-25T02:46:29.979895"
+    },
+    {
+      "filename": "cleaned_batch_69_20250624_202114.csv",
+      "created_at": "2025-06-25T02:48:16.770214"
+    },
+    {
+      "filename": "cleaned_batch_70_20250624_202114.csv",
+      "created_at": "2025-06-25T02:50:03.611383"
+    },
+    {
+      "filename": "cleaned_batch_71_20250624_202114.csv",
+      "created_at": "2025-06-25T02:51:50.395819"
+    },
+    {
+      "filename": "cleaned_batch_72_20250624_202114.csv",
+      "created_at": "2025-06-25T02:53:37.206232"
+    },
+    {
+      "filename": "cleaned_batch_73_20250624_202114.csv",
+      "created_at": "2025-06-25T02:55:24.007006"
+    },
+    {
+      "filename": "cleaned_batch_74_20250624_202114.csv",
+      "created_at": "2025-06-25T02:57:10.813003"
+    },
+    {
+      "filename": "cleaned_batch_75_20250624_202114.csv",
+      "created_at": "2025-06-25T02:58:57.590571"
+    },
+    {
+      "filename": "cleaned_batch_76_20250624_202114.csv",
+      "created_at": "2025-06-25T03:00:44.344740"
+    },
+    {
+      "filename": "cleaned_batch_77_20250624_202114.csv",
+      "created_at": "2025-06-25T03:02:31.155981"
+    },
+    {
+      "filename": "cleaned_batch_78_20250624_202114.csv",
+      "created_at": "2025-06-25T03:04:18.029003"
+    },
+    {
+      "filename": "cleaned_batch_79_20250624_202114.csv",
+      "created_at": "2025-06-25T03:06:04.817697"
+    },
+    {
+      "filename": "cleaned_batch_80_20250624_202114.csv",
+      "created_at": "2025-06-25T03:07:51.557933"
+    },
+    {
+      "filename": "cleaned_batch_81_20250624_202114.csv",
+      "created_at": "2025-06-25T03:09:38.386395"
+    },
+    {
+      "filename": "cleaned_batch_82_20250624_202114.csv",
+      "created_at": "2025-06-25T03:11:25.193043"
+    },
+    {
+      "filename": "cleaned_batch_83_20250624_202114.csv",
+      "created_at": "2025-06-25T03:13:11.993574"
+    },
+    {
+      "filename": "cleaned_batch_84_20250624_202114.csv",
+      "created_at": "2025-06-25T03:14:58.792286"
+    },
+    {
+      "filename": "cleaned_batch_85_20250624_202114.csv",
+      "created_at": "2025-06-25T03:16:45.569937"
+    },
+    {
+      "filename": "cleaned_batch_86_20250624_202114.csv",
+      "created_at": "2025-06-25T03:18:32.366914"
+    },
+    {
+      "filename": "cleaned_batch_87_20250624_202114.csv",
+      "created_at": "2025-06-25T03:20:19.166490"
+    },
+    {
+      "filename": "cleaned_batch_88_20250624_202114.csv",
+      "created_at": "2025-06-25T03:22:06.004235"
+    },
+    {
+      "filename": "cleaned_batch_89_20250624_202114.csv",
+      "created_at": "2025-06-25T03:23:52.829771"
+    },
+    {
+      "filename": "cleaned_batch_90_20250624_202114.csv",
+      "created_at": "2025-06-25T03:25:40.090143"
+    },
+    {
+      "filename": "cleaned_batch_91_20250624_202114.csv",
+      "created_at": "2025-06-25T03:27:26.938326"
+    },
+    {
+      "filename": "cleaned_batch_92_20250624_202114.csv",
+      "created_at": "2025-06-25T03:29:13.702180"
+    },
+    {
+      "filename": "cleaned_batch_93_20250624_202114.csv",
+      "created_at": "2025-06-25T03:31:00.509173"
+    },
+    {
+      "filename": "cleaned_batch_94_20250624_202114.csv",
+      "created_at": "2025-06-25T03:32:47.262709"
+    },
+    {
+      "filename": "cleaned_batch_95_20250624_202114.csv",
+      "created_at": "2025-06-25T03:34:34.057917"
+    },
+    {
+      "filename": "cleaned_batch_96_20250624_202114.csv",
+      "created_at": "2025-06-25T03:36:20.849454"
+    },
+    {
+      "filename": "cleaned_batch_97_20250624_202114.csv",
+      "created_at": "2025-06-25T03:38:07.703027"
+    },
+    {
+      "filename": "cleaned_batch_98_20250624_202114.csv",
+      "created_at": "2025-06-25T03:39:54.509329"
+    },
+    {
+      "filename": "cleaned_batch_99_20250624_202114.csv",
+      "created_at": "2025-06-25T03:41:41.281783"
+    },
+    {
+      "filename": "cleaned_batch_100_20250624_202114.csv",
+      "created_at": "2025-06-25T03:43:28.045668"
+    },
+    {
+      "filename": "cleaned_batch_101_20250624_202114.csv",
+      "created_at": "2025-06-25T03:45:14.817374"
+    },
+    {
+      "filename": "cleaned_batch_102_20250624_202114.csv",
+      "created_at": "2025-06-25T03:47:01.559851"
+    },
+    {
+      "filename": "cleaned_batch_103_20250624_202114.csv",
+      "created_at": "2025-06-25T03:48:48.305626"
+    },
+    {
+      "filename": "cleaned_batch_104_20250624_202114.csv",
+      "created_at": "2025-06-25T03:50:35.109258"
+    },
+    {
+      "filename": "cleaned_batch_105_20250624_202114.csv",
+      "created_at": "2025-06-25T03:52:21.894138"
+    },
+    {
+      "filename": "cleaned_batch_106_20250624_202114.csv",
+      "created_at": "2025-06-25T03:54:08.710786"
+    },
+    {
+      "filename": "cleaned_batch_107_20250624_202114.csv",
+      "created_at": "2025-06-25T03:55:55.483293"
+    },
+    {
+      "filename": "cleaned_batch_108_20250624_202114.csv",
+      "created_at": "2025-06-25T03:57:42.273626"
+    },
+    {
+      "filename": "cleaned_batch_109_20250624_202114.csv",
+      "created_at": "2025-06-25T03:59:29.064919"
+    },
+    {
+      "filename": "cleaned_batch_110_20250624_202114.csv",
+      "created_at": "2025-06-25T04:01:15.854632"
+    },
+    {
+      "filename": "cleaned_batch_111_20250624_202114.csv",
+      "created_at": "2025-06-25T04:03:02.729921"
+    },
+    {
+      "filename": "cleaned_batch_112_20250624_202114.csv",
+      "created_at": "2025-06-25T04:04:49.571728"
+    },
+    {
+      "filename": "cleaned_batch_113_20250624_202114.csv",
+      "created_at": "2025-06-25T04:06:36.819695"
+    },
+    {
+      "filename": "cleaned_batch_114_20250624_202114.csv",
+      "created_at": "2025-06-25T04:08:23.590425"
+    },
+    {
+      "filename": "cleaned_batch_115_20250624_202114.csv",
+      "created_at": "2025-06-25T04:10:10.414041"
+    },
+    {
+      "filename": "cleaned_batch_116_20250624_202114.csv",
+      "created_at": "2025-06-25T04:11:57.192301"
+    },
+    {
+      "filename": "cleaned_batch_117_20250624_202114.csv",
+      "created_at": "2025-06-25T04:13:43.946059"
+    },
+    {
+      "filename": "cleaned_batch_118_20250624_202114.csv",
+      "created_at": "2025-06-25T04:15:30.754878"
+    },
+    {
+      "filename": "cleaned_batch_119_20250624_202114.csv",
+      "created_at": "2025-06-25T04:17:17.558833"
+    },
+    {
+      "filename": "cleaned_batch_120_20250624_202114.csv",
+      "created_at": "2025-06-25T04:19:04.288055"
+    },
+    {
+      "filename": "cleaned_batch_121_20250624_202114.csv",
+      "created_at": "2025-06-25T04:20:51.016546"
+    },
+    {
+      "filename": "cleaned_batch_122_20250624_202114.csv",
+      "created_at": "2025-06-25T04:22:37.838765"
+    },
+    {
+      "filename": "cleaned_batch_123_20250624_202114.csv",
+      "created_at": "2025-06-25T04:24:24.625588"
+    },
+    {
+      "filename": "cleaned_batch_124_20250624_202114.csv",
+      "created_at": "2025-06-25T04:26:11.331950"
+    },
+    {
+      "filename": "cleaned_batch_125_20250624_202114.csv",
+      "created_at": "2025-06-25T04:27:58.123147"
+    },
+    {
+      "filename": "cleaned_batch_126_20250624_202114.csv",
+      "created_at": "2025-06-25T04:29:44.906370"
+    },
+    {
+      "filename": "cleaned_batch_127_20250624_202114.csv",
+      "created_at": "2025-06-25T04:31:31.633211"
+    },
+    {
+      "filename": "cleaned_batch_128_20250624_202114.csv",
+      "created_at": "2025-06-25T04:33:18.348501"
+    },
+    {
+      "filename": "cleaned_batch_129_20250624_202114.csv",
+      "created_at": "2025-06-25T04:35:05.100221"
+    },
+    {
+      "filename": "cleaned_batch_130_20250624_202114.csv",
+      "created_at": "2025-06-25T04:36:51.896186"
+    },
+    {
+      "filename": "cleaned_batch_131_20250624_202114.csv",
+      "created_at": "2025-06-25T04:38:38.684090"
+    },
+    {
+      "filename": "cleaned_batch_132_20250624_202114.csv",
+      "created_at": "2025-06-25T04:40:25.484745"
+    },
+    {
+      "filename": "cleaned_batch_133_20250624_202114.csv",
+      "created_at": "2025-06-25T04:42:12.241903"
+    },
+    {
+      "filename": "cleaned_batch_134_20250624_202114.csv",
+      "created_at": "2025-06-25T04:43:58.994352"
+    },
+    {
+      "filename": "cleaned_batch_135_20250624_202114.csv",
+      "created_at": "2025-06-25T04:45:45.736694"
+    },
+    {
+      "filename": "cleaned_batch_136_20250624_202114.csv",
+      "created_at": "2025-06-25T04:47:32.517585"
+    },
+    {
+      "filename": "cleaned_batch_137_20250624_202114.csv",
+      "created_at": "2025-06-25T04:49:19.684013"
+    },
+    {
+      "filename": "cleaned_batch_138_20250624_202114.csv",
+      "created_at": "2025-06-25T04:51:06.390163"
+    },
+    {
+      "filename": "cleaned_batch_139_20250624_202114.csv",
+      "created_at": "2025-06-25T04:52:53.169246"
+    },
+    {
+      "filename": "cleaned_batch_140_20250624_202114.csv",
+      "created_at": "2025-06-25T04:54:39.915955"
+    },
+    {
+      "filename": "cleaned_batch_141_20250624_202114.csv",
+      "created_at": "2025-06-25T04:56:26.651187"
+    },
+    {
+      "filename": "cleaned_batch_142_20250624_202114.csv",
+      "created_at": "2025-06-25T04:58:13.370373"
+    },
+    {
+      "filename": "cleaned_batch_143_20250624_202114.csv",
+      "created_at": "2025-06-25T05:00:00.094560"
+    },
+    {
+      "filename": "cleaned_batch_144_20250624_202114.csv",
+      "created_at": "2025-06-25T05:01:46.889485"
+    },
+    {
+      "filename": "cleaned_batch_145_20250624_202114.csv",
+      "created_at": "2025-06-25T05:03:33.637546"
+    },
+    {
+      "filename": "cleaned_batch_146_20250624_202114.csv",
+      "created_at": "2025-06-25T05:05:20.368183"
+    },
+    {
+      "filename": "cleaned_batch_147_20250624_202114.csv",
+      "created_at": "2025-06-25T05:07:07.120212"
+    },
+    {
+      "filename": "cleaned_batch_148_20250624_202114.csv",
+      "created_at": "2025-06-25T05:08:53.863257"
+    },
+    {
+      "filename": "cleaned_batch_149_20250624_202114.csv",
+      "created_at": "2025-06-25T05:10:40.574640"
+    },
+    {
+      "filename": "cleaned_batch_150_20250624_202114.csv",
+      "created_at": "2025-06-25T05:12:27.310391"
+    },
+    {
+      "filename": "cleaned_batch_151_20250624_202114.csv",
+      "created_at": "2025-06-25T05:14:14.073651"
+    },
+    {
+      "filename": "cleaned_batch_152_20250624_202114.csv",
+      "created_at": "2025-06-25T05:16:00.854564"
+    },
+    {
+      "filename": "cleaned_batch_153_20250624_202114.csv",
+      "created_at": "2025-06-25T05:17:47.723853"
+    },
+    {
+      "filename": "cleaned_batch_154_20250624_202114.csv",
+      "created_at": "2025-06-25T05:19:34.502639"
+    },
+    {
+      "filename": "cleaned_batch_155_20250624_202114.csv",
+      "created_at": "2025-06-25T05:21:21.359204"
+    },
+    {
+      "filename": "cleaned_batch_156_20250624_202114.csv",
+      "created_at": "2025-06-25T05:23:08.149617"
+    },
+    {
+      "filename": "cleaned_batch_157_20250624_202114.csv",
+      "created_at": "2025-06-25T05:24:54.903689"
+    },
+    {
+      "filename": "cleaned_batch_158_20250624_202114.csv",
+      "created_at": "2025-06-25T05:26:41.699409"
+    },
+    {
+      "filename": "cleaned_batch_159_20250624_202114.csv",
+      "created_at": "2025-06-25T05:28:28.970562"
+    },
+    {
+      "filename": "cleaned_batch_160_20250624_202114.csv",
+      "created_at": "2025-06-25T05:30:15.701168"
+    },
+    {
+      "filename": "cleaned_batch_161_20250624_202114.csv",
+      "created_at": "2025-06-25T05:32:02.552189"
+    },
+    {
+      "filename": "cleaned_batch_162_20250624_202114.csv",
+      "created_at": "2025-06-25T05:33:49.401978"
+    },
+    {
+      "filename": "cleaned_batch_163_20250624_202114.csv",
+      "created_at": "2025-06-25T05:35:36.200521"
+    },
+    {
+      "filename": "cleaned_batch_164_20250624_202114.csv",
+      "created_at": "2025-06-25T05:37:22.951114"
+    },
+    {
+      "filename": "cleaned_batch_165_20250624_202114.csv",
+      "created_at": "2025-06-25T05:39:09.800311"
+    },
+    {
+      "filename": "cleaned_batch_166_20250624_202114.csv",
+      "created_at": "2025-06-25T05:40:56.574214"
+    },
+    {
+      "filename": "cleaned_batch_167_20250624_202114.csv",
+      "created_at": "2025-06-25T05:42:43.318181"
+    },
+    {
+      "filename": "cleaned_batch_168_20250624_202114.csv",
+      "created_at": "2025-06-25T05:44:30.049821"
+    },
+    {
+      "filename": "cleaned_batch_169_20250624_202114.csv",
+      "created_at": "2025-06-25T05:46:16.766203"
+    },
+    {
+      "filename": "cleaned_batch_170_20250624_202114.csv",
+      "created_at": "2025-06-25T05:48:03.547992"
+    },
+    {
+      "filename": "cleaned_batch_171_20250624_202114.csv",
+      "created_at": "2025-06-25T05:49:50.350733"
+    },
+    {
+      "filename": "cleaned_batch_172_20250624_202114.csv",
+      "created_at": "2025-06-25T05:51:37.129160"
+    },
+    {
+      "filename": "cleaned_batch_173_20250624_202114.csv",
+      "created_at": "2025-06-25T05:53:23.910685"
+    },
+    {
+      "filename": "cleaned_batch_174_20250624_202114.csv",
+      "created_at": "2025-06-25T05:55:10.652360"
+    },
+    {
+      "filename": "cleaned_batch_175_20250624_202114.csv",
+      "created_at": "2025-06-25T05:56:57.404330"
+    },
+    {
+      "filename": "cleaned_batch_176_20250624_202114.csv",
+      "created_at": "2025-06-25T05:58:44.199846"
+    },
+    {
+      "filename": "cleaned_batch_177_20250624_202114.csv",
+      "created_at": "2025-06-25T06:00:30.915757"
+    },
+    {
+      "filename": "cleaned_batch_178_20250624_202114.csv",
+      "created_at": "2025-06-25T06:02:17.680210"
+    },
+    {
+      "filename": "cleaned_batch_179_20250624_202114.csv",
+      "created_at": "2025-06-25T06:04:04.439824"
+    },
+    {
+      "filename": "cleaned_batch_180_20250624_202114.csv",
+      "created_at": "2025-06-25T06:05:51.192046"
+    },
+    {
+      "filename": "cleaned_batch_181_20250624_202114.csv",
+      "created_at": "2025-06-25T06:07:38.454811"
+    },
+    {
+      "filename": "cleaned_batch_182_20250624_202114.csv",
+      "created_at": "2025-06-25T06:09:25.214070"
+    },
+    {
+      "filename": "cleaned_batch_183_20250624_202114.csv",
+      "created_at": "2025-06-25T06:11:12.001386"
+    },
+    {
+      "filename": "cleaned_batch_184_20250624_202114.csv",
+      "created_at": "2025-06-25T06:12:58.757211"
+    },
+    {
+      "filename": "cleaned_batch_185_20250624_202114.csv",
+      "created_at": "2025-06-25T06:14:45.566417"
+    },
+    {
+      "filename": "cleaned_batch_186_20250624_202114.csv",
+      "created_at": "2025-06-25T06:16:32.318072"
+    },
+    {
+      "filename": "cleaned_batch_187_20250624_202114.csv",
+      "created_at": "2025-06-25T06:18:19.064897"
+    },
+    {
+      "filename": "cleaned_batch_188_20250624_202114.csv",
+      "created_at": "2025-06-25T06:20:05.825393"
+    },
+    {
+      "filename": "cleaned_batch_189_20250624_202114.csv",
+      "created_at": "2025-06-25T06:21:52.620041"
+    },
+    {
+      "filename": "cleaned_batch_190_20250624_202114.csv",
+      "created_at": "2025-06-25T06:23:39.388851"
+    },
+    {
+      "filename": "cleaned_batch_191_20250624_202114.csv",
+      "created_at": "2025-06-25T06:25:26.105895"
+    },
+    {
+      "filename": "cleaned_batch_192_20250624_202114.csv",
+      "created_at": "2025-06-25T06:27:12.903407"
+    },
+    {
+      "filename": "cleaned_batch_193_20250624_202114.csv",
+      "created_at": "2025-06-25T06:28:59.767249"
+    },
+    {
+      "filename": "cleaned_batch_194_20250624_202114.csv",
+      "created_at": "2025-06-25T06:30:46.548235"
+    },
+    {
+      "filename": "cleaned_batch_195_20250624_202114.csv",
+      "created_at": "2025-06-25T06:32:33.587762"
+    },
+    {
+      "filename": "cleaned_batch_196_20250624_202114.csv",
+      "created_at": "2025-06-25T06:34:20.397885"
+    },
+    {
+      "filename": "cleaned_batch_197_20250624_202114.csv",
+      "created_at": "2025-06-25T06:36:07.169042"
+    },
+    {
+      "filename": "cleaned_batch_198_20250624_202114.csv",
+      "created_at": "2025-06-25T06:37:53.909857"
+    },
+    {
+      "filename": "cleaned_batch_199_20250624_202114.csv",
+      "created_at": "2025-06-25T06:39:40.792054"
+    },
+    {
+      "filename": "cleaned_batch_200_20250624_202114.csv",
+      "created_at": "2025-06-25T06:41:27.581343"
+    },
+    {
+      "filename": "cleaned_batch_201_20250624_202114.csv",
+      "created_at": "2025-06-25T06:43:14.399284"
+    },
+    {
+      "filename": "cleaned_batch_202_20250624_202114.csv",
+      "created_at": "2025-06-25T06:45:01.172316"
+    },
+    {
+      "filename": "cleaned_batch_203_20250624_202114.csv",
+      "created_at": "2025-06-25T06:46:47.983651"
+    },
+    {
+      "filename": "cleaned_batch_204_20250624_202114.csv",
+      "created_at": "2025-06-25T06:48:35.227954"
+    },
+    {
+      "filename": "cleaned_batch_205_20250624_202114.csv",
+      "created_at": "2025-06-25T06:50:22.044336"
+    },
+    {
+      "filename": "cleaned_batch_206_20250624_202114.csv",
+      "created_at": "2025-06-25T06:52:08.867136"
+    },
+    {
+      "filename": "cleaned_batch_207_20250624_202114.csv",
+      "created_at": "2025-06-25T06:53:55.646262"
+    },
+    {
+      "filename": "cleaned_batch_208_20250624_202114.csv",
+      "created_at": "2025-06-25T06:55:42.395383"
+    },
+    {
+      "filename": "cleaned_batch_209_20250624_202114.csv",
+      "created_at": "2025-06-25T06:57:29.151438"
+    },
+    {
+      "filename": "cleaned_batch_210_20250624_202114.csv",
+      "created_at": "2025-06-25T06:59:16.006612"
+    },
+    {
+      "filename": "cleaned_batch_211_20250624_202114.csv",
+      "created_at": "2025-06-25T07:01:02.790158"
+    },
+    {
+      "filename": "cleaned_batch_212_20250624_202114.csv",
+      "created_at": "2025-06-25T07:02:49.601695"
+    },
+    {
+      "filename": "cleaned_batch_213_20250624_202114.csv",
+      "created_at": "2025-06-25T07:04:36.425392"
+    },
+    {
+      "filename": "cleaned_batch_214_20250624_202114.csv",
+      "created_at": "2025-06-25T07:06:23.202487"
+    },
+    {
+      "filename": "cleaned_batch_215_20250624_202114.csv",
+      "created_at": "2025-06-25T07:08:09.958180"
+    },
+    {
+      "filename": "cleaned_batch_216_20250624_202114.csv",
+      "created_at": "2025-06-25T07:09:56.774964"
+    },
+    {
+      "filename": "cleaned_batch_217_20250624_202114.csv",
+      "created_at": "2025-06-25T07:11:43.547720"
+    },
+    {
+      "filename": "cleaned_batch_218_20250624_202114.csv",
+      "created_at": "2025-06-25T07:13:30.350815"
+    },
+    {
+      "filename": "cleaned_batch_219_20250624_202114.csv",
+      "created_at": "2025-06-25T07:15:17.171822"
+    },
+    {
+      "filename": "cleaned_batch_220_20250624_202114.csv",
+      "created_at": "2025-06-25T07:17:03.933444"
+    },
+    {
+      "filename": "cleaned_batch_221_20250624_202114.csv",
+      "created_at": "2025-06-25T07:18:50.721821"
+    },
+    {
+      "filename": "cleaned_batch_222_20250624_202114.csv",
+      "created_at": "2025-06-25T07:20:37.528735"
+    },
+    {
+      "filename": "cleaned_batch_223_20250624_202114.csv",
+      "created_at": "2025-06-25T07:22:24.353999"
+    },
+    {
+      "filename": "cleaned_batch_224_20250624_202114.csv",
+      "created_at": "2025-06-25T07:24:11.137488"
+    },
+    {
+      "filename": "cleaned_batch_225_20250624_202114.csv",
+      "created_at": "2025-06-25T07:25:57.945101"
+    },
+    {
+      "filename": "cleaned_batch_226_20250624_202114.csv",
+      "created_at": "2025-06-25T07:27:44.718832"
+    },
+    {
+      "filename": "cleaned_batch_227_20250624_202114.csv",
+      "created_at": "2025-06-25T07:29:31.513765"
+    },
+    {
+      "filename": "cleaned_batch_228_20250624_202114.csv",
+      "created_at": "2025-06-25T07:31:18.769985"
+    },
+    {
+      "filename": "cleaned_batch_229_20250624_202114.csv",
+      "created_at": "2025-06-25T07:33:05.588118"
+    },
+    {
+      "filename": "cleaned_batch_230_20250624_202114.csv",
+      "created_at": "2025-06-25T07:34:52.379220"
+    },
+    {
+      "filename": "cleaned_batch_231_20250624_202114.csv",
+      "created_at": "2025-06-25T07:36:39.174546"
+    },
+    {
+      "filename": "cleaned_batch_232_20250624_202114.csv",
+      "created_at": "2025-06-25T07:38:25.998216"
+    },
+    {
+      "filename": "cleaned_batch_233_20250624_202114.csv",
+      "created_at": "2025-06-25T07:40:12.742333"
+    },
+    {
+      "filename": "cleaned_batch_234_20250624_202114.csv",
+      "created_at": "2025-06-25T07:41:59.502269"
+    },
+    {
+      "filename": "cleaned_batch_235_20250624_202114.csv",
+      "created_at": "2025-06-25T07:43:46.283032"
+    },
+    {
+      "filename": "cleaned_batch_236_20250624_202114.csv",
+      "created_at": "2025-06-25T07:45:33.061384"
+    },
+    {
+      "filename": "cleaned_batch_237_20250624_202114.csv",
+      "created_at": "2025-06-25T07:47:19.855860"
+    },
+    {
+      "filename": "cleaned_batch_238_20250624_202114.csv",
+      "created_at": "2025-06-25T07:49:06.616204"
+    },
+    {
+      "filename": "cleaned_batch_239_20250624_202114.csv",
+      "created_at": "2025-06-25T07:50:53.362331"
+    },
+    {
+      "filename": "cleaned_batch_240_20250624_202114.csv",
+      "created_at": "2025-06-25T07:52:40.113863"
+    },
+    {
+      "filename": "cleaned_batch_241_20250624_202114.csv",
+      "created_at": "2025-06-25T07:54:26.933962"
+    },
+    {
+      "filename": "cleaned_batch_242_20250624_202114.csv",
+      "created_at": "2025-06-25T07:56:13.718440"
+    },
+    {
+      "filename": "cleaned_batch_243_20250624_202114.csv",
+      "created_at": "2025-06-25T07:58:00.590461"
+    },
+    {
+      "filename": "cleaned_batch_244_20250624_202114.csv",
+      "created_at": "2025-06-25T07:59:47.396862"
+    },
+    {
+      "filename": "cleaned_batch_245_20250624_202114.csv",
+      "created_at": "2025-06-25T08:01:34.241787"
+    },
+    {
+      "filename": "cleaned_batch_246_20250624_202114.csv",
+      "created_at": "2025-06-25T08:03:21.053440"
+    },
+    {
+      "filename": "cleaned_batch_247_20250624_202114.csv",
+      "created_at": "2025-06-25T08:05:07.895690"
+    },
+    {
+      "filename": "cleaned_batch_248_20250624_202114.csv",
+      "created_at": "2025-06-25T08:06:54.652905"
+    },
+    {
+      "filename": "cleaned_batch_249_20250624_202114.csv",
+      "created_at": "2025-06-25T08:08:41.450238"
+    },
+    {
+      "filename": "cleaned_batch_250_20250624_202114.csv",
+      "created_at": "2025-06-25T08:10:28.244257"
+    },
+    {
+      "filename": "cleaned_batch_251_20250624_202114.csv",
+      "created_at": "2025-06-25T08:12:15.058074"
+    },
+    {
+      "filename": "cleaned_batch_252_20250624_202114.csv",
+      "created_at": "2025-06-25T08:14:02.203477"
+    },
+    {
+      "filename": "cleaned_batch_253_20250624_202114.csv",
+      "created_at": "2025-06-25T08:15:48.966622"
+    },
+    {
+      "filename": "cleaned_batch_254_20250624_202114.csv",
+      "created_at": "2025-06-25T08:17:35.764149"
+    },
+    {
+      "filename": "cleaned_batch_255_20250624_202114.csv",
+      "created_at": "2025-06-25T08:19:22.505251"
+    },
+    {
+      "filename": "cleaned_batch_256_20250624_202114.csv",
+      "created_at": "2025-06-25T08:21:09.291191"
+    },
+    {
+      "filename": "cleaned_batch_257_20250624_202114.csv",
+      "created_at": "2025-06-25T08:22:56.056963"
+    },
+    {
+      "filename": "cleaned_batch_258_20250624_202114.csv",
+      "created_at": "2025-06-25T08:24:42.857002"
+    },
+    {
+      "filename": "cleaned_batch_259_20250624_202114.csv",
+      "created_at": "2025-06-25T08:26:29.603049"
+    },
+    {
+      "filename": "cleaned_batch_260_20250624_202114.csv",
+      "created_at": "2025-06-25T08:28:16.420960"
+    },
+    {
+      "filename": "cleaned_batch_261_20250624_202114.csv",
+      "created_at": "2025-06-25T08:30:03.173245"
+    },
+    {
+      "filename": "cleaned_batch_262_20250624_202114.csv",
+      "created_at": "2025-06-25T08:31:49.916418"
+    },
+    {
+      "filename": "cleaned_batch_263_20250624_202114.csv",
+      "created_at": "2025-06-25T08:33:36.716734"
+    },
+    {
+      "filename": "cleaned_batch_264_20250624_202114.csv",
+      "created_at": "2025-06-25T08:35:23.504078"
+    },
+    {
+      "filename": "cleaned_batch_265_20250624_202114.csv",
+      "created_at": "2025-06-25T08:37:10.311156"
+    },
+    {
+      "filename": "cleaned_batch_266_20250624_202114.csv",
+      "created_at": "2025-06-25T08:38:57.084058"
+    },
+    {
+      "filename": "cleaned_batch_267_20250624_202114.csv",
+      "created_at": "2025-06-25T08:40:43.850790"
+    },
+    {
+      "filename": "cleaned_batch_268_20250624_202114.csv",
+      "created_at": "2025-06-25T08:42:30.618897"
+    },
+    {
+      "filename": "cleaned_batch_269_20250624_202114.csv",
+      "created_at": "2025-06-25T08:44:17.381750"
+    },
+    {
+      "filename": "cleaned_batch_270_20250624_202114.csv",
+      "created_at": "2025-06-25T08:46:04.174766"
+    },
+    {
+      "filename": "cleaned_batch_271_20250624_202114.csv",
+      "created_at": "2025-06-25T08:47:50.968753"
+    },
+    {
+      "filename": "cleaned_batch_272_20250624_202114.csv",
+      "created_at": "2025-06-25T08:49:37.808239"
+    },
+    {
+      "filename": "cleaned_batch_273_20250624_202114.csv",
+      "created_at": "2025-06-25T08:51:24.552973"
+    },
+    {
+      "filename": "cleaned_batch_274_20250624_202114.csv",
+      "created_at": "2025-06-25T08:53:11.356632"
+    },
+    {
+      "filename": "cleaned_batch_275_20250624_202114.csv",
+      "created_at": "2025-06-25T08:54:58.640411"
+    },
+    {
+      "filename": "cleaned_batch_276_20250624_202114.csv",
+      "created_at": "2025-06-25T08:56:45.456684"
+    },
+    {
+      "filename": "cleaned_batch_277_20250624_202114.csv",
+      "created_at": "2025-06-25T08:58:32.231754"
+    },
+    {
+      "filename": "cleaned_batch_278_20250624_202114.csv",
+      "created_at": "2025-06-25T09:00:19.014638"
+    },
+    {
+      "filename": "cleaned_batch_279_20250624_202114.csv",
+      "created_at": "2025-06-25T09:02:05.774889"
+    },
+    {
+      "filename": "cleaned_batch_280_20250624_202114.csv",
+      "created_at": "2025-06-25T14:25:38.652144"
+    },
+    {
+      "filename": "cleaned_batch_281_20250624_202114.csv",
+      "created_at": "2025-06-25T14:28:44.015102"
+    },
+    {
+      "filename": "cleaned_batch_282_20250624_202114.csv",
+      "created_at": "2025-06-25T14:30:30.921360"
+    },
+    {
+      "filename": "cleaned_batch_283_20250624_202114.csv",
+      "created_at": "2025-06-25T14:32:17.757072"
+    },
+    {
+      "filename": "cleaned_batch_284_20250624_202114.csv",
+      "created_at": "2025-06-25T14:34:04.714359"
+    },
+    {
+      "filename": "cleaned_batch_285_20250624_202114.csv",
+      "created_at": "2025-06-25T14:35:51.687432"
+    },
+    {
+      "filename": "cleaned_batch_286_20250624_202114.csv",
+      "created_at": "2025-06-25T14:37:38.662380"
+    },
+    {
+      "filename": "cleaned_batch_287_20250624_202114.csv",
+      "created_at": "2025-06-25T14:39:25.744370"
+    },
+    {
+      "filename": "cleaned_batch_288_20250624_202114.csv",
+      "created_at": "2025-06-25T14:41:12.733296"
+    },
+    {
+      "filename": "cleaned_batch_289_20250624_202114.csv",
+      "created_at": "2025-06-25T14:43:00.109667"
+    },
+    {
+      "filename": "cleaned_batch_290_20250624_202114.csv",
+      "created_at": "2025-06-25T14:44:47.163477"
+    },
+    {
+      "filename": "cleaned_batch_291_20250624_202114.csv",
+      "created_at": "2025-06-25T14:46:34.339045"
+    },
+    {
+      "filename": "cleaned_batch_292_20250624_202114.csv",
+      "created_at": "2025-06-25T14:48:21.346168"
+    },
+    {
+      "filename": "cleaned_batch_293_20250624_202114.csv",
+      "created_at": "2025-06-25T14:50:08.285934"
+    },
+    {
+      "filename": "cleaned_batch_294_20250624_202114.csv",
+      "created_at": "2025-06-25T14:51:55.226444"
+    },
+    {
+      "filename": "cleaned_batch_295_20250624_202114.csv",
+      "created_at": "2025-06-25T14:53:42.289958"
+    },
+    {
+      "filename": "cleaned_batch_296_20250624_202114.csv",
+      "created_at": "2025-06-25T14:55:29.268148"
+    },
+    {
+      "filename": "cleaned_batch_297_20250624_202114.csv",
+      "created_at": "2025-06-25T14:57:29.366564"
+    },
+    {
+      "filename": "cleaned_batch_298_20250624_202114.csv",
+      "created_at": "2025-06-25T14:59:16.346234"
+    },
+    {
+      "filename": "cleaned_batch_299_20250624_202114.csv",
+      "created_at": "2025-06-25T15:01:03.357673"
+    },
+    {
+      "filename": "cleaned_batch_300_20250624_202114.csv",
+      "created_at": "2025-06-25T15:02:50.269119"
+    },
+    {
+      "filename": "cleaned_batch_301_20250624_202114.csv",
+      "created_at": "2025-06-25T15:04:37.192869"
+    },
+    {
+      "filename": "cleaned_batch_302_20250624_202114.csv",
+      "created_at": "2025-06-25T15:06:24.347692"
+    },
+    {
+      "filename": "cleaned_batch_303_20250624_202114.csv",
+      "created_at": "2025-06-25T15:08:11.369579"
+    },
+    {
+      "filename": "cleaned_batch_304_20250624_202114.csv",
+      "created_at": "2025-06-25T15:09:58.429786"
+    },
+    {
+      "filename": "cleaned_batch_305_20250624_202114.csv",
+      "created_at": "2025-06-25T15:11:45.441109"
+    },
+    {
+      "filename": "cleaned_batch_306_20250624_202114.csv",
+      "created_at": "2025-06-25T15:13:32.296377"
+    },
+    {
+      "filename": "cleaned_batch_307_20250624_202114.csv",
+      "created_at": "2025-06-25T15:15:19.172778"
+    },
+    {
+      "filename": "cleaned_batch_308_20250624_202114.csv",
+      "created_at": "2025-06-25T15:17:06.041297"
+    },
+    {
+      "filename": "cleaned_batch_309_20250624_202114.csv",
+      "created_at": "2025-06-25T15:18:52.904937"
+    },
+    {
+      "filename": "cleaned_batch_310_20250624_202114.csv",
+      "created_at": "2025-06-25T15:20:39.880050"
+    },
+    {
+      "filename": "cleaned_batch_311_20250624_202114.csv",
+      "created_at": "2025-06-25T15:22:26.728979"
+    },
+    {
+      "filename": "cleaned_batch_312_20250624_202114.csv",
+      "created_at": "2025-06-25T15:24:13.608887"
+    },
+    {
+      "filename": "cleaned_batch_313_20250624_202114.csv",
+      "created_at": "2025-06-25T15:26:01.114310"
+    },
+    {
+      "filename": "cleaned_batch_314_20250624_202114.csv",
+      "created_at": "2025-06-25T15:27:47.967808"
+    },
+    {
+      "filename": "cleaned_batch_315_20250624_202114.csv",
+      "created_at": "2025-06-25T15:29:34.785314"
+    },
+    {
+      "filename": "cleaned_batch_316_20250624_202114.csv",
+      "created_at": "2025-06-25T15:31:21.603693"
+    },
+    {
+      "filename": "cleaned_batch_317_20250624_202114.csv",
+      "created_at": "2025-06-25T15:33:08.460374"
+    },
+    {
+      "filename": "cleaned_batch_318_20250624_202114.csv",
+      "created_at": "2025-06-25T15:34:55.241692"
+    },
+    {
+      "filename": "cleaned_batch_319_20250624_202114.csv",
+      "created_at": "2025-06-25T15:36:42.100711"
+    },
+    {
+      "filename": "cleaned_batch_320_20250624_202114.csv",
+      "created_at": "2025-06-25T15:38:28.958292"
+    },
+    {
+      "filename": "cleaned_batch_321_20250624_202114.csv",
+      "created_at": "2025-06-25T15:40:15.895386"
+    },
+    {
+      "filename": "cleaned_batch_322_20250624_202114.csv",
+      "created_at": "2025-06-25T15:42:02.827893"
+    },
+    {
+      "filename": "cleaned_batch_323_20250624_202114.csv",
+      "created_at": "2025-06-25T15:43:49.815378"
+    },
+    {
+      "filename": "cleaned_batch_324_20250624_202114.csv",
+      "created_at": "2025-06-25T15:45:36.819398"
+    },
+    {
+      "filename": "cleaned_batch_325_20250624_202114.csv",
+      "created_at": "2025-06-25T15:47:23.712555"
+    },
+    {
+      "filename": "cleaned_batch_326_20250624_202114.csv",
+      "created_at": "2025-06-25T15:49:10.557891"
+    },
+    {
+      "filename": "cleaned_batch_327_20250624_202114.csv",
+      "created_at": "2025-06-25T15:50:57.388508"
+    },
+    {
+      "filename": "cleaned_batch_328_20250624_202114.csv",
+      "created_at": "2025-06-25T15:52:44.231676"
+    },
+    {
+      "filename": "cleaned_batch_329_20250624_202114.csv",
+      "created_at": "2025-06-25T15:54:31.008553"
+    },
+    {
+      "filename": "cleaned_batch_330_20250624_202114.csv",
+      "created_at": "2025-06-25T15:56:17.791892"
+    },
+    {
+      "filename": "cleaned_batch_331_20250624_202114.csv",
+      "created_at": "2025-06-25T15:58:04.627484"
+    },
+    {
+      "filename": "cleaned_batch_332_20250624_202114.csv",
+      "created_at": "2025-06-25T15:59:51.487506"
+    },
+    {
+      "filename": "cleaned_batch_333_20250624_202114.csv",
+      "created_at": "2025-06-25T16:01:38.330405"
+    },
+    {
+      "filename": "cleaned_batch_334_20250624_202114.csv",
+      "created_at": "2025-06-25T16:03:25.154229"
+    },
+    {
+      "filename": "cleaned_batch_335_20250624_202114.csv",
+      "created_at": "2025-06-25T16:05:11.999985"
+    },
+    {
+      "filename": "cleaned_batch_336_20250624_202114.csv",
+      "created_at": "2025-06-25T16:06:58.864941"
+    },
+    {
+      "filename": "cleaned_batch_337_20250624_202114.csv",
+      "created_at": "2025-06-25T16:08:46.245104"
+    },
+    {
+      "filename": "cleaned_batch_338_20250624_202114.csv",
+      "created_at": "2025-06-25T16:10:33.063018"
+    },
+    {
+      "filename": "cleaned_batch_339_20250624_202114.csv",
+      "created_at": "2025-06-25T16:12:19.917759"
+    },
+    {
+      "filename": "cleaned_batch_340_20250624_202114.csv",
+      "created_at": "2025-06-25T16:14:06.746430"
+    },
+    {
+      "filename": "cleaned_batch_341_20250624_202114.csv",
+      "created_at": "2025-06-25T16:15:53.605002"
+    },
+    {
+      "filename": "cleaned_batch_342_20250624_202114.csv",
+      "created_at": "2025-06-25T16:17:40.449495"
+    },
+    {
+      "filename": "cleaned_batch_343_20250624_202114.csv",
+      "created_at": "2025-06-25T16:19:27.285559"
+    },
+    {
+      "filename": "cleaned_batch_344_20250624_202114.csv",
+      "created_at": "2025-06-25T16:21:14.171881"
+    },
+    {
+      "filename": "cleaned_batch_345_20250624_202114.csv",
+      "created_at": "2025-06-25T16:23:01.037394"
+    },
+    {
+      "filename": "cleaned_batch_346_20250624_202114.csv",
+      "created_at": "2025-06-25T16:24:47.876132"
+    },
+    {
+      "filename": "cleaned_batch_347_20250624_202114.csv",
+      "created_at": "2025-06-25T16:26:34.739222"
+    },
+    {
+      "filename": "cleaned_batch_348_20250624_202114.csv",
+      "created_at": "2025-06-25T16:28:21.609193"
+    },
+    {
+      "filename": "cleaned_batch_349_20250624_202114.csv",
+      "created_at": "2025-06-25T16:30:08.462998"
+    },
+    {
+      "filename": "cleaned_batch_350_20250624_202114.csv",
+      "created_at": "2025-06-25T16:31:55.375061"
+    },
+    {
+      "filename": "cleaned_batch_351_20250624_202114.csv",
+      "created_at": "2025-06-25T16:33:42.270833"
+    },
+    {
+      "filename": "cleaned_batch_352_20250624_202114.csv",
+      "created_at": "2025-06-25T16:35:29.144228"
+    },
+    {
+      "filename": "cleaned_batch_353_20250624_202114.csv",
+      "created_at": "2025-06-25T16:37:16.053343"
+    },
+    {
+      "filename": "cleaned_batch_354_20250624_202114.csv",
+      "created_at": "2025-06-25T16:39:02.940279"
+    },
+    {
+      "filename": "cleaned_batch_355_20250624_202114.csv",
+      "created_at": "2025-06-25T16:40:49.817215"
+    },
+    {
+      "filename": "cleaned_batch_356_20250624_202114.csv",
+      "created_at": "2025-06-25T16:42:36.711310"
+    },
+    {
+      "filename": "cleaned_batch_357_20250624_202114.csv",
+      "created_at": "2025-06-25T16:44:23.607186"
+    },
+    {
+      "filename": "cleaned_batch_358_20250624_202114.csv",
+      "created_at": "2025-06-25T16:46:10.537134"
+    },
+    {
+      "filename": "cleaned_batch_359_20250624_202114.csv",
+      "created_at": "2025-06-25T16:47:57.524305"
+    },
+    {
+      "filename": "cleaned_batch_360_20250624_202114.csv",
+      "created_at": "2025-06-25T16:49:44.978048"
+    },
+    {
+      "filename": "cleaned_batch_361_20250624_202114.csv",
+      "created_at": "2025-06-25T16:51:31.841992"
+    },
+    {
+      "filename": "cleaned_batch_362_20250624_202114.csv",
+      "created_at": "2025-06-25T16:53:18.778776"
+    },
+    {
+      "filename": "cleaned_batch_363_20250624_202114.csv",
+      "created_at": "2025-06-25T16:55:05.694223"
+    },
+    {
+      "filename": "cleaned_batch_364_20250624_202114.csv",
+      "created_at": "2025-06-25T16:56:52.667774"
+    },
+    {
+      "filename": "cleaned_batch_365_20250624_202114.csv",
+      "created_at": "2025-06-25T16:58:39.636365"
+    },
+    {
+      "filename": "cleaned_batch_366_20250624_202114.csv",
+      "created_at": "2025-06-25T17:00:26.556561"
+    },
+    {
+      "filename": "cleaned_batch_367_20250624_202114.csv",
+      "created_at": "2025-06-25T17:02:13.517688"
+    },
+    {
+      "filename": "cleaned_batch_368_20250624_202114.csv",
+      "created_at": "2025-06-25T17:04:00.426636"
+    },
+    {
+      "filename": "cleaned_batch_369_20250624_202114.csv",
+      "created_at": "2025-06-25T17:05:47.410153"
+    },
+    {
+      "filename": "cleaned_batch_370_20250624_202114.csv",
+      "created_at": "2025-06-25T17:07:34.416812"
+    },
+    {
+      "filename": "cleaned_batch_371_20250624_202114.csv",
+      "created_at": "2025-06-25T17:09:21.405192"
+    },
+    {
+      "filename": "cleaned_batch_372_20250624_202114.csv",
+      "created_at": "2025-06-25T17:11:08.471196"
+    },
+    {
+      "filename": "cleaned_batch_373_20250624_202114.csv",
+      "created_at": "2025-06-25T17:12:55.477721"
+    },
+    {
+      "filename": "cleaned_batch_374_20250624_202114.csv",
+      "created_at": "2025-06-25T17:14:42.421641"
+    },
+    {
+      "filename": "cleaned_batch_375_20250624_202114.csv",
+      "created_at": "2025-06-25T17:16:29.357574"
+    },
+    {
+      "filename": "cleaned_batch_376_20250624_202114.csv",
+      "created_at": "2025-06-25T17:18:16.291912"
+    },
+    {
+      "filename": "cleaned_batch_377_20250624_202114.csv",
+      "created_at": "2025-06-25T17:20:03.253669"
+    },
+    {
+      "filename": "cleaned_batch_378_20250624_202114.csv",
+      "created_at": "2025-06-25T17:21:50.268154"
+    },
+    {
+      "filename": "cleaned_batch_379_20250624_202114.csv",
+      "created_at": "2025-06-25T17:23:37.275015"
+    },
+    {
+      "filename": "cleaned_batch_380_20250624_202114.csv",
+      "created_at": "2025-06-25T17:25:24.270506"
+    },
+    {
+      "filename": "cleaned_batch_381_20250624_202114.csv",
+      "created_at": "2025-06-25T17:27:11.316019"
+    },
+    {
+      "filename": "cleaned_batch_382_20250624_202114.csv",
+      "created_at": "2025-06-25T17:28:58.345014"
+    },
+    {
+      "filename": "cleaned_batch_383_20250624_202114.csv",
+      "created_at": "2025-06-25T17:30:45.377043"
+    },
+    {
+      "filename": "cleaned_batch_384_20250624_202114.csv",
+      "created_at": "2025-06-25T17:32:32.920399"
+    },
+    {
+      "filename": "cleaned_batch_385_20250624_202114.csv",
+      "created_at": "2025-06-25T17:34:19.964432"
+    },
+    {
+      "filename": "cleaned_batch_386_20250624_202114.csv",
+      "created_at": "2025-06-25T17:36:06.942090"
+    },
+    {
+      "filename": "cleaned_batch_387_20250624_202114.csv",
+      "created_at": "2025-06-25T17:37:53.967714"
+    },
+    {
+      "filename": "cleaned_batch_388_20250624_202114.csv",
+      "created_at": "2025-06-25T17:39:40.963133"
+    },
+    {
+      "filename": "cleaned_batch_389_20250624_202114.csv",
+      "created_at": "2025-06-25T17:41:27.970423"
+    },
+    {
+      "filename": "cleaned_batch_390_20250624_202114.csv",
+      "created_at": "2025-06-25T17:43:15.028272"
+    },
+    {
+      "filename": "cleaned_batch_391_20250624_202114.csv",
+      "created_at": "2025-06-25T17:45:02.043305"
+    },
+    {
+      "filename": "cleaned_batch_392_20250624_202114.csv",
+      "created_at": "2025-06-25T17:46:49.184183"
+    },
+    {
+      "filename": "cleaned_batch_393_20250624_202114.csv",
+      "created_at": "2025-06-25T17:48:36.268881"
+    },
+    {
+      "filename": "cleaned_batch_394_20250624_202114.csv",
+      "created_at": "2025-06-25T17:50:23.327373"
+    },
+    {
+      "filename": "cleaned_batch_395_20250624_202114.csv",
+      "created_at": "2025-06-25T17:52:10.455869"
+    },
+    {
+      "filename": "cleaned_batch_396_20250624_202114.csv",
+      "created_at": "2025-06-25T17:53:57.548584"
+    },
+    {
+      "filename": "cleaned_batch_397_20250624_202114.csv",
+      "created_at": "2025-06-25T17:55:44.647083"
+    },
+    {
+      "filename": "cleaned_batch_398_20250624_202114.csv",
+      "created_at": "2025-06-25T17:57:31.780481"
+    },
+    {
+      "filename": "cleaned_batch_399_20250624_202114.csv",
+      "created_at": "2025-06-25T17:59:18.834235"
+    },
+    {
+      "filename": "cleaned_batch_400_20250624_202114.csv",
+      "created_at": "2025-06-25T18:01:05.915954"
+    },
+    {
+      "filename": "cleaned_batch_401_20250624_202114.csv",
+      "created_at": "2025-06-25T18:02:53.010372"
+    },
+    {
+      "filename": "cleaned_batch_402_20250624_202114.csv",
+      "created_at": "2025-06-25T18:04:40.098152"
+    },
+    {
+      "filename": "cleaned_batch_403_20250624_202114.csv",
+      "created_at": "2025-06-25T18:06:27.324012"
+    },
+    {
+      "filename": "cleaned_batch_404_20250624_202114.csv",
+      "created_at": "2025-06-25T18:08:14.409804"
+    },
+    {
+      "filename": "cleaned_batch_405_20250624_202114.csv",
+      "created_at": "2025-06-25T18:10:01.523319"
+    },
+    {
+      "filename": "cleaned_batch_406_20250624_202114.csv",
+      "created_at": "2025-06-25T18:11:48.600789"
+    },
+    {
+      "filename": "cleaned_batch_407_20250624_202114.csv",
+      "created_at": "2025-06-25T18:13:35.645191"
+    },
+    {
+      "filename": "cleaned_batch_408_20250624_202114.csv",
+      "created_at": "2025-06-25T18:15:22.811988"
+    },
+    {
+      "filename": "cleaned_batch_409_20250624_202114.csv",
+      "created_at": "2025-06-25T18:17:10.630382"
+    },
+    {
+      "filename": "cleaned_batch_410_20250624_202114.csv",
+      "created_at": "2025-06-25T18:18:58.134868"
+    },
+    {
+      "filename": "cleaned_batch_411_20250624_202114.csv",
+      "created_at": "2025-06-25T18:20:45.787260"
+    },
+    {
+      "filename": "cleaned_batch_412_20250624_202114.csv",
+      "created_at": "2025-06-25T18:22:33.368481"
+    },
+    {
+      "filename": "cleaned_batch_413_20250624_202114.csv",
+      "created_at": "2025-06-25T18:24:20.921617"
+    },
+    {
+      "filename": "cleaned_batch_414_20250624_202114.csv",
+      "created_at": "2025-06-25T18:26:08.525499"
+    },
+    {
+      "filename": "cleaned_batch_415_20250624_202114.csv",
+      "created_at": "2025-06-25T18:27:56.166466"
+    },
+    {
+      "filename": "cleaned_batch_416_20250624_202114.csv",
+      "created_at": "2025-06-25T18:29:43.856893"
+    },
+    {
+      "filename": "cleaned_batch_417_20250624_202114.csv",
+      "created_at": "2025-06-25T18:31:31.471255"
+    },
+    {
+      "filename": "cleaned_batch_418_20250624_202114.csv",
+      "created_at": "2025-06-25T18:33:19.156987"
+    },
+    {
+      "filename": "cleaned_batch_419_20250624_202114.csv",
+      "created_at": "2025-06-25T18:35:06.800865"
+    },
+    {
+      "filename": "cleaned_batch_420_20250624_202114.csv",
+      "created_at": "2025-06-25T18:36:54.442372"
+    },
+    {
+      "filename": "cleaned_batch_421_20250624_202114.csv",
+      "created_at": "2025-06-25T18:38:42.058539"
+    },
+    {
+      "filename": "cleaned_batch_422_20250624_202114.csv",
+      "created_at": "2025-06-25T18:40:29.626228"
+    },
+    {
+      "filename": "cleaned_batch_423_20250624_202114.csv",
+      "created_at": "2025-06-25T18:42:17.353807"
+    },
+    {
+      "filename": "cleaned_batch_424_20250624_202114.csv",
+      "created_at": "2025-06-25T18:44:05.043362"
+    }
+  ],
+  "last_updated": "2025-06-25T18:44:05.043382"
+}

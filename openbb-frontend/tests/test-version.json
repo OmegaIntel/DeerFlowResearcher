@@ -1,0 +1,10 @@
+{
+  "version": "3.0-financials-fixed",
+  "timestamp": "2025-06-23T14:30:00Z",
+  "changes": {
+    "quarterlyHeaders": "Fixed - Q1, Q2, Q3, Q4 format",
+    "dataConsistency": "Fixed - Different values for FY vs QTR",
+    "scrollingOverlap": "Fixed - 200px min-width + improved shadow",
+    "testImport": "Added FINANCIALS_TEST_VERSION import"
+  }
+}

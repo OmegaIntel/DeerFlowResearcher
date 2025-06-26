@@ -2,6 +2,8 @@ import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 import './openbb-theme.css'
+import './styles/theme.css'
+import './utils/chartConfig' // Initialize Chart.js
 import App from './App.tsx'
 
 console.log('OpenBB Frontend starting...');

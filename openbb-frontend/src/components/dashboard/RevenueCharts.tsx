@@ -5,18 +5,23 @@ import { mockRevenueByGeography, mockRevenueByBusiness } from '../../services/mo
 import { chartColors, defaultChartOptions } from '../../utils/chartConfig';
 import classNames from 'classnames';
 import WidgetHeaderWithTicker from '../common/WidgetHeaderWithTicker';
+import { useCopilot } from '../../contexts/CopilotContext';
+import type { WidgetType } from '../../services/copilotService';
 
 interface RevenueChartsProps {
   ticker: string;
   onTickerChange?: (ticker: string) => void;
+  onSettings?: () => void;
+  onRemove?: () => void;
 }
 
 type ChartView = 'FY' | 'QTR' | 'TTM';
 type ChartType = 'geography' | 'business';
 
-const RevenueCharts: React.FC<RevenueChartsProps> = ({ ticker, onTickerChange }) => {
+const RevenueCharts: React.FC<RevenueChartsProps> = ({ ticker, onTickerChange, onSettings, onRemove }) => {
   const [chartView, setChartView] = useState<ChartView>('FY');
   const [chartType, setChartType] = useState<ChartType>('geography');
+  const { addWidgetContext } = useCopilot();
 
   // Process geography data
   const geographyData = {
@@ -47,10 +52,19 @@ const RevenueCharts: React.FC<RevenueChartsProps> = ({ ticker, onTickerChange })
           title="Revenue Analysis"
           ticker={ticker}
           onTickerChange={onTickerChange || (() => {})}
-          onRefresh={() => console.log('Refresh')}
-          onAdd={() => console.log('Add to dashboard')}
-          onExpand={() => console.log('Expand')}
-          onMore={() => console.log('More options')}
+          onAdd={() => addWidgetContext(
+            WidgetType.REVENUE_CHARTS,
+            {
+              chartType,
+              chartView,
+              geographyData,
+              businessData
+            },
+            ticker,
+            'Revenue Analysis'
+          )}
+          onSettings={onSettings}
+          onRemove={onRemove}
         />
         
         <div className="flex items-center gap-4">
@@ -61,7 +75,7 @@ const RevenueCharts: React.FC<RevenueChartsProps> = ({ ticker, onTickerChange })
                 key={view}
                 onClick={() => setChartView(view)}
                 className={classNames(
-                  'px-2 py-1 text-xs font-mono rounded transition-colors',
+                  'px-2 py-1 text-xs  rounded transition-colors',
                   chartView === view
                     ? 'bg-openbb-accent text-openbb-bg-primary'
                     : 'text-openbb-text-secondary hover:text-openbb-text-primary'
@@ -77,7 +91,7 @@ const RevenueCharts: React.FC<RevenueChartsProps> = ({ ticker, onTickerChange })
             <button
               onClick={() => setChartType('geography')}
               className={classNames(
-                'flex items-center gap-1 px-2 py-1 rounded text-xs font-mono transition-colors',
+                'flex items-center gap-1 px-2 py-1 rounded text-xs  transition-colors',
                 chartType === 'geography'
                   ? 'bg-openbb-blue text-white'
                   : 'bg-openbb-bg-secondary text-openbb-text-secondary hover:text-openbb-text-primary'
@@ -89,7 +103,7 @@ const RevenueCharts: React.FC<RevenueChartsProps> = ({ ticker, onTickerChange })
             <button
               onClick={() => setChartType('business')}
               className={classNames(
-                'flex items-center gap-1 px-2 py-1 rounded text-xs font-mono transition-colors',
+                'flex items-center gap-1 px-2 py-1 rounded text-xs  transition-colors',
                 chartType === 'business'
                   ? 'bg-openbb-blue text-white'
                   : 'bg-openbb-bg-secondary text-openbb-text-secondary hover:text-openbb-text-primary'
@@ -126,7 +140,7 @@ const RevenueCharts: React.FC<RevenueChartsProps> = ({ ticker, onTickerChange })
         )}
       </div>
 
-      <div className="mt-3 flex items-center justify-between text-xs text-openbb-text-muted font-mono">
+      <div className="mt-3 flex items-center justify-between text-xs text-openbb-text-muted ">
         <div className="flex items-center gap-1">
           <Calendar size={12} />
           <span>Last Updated: {new Date().toLocaleDateString()}</span>

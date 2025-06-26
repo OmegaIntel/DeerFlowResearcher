@@ -2,8 +2,16 @@ import React from 'react';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { openbbService } from '../../services/openbb-api';
+import { useCopilot } from '../../contexts/CopilotContext';
+import type { WidgetType } from '../../services/copilotService';
+import WidgetHeader from '../common/WidgetHeader';
 
-const MarketOverview: React.FC = () => {
+interface MarketOverviewProps {
+  onSettings?: () => void;
+  onRemove?: () => void;
+}
+
+const MarketOverview: React.FC<MarketOverviewProps> = ({ onSettings, onRemove }) => {
   // Fetch major indices
   const indices = ['SPY', 'QQQ', 'DIA', 'IWM', 'VTI'];
   
@@ -23,6 +31,8 @@ const MarketOverview: React.FC = () => {
     staleTime: 60 * 1000,
     refetchInterval: 60 * 1000,
   });
+
+  const { addWidgetContext } = useCopilot();
 
   // Also fetch crypto and forex data
   const { data: cryptoData } = useQuery({
@@ -73,27 +83,37 @@ const MarketOverview: React.FC = () => {
 
   return (
     <div className="bg-openbb-bg-widget rounded-lg border border-openbb-border p-4">
-      <h3 className="text-sm font-mono font-semibold text-openbb-text-primary mb-4">
-        Market Overview
-      </h3>
+      <WidgetHeader
+        title="Market Overview"
+        onAdd={() => {
+          const marketData = {
+            indices: indexData || [],
+            crypto: cryptoData || [],
+            forex: forexData || [],
+          };
+          addWidgetContext(WidgetType.MARKET_OVERVIEW, marketData, 'Market Overview');
+        }}
+        onSettings={onSettings}
+        onRemove={onRemove}
+      />
 
       {/* Major Indices */}
       <div className="mb-6">
-        <h4 className="text-xs font-mono text-openbb-text-secondary mb-3">Major Indices</h4>
+        <h4 className="text-xs  text-openbb-text-secondary mb-3">Major Indices</h4>
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
           {indexData?.map((index) => (
             <div
               key={index.symbol}
               className="bg-openbb-bg-primary rounded p-3 border border-openbb-border"
             >
-              <div className="text-xs font-mono text-openbb-text-secondary mb-1">
+              <div className="text-xs  text-openbb-text-secondary mb-1">
                 {index.name}
               </div>
-              <div className="text-lg font-mono font-semibold text-openbb-text-primary">
+              <div className="text-lg  font-semibold text-openbb-text-primary">
                 ${index.price.toFixed(2)}
               </div>
               <div
-                className={`flex items-center gap-1 text-xs font-mono ${
+                className={`flex items-center gap-1 text-xs  ${
                   index.changePercent >= 0 ? 'text-green-500' : 'text-red-500'
                 }`}
               >
@@ -115,17 +135,17 @@ const MarketOverview: React.FC = () => {
       {/* Crypto */}
       {cryptoData && (
         <div className="mb-6">
-          <h4 className="text-xs font-mono text-openbb-text-secondary mb-3">Cryptocurrency</h4>
+          <h4 className="text-xs  text-openbb-text-secondary mb-3">Cryptocurrency</h4>
           <div className="grid grid-cols-2 gap-3">
             {cryptoData.map((crypto: any, idx: number) => (
               <div
                 key={idx}
                 className="bg-openbb-bg-primary rounded p-3 border border-openbb-border"
               >
-                <div className="text-xs font-mono text-openbb-text-secondary mb-1">
+                <div className="text-xs  text-openbb-text-secondary mb-1">
                   {['Bitcoin', 'Ethereum'][idx]}
                 </div>
-                <div className="text-lg font-mono font-semibold text-openbb-text-primary">
+                <div className="text-lg  font-semibold text-openbb-text-primary">
                   ${crypto.price?.toFixed(2) || 'N/A'}
                 </div>
               </div>
@@ -137,17 +157,17 @@ const MarketOverview: React.FC = () => {
       {/* Forex */}
       {forexData && (
         <div>
-          <h4 className="text-xs font-mono text-openbb-text-secondary mb-3">Foreign Exchange</h4>
+          <h4 className="text-xs  text-openbb-text-secondary mb-3">Foreign Exchange</h4>
           <div className="grid grid-cols-3 gap-3">
             {forexData.map((forex: any, idx: number) => (
               <div
                 key={idx}
                 className="bg-openbb-bg-primary rounded p-3 border border-openbb-border"
               >
-                <div className="text-xs font-mono text-openbb-text-secondary mb-1">
+                <div className="text-xs  text-openbb-text-secondary mb-1">
                   {['EUR/USD', 'GBP/USD', 'USD/JPY'][idx]}
                 </div>
-                <div className="text-lg font-mono font-semibold text-openbb-text-primary">
+                <div className="text-lg  font-semibold text-openbb-text-primary">
                   {forex.price?.toFixed(4) || 'N/A'}
                 </div>
               </div>

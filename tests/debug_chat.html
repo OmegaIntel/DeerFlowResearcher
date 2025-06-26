@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Chat</title>
+</head>
+<body>
+    <h1>Debug Chat Test</h1>
+    <button onclick="testAPI()">Test API</button>
+    <pre id="output"></pre>
+
+    <script>
+        async function testAPI() {
+            const output = document.getElementById('output');
+            output.textContent = 'Testing...\n\n';
+            
+            try {
+                // Step 1: Create session
+                output.textContent += 'Step 1: Creating session...\n';
+                const sessionResponse = await fetch('/api/v1/copilot/session', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ initial_ticker: 'AAPL' })
+                });
+                
+                output.textContent += `Session Response Status: ${sessionResponse.status}\n`;
+                output.textContent += `Session Response Headers:\n${JSON.stringify([...sessionResponse.headers.entries()], null, 2)}\n`;
+                
+                const sessionText = await sessionResponse.text();
+                output.textContent += `Session Response Body: ${sessionText}\n`;
+                
+                let sessionData;
+                try {
+                    sessionData = JSON.parse(sessionText);
+                } catch (e) {
+                    output.textContent += `Error parsing session JSON: ${e.message}\n`;
+                    return;
+                }
+                
+                if (!sessionData.success) {
+                    output.textContent += `Session creation failed: ${sessionData.error}\n`;
+                    return;
+                }
+                
+                const sessionId = sessionData.data.session_id;
+                output.textContent += `\nSession ID: ${sessionId}\n\n`;
+                
+                // Step 2: Send chat message
+                output.textContent += 'Step 2: Sending chat message...\n';
+                const chatResponse = await fetch('/api/v1/copilot/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        session_id: sessionId,
+                        message: 'Hello, test message'
+                    })
+                });
+                
+                output.textContent += `Chat Response Status: ${chatResponse.status}\n`;
+                output.textContent += `Chat Response Headers:\n${JSON.stringify([...chatResponse.headers.entries()], null, 2)}\n`;
+                
+                const chatText = await chatResponse.text();
+                output.textContent += `Chat Response Body: ${chatText}\n`;
+                
+                let chatData;
+                try {
+                    chatData = JSON.parse(chatText);
+                } catch (e) {
+                    output.textContent += `Error parsing chat JSON: ${e.message}\n`;
+                    return;
+                }
+                
+                if (chatData.success) {
+                    output.textContent += `\nChat Success! Response:\n${chatData.data.response}\n`;
+                } else {
+                    output.textContent += `\nChat Failed: ${chatData.error}\n`;
+                }
+                
+            } catch (error) {
+                output.textContent += `\nError: ${error.message}\n`;
+                output.textContent += `Stack: ${error.stack}\n`;
+            }
+        }
+    </script>
+</body>
+</html>

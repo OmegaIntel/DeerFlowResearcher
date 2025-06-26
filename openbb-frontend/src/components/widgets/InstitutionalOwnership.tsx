@@ -2,14 +2,19 @@ import React from 'react';
 import { useInstitutionalOwnership } from '../../hooks/useOpenBBData';
 import WidgetHeaderWithTicker from '../common/WidgetHeaderWithTicker';
 import { Building2, TrendingUp, TrendingDown } from 'lucide-react';
+import { useCopilot } from '../../contexts/CopilotContext';
+import type { WidgetType } from '../../services/copilotService';
 
 interface InstitutionalOwnershipProps {
   ticker: string;
   onTickerChange?: (ticker: string) => void;
+  onSettings?: () => void;
+  onRemove?: () => void;
 }
 
-const InstitutionalOwnership: React.FC<InstitutionalOwnershipProps> = ({ ticker, onTickerChange }) => {
+const InstitutionalOwnership: React.FC<InstitutionalOwnershipProps> = ({ ticker, onTickerChange, onSettings, onRemove }) => {
   const { data: ownershipData, isLoading, error } = useInstitutionalOwnership(ticker);
+  const { addWidgetContext } = useCopilot();
 
   if (isLoading) {
     return (
@@ -31,12 +36,16 @@ const InstitutionalOwnership: React.FC<InstitutionalOwnershipProps> = ({ ticker,
           title="Institutional Ownership"
           ticker={ticker}
           onTickerChange={onTickerChange || (() => {})}
-          onRefresh={() => window.location.reload()}
-          onAdd={() => console.log('Add to dashboard')}
-          onExpand={() => console.log('Expand')}
-          onMore={() => console.log('More options')}
+          onAdd={() => addWidgetContext(
+            WidgetType.INSTITUTIONAL_OWNERSHIP,
+            ownershipData,
+            ticker,
+            'Institutional Ownership'
+          )}
+          onSettings={onSettings}
+          onRemove={onRemove}
         />
-        <p className="text-xs font-mono text-openbb-text-muted">
+        <p className="text-xs  text-openbb-text-muted">
           No institutional ownership data available
         </p>
       </div>
@@ -58,29 +67,33 @@ const InstitutionalOwnership: React.FC<InstitutionalOwnershipProps> = ({ ticker,
         title="Institutional Ownership"
         ticker={ticker}
         onTickerChange={onTickerChange || (() => {})}
-        onRefresh={() => console.log('Refresh')}
-        onAdd={() => console.log('Add to dashboard')}
-        onExpand={() => console.log('Expand')}
-        onMore={() => console.log('More options')}
+        onAdd={() => addWidgetContext(
+          WidgetType.INSTITUTIONAL_OWNERSHIP,
+          ownershipData,
+          ticker,
+          'Institutional Ownership'
+        )}
+        onSettings={onSettings}
+        onRemove={onRemove}
       />
 
       {/* Summary Stats */}
       <div className="grid grid-cols-3 gap-3 mb-4">
         <div className="bg-openbb-bg-primary rounded p-2 border border-openbb-border">
-          <div className="text-xs font-mono text-openbb-text-secondary">Total Holders</div>
-          <div className="text-lg font-mono font-semibold text-openbb-text-primary">
+          <div className="text-xs  text-openbb-text-secondary">Total Holders</div>
+          <div className="text-lg  font-semibold text-openbb-text-primary">
             {ownershipData.length}
           </div>
         </div>
         <div className="bg-openbb-bg-primary rounded p-2 border border-openbb-border">
-          <div className="text-xs font-mono text-openbb-text-secondary">Total Shares</div>
-          <div className="text-lg font-mono font-semibold text-openbb-text-primary">
+          <div className="text-xs  text-openbb-text-secondary">Total Shares</div>
+          <div className="text-lg  font-semibold text-openbb-text-primary">
             {(totalShares / 1e6).toFixed(1)}M
           </div>
         </div>
         <div className="bg-openbb-bg-primary rounded p-2 border border-openbb-border">
-          <div className="text-xs font-mono text-openbb-text-secondary">Total Value</div>
-          <div className="text-lg font-mono font-semibold text-openbb-text-primary">
+          <div className="text-xs  text-openbb-text-secondary">Total Value</div>
+          <div className="text-lg  font-semibold text-openbb-text-primary">
             ${(totalValue / 1e9).toFixed(1)}B
           </div>
         </div>
@@ -101,20 +114,20 @@ const InstitutionalOwnership: React.FC<InstitutionalOwnershipProps> = ({ ticker,
                 <div className="flex items-start gap-2 flex-1">
                   <Building2 size={16} className="text-openbb-text-secondary mt-0.5" />
                   <div className="flex-1">
-                    <div className="text-xs font-mono font-semibold text-openbb-text-primary">
+                    <div className="text-xs  font-semibold text-openbb-text-primary">
                       {holder.investor_name || 'Unknown Institution'}
                     </div>
-                    <div className="text-xs font-mono text-openbb-text-secondary">
+                    <div className="text-xs  text-openbb-text-secondary">
                       {holder.shares?.toLocaleString() || 'N/A'} shares
                     </div>
                   </div>
                 </div>
                 <div className="text-right">
-                  <div className="text-xs font-mono font-semibold text-openbb-text-primary">
+                  <div className="text-xs  font-semibold text-openbb-text-primary">
                     ${(holder.value / 1e6).toFixed(1)}M
                   </div>
                   {percentChange !== 0 && (
-                    <div className={`flex items-center justify-end gap-1 text-xs font-mono ${
+                    <div className={`flex items-center justify-end gap-1 text-xs  ${
                       isIncrease ? 'text-green-500' : 'text-red-500'
                     }`}>
                       {isIncrease ? <TrendingUp size={12} /> : <TrendingDown size={12} />}
@@ -124,7 +137,7 @@ const InstitutionalOwnership: React.FC<InstitutionalOwnershipProps> = ({ ticker,
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-2 mt-2 text-xs font-mono">
+              <div className="grid grid-cols-3 gap-2 mt-2 text-xs ">
                 <div>
                   <span className="text-openbb-text-secondary">% of Portfolio: </span>
                   <span className="text-openbb-text-primary">

@@ -2,14 +2,19 @@ import React from 'react';
 import { RefreshCw, Download, Settings, Maximize2 } from 'lucide-react';
 import { useAnalystRatingsRealTime } from '../../hooks/useRealTimeDataExtended';
 import WidgetHeaderWithTicker from '../common/WidgetHeaderWithTicker';
+import { useCopilot } from '../../contexts/CopilotContext';
+import type { WidgetType } from '../../services/copilotService';
 
 interface PriceTargetProps {
   ticker: string;
   onTickerChange?: (ticker: string) => void;
+  onSettings?: () => void;
+  onRemove?: () => void;
 }
 
-const PriceTarget: React.FC<PriceTargetProps> = ({ ticker, onTickerChange }) => {
+const PriceTarget: React.FC<PriceTargetProps> = ({ ticker, onTickerChange, onSettings, onRemove }) => {
   const { data: ratingsData = [], isLoading, error } = useAnalystRatingsRealTime(ticker);
+  const { addWidgetContext } = useCopilot();
 
   // Format date to match screenshot
   const formatDate = (dateStr: string) => {
@@ -41,11 +46,19 @@ const PriceTarget: React.FC<PriceTargetProps> = ({ ticker, onTickerChange }) => 
           title="Price Target By Analyst"
           ticker={ticker}
           onTickerChange={onTickerChange}
+          onAdd={ratingsData.length > 0 ? () => addWidgetContext(
+            WidgetType.CUSTOM,
+            ratingsData,
+            ticker,
+            'Price Target By Analyst'
+          ) : undefined}
+          onSettings={onSettings}
+          onRemove={onRemove}
         />
         <div className="h-full bg-openbb-bg-widget border border-openbb-border flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-openbb-accent mx-auto mb-4"></div>
-            <p className="text-openbb-text-muted font-mono text-sm">Loading analyst ratings...</p>
+            <p className="text-openbb-text-muted  text-sm">Loading analyst ratings...</p>
           </div>
         </div>
       </div>
@@ -58,14 +71,22 @@ const PriceTarget: React.FC<PriceTargetProps> = ({ ticker, onTickerChange }) => 
         title="Price Target By Analyst"
         ticker={ticker}
         onTickerChange={onTickerChange}
+        onAdd={ratingsData.length > 0 ? () => addWidgetContext(
+          WidgetType.CUSTOM,
+          ratingsData,
+          ticker,
+          'Price Target By Analyst'
+        ) : undefined}
+        onSettings={onSettings}
+        onRemove={onRemove}
       />
       
       <div className="flex items-center justify-between p-3 border-b border-openbb-border bg-openbb-bg-secondary flex-shrink-0">
         <div className="flex items-center gap-3">
           {ratingsData.length > 0 ? (
-            <span className="text-xs text-openbb-accent font-mono bg-openbb-bg-hover px-2 py-1 rounded">LIVE</span>
+            <span className="text-xs text-openbb-accent  bg-openbb-bg-hover px-2 py-1 rounded">LIVE</span>
           ) : (
-            <span className="text-xs text-yellow-500 font-mono bg-openbb-bg-hover px-2 py-1 rounded">DEMO</span>
+            <span className="text-xs text-yellow-500  bg-openbb-bg-hover px-2 py-1 rounded">DEMO</span>
           )}
         </div>
         
@@ -87,7 +108,7 @@ const PriceTarget: React.FC<PriceTargetProps> = ({ ticker, onTickerChange }) => 
 
       {/* Table */}
       <div className="overflow-auto flex-grow">
-        <table className="w-full text-xs font-mono">
+        <table className="w-full text-xs ">
           <thead>
             <tr className="border-b border-openbb-border bg-openbb-bg-secondary sticky top-0 z-10">
               <th className="text-left py-3 px-4 text-openbb-text-secondary font-medium">Date</th>
@@ -137,7 +158,7 @@ const PriceTarget: React.FC<PriceTargetProps> = ({ ticker, onTickerChange }) => 
         </table>
         
         {ratingsData.length === 0 && !isLoading && (
-          <div className="text-center py-8 text-openbb-text-muted font-mono text-sm">
+          <div className="text-center py-8 text-openbb-text-muted  text-sm">
             No analyst ratings available for {ticker}
           </div>
         )}
@@ -146,7 +167,7 @@ const PriceTarget: React.FC<PriceTargetProps> = ({ ticker, onTickerChange }) => 
       {/* Footer */}
       <div className="border-t border-openbb-border bg-openbb-bg-secondary flex-shrink-0">
         <div className="p-3">
-          <p className="text-xxs text-openbb-text-muted font-mono">
+          <p className="text-xxs text-openbb-text-muted ">
             Price targets updated in real-time • Percentages indicate upside potential
           </p>
         </div>

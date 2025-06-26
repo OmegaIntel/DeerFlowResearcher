@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import Sidebar from './Sidebar';
 import MainContent from './MainContent';
-import Copilot from '../copilot/Copilot';
-import FloatingActionButton from '../common/FloatingActionButton';
+import CopilotEnhanced from '../copilot/CopilotEnhanced';
+import FloatingCopilotButton from '../common/FloatingCopilotButton';
 import WidgetSelectionDialog from '../common/WidgetSelectionDialog';
 import PageCustomizationDialog from '../common/PageCustomizationDialog';
 import { useWidgets } from '../../contexts/WidgetContext';
 import { useDashboards } from '../../contexts/DashboardContext';
+import { useCopilot } from '../../contexts/CopilotContext';
 
 const Layout: React.FC = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
-  const [isCopilotOpen, setIsCopilotOpen] = useState(false);
   const [selectedTicker, setSelectedTicker] = useState('AAPL');
   const [activeTab, setActiveTab] = useState('overview');
   const [isWidgetDialogOpen, setIsWidgetDialogOpen] = useState(false);
@@ -18,6 +18,7 @@ const Layout: React.FC = () => {
   
   const { pages, addWidgets, updatePages } = useWidgets();
   const { dashboards, activeDashboardId, updateDashboardTicker } = useDashboards();
+  const { openCopilot, isOpen: isCopilotOpen } = useCopilot();
   
   // Update ticker when dashboard changes
   useEffect(() => {
@@ -47,24 +48,18 @@ const Layout: React.FC = () => {
               updateDashboardTicker(activeDashboardId, ticker);
             }
           }}
-          onToggleCopilot={() => setIsCopilotOpen(!isCopilotOpen)}
           activeTab={activeTab}
           onTabChange={setActiveTab}
           onOpenPageSettings={() => setIsPageDialogOpen(true)}
+          onAddWidget={() => setIsWidgetDialogOpen(true)}
         />
       </div>
 
       {/* Copilot */}
-      {isCopilotOpen && (
-        <Copilot 
-          isOpen={isCopilotOpen} 
-          onClose={() => setIsCopilotOpen(false)}
-          selectedTicker={selectedTicker}
-        />
-      )}
+      <CopilotEnhanced selectedTicker={selectedTicker} />
       
-      {/* Floating Action Button */}
-      <FloatingActionButton onClick={() => setIsWidgetDialogOpen(true)} />
+      {/* Floating Copilot Button - Bottom Right */}
+      {!isCopilotOpen && <FloatingCopilotButton onClick={() => openCopilot()} />}
       
       {/* Widget Selection Dialog */}
       <WidgetSelectionDialog

@@ -1,0 +1,10 @@
+# Agent Framework Requirements
+langchain==0.3.13
+langchain-openai==0.2.13
+langgraph==0.2.60
+langchain-community==0.3.13
+openai==1.58.1
+redis==5.2.1
+uuid==1.30
+pydantic==2.10.4
+python-multipart==0.0.18

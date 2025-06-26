@@ -1,0 +1,97 @@
+version: '3.8'
+
+services:
+  backend:
+    build: ./openbb-backend
+    ports:
+      - "8000:8000"
+    environment:
+      # AWS Services
+      - DATABASE_URL=${DATABASE_URL}
+      - REDIS_URL=${REDIS_URL}
+      - AWS_RDS_HOST=${AWS_RDS_HOST}
+      - AWS_RDS_PORT=${AWS_RDS_PORT}
+      - AWS_RDS_DATABASE=${AWS_RDS_DATABASE}
+      - AWS_RDS_USERNAME=${AWS_RDS_USERNAME}
+      - AWS_RDS_PASSWORD=${AWS_RDS_PASSWORD}
+      - AWS_REDIS_HOST=${AWS_REDIS_HOST}
+      - AWS_REDIS_PORT=${AWS_REDIS_PORT}
+      
+      # API Keys (keep existing)
+      - OPENBB_PAT=${OPENBB_PAT}
+      - ALPHA_VANTAGE_API_KEY=${ALPHA_VANTAGE_API_KEY}
+      - POLYGON_API_KEY=${POLYGON_API_KEY}
+      - FMP_API_KEY=${FMP_API_KEY}
+      - BENZINGA_API_KEY=${BENZINGA_API_KEY}
+      - API_NINJAS_KEY=${API_NINJAS_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      
+      # MindsDB Configuration (still local)
+      - MINDSDB_URL=http://mindsdb:47334
+      - MINDSDB_USERNAME=mindsdb
+      - MINDSDB_PASSWORD=mindsdb
+      
+    volumes:
+      - ./openbb-backend:/app
+      - ./cleaning_data:/data
+    depends_on:
+      - mindsdb
+    networks:
+      - openbb-network
+
+  frontend:
+    build: ./openbb-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - VITE_API_BASE_URL=http://localhost:8000
+    volumes:
+      - ./openbb-frontend:/app
+      - /app/node_modules
+    depends_on:
+      - backend
+    networks:
+      - openbb-network
+
+  mindsdb:
+    image: mindsdb/mindsdb:latest
+    ports:
+      - "47334:47334"
+      - "47335:47335"
+    environment:
+      - MINDSDB_STORAGE_DIR=/opt/mindsdb/storage
+    volumes:
+      - mindsdb_data:/opt/mindsdb/storage
+      - ./mindsdb-config:/opt/mindsdb/config
+    networks:
+      - openbb-network
+    command: >
+      sh -c "
+        if [ ! -f /opt/mindsdb/config/config.json ]; then
+          echo '{\"storage_dir\": \"/opt/mindsdb/storage\"}' > /opt/mindsdb/config/config.json;
+        fi;
+        python -m mindsdb --config=/opt/mindsdb/config/config.json --api=http,mysql
+      "
+
+  # OnlyOffice for Excel integration (keep local for now)
+  onlyoffice:
+    image: onlyoffice/documentserver:latest
+    ports:
+      - "9080:80"
+      - "9443:443"
+    environment:
+      - JWT_ENABLED=false
+    volumes:
+      - onlyoffice_data:/var/www/onlyoffice/Data
+      - onlyoffice_logs:/var/log/onlyoffice
+    networks:
+      - openbb-network
+
+networks:
+  openbb-network:
+    driver: bridge
+
+volumes:
+  mindsdb_data:
+  onlyoffice_data:
+  onlyoffice_logs:

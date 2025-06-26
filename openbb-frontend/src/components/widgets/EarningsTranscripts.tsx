@@ -3,10 +3,14 @@ import { RefreshCw, Download, Settings, Maximize2, ChevronDown } from 'lucide-re
 import { useEarningsTranscriptRealTime, useEarningsTranscriptDatesRealTime } from '../../hooks/useRealTimeDataExtended';
 import WidgetHeaderWithTicker from '../common/WidgetHeaderWithTicker';
 import classNames from 'classnames';
+import { useCopilot } from '../../contexts/CopilotContext';
+import type { WidgetType } from '../../services/copilotService';
 
 interface EarningsTranscriptsProps {
   ticker: string;
   onTickerChange?: (ticker: string) => void;
+  onSettings?: () => void;
+  onRemove?: () => void;
 }
 
 interface TranscriptData {
@@ -19,7 +23,7 @@ interface TranscriptData {
   error?: string;
 }
 
-const EarningsTranscripts: React.FC<EarningsTranscriptsProps> = ({ ticker, onTickerChange }) => {
+const EarningsTranscripts: React.FC<EarningsTranscriptsProps> = ({ ticker, onTickerChange, onSettings, onRemove }) => {
   const [selectedYear, setSelectedYear] = useState<number>(2024);
   const [selectedQuarter, setSelectedQuarter] = useState<number>(2);
   const [hasAutoSelected, setHasAutoSelected] = useState<boolean>(false);
@@ -35,6 +39,7 @@ const EarningsTranscripts: React.FC<EarningsTranscriptsProps> = ({ ticker, onTic
   // Hooks for data fetching
   const { data: availableDates, isLoading: datesLoading } = useEarningsTranscriptDatesRealTime(ticker);
   const { data: transcript, isLoading: transcriptLoading, error: transcriptError, refetch } = useEarningsTranscriptRealTime(ticker, selectedYear, selectedQuarter);
+  const { addWidgetContext } = useCopilot();
 
 
   // Auto-select the most recent available transcript when dates load (only once)
@@ -135,15 +140,18 @@ const EarningsTranscripts: React.FC<EarningsTranscriptsProps> = ({ ticker, onTic
         title="Earnings Transcripts"
         ticker={ticker}
         onTickerChange={onTickerChange || (() => {})}
+        onAdd={() => addWidgetContext(WidgetType.EARNINGS_TRANSCRIPTS, transcript, ticker, 'Earnings Transcripts')}
+        onSettings={onSettings}
+        onRemove={onRemove}
       />
       
       {/* Controls Header */}
       <div className="flex items-center justify-between p-3 border-b border-openbb-border bg-openbb-bg-secondary flex-shrink-0">
         <div className="flex items-center gap-3">
           {transcript && transcript.content && !error ? (
-            <span className="text-xs text-openbb-accent font-mono bg-openbb-bg-hover px-2 py-1 rounded">LIVE</span>
+            <span className="text-xs text-openbb-accent  bg-openbb-bg-hover px-2 py-1 rounded">LIVE</span>
           ) : (
-            <span className="text-xs text-yellow-500 font-mono bg-openbb-bg-hover px-2 py-1 rounded">DEMO</span>
+            <span className="text-xs text-yellow-500  bg-openbb-bg-hover px-2 py-1 rounded">DEMO</span>
           )}
           
           {/* Year Selector */}
@@ -151,7 +159,7 @@ const EarningsTranscripts: React.FC<EarningsTranscriptsProps> = ({ ticker, onTic
             <select
               value={selectedYear}
               onChange={(e) => setSelectedYear(Number(e.target.value))}
-              className="appearance-none bg-openbb-bg-hover border border-openbb-border rounded px-3 py-1 text-xs text-openbb-text-primary font-mono cursor-pointer hover:bg-openbb-bg-tertiary transition-colors pr-8"
+              className="appearance-none bg-openbb-bg-hover border border-openbb-border rounded px-3 py-1 text-xs text-openbb-text-primary  cursor-pointer hover:bg-openbb-bg-tertiary transition-colors pr-8"
             >
               {yearOptions.map(year => (
                 <option key={year} value={year}>{year}</option>
@@ -167,7 +175,7 @@ const EarningsTranscripts: React.FC<EarningsTranscriptsProps> = ({ ticker, onTic
                 key={quarter}
                 onClick={() => setSelectedQuarter(quarter)}
                 className={classNames(
-                  'px-2 py-1 text-xs font-mono rounded transition-colors',
+                  'px-2 py-1 text-xs  rounded transition-colors',
                   selectedQuarter === quarter
                     ? 'bg-openbb-accent text-openbb-bg-primary'
                     : 'text-openbb-text-secondary hover:text-openbb-text-primary hover:bg-openbb-bg-hover'
@@ -205,14 +213,14 @@ const EarningsTranscripts: React.FC<EarningsTranscriptsProps> = ({ ticker, onTic
           <div className="flex-grow flex items-center justify-center">
             <div className="text-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-openbb-accent mx-auto mb-4"></div>
-              <p className="text-openbb-text-muted font-mono text-sm">Loading transcript...</p>
+              <p className="text-openbb-text-muted  text-sm">Loading transcript...</p>
             </div>
           </div>
         ) : error ? (
           <div className="flex-grow flex items-center justify-center">
             <div className="text-center">
-              <p className="text-openbb-text-muted font-mono text-sm">{String(error)}</p>
-              <p className="text-openbb-text-muted font-mono text-xs mt-2">
+              <p className="text-openbb-text-muted  text-sm">{String(error)}</p>
+              <p className="text-openbb-text-muted  text-xs mt-2">
                 Try selecting a different quarter or year
               </p>
             </div>
@@ -222,7 +230,7 @@ const EarningsTranscripts: React.FC<EarningsTranscriptsProps> = ({ ticker, onTic
             {/* Date Header */}
             {transcript.date && (
               <div className="p-3 border-b border-openbb-border bg-openbb-bg-secondary flex-shrink-0">
-                <p className="text-sm text-openbb-text-primary font-mono font-medium">
+                <p className="text-sm text-openbb-text-primary  font-medium">
                   {formatDate(transcript.date)}
                 </p>
               </div>
@@ -232,10 +240,10 @@ const EarningsTranscripts: React.FC<EarningsTranscriptsProps> = ({ ticker, onTic
             <div className="flex-grow overflow-y-auto p-4 space-y-4">
               {parsedTranscript.map((item, index) => (
                 <div key={index} className="space-y-2">
-                  <div className="text-sm font-semibold text-openbb-text-primary font-mono">
+                  <div className="text-sm font-semibold text-openbb-text-primary ">
                     {item.speaker}:
                   </div>
-                  <div className="text-sm text-openbb-text-primary leading-relaxed pl-0 font-mono">
+                  <div className="text-sm text-openbb-text-primary leading-relaxed pl-0 ">
                     {item.text}
                   </div>
                 </div>
@@ -244,7 +252,7 @@ const EarningsTranscripts: React.FC<EarningsTranscriptsProps> = ({ ticker, onTic
           </>
         ) : (
           <div className="flex-grow flex items-center justify-center">
-            <p className="text-openbb-text-muted font-mono text-sm">
+            <p className="text-openbb-text-muted  text-sm">
               Select a quarter to view earnings transcript
             </p>
           </div>
@@ -254,7 +262,7 @@ const EarningsTranscripts: React.FC<EarningsTranscriptsProps> = ({ ticker, onTic
       {/* Footer */}
       <div className="border-t border-openbb-border bg-openbb-bg-secondary flex-shrink-0">
         <div className="p-3">
-          <p className="text-xxs text-openbb-text-muted font-mono">
+          <p className="text-xxs text-openbb-text-muted ">
             Earnings transcripts from Financial Modeling Prep • Updated after earnings calls
           </p>
         </div>

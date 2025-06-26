@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Widget Test</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Testing OpenBB Widgets</h1>
+    <div id="results"></div>
+    
+    <script>
+        const API_BASE = 'http://localhost:8000/api/v1';
+        const SYMBOL = 'AAPL';
+        
+        async function testEndpoint(name, url) {
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                
+                let status = '❌';
+                let info = '';
+                
+                if (data.success) {
+                    if (data.data) {
+                        if (Array.isArray(data.data)) {
+                            status = data.data.length > 0 ? '✅' : '⚠️';
+                            info = `(${data.data.length} items)`;
+                        } else if (typeof data.data === 'object') {
+                            const keys = Object.keys(data.data);
+                            status = keys.length > 0 ? '✅' : '⚠️';
+                            info = `(${keys.length} fields)`;
+                            
+                            // Special check for price performance
+                            if (name === 'Price Performance' && data.data.performance) {
+                                const perfKeys = Object.keys(data.data.performance);
+                                info += ` Performance: ${perfKeys.length} periods`;
+                            }
+                        }
+                    }
+                } else {
+                    info = data.error || 'Failed';
+                }
+                
+                $('#results').append(`
+                    <div style="margin: 10px; padding: 10px; border: 1px solid #ccc;">
+                        <strong>${status} ${name}</strong> ${info}<br>
+                        <small>${url}</small><br>
+                        <pre style="max-height: 200px; overflow: auto;">${JSON.stringify(data, null, 2)}</pre>
+                    </div>
+                `);
+            } catch (error) {
+                $('#results').append(`
+                    <div style="margin: 10px; padding: 10px; border: 1px solid red;">
+                        <strong>❌ ${name}</strong><br>
+                        <small>${url}</small><br>
+                        Error: ${error.message}
+                    </div>
+                `);
+            }
+        }
+        
+        // Test all endpoints
+        (async () => {
+            await testEndpoint('Price Performance', `${API_BASE}/equity/price/performance?symbol=${SYMBOL}`);
+            await testEndpoint('Price Target', `${API_BASE}/equity/estimates/price-target?symbol=${SYMBOL}`);
+            await testEndpoint('Company Profile', `${API_BASE}/equity/fundamental/overview?symbol=${SYMBOL}`);
+            await testEndpoint('Key Metrics', `${API_BASE}/equity/fundamental/metrics?symbol=${SYMBOL}&period=annual&limit=1&with_ttm=true`);
+        })();
+    </script>
+</body>
+</html>

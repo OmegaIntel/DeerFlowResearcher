@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import TickerInfo from './TickerInfo';
+import { AllTheProviders } from '../../test-utils/testProviders';
 
 // Mock the useOpenBBData hooks
 vi.mock('../../hooks/useOpenBBData', () => ({
@@ -13,18 +13,6 @@ import { useHistoricalPrice, useFundamentalOverview } from '../../hooks/useOpenB
 
 const mockUseHistoricalPrice = vi.mocked(useHistoricalPrice);
 const mockUseFundamentalOverview = vi.mocked(useFundamentalOverview);
-
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retry: false,
-    },
-  },
-});
-
-const wrapper = ({ children }: { children: React.ReactNode }) => (
-  <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-);
 
 describe('TickerInfo', () => {
   beforeEach(() => {
@@ -55,7 +43,7 @@ describe('TickerInfo', () => {
       error: null,
     } as any);
 
-    render(<TickerInfo ticker="AAPL" />, { wrapper });
+    render(<TickerInfo ticker="AAPL" />, { wrapper: AllTheProviders });
     
     // Check if symbol is displayed in the main content (not in the ticker dropdown)
     const symbolElements = screen.getAllByText('AAPL');
@@ -91,7 +79,7 @@ describe('TickerInfo', () => {
       error: null,
     } as any);
     
-    render(<TickerInfo ticker="AAPL" />, { wrapper });
+    render(<TickerInfo ticker="AAPL" />, { wrapper: AllTheProviders });
     
     // Check for loading animation
     expect(screen.getByTestId('loading-skeleton')).toBeInTheDocument();
@@ -110,7 +98,7 @@ describe('TickerInfo', () => {
       error: null,
     } as any);
     
-    render(<TickerInfo ticker="AAPL" />, { wrapper });
+    render(<TickerInfo ticker="AAPL" />, { wrapper: AllTheProviders });
     
     // Check for error message
     expect(screen.getByText('Error loading stock data')).toBeInTheDocument();

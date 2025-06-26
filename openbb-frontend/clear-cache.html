@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Clear Cache</title>
+</head>
+<body>
+    <h1>Clearing Cache...</h1>
+    <script>
+        // Clear all localStorage
+        localStorage.clear();
+        
+        // Force reload
+        setTimeout(() => {
+            window.location.href = '/';
+        }, 1000);
+    </script>
+    <p>Cache cleared! Redirecting...</p>
+</body>
+</html>

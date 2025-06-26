@@ -2,14 +2,19 @@ import React from 'react';
 import { RefreshCw, Download, Settings, Maximize2, ExternalLink } from 'lucide-react';
 import { useSecFilingsRealTime } from '../../hooks/useRealTimeDataExtended';
 import WidgetHeaderWithTicker from '../common/WidgetHeaderWithTicker';
+import { useCopilot } from '../../contexts/CopilotContext';
+import type { WidgetType } from '../../services/copilotService';
 
 interface CompanyFilingsProps {
   ticker: string;
   onTickerChange?: (ticker: string) => void;
+  onSettings?: () => void;
+  onRemove?: () => void;
 }
 
-const CompanyFilings: React.FC<CompanyFilingsProps> = ({ ticker, onTickerChange }) => {
+const CompanyFilings: React.FC<CompanyFilingsProps> = ({ ticker, onTickerChange, onSettings, onRemove }) => {
   const { data: filingsData = [], isLoading, error } = useSecFilingsRealTime(ticker);
+  const { addWidgetContext } = useCopilot();
 
   // Format date to match screenshot
   const formatDate = (dateStr: string) => {
@@ -31,11 +36,14 @@ const CompanyFilings: React.FC<CompanyFilingsProps> = ({ ticker, onTickerChange 
           title="Company Filings"
           ticker={ticker}
           onTickerChange={onTickerChange}
+          onAdd={() => addWidgetContext(WidgetType.COMPANY_FILINGS, filingsData, ticker, 'Company Filings')}
+          onSettings={onSettings}
+          onRemove={onRemove}
         />
         <div className="h-full bg-openbb-bg-widget border border-openbb-border flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-openbb-accent mx-auto mb-4"></div>
-            <p className="text-openbb-text-muted font-mono text-sm">Loading SEC filings...</p>
+            <p className="text-openbb-text-muted  text-sm">Loading SEC filings...</p>
           </div>
         </div>
       </div>
@@ -48,14 +56,15 @@ const CompanyFilings: React.FC<CompanyFilingsProps> = ({ ticker, onTickerChange 
         title="Company Filings"
         ticker={ticker}
         onTickerChange={onTickerChange}
+        onAdd={() => addWidgetContext(WidgetType.COMPANY_FILINGS, filingsData, ticker, 'Company Filings')}
       />
       
       <div className="flex items-center justify-between p-3 border-b border-openbb-border bg-openbb-bg-secondary flex-shrink-0">
         <div className="flex items-center gap-3">
           {filingsData.length > 0 && filingsData[0].provider === 'fmp' ? (
-            <span className="text-xs text-openbb-accent font-mono bg-openbb-bg-hover px-2 py-1 rounded">LIVE</span>
+            <span className="text-xs text-openbb-accent  bg-openbb-bg-hover px-2 py-1 rounded">LIVE</span>
           ) : (
-            <span className="text-xs text-yellow-500 font-mono bg-openbb-bg-hover px-2 py-1 rounded">DEMO</span>
+            <span className="text-xs text-yellow-500  bg-openbb-bg-hover px-2 py-1 rounded">DEMO</span>
           )}
         </div>
         
@@ -77,7 +86,7 @@ const CompanyFilings: React.FC<CompanyFilingsProps> = ({ ticker, onTickerChange 
 
       {/* Table */}
       <div className="overflow-auto flex-grow">
-        <table className="w-full text-xs font-mono">
+        <table className="w-full text-xs ">
           <thead>
             <tr className="border-b border-openbb-border bg-openbb-bg-secondary sticky top-0 z-10">
               <th className="text-left py-3 px-4 text-openbb-text-secondary font-medium w-1/4">Date</th>
@@ -116,7 +125,7 @@ const CompanyFilings: React.FC<CompanyFilingsProps> = ({ ticker, onTickerChange 
         </table>
         
         {filingsData.length === 0 && !isLoading && (
-          <div className="text-center py-8 text-openbb-text-muted font-mono text-sm">
+          <div className="text-center py-8 text-openbb-text-muted  text-sm">
             No SEC filings available for {ticker}
           </div>
         )}
@@ -125,7 +134,7 @@ const CompanyFilings: React.FC<CompanyFilingsProps> = ({ ticker, onTickerChange 
       {/* Footer */}
       <div className="border-t border-openbb-border bg-openbb-bg-secondary flex-shrink-0">
         <div className="p-3">
-          <p className="text-xxs text-openbb-text-muted font-mono">
+          <p className="text-xxs text-openbb-text-muted ">
             SEC filings from EDGAR database • Updated in real-time
           </p>
         </div>

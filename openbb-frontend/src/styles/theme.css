@@ -1,0 +1,151 @@
+/* Dark theme (default) */
+.dark {
+  --bg-primary: #000000;
+  --bg-secondary: #0A0A0A;
+  --bg-widget: #1A1A1A;
+  --bg-hover: #2A2A2A;
+  --text-primary: #FFFFFF;
+  --text-secondary: #CCCCCC;
+  --text-muted: #888888;
+  --border: #333333;
+  --accent: #00D9FF;
+}
+
+/* Light theme */
+.light {
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F8F9FA;
+  --bg-widget: #FFFFFF;
+  --bg-hover: #F0F0F0;
+  --text-primary: #000000;
+  --text-secondary: #555555;
+  --text-muted: #999999;
+  --border: #E0E0E0;
+  --accent: #0099CC;
+}
+
+/* Apply theme colors to Tailwind classes */
+.light .bg-openbb-bg-primary {
+  background-color: var(--bg-primary);
+}
+
+.light .bg-openbb-bg-secondary {
+  background-color: var(--bg-secondary);
+}
+
+.light .bg-openbb-bg-widget {
+  background-color: var(--bg-widget);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.light .bg-openbb-bg-hover {
+  background-color: var(--bg-hover);
+}
+
+.light .text-openbb-text-primary {
+  color: var(--text-primary);
+}
+
+.light .text-openbb-text-secondary {
+  color: var(--text-secondary);
+}
+
+.light .text-openbb-text-muted {
+  color: var(--text-muted);
+}
+
+.light .border-openbb-border {
+  border-color: var(--border);
+}
+
+.light .text-openbb-accent {
+  color: var(--accent);
+}
+
+.light .bg-openbb-accent {
+  background-color: var(--accent);
+}
+
+/* Light theme specific adjustments */
+.light .hover\:bg-openbb-bg-hover:hover {
+  background-color: var(--bg-hover);
+}
+
+.light .hover\:text-openbb-text-primary:hover {
+  color: var(--text-primary);
+}
+
+.light .focus\:border-openbb-accent:focus {
+  border-color: var(--accent);
+}
+
+/* Chart adjustments for light theme */
+.light .recharts-text {
+  fill: var(--text-primary);
+}
+
+.light .recharts-cartesian-grid-horizontal line,
+.light .recharts-cartesian-grid-vertical line {
+  stroke: var(--border);
+}
+
+/* Scrollbar styling for light theme */
+.light ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.light ::-webkit-scrollbar-track {
+  background: var(--bg-secondary);
+}
+
+.light ::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+.light ::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Input adjustments for light theme */
+.light input, 
+.light select, 
+.light textarea {
+  color: var(--text-primary);
+  background-color: var(--bg-widget);
+  border-color: var(--border);
+}
+
+.light input::placeholder,
+.light textarea::placeholder {
+  color: var(--text-muted);
+}
+
+/* Table adjustments for light theme */
+.light table {
+  color: var(--text-primary);
+}
+
+.light th {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.light tr:hover {
+  background-color: var(--bg-hover);
+}
+
+/* Button adjustments for light theme */
+.light button:not(.bg-openbb-accent):not(.bg-openbb-success):not(.bg-openbb-danger) {
+  color: var(--text-primary);
+}
+
+/* Shadow adjustments for light theme */
+.light .shadow-lg {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+
+.light .shadow {
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+}

@@ -1,65 +1,65 @@
 import React from 'react';
-import { MessageSquare, Settings, RefreshCw } from 'lucide-react';
+import { Edit2, Plus, Sun, Moon } from 'lucide-react';
 import classNames from 'classnames';
 import ResizableGridLayout from './ResizableGridLayout';
 import ComparisonAnalysis from '../comparison/ComparisonAnalysis';
 import OwnershipPage from '../ownership/OwnershipPage';
-import TickerSelector from '../common/TickerSelector';
+import TemplatesPage from '../templates/TemplatesPage';
+import MindsDBPage from '../mindsdb/MindsDBPage';
+import PrivateCompaniesPage from '../private-companies/PrivateCompaniesPage';
+import DealroomPage from '../dealroom/DealroomPage';
 import { useWidgets } from '../../contexts/WidgetContext';
 import { useDashboards } from '../../contexts/DashboardContext';
+import { useTheme } from '../../contexts/ThemeContext';
 
 interface MainContentProps {
   selectedTicker: string;
   onTickerChange: (ticker: string) => void;
-  onToggleCopilot: () => void;
   activeTab: string;
   onTabChange: (tab: string) => void;
   onOpenPageSettings?: () => void;
+  onAddWidget?: () => void;
 }
 
 const MainContent: React.FC<MainContentProps> = ({ 
   selectedTicker, 
   onTickerChange,
-  onToggleCopilot,
   activeTab,
   onTabChange,
-  onOpenPageSettings 
+  onOpenPageSettings,
+  onAddWidget 
 }) => {
   const { widgets, pages, removeWidget } = useWidgets();
   const { activeDashboardId } = useDashboards();
+  const { theme, toggleTheme } = useTheme();
   
   // Get widgets for current page and active dashboard
   const pageWidgets = widgets.filter(w => 
     w.pageId === activeTab && w.dashboardId === activeDashboardId
   );
+  
+  // Debug logging
+  console.log('MainContent Debug:', {
+    activeTab,
+    activeDashboardId,
+    totalWidgets: widgets.length,
+    pageWidgets: pageWidgets.length,
+    widgets: widgets.slice(0, 3) // Show first 3 widgets
+  });
+  
   return (
     <div className="flex-1 flex flex-col h-full">
       {/* Header with Tabs */}
       <header className="bg-openbb-bg-secondary border-b border-openbb-border flex-shrink-0">
-        <div className="px-6 py-3 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <TickerSelector 
-              selectedTicker={selectedTicker}
-              onTickerChange={onTickerChange}
-            />
-          </div>
-          
+        <div className="px-6 py-3 flex items-center justify-end">
           <div className="flex items-center gap-2">
             <button
-              onClick={() => window.location.reload()}
+              onClick={toggleTheme}
               className="p-2 text-openbb-text-muted hover:text-openbb-text-primary transition-colors"
-              title="Refresh All"
-              data-testid="global-refresh-button"
+              title={`Switch to ${theme === 'dark' ? 'Light' : 'Dark'} Theme`}
+              data-testid="theme-toggle-button"
             >
-              <RefreshCw size={16} />
-            </button>
-            
-            <button
-              onClick={onToggleCopilot}
-              className="flex items-center gap-2 px-3 py-1.5 bg-openbb-blue text-white rounded text-sm hover:bg-blue-600 transition-colors"
-            >
-              <MessageSquare size={16} />
-              <span>OpenBB Copilot</span>
+              {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
             </button>
           </div>
         </div>
@@ -83,15 +83,27 @@ const MainContent: React.FC<MainContentProps> = ({
             ))}
           </div>
           
-          {onOpenPageSettings && (
-            <button
-              onClick={onOpenPageSettings}
-              className="p-2 text-openbb-text-muted hover:text-openbb-text-primary transition-colors"
-              title="Customize Pages"
-            >
-              <Settings size={16} />
-            </button>
-          )}
+          <div className="flex items-center gap-1">
+            {onAddWidget && (
+              <button
+                onClick={onAddWidget}
+                className="p-2 text-openbb-text-muted hover:text-openbb-text-primary transition-colors"
+                title="Add Widget"
+                data-testid="add-widget-button"
+              >
+                <Plus size={16} />
+              </button>
+            )}
+            {onOpenPageSettings && (
+              <button
+                onClick={onOpenPageSettings}
+                className="p-2 text-openbb-text-muted hover:text-openbb-text-primary transition-colors"
+                title="Customize Pages"
+              >
+                <Edit2 size={16} />
+              </button>
+            )}
+          </div>
         </div>
       </header>
 
@@ -117,10 +129,10 @@ const MainContent: React.FC<MainContentProps> = ({
           ) : (
             <div className="p-4">
               <div className="bg-openbb-bg-widget rounded border border-openbb-border p-8 text-center">
-                <p className="text-openbb-text-muted font-mono text-sm mb-4">
+                <p className="text-openbb-text-muted  text-sm mb-4">
                   No widgets added to this page yet.
                 </p>
-                <p className="text-openbb-text-muted font-mono text-xs">
+                <p className="text-openbb-text-muted  text-xs">
                   Click the + button to add widgets.
                 </p>
               </div>
@@ -136,7 +148,23 @@ const MainContent: React.FC<MainContentProps> = ({
           <OwnershipPage ticker={selectedTicker} />
         )}
         
-        {activeTab !== 'overview' && activeTab !== 'financials' && activeTab !== 'comparison' && activeTab !== 'ownership' && (
+        {activeTab === 'templates' && (
+          <TemplatesPage />
+        )}
+        
+        {activeTab === 'mindsdb' && (
+          <MindsDBPage />
+        )}
+        
+        {activeTab === 'private-companies' && (
+          <PrivateCompaniesPage />
+        )}
+        
+        {activeTab === 'dealroom' && (
+          <DealroomPage />
+        )}
+        
+        {activeTab !== 'overview' && activeTab !== 'financials' && activeTab !== 'comparison' && activeTab !== 'ownership' && activeTab !== 'templates' && activeTab !== 'mindsdb' && activeTab !== 'private-companies' && activeTab !== 'dealroom' && (
           pageWidgets.length > 0 ? (
             <ResizableGridLayout
               widgets={pageWidgets}
@@ -147,10 +175,10 @@ const MainContent: React.FC<MainContentProps> = ({
           ) : (
             <div className="p-4">
               <div className="bg-openbb-bg-widget rounded border border-openbb-border p-8 text-center">
-                <p className="text-openbb-text-muted font-mono text-sm mb-4">
+                <p className="text-openbb-text-muted  text-sm mb-4">
                   No widgets added to this page yet.
                 </p>
-                <p className="text-openbb-text-muted font-mono text-xs">
+                <p className="text-openbb-text-muted  text-xs">
                   Click the + button to add widgets.
                 </p>
               </div>

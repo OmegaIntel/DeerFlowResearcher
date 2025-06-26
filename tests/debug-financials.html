@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Financials Changes</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        .test { margin: 20px 0; padding: 15px; background: #f0f0f0; }
+        .success { color: green; font-weight: bold; }
+        .error { color: red; font-weight: bold; }
+        code { background: #e0e0e0; padding: 2px 5px; }
+    </style>
+</head>
+<body>
+    <h1>Debug Financials Page Changes</h1>
+    
+    <div class="test">
+        <h3>1. Test Version Endpoint</h3>
+        <button onclick="testVersion()">Check Version</button>
+        <div id="version-result"></div>
+    </div>
+    
+    <div class="test">
+        <h3>2. Direct Console Commands</h3>
+        <p>Run these in the browser console on the Financials page:</p>
+        <pre>
+// Check if changes are loaded
+document.querySelector('th.min-w-\\[200px\\]') ? '✓ Min-width applied' : '✗ Min-width NOT found'
+
+// Check shadow
+document.querySelector('.shadow-\\[4px_0_8px_-2px_rgba\\(0\\,0\\,0\\,0\\.1\\)\\]') ? '✓ New shadow applied' : '✗ Shadow NOT found'
+
+// Get current headers
+Array.from(document.querySelectorAll('th')).map(th => th.textContent)
+
+// Get revenue values
+document.querySelector('tr:has(td:contains("Revenue"))') || document.querySelector('tr').textContent.includes('Revenue')
+        </pre>
+    </div>
+    
+    <div class="test">
+        <h3>3. Force Reload Instructions</h3>
+        <ol>
+            <li><strong>Chrome/Edge:</strong>
+                <ul>
+                    <li>Open DevTools (F12)</li>
+                    <li>Go to Network tab</li>
+                    <li>Check "Disable cache"</li>
+                    <li>Keep DevTools open and refresh</li>
+                </ul>
+            </li>
+            <li><strong>Firefox:</strong>
+                <ul>
+                    <li>Hold Shift and click Reload</li>
+                    <li>Or press Ctrl+Shift+R</li>
+                </ul>
+            </li>
+        </ol>
+    </div>
+    
+    <div class="test">
+        <h3>4. What Should Be Different:</h3>
+        <table border="1" cellpadding="5">
+            <tr>
+                <th>Feature</th>
+                <th>Before</th>
+                <th>After</th>
+            </tr>
+            <tr>
+                <td>FY Revenue</td>
+                <td>Same as QTR</td>
+                <td class="success">391,035</td>
+            </tr>
+            <tr>
+                <td>QTR Revenue</td>
+                <td>Same as FY</td>
+                <td class="success">94,372</td>
+            </tr>
+            <tr>
+                <td>QTR Headers</td>
+                <td>Missing Q labels</td>
+                <td class="success">Q3 2024, Q2 2024, etc.</td>
+            </tr>
+            <tr>
+                <td>Index Column Width</td>
+                <td>No min-width</td>
+                <td class="success">min-w-[200px]</td>
+            </tr>
+            <tr>
+                <td>Shadow</td>
+                <td>2px shadow</td>
+                <td class="success">4px enhanced shadow</td>
+            </tr>
+        </table>
+    </div>
+    
+    <script>
+        async function testVersion() {
+            try {
+                const response = await fetch('/test-version.json?t=' + Date.now());
+                const data = await response.json();
+                document.getElementById('version-result').innerHTML = 
+                    '<div class="success">Version: ' + data.version + '</div>' +
+                    '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+            } catch (error) {
+                document.getElementById('version-result').innerHTML = 
+                    '<div class="error">Error: ' + error.message + '</div>';
+            }
+        }
+    </script>
+</body>
+</html>

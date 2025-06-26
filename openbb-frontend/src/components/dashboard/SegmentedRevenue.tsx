@@ -12,6 +12,8 @@ import {
 import type { ChartOptions } from 'chart.js';
 import { Bar } from 'react-chartjs-2';
 import WidgetHeaderWithTicker from '../common/WidgetHeaderWithTicker';
+import { useCopilot } from '../../contexts/CopilotContext';
+import type { WidgetType } from '../../services/copilotService';
 
 ChartJS.register(
   CategoryScale,
@@ -25,11 +27,14 @@ ChartJS.register(
 interface SegmentedRevenueProps {
   ticker: string;
   onTickerChange?: (ticker: string) => void;
+  onSettings?: () => void;
+  onRemove?: () => void;
 }
 
-const SegmentedRevenue: React.FC<SegmentedRevenueProps> = ({ ticker, onTickerChange }) => {
+const SegmentedRevenue: React.FC<SegmentedRevenueProps> = ({ ticker, onTickerChange, onSettings, onRemove }) => {
   const [viewType, setViewType] = useState<'geography' | 'business'>('geography');
   const [chartType, setChartType] = useState<'FY' | 'QTR'>('FY');
+  const { addWidgetContext } = useCopilot();
 
   // Mock data for Revenue Per Geography
   const geographyData = {
@@ -193,16 +198,20 @@ const SegmentedRevenue: React.FC<SegmentedRevenueProps> = ({ ticker, onTickerCha
           title={`Revenue Per ${viewType === 'geography' ? 'Geography' : 'Business Line'}`}
           ticker={ticker}
           onTickerChange={onTickerChange || (() => {})}
-          onRefresh={() => console.log('Refresh')}
-          onAdd={() => console.log('Add to dashboard')}
-          onExpand={() => console.log('Expand')}
-          onMore={() => console.log('More options')}
+          onAdd={() => addWidgetContext(
+            viewType === 'geography' ? WidgetType.REVENUE_GEOGRAPHY : WidgetType.REVENUE_SEGMENT,
+            currentData,
+            ticker,
+            `Revenue Per ${viewType === 'geography' ? 'Geography' : 'Business Line'}`
+          )}
+          onSettings={onSettings}
+          onRemove={onRemove}
         />
         
         <div className="flex items-center gap-3">
           <button 
             onClick={() => setChartType(chartType === 'FY' ? 'QTR' : 'FY')}
-            className="text-xs font-mono text-openbb-text-secondary hover:text-openbb-accent transition-colors flex items-center gap-1"
+            className="text-xs  text-openbb-text-secondary hover:text-openbb-accent transition-colors flex items-center gap-1"
           >
             <BarChart2 size={12} />
             {chartType} {chartType === 'FY' ? 'QTR' : 'FY'}
@@ -219,7 +228,7 @@ const SegmentedRevenue: React.FC<SegmentedRevenueProps> = ({ ticker, onTickerCha
       <div className="p-3 border-t border-openbb-border bg-openbb-bg-secondary">
         <button
           onClick={() => setViewType(viewType === 'geography' ? 'business' : 'geography')}
-          className="text-xs font-mono text-openbb-text-secondary hover:text-openbb-accent transition-colors"
+          className="text-xs  text-openbb-text-secondary hover:text-openbb-accent transition-colors"
         >
           Switch to Revenue Per {viewType === 'geography' ? 'Business Line' : 'Geography'} →
         </button>

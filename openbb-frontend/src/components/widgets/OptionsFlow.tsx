@@ -1,11 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { TrendingUp, TrendingDown, Filter, RefreshCw, AlertCircle, Activity } from 'lucide-react';
 import WidgetHeaderWithTicker from '../common/WidgetHeaderWithTicker';
+import { useCopilot } from '../../contexts/CopilotContext';
+import type { WidgetType } from '../../services/copilotService';
 
 interface OptionsFlowProps {
   ticker: string;
   onTickerChange?: (ticker: string) => void;
   dataProvider?: string;
+  onSettings?: () => void;
+  onRemove?: () => void;
 }
 
 interface OptionContract {
@@ -30,12 +34,13 @@ interface OptionContract {
   unusual_activity?: boolean;
 }
 
-const OptionsFlow: React.FC<OptionsFlowProps> = ({ ticker, onTickerChange, dataProvider = 'auto' }) => {
+const OptionsFlow: React.FC<OptionsFlowProps> = ({ ticker, onTickerChange, dataProvider = 'auto', onSettings, onRemove }) => {
   const [optionsData, setOptionsData] = useState<OptionContract[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<'all' | 'calls' | 'puts'>('all');
   const [showFilterMenu, setShowFilterMenu] = useState(false);
+  const { addWidgetContext } = useCopilot();
 
   const fetchOptionsData = async () => {
     setIsLoading(true);
@@ -127,9 +132,14 @@ const OptionsFlow: React.FC<OptionsFlowProps> = ({ ticker, onTickerChange, dataP
           ticker={ticker}
           onTickerChange={onTickerChange || (() => {})}
           onRefresh={fetchOptionsData}
-          onAdd={() => console.log('Add to dashboard')}
-          onExpand={() => console.log('Expand')}
-          onMore={() => console.log('More options')}
+          onAdd={() => addWidgetContext(
+            WidgetType.OPTIONS_FLOW,
+            optionsData,
+            ticker,
+            'Options Flow Activity'
+          )}
+          onSettings={onSettings}
+          onRemove={onRemove}
         />
         <div className="flex items-center gap-2 text-sm text-red-500">
           <AlertCircle size={16} />
@@ -143,54 +153,56 @@ const OptionsFlow: React.FC<OptionsFlowProps> = ({ ticker, onTickerChange, dataP
 
   return (
     <div className="bg-openbb-bg-widget rounded-lg border border-openbb-border p-4" data-testid="options-flow-widget">
-      <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-2">
-          <Activity size={20} className="text-openbb-primary" />
-          <h3 className="text-lg font-mono font-semibold text-openbb-text-primary">Options Flow</h3>
-          <span className="text-sm font-mono text-openbb-text-muted">{ticker}</span>
-        </div>
-        <div className="flex items-center gap-2">
-          <div className="relative">
-            <button
-              onClick={() => setShowFilterMenu(!showFilterMenu)}
-              className="p-1.5 rounded hover:bg-openbb-bg-hover transition-colors"
-              title="Filter options"
-              data-testid="options-filter-button"
-            >
-              <Filter size={16} className="text-openbb-text-secondary" />
-            </button>
-            {showFilterMenu && (
-              <div className="absolute right-0 top-8 bg-openbb-bg-widget border border-openbb-border rounded shadow-lg z-10 min-w-[120px]">
-                <button
-                  onClick={() => { setFilter('all'); setShowFilterMenu(false); }}
-                  className="block w-full text-left px-3 py-2 text-sm hover:bg-openbb-bg-hover"
-                >
-                  All Options
-                </button>
-                <button
-                  onClick={() => { setFilter('calls'); setShowFilterMenu(false); }}
-                  className="block w-full text-left px-3 py-2 text-sm hover:bg-openbb-bg-hover"
-                >
-                  Bullish Only
-                </button>
-                <button
-                  onClick={() => { setFilter('puts'); setShowFilterMenu(false); }}
-                  className="block w-full text-left px-3 py-2 text-sm hover:bg-openbb-bg-hover"
-                >
-                  Bearish Only
-                </button>
-              </div>
-            )}
-          </div>
+      <WidgetHeaderWithTicker
+        title="Options Flow"
+        ticker={ticker}
+        onTickerChange={onTickerChange || (() => {})}
+        onRefresh={fetchOptionsData}
+        onAdd={() => addWidgetContext(
+          WidgetType.OPTIONS_FLOW,
+          filteredOptions,
+          ticker,
+          'Options Flow Activity'
+        )}
+        onSettings={onSettings}
+        onRemove={onRemove}
+      />
+      <div className="flex items-center gap-2 mb-4">
+        <div className="relative">
           <button
-            onClick={fetchOptionsData}
+            onClick={() => setShowFilterMenu(!showFilterMenu)}
             className="p-1.5 rounded hover:bg-openbb-bg-hover transition-colors"
-            title="Refresh data"
-            data-testid="options-refresh-button"
+            title="Filter options"
+            data-testid="options-filter-button"
           >
-            <RefreshCw size={16} className="text-openbb-text-secondary" />
+            <Filter size={16} className="text-openbb-text-secondary" />
           </button>
+          {showFilterMenu && (
+            <div className="absolute left-0 top-8 bg-openbb-bg-widget border border-openbb-border rounded shadow-lg z-10 min-w-[120px]">
+              <button
+                onClick={() => { setFilter('all'); setShowFilterMenu(false); }}
+                className="block w-full text-left px-3 py-2 text-sm hover:bg-openbb-bg-hover"
+              >
+                All Options
+              </button>
+              <button
+                onClick={() => { setFilter('calls'); setShowFilterMenu(false); }}
+                className="block w-full text-left px-3 py-2 text-sm hover:bg-openbb-bg-hover"
+              >
+                Bullish Only
+              </button>
+              <button
+                onClick={() => { setFilter('puts'); setShowFilterMenu(false); }}
+                className="block w-full text-left px-3 py-2 text-sm hover:bg-openbb-bg-hover"
+              >
+                Bearish Only
+              </button>
+            </div>
+          )}
         </div>
+        <span className="text-xs text-openbb-text-muted">
+          Filter: {filter === 'all' ? 'All' : filter === 'calls' ? 'Bullish' : 'Bearish'}
+        </span>
       </div>
 
       {filteredOptions.length === 0 ? (
@@ -220,7 +232,7 @@ const OptionsFlow: React.FC<OptionsFlowProps> = ({ ticker, onTickerChange, dataP
                     )}
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-mono font-semibold text-openbb-text-primary">
+                        <span className="text-sm  font-semibold text-openbb-text-primary">
                           {formatExpiration(option.expiration)} {option.strike}{isCall ? 'C' : 'P'}
                         </span>
                         {isUnusual && (
@@ -237,7 +249,7 @@ const OptionsFlow: React.FC<OptionsFlowProps> = ({ ticker, onTickerChange, dataP
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-sm font-mono text-openbb-text-primary">
+                    <div className="text-sm  text-openbb-text-primary">
                       ${price.toFixed(2)}
                     </div>
                     <div className="text-xs text-openbb-text-muted">
@@ -245,7 +257,7 @@ const OptionsFlow: React.FC<OptionsFlowProps> = ({ ticker, onTickerChange, dataP
                     </div>
                   </div>
                 </div>
-                <div className="mt-2 grid grid-cols-4 gap-2 text-xs font-mono">
+                <div className="mt-2 grid grid-cols-4 gap-2 text-xs ">
                   <div>
                     <span className="text-openbb-text-muted">OI: </span>
                     <span className="text-openbb-text-secondary">{formatNumber(option.open_interest)}</span>

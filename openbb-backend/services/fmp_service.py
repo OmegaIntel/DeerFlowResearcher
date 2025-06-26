@@ -430,3 +430,60 @@ class FMPService:
         except Exception as e:
             print(f"FMP transcript dates error: {e}")
             return []
+    
+    async def get_company_news(
+        self,
+        symbol: str,
+        start_date: Optional[date] = None,
+        end_date: Optional[date] = None,
+        limit: int = 50
+    ) -> List[Dict[str, Any]]:
+        """Get company news from FMP"""
+        try:
+            url = f"{self.base_url}/stock_news"
+            params = {
+                'apikey': self.api_key,
+                'tickers': symbol,
+                'limit': limit
+            }
+            
+            response = requests.get(url, params=params)
+            data = response.json()
+            
+            if data and isinstance(data, list):
+                formatted_news = []
+                for item in data:
+                    # Parse the published date
+                    pub_date = item.get('publishedDate', '')
+                    if pub_date:
+                        try:
+                            pub_datetime = datetime.strptime(pub_date, '%Y-%m-%d %H:%M:%S')
+                        except:
+                            pub_datetime = datetime.now()
+                    else:
+                        pub_datetime = datetime.now()
+                    
+                    # Filter by date if provided
+                    if start_date and pub_datetime.date() < start_date:
+                        continue
+                    if end_date and pub_datetime.date() > end_date:
+                        continue
+                    
+                    formatted_news.append({
+                        "title": item.get("title", ""),
+                        "url": item.get("url", ""),
+                        "published": pub_datetime.isoformat(),
+                        "source": item.get("site", ""),
+                        "summary": item.get("text", "")[:200] + "..." if len(item.get("text", "")) > 200 else item.get("text", ""),
+                        "symbol": item.get("symbol", symbol),
+                        "image": item.get("image", ""),
+                        "provider": "fmp"
+                    })
+                
+                return formatted_news[:limit]
+            
+            return []
+                
+        except Exception as e:
+            print(f"FMP news error: {e}")
+            return []

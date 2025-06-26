@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_BASE_URL = import.meta.env.VITE_API_URL || '';
 
 interface ApiResponse<T = any> {
   success: boolean;
@@ -19,7 +19,10 @@ class ApiService {
     options: RequestInit = {}
   ): Promise<T> {
     try {
-      const response = await fetch(`${this.baseUrl}${endpoint}`, {
+      const url = `${this.baseUrl}${endpoint}`;
+      console.log('API Request:', { url, endpoint, baseUrl: this.baseUrl });
+      
+      const response = await fetch(url, {
         ...options,
         headers: {
           'Content-Type': 'application/json',
@@ -27,17 +30,59 @@ class ApiService {
         },
       });
 
-      const data: ApiResponse<T> = await response.json();
+      const responseText = await response.text();
+      console.log('API Response:', { status: response.status, text: responseText.substring(0, 200) });
+      
+      let data: ApiResponse<T>;
+      try {
+        data = JSON.parse(responseText);
+      } catch (e) {
+        console.error('Failed to parse API response:', e);
+        throw new Error('Invalid JSON response from server');
+      }
 
       if (!data.success) {
+        console.error('API request failed:', { endpoint, error: data.error, fullResponse: data });
         throw new Error(data.error || 'API request failed');
       }
 
+      console.log('API Success:', { endpoint, dataKeys: Object.keys(data.data || {}).slice(0, 5) });
       return data.data as T;
-    } catch (error) {
+    } catch (error: any) {
       console.error('API Error:', error);
+      console.error('Error details:', {
+        message: error.message,
+        stack: error.stack,
+        endpoint: endpoint,
+        options: options
+      });
       throw error;
     }
+  }
+
+  // HTTP method helpers
+  async get<T>(endpoint: string): Promise<T> {
+    return this.request<T>(endpoint);
+  }
+
+  async post<T>(endpoint: string, data?: any): Promise<T> {
+    return this.request<T>(endpoint, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async put<T>(endpoint: string, data?: any): Promise<T> {
+    return this.request<T>(endpoint, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async delete<T>(endpoint: string): Promise<T> {
+    return this.request<T>(endpoint, {
+      method: 'DELETE',
+    });
   }
 
   // Equity endpoints

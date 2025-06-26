@@ -1,0 +1,44 @@
+{
+  "SecurityGroupName": "openbb-frontend-sg",
+  "Description": "Security group for OpenBB Frontend application",
+  "IngressRules": [
+    {
+      "IpProtocol": "tcp",
+      "FromPort": 22,
+      "ToPort": 22,
+      "Description": "SSH access",
+      "CidrIp": "YOUR_IP_ADDRESS/32"
+    },
+    {
+      "IpProtocol": "tcp",
+      "FromPort": 80,
+      "ToPort": 80,
+      "Description": "HTTP access",
+      "CidrIp": "0.0.0.0/0"
+    },
+    {
+      "IpProtocol": "tcp",
+      "FromPort": 443,
+      "ToPort": 443,
+      "Description": "HTTPS access",
+      "CidrIp": "0.0.0.0/0"
+    }
+  ],
+  "EgressRules": [
+    {
+      "IpProtocol": "-1",
+      "Description": "Allow all outbound traffic",
+      "CidrIp": "0.0.0.0/0"
+    }
+  ],
+  "Tags": [
+    {
+      "Key": "Name",
+      "Value": "openbb-frontend-sg"
+    },
+    {
+      "Key": "Application",
+      "Value": "OpenBB-Frontend"
+    }
+  ]
+}

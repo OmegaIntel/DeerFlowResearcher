@@ -240,6 +240,51 @@ class MultiProviderService:
             print(f"Share statistics error: {e}")
             return {"symbol": symbol, "error": str(e)}
     
+    async def get_key_metrics(self, symbol: str) -> Dict[str, Any]:
+        """Get key financial metrics for a symbol"""
+        # Try FMP first
+        if self.fmp:
+            try:
+                metrics = await self.fmp.get_key_metrics(symbol)
+                if metrics and not metrics.get("error"):
+                    return metrics
+            except Exception as e:
+                print(f"FMP key metrics error: {e}")
+        
+        # Fallback to yfinance
+        try:
+            ticker = yf.Ticker(symbol)
+            info = ticker.info
+            
+            # Get current price for calculations
+            current_price = info.get("currentPrice") or info.get("regularMarketPrice", 0)
+            
+            return {
+                "symbol": symbol,
+                "name": info.get("longName", ""),
+                "peRatio": info.get("trailingPE", 0) or info.get("forwardPE", 0),
+                "psRatio": info.get("priceToSalesTrailing12Months", 0),
+                "pbRatio": info.get("priceToBook", 0),
+                "evToRevenue": info.get("enterpriseToRevenue", 0),
+                "evToEbitda": info.get("enterpriseToEbitda", 0),
+                "dividendYield": (info.get("dividendYield", 0) or 0) * 100,  # Convert to percentage
+                "marketCap": info.get("marketCap", 0),
+                "currentPrice": current_price,
+                "provider": "yfinance"
+            }
+        except Exception as e:
+            print(f"Key metrics error for {symbol}: {e}")
+            return {
+                "symbol": symbol,
+                "error": str(e),
+                "peRatio": 0,
+                "psRatio": 0,
+                "pbRatio": 0,
+                "evToRevenue": 0,
+                "evToEbitda": 0,
+                "dividendYield": 0
+            }
+    
     async def get_company_news(
         self,
         symbol: str,
@@ -247,9 +292,18 @@ class MultiProviderService:
         end_date: Optional[date] = None,
         limit: int = 50
     ) -> List[Dict[str, Any]]:
-        """Get company news - tries Benzinga first, then other providers"""
+        """Get company news - tries FMP first, then other providers"""
         
-        # Try Benzinga first (has links and full content)
+        # Try FMP first (we have API key for it)
+        if self.fmp:
+            try:
+                news = await self.fmp.get_company_news(symbol, start_date, end_date, limit)
+                if news:
+                    return news
+            except Exception as e:
+                print(f"FMP news error: {e}")
+        
+        # Try Benzinga second (has links and full content)
         if self.benzinga:
             try:
                 news = await self.benzinga.get_company_news(symbol, start_date, end_date, limit)
@@ -258,7 +312,7 @@ class MultiProviderService:
             except Exception as e:
                 print(f"Benzinga news error: {e}")
         
-        # Try Polygon second (good news API)
+        # Try Polygon third (good news API)
         if self.polygon:
             try:
                 news = await self.polygon.get_company_news(symbol, limit)
@@ -275,7 +329,21 @@ class MultiProviderService:
             if news:
                 formatted_news = []
                 for item in news[:limit]:
-                    pub_time = datetime.fromtimestamp(item.get("providerPublishTime", 0))
+                    # Debug: Print raw news item
+                    print(f"YFinance news item: {item}")
+                    
+                    # Extract content from nested structure
+                    content = item.get('content', {})
+                    
+                    # Parse the published date
+                    pub_date_str = content.get('pubDate', '')
+                    if pub_date_str:
+                        try:
+                            pub_time = datetime.strptime(pub_date_str, '%Y-%m-%dT%H:%M:%SZ')
+                        except:
+                            pub_time = datetime.now()
+                    else:
+                        pub_time = datetime.now()
                     
                     # Filter by date if provided
                     if start_date and pub_time.date() < start_date:
@@ -283,18 +351,31 @@ class MultiProviderService:
                     if end_date and pub_time.date() > end_date:
                         continue
                     
+                    # Extract URL from nested structure
+                    url = ''
+                    if content.get('clickThroughUrl'):
+                        url = content['clickThroughUrl'].get('url', '')
+                    elif content.get('canonicalUrl'):
+                        url = content['canonicalUrl'].get('url', '')
+                    
+                    # Extract provider
+                    provider_info = content.get('provider', {})
+                    source = provider_info.get('displayName', 'Unknown')
+                    
                     formatted_news.append({
-                        "title": item.get("title", ""),
-                        "url": item.get("link", ""),
+                        "title": content.get("title", ""),
+                        "url": url,
                         "published": pub_time.isoformat(),
-                        "source": item.get("publisher", ""),
-                        "summary": item.get("summary", "")[:200] + "..." if len(item.get("summary", "")) > 200 else item.get("summary", ""),
+                        "source": source,
+                        "summary": content.get("summary", "")[:200] + "..." if len(content.get("summary", "")) > 200 else content.get("summary", ""),
                         "provider": "yfinance"
                     })
                 
                 return formatted_news
         except Exception as e:
             print(f"YFinance news error: {e}")
+            import traceback
+            traceback.print_exc()
         
         return []
     
@@ -353,8 +434,31 @@ class MultiProviderService:
         return []
     
     async def get_management_team(self, symbol: str) -> List[Dict[str, Any]]:
-        """Get management team - requires FMP or similar provider"""
-        # Try FMP if available
+        """Get management team - tries yfinance first (has full team), then FMP"""
+        
+        # Try yfinance first since it has full management team data
+        try:
+            ticker = yf.Ticker(symbol)
+            info = ticker.info
+            
+            if 'companyOfficers' in info and info['companyOfficers']:
+                formatted = []
+                for officer in info['companyOfficers']:
+                    formatted.append({
+                        "name": officer.get("name", "N/A"),
+                        "title": officer.get("title", "N/A"),
+                        "compensation": officer.get("totalPay", 0),
+                        "currency": "USD",
+                        "age": officer.get("age"),
+                        "yearBorn": officer.get("yearBorn"),
+                        "fiscalYear": officer.get("fiscalYear")
+                    })
+                if formatted:  # If we got data, return it
+                    return formatted
+        except Exception as e:
+            print(f"YFinance management error: {e}")
+        
+        # Fallback to FMP if yfinance fails
         if self.fmp:
             try:
                 executives = await self.fmp.get_key_executives(symbol)
@@ -372,8 +476,125 @@ class MultiProviderService:
             except Exception as e:
                 print(f"FMP management error: {e}")
         
-        # No other provider has management data
         return []
+    
+    async def get_price_performance(self, symbol: str) -> Dict[str, Any]:
+        """Get price performance data across multiple time periods"""
+        try:
+            # Use yfinance for all data
+            ticker = yf.Ticker(symbol)
+            
+            # Get current info - handle 401 errors gracefully
+            try:
+                info = ticker.info
+                current_price = info.get('currentPrice', info.get('regularMarketPrice'))
+            except Exception as e:
+                # Try basic quote data only
+                try:
+                    # Use fast_info which is less likely to trigger 401
+                    fast = ticker.fast_info
+                    current_price = fast.last_price
+                    info = {
+                        'previousClose': fast.previous_close,
+                        'currency': 'USD',
+                        'fiftyTwoWeekHigh': fast.year_high,
+                        'fiftyTwoWeekLow': fast.year_low,
+                    }
+                except:
+                    print(f"Unable to get basic quote for {symbol}")
+                    return {}
+            
+            if not current_price:
+                print(f"No current price found for {symbol}")
+                return {}
+            
+            # Build the performance object
+            performance = {
+                "currentPrice": current_price,
+                "currency": info.get('currency', 'USD'),
+                "previousClose": info.get('previousClose', 0),
+                "dayChange": current_price - info.get('previousClose', current_price),
+                "dayChangePercent": ((current_price - info.get('previousClose', current_price)) / info.get('previousClose', current_price) * 100) if info.get('previousClose') else 0,
+                "yearHigh": info.get('fiftyTwoWeekHigh', 0),
+                "yearLow": info.get('fiftyTwoWeekLow', 0),
+                "marketCap": info.get('marketCap', 0),
+                "volume": info.get('volume', 0),
+                "averageVolume": info.get('averageVolume', 0),
+                "peRatio": info.get('trailingPE'),
+                "provider": "yfinance",
+                "performance": {}
+            }
+            
+            # Calculate time-based performances
+            try:
+                # Get different period histories
+                hist_5d = ticker.history(period="5d")
+                hist_1mo = ticker.history(period="1mo")
+                hist_3mo = ticker.history(period="3mo")
+                hist_6mo = ticker.history(period="6mo")
+                hist_ytd = ticker.history(period="ytd")
+                hist_1y = ticker.history(period="1y")
+                hist_2y = ticker.history(period="2y")
+                hist_5y = ticker.history(period="5y")
+                
+                # Calculate 1D return (previous close vs current)
+                if info.get('previousClose') and current_price:
+                    performance['performance']['1D'] = round(((current_price - info['previousClose']) / info['previousClose'] * 100), 2)
+                
+                # Calculate 5D return
+                if not hist_5d.empty and len(hist_5d) > 0:
+                    performance['performance']['5D'] = round(((current_price - hist_5d['Close'].iloc[0]) / hist_5d['Close'].iloc[0] * 100), 2)
+                
+                # Calculate 1W return (approximately)
+                if not hist_1mo.empty and len(hist_1mo) >= 5:
+                    # Get price from ~7 days ago
+                    idx = min(5, len(hist_1mo) - 1)
+                    performance['performance']['1W'] = round(((current_price - hist_1mo['Close'].iloc[idx]) / hist_1mo['Close'].iloc[idx] * 100), 2)
+                
+                # Calculate 1M return
+                if not hist_1mo.empty and len(hist_1mo) > 0:
+                    performance['performance']['1M'] = round(((current_price - hist_1mo['Close'].iloc[0]) / hist_1mo['Close'].iloc[0] * 100), 2)
+                
+                # Calculate 3M return
+                if not hist_3mo.empty and len(hist_3mo) > 0:
+                    performance['performance']['3M'] = round(((current_price - hist_3mo['Close'].iloc[0]) / hist_3mo['Close'].iloc[0] * 100), 2)
+                
+                # Calculate 6M return
+                if not hist_6mo.empty and len(hist_6mo) > 0:
+                    performance['performance']['6M'] = round(((current_price - hist_6mo['Close'].iloc[0]) / hist_6mo['Close'].iloc[0] * 100), 2)
+                
+                # Calculate YTD return
+                if not hist_ytd.empty and len(hist_ytd) > 0:
+                    performance['performance']['YTD'] = round(((current_price - hist_ytd['Close'].iloc[0]) / hist_ytd['Close'].iloc[0] * 100), 2)
+                
+                # Calculate 1Y return
+                if not hist_1y.empty and len(hist_1y) > 0:
+                    performance['performance']['1Y'] = round(((current_price - hist_1y['Close'].iloc[0]) / hist_1y['Close'].iloc[0] * 100), 2)
+                
+                # Calculate 3Y return (use 2Y history and extrapolate if needed)
+                if not hist_2y.empty and len(hist_2y) > 250:  # At least 1 year of data
+                    # Try to get price from 3 years ago
+                    target_idx = min(750, len(hist_2y) - 1)  # ~3 years of trading days
+                    if target_idx > 0:
+                        performance['performance']['3Y'] = round(((current_price - hist_2y['Close'].iloc[target_idx]) / hist_2y['Close'].iloc[target_idx] * 100), 2)
+                
+                # Calculate 5Y return
+                if not hist_5y.empty and len(hist_5y) > 250:  # At least 1 year of data
+                    # Get the oldest price available
+                    performance['performance']['5Y'] = round(((current_price - hist_5y['Close'].iloc[0]) / hist_5y['Close'].iloc[0] * 100), 2)
+                    
+            except Exception as e:
+                print(f"Error calculating performance for {symbol}: {str(e)}")
+                # Set all to None if there's an error
+                for period in ['1D', '5D', '1W', '1M', '3M', '6M', 'YTD', '1Y', '3Y', '5Y']:
+                    if period not in performance['performance']:
+                        performance['performance'][period] = None
+            
+            return performance
+            
+        except Exception as e:
+            print(f"YFinance price performance error: {e}")
+            return {}
     
     async def get_revenue_geography(self, symbol: str, period: str = "annual") -> List[Dict[str, Any]]:
         """Get revenue by geography - from FMP"""

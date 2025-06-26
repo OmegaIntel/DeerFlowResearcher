@@ -85,3 +85,25 @@ debug-*.js
 # Uncomment specific docs you want to track:
 # !API_PROVIDER_ANALYSIS.md
 # !OPENBB_INTEGRATION_PLAN.md
+
+# Temporary documentation
+*_SUMMARY.md
+*_GUIDE.md
+*_PLAN.md
+*_SETUP.md
+*_ANALYSIS.md
+*_IMPLEMENTATION.md
+test-summary.md
+
+# Test Data
+Test Data/
+
+# Temporary shell scripts
+START_FAST_EXCEL.sh
+start-with-copilot.sh
+
+# Test HTML files
+test.html
+test-*.html
+excel-viewer.html
+simple-excel-viewer.html

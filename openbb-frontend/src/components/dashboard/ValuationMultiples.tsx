@@ -3,14 +3,19 @@ import { Line } from 'react-chartjs-2';
 import { useValuationMultiplesRealTime } from '../../hooks/useRealTimeDataExtended';
 import WidgetHeaderWithTicker from '../common/WidgetHeaderWithTicker';
 import classNames from 'classnames';
+import { useCopilot } from '../../contexts/CopilotContext';
+import type { WidgetType } from '../../services/copilotService';
 
 interface ValuationMultiplesProps {
   ticker: string;
   onTickerChange?: (ticker: string) => void;
+  onSettings?: () => void;
+  onRemove?: () => void;
 }
 
-const ValuationMultiples: React.FC<ValuationMultiplesProps> = ({ ticker, onTickerChange }) => {
+const ValuationMultiples: React.FC<ValuationMultiplesProps> = ({ ticker, onTickerChange, onSettings, onRemove }) => {
   const { data: metricsData, isLoading, error } = useValuationMultiplesRealTime(ticker);
+  const { addWidgetContext } = useCopilot();
   
   const valuationData = useMemo(() => {
     if (!metricsData || !Array.isArray(metricsData) || metricsData.length === 0) {
@@ -181,13 +186,17 @@ const ValuationMultiples: React.FC<ValuationMultiplesProps> = ({ ticker, onTicke
           title="Valuation Multiples"
           ticker={ticker}
           onTickerChange={onTickerChange || (() => {})}
-          onRefresh={() => window.location.reload()}
-          onAdd={() => console.log('Add to dashboard')}
-          onExpand={() => console.log('Expand')}
-          onMore={() => console.log('More options')}
+          onAdd={() => addWidgetContext(
+            WidgetType.VALUATION_MULTIPLES,
+            metricsData,
+            ticker,
+            'Valuation Multiples'
+          )}
+          onSettings={onSettings}
+          onRemove={onRemove}
         />
         <div className="widget-content flex-1 overflow-auto">
-          <p className="text-xs font-mono text-openbb-text-muted">No valuation data available</p>
+          <p className="text-xs  text-openbb-text-muted">No valuation data available</p>
         </div>
       </div>
     );
@@ -200,16 +209,20 @@ const ValuationMultiples: React.FC<ValuationMultiplesProps> = ({ ticker, onTicke
           title="Valuation Multiples"
           ticker={ticker}
           onTickerChange={onTickerChange || (() => {})}
-          onRefresh={() => console.log('Refresh')}
-          onAdd={() => console.log('Add to dashboard')}
-          onExpand={() => console.log('Expand')}
-          onMore={() => console.log('More options')}
+          onAdd={() => addWidgetContext(
+            WidgetType.VALUATION_MULTIPLES,
+            metricsData,
+            ticker,
+            'Valuation Multiples'
+          )}
+          onSettings={onSettings}
+          onRemove={onRemove}
         />
         
         <div className="flex items-center gap-1 bg-openbb-bg-secondary p-0.5 rounded">
           <button
             className={classNames(
-              'px-2 py-1 text-xs font-mono rounded transition-colors',
+              'px-2 py-1 text-xs  rounded transition-colors',
               'bg-openbb-accent text-openbb-bg-primary'
             )}
           >

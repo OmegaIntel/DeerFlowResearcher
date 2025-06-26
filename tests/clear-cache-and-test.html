@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clear Cache and Test Financials</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .step {
+            background: #f4f4f4;
+            padding: 15px;
+            margin: 10px 0;
+            border-left: 4px solid #007bff;
+        }
+        .test-item {
+            margin: 10px 0;
+            padding: 10px;
+            background: #e9ecef;
+        }
+        .success { color: green; }
+        .error { color: red; }
+    </style>
+</head>
+<body>
+    <h1>Clear Cache and Test Financials Page</h1>
+    
+    <div class="step">
+        <h2>Step 1: Clear Browser Cache</h2>
+        <p><strong>Chrome/Edge:</strong> Press Ctrl+Shift+Delete (Windows) or Cmd+Shift+Delete (Mac)</p>
+        <p><strong>Firefox:</strong> Press Ctrl+Shift+Delete (Windows) or Cmd+Shift+Delete (Mac)</p>
+        <p>Select "Cached images and files" and clear for "All time"</p>
+    </div>
+    
+    <div class="step">
+        <h2>Step 2: Open in Incognito/Private Window</h2>
+        <p>For best results, open this link in an incognito/private window:</p>
+        <p><a href="http://localhost:3000" target="_blank" style="font-size: 18px;">🔗 Open OpenBB Terminal</a></p>
+    </div>
+    
+    <div class="step">
+        <h2>Step 3: Navigate to Financials</h2>
+        <ol>
+            <li>Search for "AAPL" in the search box</li>
+            <li>Press Enter to load the dashboard</li>
+            <li>Click on the "Financials" tab</li>
+        </ol>
+    </div>
+    
+    <div class="step">
+        <h2>Step 4: Verify These Changes</h2>
+        
+        <div class="test-item">
+            <h3>✅ Test 1: Different FY vs QTR Data</h3>
+            <ul>
+                <li>In <strong>FY view</strong>, first Revenue value should be: <code>391,035</code></li>
+                <li>Click <strong>QTR</strong> button</li>
+                <li>In <strong>QTR view</strong>, first Revenue value should be: <code>94,372</code></li>
+            </ul>
+            <p class="success">✓ These should be DIFFERENT values now!</p>
+        </div>
+        
+        <div class="test-item">
+            <h3>✅ Test 2: Quarterly Headers</h3>
+            <ul>
+                <li>In <strong>FY view</strong>: Headers show <code>2024, 2023, 2022...</code></li>
+                <li>In <strong>QTR view</strong>: Headers show <code>Q3 2024, Q2 2024, Q1 2024...</code></li>
+            </ul>
+            <p class="success">✓ Quarterly headers should now appear!</p>
+        </div>
+        
+        <div class="test-item">
+            <h3>✅ Test 3: Fixed Index Column</h3>
+            <ul>
+                <li>Scroll the table horizontally using the scrollbar at the bottom</li>
+                <li>The "Index" column should stay fixed on the left</li>
+                <li>The column should have a clear shadow/border</li>
+                <li>Text should NOT overlap when scrolling</li>
+            </ul>
+            <p class="success">✓ Index column now has 200px min-width and better shadow!</p>
+        </div>
+    </div>
+    
+    <div class="step">
+        <h2>Changes Applied:</h2>
+        <ul>
+            <li>Fixed duplicate <code>getColumnHeaders</code> function</li>
+            <li>Ensured different mock data for FY vs QTR views</li>
+            <li>Added <code>min-w-[200px]</code> to Index column</li>
+            <li>Enhanced shadow effect: <code>shadow-[4px_0_8px_-2px_rgba(0,0,0,0.1)]</code></li>
+            <li>Improved z-index: header (z-30) vs cells (z-20)</li>
+        </ul>
+    </div>
+    
+    <div class="step" style="background: #d4edda; border-color: #28a745;">
+        <h2>🎯 Expected Result</h2>
+        <p>All three issues should now be fixed:</p>
+        <ol>
+            <li>Different data showing for FY vs QTR</li>
+            <li>Quarterly headers (Q1, Q2, etc.) in QTR view</li>
+            <li>No overlapping when scrolling horizontally</li>
+        </ol>
+    </div>
+    
+    <script>
+        // Force reload with cache bypass
+        if (window.location.hash !== '#reloaded') {
+            window.location.hash = '#reloaded';
+            window.location.reload(true);
+        }
+    </script>
+</body>
+</html>
