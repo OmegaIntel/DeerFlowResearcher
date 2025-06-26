@@ -5,6 +5,7 @@ import WidgetHeaderWithTicker from '../common/WidgetHeaderWithTicker';
 import classNames from 'classnames';
 import { useCopilot } from '../../contexts/CopilotContext';
 import type { WidgetType } from '../../services/copilotService';
+import { safeDate } from '../../utils/dateUtils';
 
 interface ValuationMultiplesProps {
   ticker: string;
@@ -33,13 +34,21 @@ const ValuationMultiples: React.FC<ValuationMultiplesProps> = ({ ticker, onTicke
     }
     
     // Process real data
-    const sortedData = [...metricsData].sort((a, b) => 
-      new Date(a.date).getTime() - new Date(b.date).getTime()
-    );
+    const sortedData = [...metricsData].sort((a, b) => {
+      const dateA = safeDate(a.date);
+      const dateB = safeDate(b.date);
+      
+      // Handle null dates
+      if (!dateA && !dateB) return 0;
+      if (!dateA) return 1; // null dates go to end
+      if (!dateB) return -1;
+      
+      return dateA.getTime() - dateB.getTime();
+    });
     
     const labels = sortedData.map(item => {
-      const date = new Date(item.date);
-      return `FY ${date.getFullYear()}`;
+      const date = safeDate(item.date);
+      return date ? `FY ${date.getFullYear()}` : 'N/A';
     });
     
     const datasets = [

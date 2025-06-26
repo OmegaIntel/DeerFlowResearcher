@@ -4,6 +4,7 @@ import WidgetHeaderWithTicker from '../common/WidgetHeaderWithTicker';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 import { useCopilot } from '../../contexts/CopilotContext';
 import type { WidgetType } from '../../services/copilotService';
+import { safeDate, safeDateString } from '../../utils/dateUtils';
 
 interface InsiderTradingProps {
   ticker: string;
@@ -51,7 +52,18 @@ const InsiderTrading: React.FC<InsiderTradingProps> = ({ ticker, onTickerChange,
 
   // Process and sort transactions by date
   const recentTransactions = insiderData
-    .sort((a: any, b: any) => new Date(b.filing_date).getTime() - new Date(a.filing_date).getTime())
+    .sort((a: any, b: any) => {
+      const dateA = safeDate(a.filing_date);
+      const dateB = safeDate(b.filing_date);
+      
+      // Handle null dates
+      if (!dateA && !dateB) return 0;
+      if (!dateA) return 1; // null dates go to end
+      if (!dateB) return -1;
+      
+      // Sort descending (newest first)
+      return dateB.getTime() - dateA.getTime();
+    })
     .slice(0, 10);
 
   return (
@@ -116,7 +128,7 @@ const InsiderTrading: React.FC<InsiderTradingProps> = ({ ticker, onTickerChange,
                 <div>
                   <span className="text-openbb-text-secondary">Date: </span>
                   <span className="text-openbb-text-primary">
-                    {new Date(transaction.filing_date).toLocaleDateString()}
+                    {safeDateString(transaction.filing_date)}
                   </span>
                 </div>
               </div>

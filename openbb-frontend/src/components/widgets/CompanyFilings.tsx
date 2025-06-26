@@ -4,6 +4,7 @@ import { useSecFilingsRealTime } from '../../hooks/useRealTimeDataExtended';
 import WidgetHeaderWithTicker from '../common/WidgetHeaderWithTicker';
 import { useCopilot } from '../../contexts/CopilotContext';
 import type { WidgetType } from '../../services/copilotService';
+import { safeISOString } from '../../utils/dateUtils';
 
 interface CompanyFilingsProps {
   ticker: string;
@@ -18,8 +19,8 @@ const CompanyFilings: React.FC<CompanyFilingsProps> = ({ ticker, onTickerChange,
 
   // Format date to match screenshot
   const formatDate = (dateStr: string) => {
-    const date = new Date(dateStr);
-    return date.toISOString().split('T')[0];
+    const isoString = safeISOString(dateStr);
+    return isoString ? isoString.split('T')[0] : 'N/A';
   };
 
   // Format CIK with leading zeros

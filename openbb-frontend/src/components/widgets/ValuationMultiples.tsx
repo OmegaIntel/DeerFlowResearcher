@@ -6,6 +6,7 @@ import WidgetHeaderWithTicker from '../common/WidgetHeaderWithTicker';
 import classNames from 'classnames';
 import { useCopilot } from '../../contexts/CopilotContext';
 import type { WidgetType } from '../../services/copilotService';
+import { safeDate } from '../../utils/dateUtils';
 
 interface ValuationMultiplesProps {
   ticker: string;
@@ -52,14 +53,24 @@ const ValuationMultiples: React.FC<ValuationMultiplesProps> = ({ ticker, onTicke
       };
     }
     
-    const sortedData = [...enhancedMetricsData].sort((a, b) => 
-      new Date(a.date).getTime() - new Date(b.date).getTime()
-    );
+    const sortedData = [...enhancedMetricsData].sort((a, b) => {
+      const dateA = safeDate(a.date);
+      const dateB = safeDate(b.date);
+      
+      // Handle null dates
+      if (!dateA && !dateB) return 0;
+      if (!dateA) return 1; // null dates go to end
+      if (!dateB) return -1;
+      
+      return dateA.getTime() - dateB.getTime();
+    });
     
     const labels = sortedData.map(item => {
-      const date = new Date(item.date);
+      const date = safeDate(item.date);
       if (periodType === 'TTM') {
         return 'TTM';
+      } else if (!date) {
+        return 'N/A';
       } else if (periodType === 'QTR' && item.period) {
         return `${item.period} ${date.getFullYear()}`;
       } else {

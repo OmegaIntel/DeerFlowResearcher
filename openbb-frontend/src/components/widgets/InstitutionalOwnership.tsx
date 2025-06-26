@@ -4,6 +4,7 @@ import WidgetHeaderWithTicker from '../common/WidgetHeaderWithTicker';
 import { Building2, TrendingUp, TrendingDown } from 'lucide-react';
 import { useCopilot } from '../../contexts/CopilotContext';
 import type { WidgetType } from '../../services/copilotService';
+import { safeDateString } from '../../utils/dateUtils';
 
 interface InstitutionalOwnershipProps {
   ticker: string;
@@ -153,7 +154,7 @@ const InstitutionalOwnership: React.FC<InstitutionalOwnershipProps> = ({ ticker,
                 <div>
                   <span className="text-openbb-text-secondary">Filed: </span>
                   <span className="text-openbb-text-primary">
-                    {holder.date_reported ? new Date(holder.date_reported).toLocaleDateString() : 'N/A'}
+                    {safeDateString(holder.date_reported)}
                   </span>
                 </div>
               </div>

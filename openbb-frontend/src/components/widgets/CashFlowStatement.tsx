@@ -3,6 +3,7 @@ import { Banknote, Calendar, TrendingUp, BarChart3 } from 'lucide-react';
 import { useCopilot } from '../../contexts/CopilotContext';
 import type { WidgetType } from '../../services/copilotService';
 import WidgetHeader from '../common/WidgetHeader';
+import { safeDateString } from '../../utils/dateUtils';
 
 interface CashFlowStatementProps {
   ticker: string;
@@ -78,7 +79,12 @@ const CashFlowStatement: React.FC<CashFlowStatementProps> = ({
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
+    const formatted = safeDateString(dateString);
+    if (formatted === 'N/A') return formatted;
+    
+    // Format as "MMM YYYY" if we got a valid date
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: 'short'
     });
